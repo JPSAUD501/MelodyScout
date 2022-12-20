@@ -1,7 +1,7 @@
 import { MelodyScoutLogBot } from "../MelodyScoutLog_Bot/bot";
 
 export class AdvConsole {
-  bot: MelodyScoutLogBot;
+  private bot: MelodyScoutLogBot;
 
   constructor (bot: MelodyScoutLogBot) {
     this.bot = bot;

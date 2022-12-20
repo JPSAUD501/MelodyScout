@@ -17,7 +17,7 @@ model TrackerChats {
 
 model TrackingUsers {
   lastfmUser              String @id @unique
-  allowedTrackingChatIds  TrackerChats[]
+  trackingInChats         TrackerChats[]
 }
 
 model TelegramUsers {

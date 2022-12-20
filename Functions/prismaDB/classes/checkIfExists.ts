@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { AdvConsole } from "../advancedConsole";
+import { AdvConsole } from "../../advancedConsole";
 
 type CheckIfExistsDefaultResponse = {
   success: true;

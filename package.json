@@ -30,7 +30,7 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@prisma/client": "^4.7.1",
+    "@prisma/client": "^4.8.0",
     "@toplast/lastfm": "^0.1.5",
     "axios": "^1.2.1",
     "dotenv": "^16.0.1",

@@ -2,8 +2,8 @@ import { Bot } from 'grammy';
 import config from './config';
 
 export class MelodyScoutLogBot {
-  bot: Bot;
-  messageQueue: string[];
+  private bot: Bot;
+  private messageQueue: string[];
 
   constructor() {
     this.bot = new Bot(config.telegram.token);

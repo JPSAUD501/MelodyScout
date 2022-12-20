@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { AdvConsole } from "../advancedConsole";
+import { AdvConsole } from "../../advancedConsole";
 
 type CreateDefaultResponse = {
   success: true;
@@ -48,7 +48,7 @@ export class Create {
     return { success: true, info: "Tracking user created!" };
   }
 
-  async telegramUser (telegramUserId: string, lastfmUser: string): Promise<CreateDefaultResponse> {
+  async telegramUser (telegramUserId: string): Promise<CreateDefaultResponse> {
     const createdTelegramUser = await this.prisma.telegramUsers.create({
       data: {
         telegramUserId: telegramUserId,

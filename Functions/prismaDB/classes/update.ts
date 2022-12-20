@@ -1,9 +1,9 @@
 import { PrismaClient } from "@prisma/client";
-import { AdvConsole } from "../advancedConsole";
+import { AdvConsole } from "../../advancedConsole";
 import { CheckIfExists } from "./checkIfExists";
 import { Create } from "./create";
 
-type SetDefaultResponse = {
+type UpdateDefaultResponse = {
   success: true;
   info: string;
 } | {
@@ -11,7 +11,7 @@ type SetDefaultResponse = {
   error: string;
 };
 
-export class Set {
+export class Update {
   private advConsole: AdvConsole;
   private prisma: PrismaClient;
   private checkIfExists: CheckIfExists;
@@ -24,7 +24,7 @@ export class Set {
     this.create = Create;
   }
 
-  async trackerChat (chatId: string, lastfmUsers: string[]): Promise<SetDefaultResponse> {
+  async trackerChat (chatId: string, lastfmUsers: string[], option?: 'remove' | 'add' |'set' ): Promise<UpdateDefaultResponse> {
     const checkIfExists = await this.checkIfExists.trackerChat(chatId);
     if (!checkIfExists.success) return { success: false, error: checkIfExists.error };
     if (!checkIfExists.exists) {
@@ -44,10 +44,28 @@ export class Set {
         chatId: chatId
       },
       data: {
-        trackingUsers: {
+        trackingUsers: option === 'remove' ? {
+          disconnect: [...lastfmUsers.map((lastfmUser) => {
+            return {
+              lastfmUser
+            }
+          })]
+        } : option === 'add' ? {
           connect: [...lastfmUsers.map((lastfmUser) => {
             return {
-              lastfmUser: lastfmUser
+              lastfmUser
+            }
+          })]
+        } : option === 'set' ? {
+          set: [...lastfmUsers.map((lastfmUser) => {
+            return {
+              lastfmUser
+            }
+          })]
+        } : { // Default - SET
+          set: [...lastfmUsers.map((lastfmUser) => {
+            return {
+              lastfmUser
             }
           })]
         }
@@ -64,11 +82,11 @@ export class Set {
     }
   }
 
-  async telegramUser (telegramUserId: string, lastfmUser: string): Promise<SetDefaultResponse> {
+  async telegramUser (telegramUserId: string, lastfmUser: string | null): Promise<UpdateDefaultResponse> {
     const checkIfExists = await this.checkIfExists.telegramUser(telegramUserId);
     if (!checkIfExists.success) return { success: false, error: checkIfExists.error };
     if (!checkIfExists.exists) {
-      const createTelegramUser = await this.create.telegramUser(telegramUserId, lastfmUser);
+      const createTelegramUser = await this.create.telegramUser(telegramUserId);
       if (!createTelegramUser.success) return { success: false, error: createTelegramUser.error };
     }
     const setTelegramUser = await this.prisma.telegramUsers.update({

@@ -1,10 +1,10 @@
 import config from "./config";
 import { AdvConsole } from "./functions/advancedConsole";
-import { PrismaDB } from "./functions/prismaDB";
-import { Server } from "./Server/server";
+import { PrismaDB } from "./functions/prismaDB/base";
 import { MelodyScoutLogBot } from "./MelodyScoutLog_Bot/bot";
 import { MelodyScoutBot } from "./MelodyScout_Bot/bot";
 import { MsLastfmApi } from "./api/msLastfmApi/base";
+import { CtxFunctions } from "./functions/ctxFunctions";
 
 class StartSequence {
   static async start() {
@@ -17,7 +17,8 @@ class StartSequence {
     advConsole.log(`Running the start sequence...`);
     const prismaDB = new PrismaDB(advConsole);
     const msLastfmApi = new MsLastfmApi(config.lastfm.apiKey)
-    const melodyScoutBot = new MelodyScoutBot(advConsole, msLastfmApi, prismaDB);
+    const ctxFunctions = new CtxFunctions(advConsole);
+    const melodyScoutBot = new MelodyScoutBot(advConsole, ctxFunctions, msLastfmApi, prismaDB);
     melodyScoutBot.start();
     melodyScoutBot.hear();
     advConsole.log(`Start sequence completed`);

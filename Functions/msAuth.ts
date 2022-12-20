@@ -9,4 +9,6 @@ export class MsAuth {
     });
     return allowedTrackingChatIds;
   }
+
+  // TODO: If user about me includes "T:ALL", allow all chat ids
 }
