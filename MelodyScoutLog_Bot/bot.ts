@@ -1,26 +1,25 @@
-import { Telegraf } from 'telegraf';
+import { Bot } from 'grammy';
 import config from './config';
 
-export class TrackerManLogBot {
-  bot: Telegraf;
+export class MelodyScoutLogBot {
+  bot: Bot;
   messageQueue: string[];
 
   constructor() {
-    this.bot = new Telegraf(config.telegram.token);
+    this.bot = new Bot(config.telegram.token);
     this.messageQueue = [];
 
-    console.log(`TrackerManLog_Bot - Loaded`);
+    console.log(`MelodyScoutLog_Bot - Loaded`);
   }
 
   async start() {
-    await this.bot.launch();
-
+    this.bot.start().catch((err) => {
+      console.error(err);
+      console.error(`MelodyScoutLog_Bot - Error`);
+    });
     this.startLogQueue();
 
-    console.log(`TrackerManLog_Bot - Started`);
-
-    process.once('SIGINT', () => this.bot.stop('SIGINT'))
-    process.once('SIGTERM', () =>this.bot.stop('SIGTERM'))
+    console.log(`MelodyScoutLog_Bot - Started`);
   }
 
   sendLog(log: any) {
@@ -36,7 +35,7 @@ export class TrackerManLogBot {
       if (this.messageQueue.length <= 0) return;
       try {
         const message = this.messageQueue.shift() || '⚠';
-        await this.bot.telegram.sendMessage(config.telegram.logChannel, message);
+        await this.bot.api.sendMessage(config.telegram.logChannel, message);
       } catch (error) {
         console.log(error);
       }

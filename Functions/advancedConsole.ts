@@ -1,11 +1,9 @@
-import { Telegraf } from "telegraf";
-import { TrackerManLogBot } from "../TrackerManLog_Bot/bot";
-import config from "../TrackerMan_Bot/config";
+import { MelodyScoutLogBot } from "../MelodyScoutLog_Bot/bot";
 
 export class AdvConsole {
-  bot: TrackerManLogBot;
+  bot: MelodyScoutLogBot;
 
-  constructor (bot: TrackerManLogBot) {
+  constructor (bot: MelodyScoutLogBot) {
     this.bot = bot;
   }
 

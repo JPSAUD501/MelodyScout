@@ -1,0 +1,28 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider                = "prisma-client-js"
+}
+
+datasource db {
+  provider                = "sqlite"
+  url                     = env("DATABASE_URL")
+}
+
+model TrackerChats {
+  chatId                  String @id @unique
+  trackingUsers           TrackingUsers[]
+}
+
+model TrackingUsers {
+  lastfmUser              String @id @unique
+  allowedTrackingChatIds  TrackerChats[]
+}
+
+model TelegramUser {
+  telegramUserId          String @id @unique
+  lastfmUser              String
+  lastUpdate              Int
+}
+

@@ -3,6 +3,6 @@ dotenv.config();
 
 export default {
   telegram: {
-      token: process.env.TMB_TELEGRAM_TOKEN || ''
+      token: process.env.MSB_TELEGRAM_TOKEN || ''
   }
 }

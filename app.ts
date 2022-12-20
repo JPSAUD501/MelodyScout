@@ -1,22 +1,25 @@
-import { AdvConsole } from "./Functions/advancedConsole";
+import config from "./config";
+import { AdvConsole } from "./functions/advancedConsole";
+import { PrismaDB } from "./functions/prismaDB";
 import { Server } from "./Server/server";
-import { TrackerManLogBot } from "./TrackerManLog_Bot/bot";
-import { TrackerManBot } from "./TrackerMan_Bot/bot";
+import { MelodyScoutLogBot } from "./MelodyScoutLog_Bot/bot";
+import { MelodyScoutBot } from "./MelodyScout_Bot/bot";
+import { MsLastfmApi } from "./api/msLastfmApi/base";
 
 class StartSequence {
   static async start() {
-    console.log("Starting TrackerManLog_Bot and AdvConsole...");
-    const trackerManLogBot = new TrackerManLogBot();
-    await trackerManLogBot.start();
-    const advConsole = new AdvConsole(trackerManLogBot);
-    console.log("TrackerManLog_Bot and AdvConsole started!");
-
+    console.log("Starting MelodyScoutLog_Bot and AdvConsole...");
+    const melodyScoutLogBot = new MelodyScoutLogBot();
+    melodyScoutLogBot.start();
+    const advConsole = new AdvConsole(melodyScoutLogBot);
+    console.log("MelodyScoutLog_Bot and AdvConsole started!");
+    
     advConsole.log(`Running the start sequence...`);
-    const server = new Server(advConsole);
-    await server.start();
-    const trackerManBot = new TrackerManBot(advConsole);
-    await trackerManBot.start();
-    await trackerManBot.hear();
+    const prismaDB = new PrismaDB(advConsole);
+    const msLastfmApi = new MsLastfmApi(config.lastfm.apiKey)
+    const melodyScoutBot = new MelodyScoutBot(advConsole, msLastfmApi, prismaDB);
+    melodyScoutBot.start();
+    melodyScoutBot.hear();
     advConsole.log(`Start sequence completed`);
   }
 }
