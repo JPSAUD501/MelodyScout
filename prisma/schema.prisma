@@ -20,9 +20,9 @@ model TrackingUsers {
   allowedTrackingChatIds  TrackerChats[]
 }
 
-model TelegramUser {
+model TelegramUsers {
   telegramUserId          String @id @unique
-  lastfmUser              String
+  lastfmUser              String?
   lastUpdate              Int
 }
 

@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { AdvConsole } from "./advancedConsole";
+import { AdvConsole } from "../advancedConsole";
 
 type PrismaDBDefaultResponse = {
   success: true;
@@ -20,7 +20,4 @@ export class PrismaDB {
     this.advConsole.log("PrismaDB started!");
   }
 
-  private async checkIfTrackerChatExists (chatId: string): Promise<PrismaDBDefaultResponse> {
-    
-  }
 }
