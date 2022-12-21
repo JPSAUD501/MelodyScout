@@ -32,3 +32,5 @@ export class MyuserCommand {
     await this.ctxFunctions.ctxReply(ctx, 'Pronto! Seu nome de usuário do Last.fm foi registrado com sucesso! Agradeço imensamente por isso e espero que você aproveite o bot!');
   }
 }
+
+//TODO: Checar se a conta é realmente do usuário por um código TU:(telegramUserId) no about me do Last.fm

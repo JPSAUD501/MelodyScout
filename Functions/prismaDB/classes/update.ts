@@ -95,7 +95,7 @@ export class Update {
       },
       data: {
         lastfmUser: lastfmUser,
-        lastUpdate: new Date().getTime()
+        lastUpdate: new Date().getTime().toString()
       }
     }).catch((err) => {
       this.advConsole.error('Error while setting telegram user! Telegram User Id: ' + telegramUserId);

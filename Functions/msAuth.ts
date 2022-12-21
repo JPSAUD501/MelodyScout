@@ -10,5 +10,7 @@ export class MsAuth {
     return allowedTrackingChatIds;
   }
 
+  // TODO: getUserTelegramChatId(lastfmUserAboutMe: string): string | null {}
+
   // TODO: If user about me includes "T:ALL", allow all chat ids
 }

@@ -52,7 +52,7 @@ export class Create {
     const createdTelegramUser = await this.prisma.telegramUsers.create({
       data: {
         telegramUserId: telegramUserId,
-        lastUpdate: new Date().getTime(),
+        lastUpdate: new Date().getTime().toString(),
       }
     }).catch((err) => {
       this.advConsole.error('Error while creating new telegram user! Telegram User Id: ' + telegramUserId);

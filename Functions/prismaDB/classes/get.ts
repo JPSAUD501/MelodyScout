@@ -24,7 +24,10 @@ export class Get {
   async trackerChat (chatId: string): Promise<GetDefaultResponseError | { success: true, trackingUsers: string[] }> {
     const checkIfExists = await this.checkIfExists.trackerChat(chatId);
     if (!checkIfExists.success) return { success: false, error: checkIfExists.error };
-    if (!checkIfExists.exists) return { success: false, error: 'Tracker chat does not exist!' };
+    if (!checkIfExists.exists) {
+      const createTrackerChat = await this.create.trackerChat(chatId);
+      if (!createTrackerChat.success) return { success: false, error: createTrackerChat.error };
+    }
     const getTrackerChat = await this.prisma.trackerChats.findUnique({
       where: {
         chatId
@@ -38,6 +41,7 @@ export class Get {
       return new Error(err);
     });
     if (getTrackerChat instanceof Error) return { success: false, error: getTrackerChat.message };
+    if (!getTrackerChat) return { success: false, error: 'Tracker chat does not exist!' };
     const trackingUsers = getTrackerChat?.trackingUsers.map((trackingUser) => {
       return trackingUser.lastfmUser;
     }) || [];
@@ -77,7 +81,7 @@ export class Get {
     }
   }
 
-  async telegramUser (telegramUserId: string): Promise<GetDefaultResponseError | { success: true, lastfmUser: string | null, lastUpdate: number }> {
+  async telegramUser (telegramUserId: string): Promise<GetDefaultResponseError | { success: true, lastfmUser: string | null, lastUpdate: string }> {
     const checkIfExists = await this.checkIfExists.telegramUser(telegramUserId);
     if (!checkIfExists.success) return { success: false, error: checkIfExists.error };
     if (!checkIfExists.exists) {

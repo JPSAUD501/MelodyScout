@@ -23,6 +23,6 @@ model TrackingUsers {
 model TelegramUsers {
   telegramUserId          String @id @unique
   lastfmUser              String?
-  lastUpdate              Int
+  lastUpdate              String
 }
 
