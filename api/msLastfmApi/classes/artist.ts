@@ -7,7 +7,7 @@ type GetInfoResponse = {
   data: ArtistInfo
 } | ApiErrors
 
-export class Album {
+export class Artist {
   private readonly apiKey: string
 
   constructor (apiKey: string) {

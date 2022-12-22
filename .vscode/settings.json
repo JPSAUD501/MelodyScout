@@ -23,9 +23,11 @@
     "streamable",
     "supergroup",
     "toplast",
+    "toptags",
     "toptracks",
     "tracklist",
     "unixtime",
+    "userloved",
     "userplaycount"
   ]
 }

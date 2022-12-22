@@ -1,4 +1,6 @@
 import { Album } from './classes/album'
+import { Artist } from './classes/artist'
+import { Track } from './classes/track'
 import { User } from './classes/user'
 import { ApiErrors } from './types/errors/ApiErrors'
 
@@ -7,12 +9,16 @@ export class MsLastfmApi {
 
   public album: Album
   public user: User
+  public artist: Artist
+  public track: Track
 
   constructor (apiKey: string) {
     this.apiKey = apiKey
 
     this.album = new Album(this.apiKey)
     this.user = new User(this.apiKey)
+    this.artist = new Artist(this.apiKey)
+    this.track = new Track(this.apiKey)
   }
 
   async checkIfUserExists (username: string): Promise<{

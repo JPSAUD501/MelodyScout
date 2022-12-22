@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const zodArtistInfo = z.object({
   artist: z.object({
     name: z.string(),
-    mbid: z.string(),
+    mbid: z.string().optional(),
     url: z.string(),
     image: z.array(z.object({ '#text': z.string(), size: z.string() })),
     streamable: z.string(),

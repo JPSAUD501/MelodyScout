@@ -22,11 +22,11 @@ export class BriefCommand {
     if (telegramUserId === undefined) return await this.ctxFunctions.ctxReply(ctx, 'Não foi possível identificar seu usuário no telegram, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
     const telegramUserDBResponse = await this.prismaDB.get.telegramUser(`${telegramUserId}`)
     if (!telegramUserDBResponse.success) return await this.ctxFunctions.ctxReply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-    const lastFmUser = telegramUserDBResponse.lastfmUser
-    if (lastFmUser === null) return await this.ctxFunctions.ctxReply(ctx, 'Para utilizar esse comando envie antes /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
-    const userInfo = await this.msLastfmApi.user.getInfo(lastFmUser)
-    if (!userInfo.success) return await this.ctxFunctions.ctxReply(ctx, `Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>${lastFmUser}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact`)
-    const userRecentTracks = await this.msLastfmApi.user.getRecentTracks(lastFmUser, 5)
+    const lastfmUser = telegramUserDBResponse.lastfmUser
+    if (lastfmUser === null) return await this.ctxFunctions.ctxReply(ctx, 'Para utilizar esse comando envie antes /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
+    const userInfo = await this.msLastfmApi.user.getInfo(lastfmUser)
+    if (!userInfo.success) return await this.ctxFunctions.ctxReply(ctx, `Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>${lastfmUser}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact`)
+    const userRecentTracks = await this.msLastfmApi.user.getRecentTracks(lastfmUser, 5)
     if (!userRecentTracks.success) return await this.ctxFunctions.ctxReply(ctx, 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
     await this.ctxFunctions.ctxReply(ctx, getBriefText(userInfo.data, userRecentTracks.data), undefined, true)
   }
