@@ -3,8 +3,8 @@ import { Bot } from 'grammy'
 import { AdvConsole } from '../functions/advancedConsole'
 import { PrismaDB } from '../functions/prismaDB/base'
 import { MsLastfmApi } from '../api/msLastfmApi/base'
-import { CtxFunctions } from '../functions/ctxFunctions'
 import { BotCommands } from './botCommands/base'
+import { CtxFunctions } from '../functions/ctxFunctions'
 
 export class MelodyScoutBot {
   private readonly advConsole: AdvConsole
