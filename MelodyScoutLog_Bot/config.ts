@@ -1,9 +1,9 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import dotenv from 'dotenv'
+dotenv.config()
 
 export default {
   telegram: {
-      token: process.env.MSLB_TELEGRAM_TOKEN || '',
-      logChannel: '-1001828315379'
+    token: process.env.MSLB_TELEGRAM_TOKEN !== undefined ? process.env.MSLB_TELEGRAM_TOKEN : '',
+    logChannel: '-1001828315379'
   }
 }

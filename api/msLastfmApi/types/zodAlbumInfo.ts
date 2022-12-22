@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from 'zod'
 
 export const zodAlbumInfo = z.object({
   album: z.object({
@@ -8,15 +8,15 @@ export const zodAlbumInfo = z.object({
       tag: z.array(z.object({ url: z.string(), name: z.string() }))
     }),
     name: z.string(),
-    image: z.array(z.object({ size: z.string(), "#text": z.string() })),
+    image: z.array(z.object({ size: z.string(), '#text': z.string() })),
     tracks: z.object({
       track: z.array(
         z.object({
-          streamable: z.object({ fulltrack: z.string(), "#text": z.string() }),
+          streamable: z.object({ fulltrack: z.string(), '#text': z.string() }),
           duration: z.number().nullable(),
           url: z.string(),
           name: z.string(),
-          "@attr": z.object({ rank: z.number() }),
+          '@attr': z.object({ rank: z.number() }),
           artist: z.object({
             url: z.string(),
             name: z.string(),

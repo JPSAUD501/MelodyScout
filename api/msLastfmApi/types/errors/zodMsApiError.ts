@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from 'zod'
 
 export const zodMsApiError = z.object({
   message: z.string(),
@@ -8,7 +8,7 @@ export const zodMsApiError = z.object({
     z.literal(-3),
     z.literal(-4),
     z.literal(-5),
-    z.literal(-6),
+    z.literal(-6)
   ])
 })
 

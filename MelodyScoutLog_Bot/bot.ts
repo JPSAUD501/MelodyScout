@@ -1,44 +1,46 @@
-import { Bot } from 'grammy';
-import config from './config';
+import { Bot } from 'grammy'
+import config from './config'
 
 export class MelodyScoutLogBot {
-  private bot: Bot;
-  private messageQueue: string[];
+  private readonly bot: Bot
+  private readonly messageQueue: string[]
 
-  constructor() {
-    this.bot = new Bot(config.telegram.token);
-    this.messageQueue = [];
+  constructor () {
+    this.bot = new Bot(config.telegram.token)
+    this.messageQueue = []
 
-    console.log(`MelodyScoutLog_Bot - Loaded`);
+    console.log('MelodyScoutLog_Bot - Loaded')
   }
 
-  async start() {
+  start (): void {
     this.bot.start().catch((err) => {
-      console.error(err);
-      console.error(`MelodyScoutLog_Bot - Error`);
-    });
-    this.startLogQueue();
+      console.error(err)
+      console.error('MelodyScoutLog_Bot - Error')
+    })
+    this.startLogQueue()
 
-    console.log(`MelodyScoutLog_Bot - Started`);
+    console.log('MelodyScoutLog_Bot - Started')
   }
 
-  sendLog(log: any) {
-    this.messageQueue.push('🔵 - ' + log.toString());
+  sendLog (log: any): void {
+    this.messageQueue.push('🔵 - ' + String(log))
   }
 
-  sendError(error: any) {
-    this.messageQueue.push('🔴 - ' + error.toString());
+  sendError (error: any): void {
+    this.messageQueue.push('🔴 - ' + String(error))
   }
 
-  startLogQueue() {
-    setInterval(async () => {
-      if (this.messageQueue.length <= 0) return;
+  startLogQueue (): void {
+    setInterval(() => {
+      if (this.messageQueue.length <= 0) return
       try {
-        const message = this.messageQueue.shift() || '⚠';
-        await this.bot.api.sendMessage(config.telegram.logChannel, message);
+        const message = this.messageQueue.shift()
+        this.bot.api.sendMessage(config.telegram.logChannel, message !== undefined ? message : '⚠').catch((err) => {
+          console.error(err)
+        })
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
-    } , 1000);
+    })
   }
 }

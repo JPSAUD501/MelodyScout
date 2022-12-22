@@ -19,25 +19,23 @@
   "homepage": "https://github.com/JPSAUD501/MelodyScout#readme",
   "devDependencies": {
     "@types/luxon": "^3.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.33.0",
-    "eslint": "^8.22.0",
-    "eslint-config-standard-with-typescript": "^22.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.47.0",
+    "eslint": "^8.30.0",
+    "eslint-config-standard-with-typescript": "^24.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.2.4",
-    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-n": "^15.6.0",
+    "eslint-plugin-promise": "^6.1.1",
     "nodemon": "^2.0.20",
     "prisma": "^4.7.1",
-    "typescript": "^4.7.4"
+    "typescript": "^4.9.4"
   },
   "dependencies": {
     "@prisma/client": "^4.8.0",
-    "@toplast/lastfm": "^0.1.5",
     "axios": "^1.2.1",
     "dotenv": "^16.0.1",
     "fastify": "^4.4.0",
     "fs": "^0.0.1-security",
     "grammy": "^1.12.0",
-    "lastfm-nodejs-client": "^1.2.3",
     "luxon": "^3.0.1",
     "ts-node": "^10.9.1",
     "zod": "^3.20.2"

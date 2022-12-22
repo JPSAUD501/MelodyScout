@@ -1,19 +1,19 @@
-import { MelodyScoutLogBot } from "../MelodyScoutLog_Bot/bot";
+import { MelodyScoutLogBot } from '../MelodyScoutLog_Bot/bot'
 
 export class AdvConsole {
-  private bot: MelodyScoutLogBot;
+  private readonly bot: MelodyScoutLogBot
 
   constructor (bot: MelodyScoutLogBot) {
-    this.bot = bot;
+    this.bot = bot
   }
 
-  log (log: any) {
-    console.log(log);
-    this.bot.sendLog(log);
+  log (log: any): void {
+    console.log(log)
+    this.bot.sendLog(log)
   }
 
-  error (error: any) {
-    console.error(error);
-    this.bot.sendError(error);
+  error (error: any): void {
+    console.error(error)
+    this.bot.sendError(error)
   }
 }

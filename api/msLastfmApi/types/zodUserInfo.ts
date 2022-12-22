@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from 'zod'
 
 export const zodUserInfo = z.object({
   user: z.object({
@@ -12,8 +12,8 @@ export const zodUserInfo = z.object({
     playlists: z.string(),
     track_count: z.string(),
     album_count: z.string(),
-    image: z.array(z.object({ size: z.string(), "#text": z.string() })),
-    registered: z.object({ unixtime: z.string(), "#text": z.number() }),
+    image: z.array(z.object({ size: z.string(), '#text': z.string() })),
+    registered: z.object({ unixtime: z.string(), '#text': z.number() }),
     country: z.string(),
     gender: z.string(),
     url: z.string(),
