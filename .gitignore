@@ -105,4 +105,5 @@ dist
 
 # Others
 migrations
-.db
+*.db
+*.db-journal
