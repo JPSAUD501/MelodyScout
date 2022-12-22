@@ -56,12 +56,16 @@ export class MelodyScoutBot {
       this.botCommands.contactCommand.run(ctx);
     });
 
-    this.bot.command('myuser', async (ctx) => {
+    this.bot.command(['myuser', 'setuser', 'reg', 'register'], async (ctx) => {
       this.botCommands.myuserCommand.run(ctx);
     });
 
     this.bot.command('forgetme', async (ctx) => {
       this.botCommands.forgetmeCommand.run(ctx);
+    });
+
+    this.bot.command('brief', async (ctx) => {
+      this.botCommands.briefCommand.run(ctx);
     });
 
     this.advConsole.log(`MelodyScout_Bot - Listening`);

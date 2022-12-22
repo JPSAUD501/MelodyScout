@@ -2,6 +2,7 @@ import { MsLastfmApi } from "../../api/msLastfmApi/base";
 import { AdvConsole } from "../../functions/advancedConsole";
 import { CtxFunctions } from "../../functions/ctxFunctions";
 import { PrismaDB } from "../../functions/prismaDB/base";
+import { BriefCommand } from "./commands/brief";
 import { ContactCommand } from "./commands/contact";
 import { ForgetmeCommand } from "./commands/forgetme";
 import { HelpCommand } from "./commands/help";
@@ -20,6 +21,7 @@ export class BotCommands {
   contactCommand: ContactCommand
   myuserCommand: MyuserCommand
   forgetmeCommand: ForgetmeCommand
+  briefCommand: BriefCommand
 
   constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB) {
     this.startCommand = new StartCommand(ctxFunctions);
@@ -30,5 +32,6 @@ export class BotCommands {
     this.contactCommand = new ContactCommand(ctxFunctions);
     this.myuserCommand = new MyuserCommand(ctxFunctions, msLastfmApi, prismaDB);
     this.forgetmeCommand = new ForgetmeCommand(ctxFunctions, prismaDB);
+    this.briefCommand = new BriefCommand(ctxFunctions, msLastfmApi, prismaDB);
   }
 }
