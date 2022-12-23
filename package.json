@@ -4,8 +4,8 @@
   "description": "Last.fm Telegram Tracker bot",
   "main": "app.ts",
   "scripts": {
-    "start": "ts-node --transpile-only app.ts",
-    "dev": "nodemon app.ts"
+    "start": "ts-node --transpile-only ./app.ts",
+    "dev": "ts-node ./app.ts"
   },
   "repository": {
     "type": "git",
