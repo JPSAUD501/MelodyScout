@@ -1,7 +1,6 @@
 import { ZodObject } from 'zod'
 import { zodLfmApiError } from '../types/errors/zodLfmApiError'
 import { ApiErrors } from '../types/errors/ApiErrors'
-import fs from 'fs'
 
 type MsApiFetchResponse = {
   success: true
