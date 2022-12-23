@@ -106,3 +106,4 @@ dist
 # Others
 *.db
 *.db-journal
+dist/
