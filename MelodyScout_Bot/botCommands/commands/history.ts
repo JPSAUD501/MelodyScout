@@ -2,9 +2,9 @@ import { CommandContext, Context } from 'grammy'
 import { CtxFunctions } from '../../../functions/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { PrismaDB } from '../../../functions/prismaDB/base'
-import { getNowPlayingText } from '../../functions/textFabric'
+import { getHistoryText } from '../../functions/textFabric'
 
-export class NowplayingCommand {
+export class HistoryCommand {
   private readonly ctxFunctions: CtxFunctions
   private readonly msLastfmApi: MsLastfmApi
   private readonly prismaDB: PrismaDB
@@ -26,24 +26,9 @@ export class NowplayingCommand {
     if (lastfmUser === null) return await this.ctxFunctions.ctxReply(ctx, 'Para utilizar esse comando envie antes /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
     const userInfo = await this.msLastfmApi.user.getInfo(lastfmUser)
     if (!userInfo.success) return await this.ctxFunctions.ctxReply(ctx, `Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>${lastfmUser}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact`)
-    const userRecentTracks = await this.msLastfmApi.user.getRecentTracks(lastfmUser, 3)
+    const userRecentTracks = await this.msLastfmApi.user.getRecentTracks(lastfmUser, 20)
     if (!userRecentTracks.success) return await this.ctxFunctions.ctxReply(ctx, 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
     if (userRecentTracks.data.recenttracks.track.length <= 0) return await this.ctxFunctions.ctxReply(ctx, 'Parece que você nunca ouviu nada no Last.fm, que tal começar a ouvir algo agora? Se isso não for verdade entre em contato com o meu desenvolvedor utilizando o comando /contact')
-    const mainTrack = {
-      trackName: userRecentTracks.data.recenttracks.track[0].name,
-      trackMbid: userRecentTracks.data.recenttracks.track[0].mbid,
-      albumName: userRecentTracks.data.recenttracks.track[0].album['#text'],
-      albumMbid: userRecentTracks.data.recenttracks.track[0].album.mbid,
-      artistName: userRecentTracks.data.recenttracks.track[0].artist.name,
-      artistMbid: userRecentTracks.data.recenttracks.track[0].artist.mbid,
-      nowPlaying: userRecentTracks.data.recenttracks.track[0]['@attr']?.nowplaying === 'true'
-    }
-    const artistInfo = await this.msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
-    if (!artistInfo.success) return await this.ctxFunctions.ctxReply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-    const albumInfo = await this.msLastfmApi.album.getInfo(mainTrack.artistName, mainTrack.albumName, mainTrack.albumMbid, lastfmUser)
-    if (!albumInfo.success) return await this.ctxFunctions.ctxReply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-    const trackInfo = await this.msLastfmApi.track.getInfo(mainTrack.artistName, mainTrack.trackName, mainTrack.trackMbid, lastfmUser)
-    if (!trackInfo.success) return await this.ctxFunctions.ctxReply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações da música que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-    await this.ctxFunctions.ctxReply(ctx, getNowPlayingText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, mainTrack.nowPlaying), undefined, false)
+    await this.ctxFunctions.ctxReply(ctx, getHistoryText(userInfo.data, userRecentTracks.data), undefined, false)
   }
 }

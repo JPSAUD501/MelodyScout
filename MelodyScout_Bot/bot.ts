@@ -72,6 +72,10 @@ export class MelodyScoutBot {
       await this.botCommands.nowplayingCommand.run(ctx)
     })
 
+    this.bot.command('history', async (ctx) => {
+      await this.botCommands.historyCommand.run(ctx)
+    })
+
     this.advConsole.log('MelodyScout_Bot - Listening')
   }
 }

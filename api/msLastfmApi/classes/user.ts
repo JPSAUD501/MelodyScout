@@ -21,11 +21,10 @@ export class User {
   }
 
   async getInfo (username: string): Promise<GetInfoResponse> {
-    console.log(`User getInfo: username: ${username}`)
-
     const url = `http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${username}&api_key=${this.apiKey}&format=json`
     const zodObject = zodUserInfo
-
+    console.log(`User getInfo: username: ${username}`)
+    console.log(`User getInfo: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
       return msApiFetchResponse
@@ -38,11 +37,10 @@ export class User {
   }
 
   async getRecentTracks (username: string, limit: number): Promise<GetRecentTracksResponse> {
-    console.log(`User getRecentTracks: username: ${username}, limit: ${limit}`)
-
     const url = `http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${username}&limit=${limit}&extended=1&api_key=${this.apiKey}&format=json`
     const zodObject = zodUserRecentTracks
-
+    console.log(`User getRecentTracks: username: ${username}, limit: ${limit}`)
+    console.log(`User getRecentTracks: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
       return msApiFetchResponse

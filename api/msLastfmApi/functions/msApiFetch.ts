@@ -52,7 +52,6 @@ export const msApiFetch = async (url: string, expectedZodObject: ZodObject<any>)
 
   const expectedData = expectedZodObject.safeParse(jsonResponse)
   if (!expectedData.success) {
-    console.error(expectedData.error)
     console.error(expectedData.error.issues)
     return {
       success: false,

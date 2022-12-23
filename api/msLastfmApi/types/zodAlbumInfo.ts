@@ -19,14 +19,14 @@ export const zodAlbumInfo = z.object({
     mbid: z.string().optional(),
     tags: z.object({
       tag: z.array(z.object({ url: z.string(), name: z.string() }))
-    }).optional(),
+    }).or(z.string()).optional(),
     name: z.string(),
     image: z.array(z.object({ size: z.string(), '#text': z.string() })),
     tracks: z.object({
       track: z.array(
         zodTrack
       ).or(zodTrack)
-    }),
+    }).optional(),
     url: z.string(),
     listeners: z.string(),
     playcount: z.string(),

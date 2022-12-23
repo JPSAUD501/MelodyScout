@@ -28,6 +28,6 @@ export class BriefCommand {
     if (!userInfo.success) return await this.ctxFunctions.ctxReply(ctx, `Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>${lastfmUser}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact`)
     const userRecentTracks = await this.msLastfmApi.user.getRecentTracks(lastfmUser, 5)
     if (!userRecentTracks.success) return await this.ctxFunctions.ctxReply(ctx, 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-    await this.ctxFunctions.ctxReply(ctx, getBriefText(userInfo.data, userRecentTracks.data), undefined, true)
+    await this.ctxFunctions.ctxReply(ctx, getBriefText(userInfo.data, userRecentTracks.data), undefined, false)
   }
 }

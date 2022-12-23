@@ -9,7 +9,11 @@ export const zodTrackInfo = z.object({
     streamable: z.object({ '#text': z.string(), fulltrack: z.string() }),
     listeners: z.string(),
     playcount: z.string(),
-    artist: z.object({ name: z.string(), mbid: z.string(), url: z.string() }),
+    artist: z.object({
+      name: z.string(),
+      mbid: z.string().optional(),
+      url: z.string()
+    }),
     album: z.object({
       artist: z.string(),
       title: z.string(),
@@ -17,7 +21,7 @@ export const zodTrackInfo = z.object({
       url: z.string(),
       image: z.array(z.object({ '#text': z.string(), size: z.string() })),
       '@attr': z.object({ position: z.string() }).optional()
-    }),
+    }).optional(),
     userplaycount: z.string(),
     userloved: z.string(),
     toptags: z.object({

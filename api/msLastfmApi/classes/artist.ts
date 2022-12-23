@@ -15,11 +15,10 @@ export class Artist {
   }
 
   async getInfo (artist: string, mbid: string, username: string): Promise<GetInfoResponse> {
-    console.log(`Artist getInfo: artist: ${artist}, mbid: ${mbid}, username: ${username}`)
-
     const url = `http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&mbid=${mbid}&artist=${artist}&username=${username}&api_key=${this.apiKey}&format=json`
     const zodObject = zodArtistInfo
-
+    console.log(`Artist getInfo: artist: ${artist}, mbid: ${mbid}, username: ${username}`)
+    console.log(`Artist getInfo: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
       return msApiFetchResponse
