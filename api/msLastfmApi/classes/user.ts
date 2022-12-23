@@ -21,6 +21,8 @@ export class User {
   }
 
   async getInfo (username: string): Promise<GetInfoResponse> {
+    console.log(`User getInfo: username: ${username}`)
+
     const url = `http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${username}&api_key=${this.apiKey}&format=json`
     const zodObject = zodUserInfo
 
@@ -36,6 +38,8 @@ export class User {
   }
 
   async getRecentTracks (username: string, limit: number): Promise<GetRecentTracksResponse> {
+    console.log(`User getRecentTracks: username: ${username}, limit: ${limit}`)
+
     const url = `http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${username}&limit=${limit}&extended=1&api_key=${this.apiKey}&format=json`
     const zodObject = zodUserRecentTracks
 

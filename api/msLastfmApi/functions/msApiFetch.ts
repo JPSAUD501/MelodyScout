@@ -1,6 +1,7 @@
 import { ZodObject } from 'zod'
 import { zodLfmApiError } from '../types/errors/zodLfmApiError'
 import { ApiErrors } from '../types/errors/ApiErrors'
+import fs from 'fs'
 
 type MsApiFetchResponse = {
   success: true
@@ -36,6 +37,9 @@ export const msApiFetch = async (url: string, expectedZodObject: ZodObject<any>)
       }
     }
   }
+
+  fs.writeFileSync('test.json', JSON.stringify(jsonResponse))
+
   const lfmApiError = zodLfmApiError.safeParse(jsonResponse)
   if (lfmApiError.success) {
     console.error(lfmApiError.data)
@@ -49,6 +53,7 @@ export const msApiFetch = async (url: string, expectedZodObject: ZodObject<any>)
   const expectedData = expectedZodObject.safeParse(jsonResponse)
   if (!expectedData.success) {
     console.error(expectedData.error)
+    console.error(expectedData.error.issues)
     return {
       success: false,
       errorType: 'msApiError',

@@ -15,6 +15,8 @@ export class Album {
   }
 
   async getInfo (artist: string, album: string, mbid: string, username: string): Promise<GetInfoResponse> {
+    console.log(`Album getInfo: artist: ${artist}, album: ${album}, mbid: ${mbid}, username: ${username}`)
+
     const url = `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&artist=${artist}&album=${album}&mbid=${mbid}&username=${username}&api_key=${this.apiKey}&format=json`
     const zodObject = zodAlbumInfo
 

@@ -1,16 +1,17 @@
 import { MsLastfmApi } from '../../api/msLastfmApi/base'
 import { AdvConsole } from '../../functions/advancedConsole'
-import { CtxFunctions } from '../../functions/ctxFunctions'
 import { PrismaDB } from '../../functions/prismaDB/base'
 import { BriefCommand } from './commands/brief'
 import { ContactCommand } from './commands/contact'
 import { ForgetmeCommand } from './commands/forgetme'
 import { HelpCommand } from './commands/help'
 import { MyuserCommand } from './commands/myuser'
+import { NowplayingCommand } from './commands/nowplaying'
 import { StartCommand } from './commands/start'
 import { TrackCommand } from './commands/track'
 import { TracklistCommand } from './commands/tracklist'
 import { UntrackCommand } from './commands/untrack'
+import { CtxFunctions } from '../../functions/ctxFunctions'
 
 export class BotCommands {
   startCommand: StartCommand
@@ -22,6 +23,7 @@ export class BotCommands {
   myuserCommand: MyuserCommand
   forgetmeCommand: ForgetmeCommand
   briefCommand: BriefCommand
+  nowplayingCommand: NowplayingCommand
 
   constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB) {
     this.startCommand = new StartCommand(ctxFunctions)
@@ -33,5 +35,6 @@ export class BotCommands {
     this.myuserCommand = new MyuserCommand(ctxFunctions, msLastfmApi, prismaDB)
     this.forgetmeCommand = new ForgetmeCommand(ctxFunctions, prismaDB)
     this.briefCommand = new BriefCommand(ctxFunctions, msLastfmApi, prismaDB)
+    this.nowplayingCommand = new NowplayingCommand(ctxFunctions, msLastfmApi, prismaDB)
   }
 }

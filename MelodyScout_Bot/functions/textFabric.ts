@@ -72,22 +72,22 @@ export function getNowPlayingText (userInfo: UserInfo, userRecentTracks: UserRec
   textArray.push('')
   switch (nowPlaying) {
     case true:
-      textArray.push(`<b>[🎧] Ouvindo <a href="${track.url}">${track.name}</a><b>`)
+      textArray.push(`<b>[🎧] Ouvindo <a href="${track.url}">${track.name}</a>:<b>`)
       break
     case false:
       textArray.push('<b>[🎧] Última música ouvida:</b>')
-      textArray.push(`- Música: <b><a href="${track.url}">${track.name}</a><b>`)
+      textArray.push(`- Música: <b><a href="${track.url}">${track.name}</a></b>`)
       break
   }
-  textArray.push(`- Álbum: <b><a href="${album.url}">${album.name}</a><b>`)
-  textArray.push(`- Artista: <b><a href="${artist.url}">${artist.name}</a><b>`)
+  textArray.push(`- Álbum: <b><a href="${album.url}">${album.name}</a></b>`)
+  textArray.push(`- Artista: <b><a href="${artist.url}">${artist.name}</a></b>`)
   textArray.push('')
   textArray.push('<b>[📊] Scrobbles:</b>')
   textArray.push(`- Música: <b>${Number(track.userplaycount)}</b>`)
   textArray.push(`- Álbum: <b>${Number(album.userplaycount)}</b>`)
   textArray.push(`- Artista: <b>${Number(artist.stats.userplaycount)}</b>`)
   textArray.push('')
-  textArray.push('<b>[ℹ️ℹ] Informações:</b>')
+  textArray.push('<b>[ℹ️] Informações:</b>')
   textArray.push(`- Essa música representa <b>${((Number(track.userplaycount) / Number(album.userplaycount)) * 100).toFixed(2)}%</b> de todas suas reproduções desse álbum.`)
   textArray.push(`- Essa música representa <b>${((Number(track.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(2)}%</b> de todas suas reproduções desse artista.`)
   textArray.push(`- Esse álbum representa <b>${((Number(album.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(2)}%</b> de todas suas reproduções desse artista.`)

@@ -15,7 +15,9 @@ export class Track {
   }
 
   async getInfo (artist: string, track: string, mbid: string, username: string): Promise<GetInfoResponse> {
-    const url = `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&mbid=${mbid}&artist=${artist}&track=${track}&username=${username}api_key=04bc113493ddaafac7a0abc7f143fbd4&format=json`
+    console.log(`Track getInfo: artist: ${artist}, track: ${track}, mbid: ${mbid}, username: ${username}`)
+
+    const url = `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&mbid=${mbid}&artist=${artist}&track=${track}&username=${username}&api_key=${this.apiKey}&format=json`
     const zodObject = zodTrackInfo
 
     const msApiFetchResponse = await msApiFetch(url, zodObject)

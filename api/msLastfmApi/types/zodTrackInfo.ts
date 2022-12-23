@@ -13,10 +13,10 @@ export const zodTrackInfo = z.object({
     album: z.object({
       artist: z.string(),
       title: z.string(),
-      mbid: z.string(),
+      mbid: z.string().optional(),
       url: z.string(),
       image: z.array(z.object({ '#text': z.string(), size: z.string() })),
-      '@attr': z.object({ position: z.string() })
+      '@attr': z.object({ position: z.string() }).optional()
     }),
     userplaycount: z.string(),
     userloved: z.string(),
@@ -27,7 +27,7 @@ export const zodTrackInfo = z.object({
       published: z.string(),
       summary: z.string(),
       content: z.string()
-    })
+    }).optional()
   })
 })
 
