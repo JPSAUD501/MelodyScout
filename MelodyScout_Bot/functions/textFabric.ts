@@ -60,7 +60,7 @@ export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTr
   return text
 }
 
-export function getNowPlayingText (userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, nowPlaying: boolean): string {
+export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, nowPlaying: boolean): string {
   const { user } = userInfo
   const { artist } = artistInfo
   const { album } = albumInfo

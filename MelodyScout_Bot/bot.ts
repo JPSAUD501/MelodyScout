@@ -28,6 +28,22 @@ export class MelodyScoutBot {
       this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
     })
 
+    this.bot.api.setMyCommands([
+      { command: 'start', description: 'Hello! I\'m MelodyScout' },
+      { command: 'help', description: 'Show help message' },
+      { command: 'contact', description: 'Contact the bot owner' },
+      { command: 'track', description: 'Track a new user Last.fm in this chat' },
+      { command: 'untrack', description: 'Untrack a user Last.fm in this chat' },
+      { command: 'tracklist', description: 'Show the list of tracked users Last.fm in this chat' },
+      { command: 'myuser', description: 'Set your Last.fm user' },
+      { command: 'forgetme', description: 'Forget your Last.fm user' },
+      { command: 'brief', description: 'Show the brief of your Last.fm user' },
+      { command: 'playingnow', description: 'Show the currently playing track of your Last.fm user' },
+      { command: 'history', description: 'Show the history of your listened tracks' }
+    ]).catch((err) => {
+      this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+    })
+
     this.advConsole.log('MelodyScout_Bot - Started')
   }
 
@@ -68,8 +84,8 @@ export class MelodyScoutBot {
       await this.botCommands.briefCommand.run(ctx)
     })
 
-    this.bot.command(['nowplaying', 'np'], async (ctx) => {
-      await this.botCommands.nowplayingCommand.run(ctx)
+    this.bot.command(['playingnow', 'pn', 'listeningnow', 'ln'], async (ctx) => {
+      await this.botCommands.playingnowCommand.run(ctx)
     })
 
     this.bot.command('history', async (ctx) => {

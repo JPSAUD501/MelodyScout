@@ -6,7 +6,7 @@ import { ContactCommand } from './commands/contact'
 import { ForgetmeCommand } from './commands/forgetme'
 import { HelpCommand } from './commands/help'
 import { MyuserCommand } from './commands/myuser'
-import { NowplayingCommand } from './commands/nowplaying'
+import { PlayingnowCommand } from './commands/playingnow'
 import { StartCommand } from './commands/start'
 import { TrackCommand } from './commands/track'
 import { TracklistCommand } from './commands/tracklist'
@@ -24,7 +24,7 @@ export class BotCommands {
   myuserCommand: MyuserCommand
   forgetmeCommand: ForgetmeCommand
   briefCommand: BriefCommand
-  nowplayingCommand: NowplayingCommand
+  playingnowCommand: PlayingnowCommand
   historyCommand: HistoryCommand
 
   constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB) {
@@ -37,7 +37,7 @@ export class BotCommands {
     this.myuserCommand = new MyuserCommand(ctxFunctions, msLastfmApi, prismaDB)
     this.forgetmeCommand = new ForgetmeCommand(ctxFunctions, prismaDB)
     this.briefCommand = new BriefCommand(ctxFunctions, msLastfmApi, prismaDB)
-    this.nowplayingCommand = new NowplayingCommand(ctxFunctions, msLastfmApi, prismaDB)
+    this.playingnowCommand = new PlayingnowCommand(ctxFunctions, msLastfmApi, prismaDB)
     this.historyCommand = new HistoryCommand(ctxFunctions, msLastfmApi, prismaDB)
   }
 }

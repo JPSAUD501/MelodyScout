@@ -2,9 +2,9 @@ import { CommandContext, Context } from 'grammy'
 import { CtxFunctions } from '../../../functions/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { PrismaDB } from '../../../functions/prismaDB/base'
-import { getNowPlayingText } from '../../functions/textFabric'
+import { getPlayingnowText } from '../../functions/textFabric'
 
-export class NowplayingCommand {
+export class PlayingnowCommand {
   private readonly ctxFunctions: CtxFunctions
   private readonly msLastfmApi: MsLastfmApi
   private readonly prismaDB: PrismaDB
@@ -44,6 +44,6 @@ export class NowplayingCommand {
     if (!albumInfo.success) return await this.ctxFunctions.ctxReply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
     const trackInfo = await this.msLastfmApi.track.getInfo(mainTrack.artistName, mainTrack.trackName, mainTrack.trackMbid, lastfmUser)
     if (!trackInfo.success) return await this.ctxFunctions.ctxReply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações da música que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-    await this.ctxFunctions.ctxReply(ctx, getNowPlayingText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, mainTrack.nowPlaying), undefined, false)
+    await this.ctxFunctions.ctxReply(ctx, getPlayingnowText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, mainTrack.nowPlaying), undefined, false)
   }
 }
