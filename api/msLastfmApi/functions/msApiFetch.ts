@@ -37,9 +37,6 @@ export const msApiFetch = async (url: string, expectedZodObject: ZodObject<any>)
       }
     }
   }
-
-  fs.writeFileSync('test.json', JSON.stringify(jsonResponse))
-
   const lfmApiError = zodLfmApiError.safeParse(jsonResponse)
   if (lfmApiError.success) {
     console.error(lfmApiError.data)
@@ -49,7 +46,6 @@ export const msApiFetch = async (url: string, expectedZodObject: ZodObject<any>)
       errorData: lfmApiError.data
     }
   }
-
   const expectedData = expectedZodObject.safeParse(jsonResponse)
   if (!expectedData.success) {
     console.error(expectedData.error.issues)
@@ -62,7 +58,6 @@ export const msApiFetch = async (url: string, expectedZodObject: ZodObject<any>)
       }
     }
   }
-
   return {
     success: true,
     data: expectedData.data
