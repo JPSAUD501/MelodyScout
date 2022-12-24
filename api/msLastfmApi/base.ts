@@ -44,7 +44,7 @@ export class MsLastfmApi {
     success: true
     aboutMe: string
   } | ApiErrors> {
-    const userPageResponse = await fetch(`https://www.last.fm/user/${username}`).catch((err) => {
+    const userPageResponse = await fetch(`https://www.last.fm/user/${username}`).catch((err: any) => {
       return new Error(err)
     })
     if (userPageResponse instanceof Error) {
@@ -69,7 +69,7 @@ export class MsLastfmApi {
         }
       }
     }
-    const userPage = await userPageResponse.text().catch((err) => {
+    const userPage = await userPageResponse.text().catch((err: any) => {
       console.error(`Error getting user page for ${username}, error getting text`, err)
       return new Error(err)
     })
@@ -84,7 +84,7 @@ export class MsLastfmApi {
         }
       }
     }
-    const aboutMe = `${userPage.split('<section class="about-me-sidebar">')[1].split('</section>')[0].split('<p>')[1].split('</p>')[0]}`
+    const aboutMe = userPage.split('<section class="about-me-sidebar">')[1].split('</section>')[0].split('<p>')[1].split('</p>')[0]
     return {
       success: true,
       aboutMe

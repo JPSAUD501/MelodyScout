@@ -8,7 +8,7 @@ type MsApiFetchResponse = {
 } | ApiErrors
 
 export const msApiFetch = async (url: string, expectedZodObject: ZodObject<any>): Promise<MsApiFetchResponse> => {
-  const response = await fetch(url).catch((err) => {
+  const response = await fetch(url).catch((err: any) => {
     return new Error(err)
   })
   if (response instanceof Error) {
@@ -22,7 +22,7 @@ export const msApiFetch = async (url: string, expectedZodObject: ZodObject<any>)
       }
     }
   }
-  const jsonResponse = await response.json().catch((err) => {
+  const jsonResponse = await response.json().catch((err: any) => {
     return new Error(err)
   })
   if (jsonResponse instanceof Error) {
