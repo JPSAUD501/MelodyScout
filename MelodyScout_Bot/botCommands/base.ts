@@ -13,6 +13,8 @@ import { TracklistCommand } from './commands/tracklist'
 import { UntrackCommand } from './commands/untrack'
 import { CtxFunctions } from '../../function/ctxFunctions'
 import { HistoryCommand } from './commands/history'
+import { LyricsCommand } from './commands/lyrics'
+import { MsGeniusApi } from '../../api/msGeniusApi/base'
 
 export class BotCommands {
   startCommand: StartCommand
@@ -26,8 +28,9 @@ export class BotCommands {
   briefCommand: BriefCommand
   playingnowCommand: PlayingnowCommand
   historyCommand: HistoryCommand
+  lyricsCommand: LyricsCommand
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB) {
+  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB, msGeniusApi: MsGeniusApi) {
     this.startCommand = new StartCommand(ctxFunctions)
     this.helpCommand = new HelpCommand(ctxFunctions)
     this.trackCommand = new TrackCommand(ctxFunctions, msLastfmApi, prismaDB)
@@ -39,5 +42,6 @@ export class BotCommands {
     this.briefCommand = new BriefCommand(ctxFunctions, msLastfmApi, prismaDB)
     this.playingnowCommand = new PlayingnowCommand(ctxFunctions, msLastfmApi, prismaDB)
     this.historyCommand = new HistoryCommand(ctxFunctions, msLastfmApi, prismaDB)
+    this.lyricsCommand = new LyricsCommand(ctxFunctions, msLastfmApi, prismaDB, msGeniusApi)
   }
 }

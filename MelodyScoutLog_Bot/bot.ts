@@ -17,6 +17,12 @@ export class MelodyScoutLogBot {
       console.error(err)
       console.error('MelodyScoutLog_Bot - Error')
     })
+
+    this.bot.catch((err) => {
+      console.error(err)
+      console.error('MelodyScoutLog_Bot - Error')
+    })
+
     this.startLogQueue()
 
     console.log('MelodyScoutLog_Bot - Started')

@@ -5,6 +5,7 @@ import { MelodyScoutLogBot } from './MelodyScoutLog_Bot/bot'
 import { MelodyScoutBot } from './MelodyScout_Bot/bot'
 import { MsLastfmApi } from './api/msLastfmApi/base'
 import { CtxFunctions } from './function/ctxFunctions'
+import { MsGeniusApi } from './api/msGeniusApi/base'
 
 async function start (): Promise<void> {
   console.log('Starting MelodyScoutLog_Bot and AdvConsole...')
@@ -16,8 +17,9 @@ async function start (): Promise<void> {
   advConsole.log('Running the start sequence...')
   const prismaDB = new PrismaDB(advConsole)
   const msLastfmApi = new MsLastfmApi(config.lastfm.apiKey)
+  const msGeniusApi = new MsGeniusApi(config.genius.accessToken)
   const ctxFunctions = new CtxFunctions(advConsole)
-  const melodyScoutBot = new MelodyScoutBot(advConsole, ctxFunctions, msLastfmApi, prismaDB)
+  const melodyScoutBot = new MelodyScoutBot(advConsole, ctxFunctions, msLastfmApi, prismaDB, msGeniusApi)
   melodyScoutBot.start()
   melodyScoutBot.hear()
   advConsole.log('Start sequence completed')

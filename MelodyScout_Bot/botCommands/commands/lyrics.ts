@@ -2,17 +2,20 @@ import { CommandContext, Context } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { PrismaDB } from '../../../function/prismaDB/base'
-import { getPlayingnowText } from '../../function/textFabric'
+import { getLyricsText } from '../../function/textFabric'
+import { MsGeniusApi } from '../../../api/msGeniusApi/base'
 
-export class PlayingnowCommand {
+export class LyricsCommand {
   private readonly ctxFunctions: CtxFunctions
   private readonly msLastfmApi: MsLastfmApi
   private readonly prismaDB: PrismaDB
+  private readonly msGeniusApi: MsGeniusApi
 
-  constructor (ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB) {
+  constructor (ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB, msGeniusApi: MsGeniusApi) {
     this.ctxFunctions = ctxFunctions
     this.msLastfmApi = msLastfmApi
     this.prismaDB = prismaDB
+    this.msGeniusApi = msGeniusApi
   }
 
   async run (ctx: CommandContext<Context>): Promise<void> {
@@ -38,12 +41,11 @@ export class PlayingnowCommand {
       artistMbid: userRecentTracks.data.recenttracks.track[0].artist.mbid,
       nowPlaying: userRecentTracks.data.recenttracks.track[0]['@attr']?.nowplaying === 'true'
     }
-    const artistInfo = await this.msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
-    if (!artistInfo.success) return await this.ctxFunctions.ctxReply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
     const albumInfo = await this.msLastfmApi.album.getInfo(mainTrack.artistName, mainTrack.albumName, mainTrack.albumMbid, lastfmUser)
-    if (!albumInfo.success) return await this.ctxFunctions.ctxReply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-    const trackInfo = await this.msLastfmApi.track.getInfo(mainTrack.artistName, mainTrack.trackName, mainTrack.trackMbid, lastfmUser)
-    if (!trackInfo.success) return await this.ctxFunctions.ctxReply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações da música que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-    await this.ctxFunctions.ctxReply(ctx, getPlayingnowText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, mainTrack.nowPlaying), undefined, false)
+    if (!albumInfo.success) return await this.ctxFunctions.ctxReply(ctx, 'Não foi possível resgatar as informações do álbum dessa música, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+    const nowPlaying = userRecentTracks.data.recenttracks.track[0]['@attr']?.nowplaying === 'true'
+    const trackLyrics = await this.msGeniusApi.getLyrics(userRecentTracks.data.recenttracks.track[0].name, userRecentTracks.data.recenttracks.track[0].artist.name)
+    if (trackLyrics === null) return await this.ctxFunctions.ctxReply(ctx, 'Não foi possível resgatar a letra dessa música, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+    await this.ctxFunctions.ctxReply(ctx, getLyricsText(userInfo.data, userRecentTracks.data, albumInfo.data, trackLyrics, nowPlaying), undefined, false)
   }
 }

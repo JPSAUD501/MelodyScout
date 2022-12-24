@@ -67,7 +67,7 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   const { track } = trackInfo
   const textArray: string[] = []
 
-  textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}:</b>`)
+  textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}:</b>`)
   textArray.push('')
   switch (nowPlaying) {
     case true:
@@ -106,7 +106,7 @@ export function getHistoryText (userInfo: UserInfo, userRecentTracks: UserRecent
   const { recenttracks } = userRecentTracks
   const textArray: string[] = []
 
-  textArray.push(`<b><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${recenttracks.track[0].image[recenttracks.track[0].image.length - 1]['#text']}">️️</a>Histórico de reprodução de <a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a>:</b>`)
+  textArray.push(`<b><a href="${recenttracks.track[0].image[recenttracks.track[0].image.length - 1]['#text']}">️️</a><a href="${user.image[user.image.length - 1]['#text']}">️️</a>Histórico de reprodução de <a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a>:</b>`)
   textArray.push('')
   if (recenttracks.track[0]['@attr']?.nowplaying === 'true') {
     const track = recenttracks.track[0]
@@ -122,6 +122,33 @@ export function getHistoryText (userInfo: UserInfo, userRecentTracks: UserRecent
     }
     textArray.push('')
   }
+
+  const text = textArray.join('\n')
+  return text
+}
+
+export function getLyricsText (userInfo: UserInfo, userRecentTracks: UserRecentTracks, albumInfo: AlbumInfo, trackLyrics: string, nowPlaying: boolean): string {
+  const { user } = userInfo
+  const { recenttracks } = userRecentTracks
+  const { album } = albumInfo
+  const textArray: string[] = []
+
+  textArray.push(`<b><a href="${recenttracks.track[0].image[recenttracks.track[0].image.length - 1]['#text']}">️️</a>Letra da musica que <a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}:</b>`)
+  textArray.push('')
+  switch (nowPlaying) {
+    case true:
+      textArray.push(`<b>[🎧] Ouvindo <a href="${recenttracks.track[0].url}">${recenttracks.track[0].name}</a>:</b>`)
+      break
+    case false:
+      textArray.push('<b>[🎧] Última música ouvida:</b>')
+      textArray.push(`- Música: <b><a href="${recenttracks.track[0].url}">${recenttracks.track[0].name}</a></b>`)
+      break
+  }
+  textArray.push(`- Álbum: <b><a href="${album.url}">${album.name}</a></b>`)
+  textArray.push(`- Artista: <b><a href="${recenttracks.track[0].artist.url}">${recenttracks.track[0].artist.name}</a></b>`)
+  textArray.push('')
+  textArray.push('<b>[📝] Letra:</b>')
+  textArray.push(`${trackLyrics}`)
 
   const text = textArray.join('\n')
   return text

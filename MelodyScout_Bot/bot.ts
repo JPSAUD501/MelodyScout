@@ -5,6 +5,7 @@ import { PrismaDB } from '../function/prismaDB/base'
 import { MsLastfmApi } from '../api/msLastfmApi/base'
 import { BotCommands } from './botCommands/base'
 import { CtxFunctions } from '../function/ctxFunctions'
+import { MsGeniusApi } from '../api/msGeniusApi/base'
 
 export class MelodyScoutBot {
   private readonly advConsole: AdvConsole
@@ -12,12 +13,14 @@ export class MelodyScoutBot {
   private readonly msLastfmApi: MsLastfmApi
   private readonly prismaDB: PrismaDB
   private readonly botCommands: BotCommands
+  private readonly msGeniusApi: MsGeniusApi
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB) {
+  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB, msGeniusApi: MsGeniusApi) {
     this.advConsole = advConsole
     this.msLastfmApi = msLastfmApi
     this.prismaDB = prismaDB
-    this.botCommands = new BotCommands(advConsole, ctxFunctions, msLastfmApi, prismaDB)
+    this.msGeniusApi = msGeniusApi
+    this.botCommands = new BotCommands(advConsole, ctxFunctions, msLastfmApi, prismaDB, msGeniusApi)
     this.bot = new Bot(config.telegram.token)
 
     console.log('MelodyScout_Bot - Loaded')
@@ -25,6 +28,10 @@ export class MelodyScoutBot {
 
   start (): void {
     this.bot.start().catch((err) => {
+      this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+    })
+
+    this.bot.catch((err) => {
       this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
     })
 
@@ -38,8 +45,9 @@ export class MelodyScoutBot {
       { command: 'myuser', description: 'Set your Last.fm user' },
       { command: 'forgetme', description: 'Forget your Last.fm user' },
       { command: 'brief', description: 'Show the brief of your Last.fm user' },
-      { command: 'playingnow', description: 'Show the currently playing track of your Last.fm user' },
-      { command: 'history', description: 'Show the history of your listened tracks' }
+      { command: 'playingnow', description: 'Show the currently playing track' },
+      { command: 'history', description: 'Show the history of your listened tracks' },
+      { command: 'lyrics', description: 'Show the lyrics of the currently playing track' }
     ]).catch((err) => {
       this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
     })
@@ -90,6 +98,10 @@ export class MelodyScoutBot {
 
     this.bot.command('history', async (ctx) => {
       await this.botCommands.historyCommand.run(ctx)
+    })
+
+    this.bot.command('lyrics', async (ctx) => {
+      await this.botCommands.lyricsCommand.run(ctx)
     })
 
     this.advConsole.log('MelodyScout_Bot - Listening')
