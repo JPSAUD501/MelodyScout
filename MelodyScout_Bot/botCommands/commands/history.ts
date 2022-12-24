@@ -1,8 +1,8 @@
 import { CommandContext, Context } from 'grammy'
-import { CtxFunctions } from '../../../functions/ctxFunctions'
+import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
-import { PrismaDB } from '../../../functions/prismaDB/base'
-import { getHistoryText } from '../../functions/textFabric'
+import { PrismaDB } from '../../../function/prismaDB/base'
+import { getHistoryText } from '../../function/textFabric'
 
 export class HistoryCommand {
   private readonly ctxFunctions: CtxFunctions

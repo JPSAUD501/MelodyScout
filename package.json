@@ -5,9 +5,7 @@
   "main": "app.ts",
   "scripts": {
     "start": "ts-node --transpile-only ./app.ts",
-    "dev": "ts-node ./app.ts",
-    "build": "tsc",
-    "start-server": "node ./dist/app.js"
+    "dev": "ts-node ./app.ts"
   },
   "repository": {
     "type": "git",

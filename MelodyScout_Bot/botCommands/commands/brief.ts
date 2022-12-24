@@ -1,8 +1,8 @@
 import { CommandContext, Context } from 'grammy'
-import { CtxFunctions } from '../../../functions/ctxFunctions'
+import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
-import { PrismaDB } from '../../../functions/prismaDB/base'
-import { getBriefText } from '../../functions/textFabric'
+import { PrismaDB } from '../../../function/prismaDB/base'
+import { getBriefText } from '../../function/textFabric'
 
 export class BriefCommand {
   private readonly ctxFunctions: CtxFunctions

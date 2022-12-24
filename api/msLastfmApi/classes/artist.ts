@@ -1,4 +1,4 @@
-import { msApiFetch } from '../functions/msApiFetch'
+import { msApiFetch } from '../function/msApiFetch'
 import { ApiErrors } from '../types/errors/ApiErrors'
 import { ArtistInfo, zodArtistInfo } from '../types/zodArtistInfo'
 

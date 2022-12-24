@@ -1,10 +1,10 @@
 import config from './config'
 import { Bot } from 'grammy'
-import { AdvConsole } from '../functions/advancedConsole'
-import { PrismaDB } from '../functions/prismaDB/base'
+import { AdvConsole } from '../function/advancedConsole'
+import { PrismaDB } from '../function/prismaDB/base'
 import { MsLastfmApi } from '../api/msLastfmApi/base'
 import { BotCommands } from './botCommands/base'
-import { CtxFunctions } from '../functions/ctxFunctions'
+import { CtxFunctions } from '../function/ctxFunctions'
 
 export class MelodyScoutBot {
   private readonly advConsole: AdvConsole

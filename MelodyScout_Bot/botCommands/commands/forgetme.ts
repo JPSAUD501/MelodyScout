@@ -1,6 +1,6 @@
 import { CommandContext, Context } from 'grammy'
-import { CtxFunctions } from '../../../functions/ctxFunctions'
-import { PrismaDB } from '../../../functions/prismaDB/base'
+import { CtxFunctions } from '../../../function/ctxFunctions'
+import { PrismaDB } from '../../../function/prismaDB/base'
 
 export class ForgetmeCommand {
   private readonly ctxFunctions: CtxFunctions

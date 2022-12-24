@@ -1,8 +1,8 @@
 import { CommandContext, Context } from 'grammy'
-import { CtxFunctions } from '../../../functions/ctxFunctions'
+import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
-import { PrismaDB } from '../../../functions/prismaDB/base'
-import { getUserAllowedTrackingChatIds } from '../../../functions/msAuth'
+import { PrismaDB } from '../../../function/prismaDB/base'
+import { getUserAllowedTrackingChatIds } from '../../../function/msAuth'
 
 export class TrackCommand {
   private readonly ctxFunctions: CtxFunctions

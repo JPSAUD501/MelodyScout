@@ -1,10 +1,10 @@
 import config from './config'
-import { AdvConsole } from './functions/advancedConsole'
-import { PrismaDB } from './functions/prismaDB/base'
+import { AdvConsole } from './function/advancedConsole'
+import { PrismaDB } from './function/prismaDB/base'
 import { MelodyScoutLogBot } from './MelodyScoutLog_Bot/bot'
 import { MelodyScoutBot } from './MelodyScout_Bot/bot'
 import { MsLastfmApi } from './api/msLastfmApi/base'
-import { CtxFunctions } from './functions/ctxFunctions'
+import { CtxFunctions } from './function/ctxFunctions'
 
 async function start (): Promise<void> {
   console.log('Starting MelodyScoutLog_Bot and AdvConsole...')

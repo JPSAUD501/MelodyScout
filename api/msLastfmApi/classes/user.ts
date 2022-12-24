@@ -1,4 +1,4 @@
-import { msApiFetch } from '../functions/msApiFetch'
+import { msApiFetch } from '../function/msApiFetch'
 import { ApiErrors } from '../types/errors/ApiErrors'
 import { UserInfo, zodUserInfo } from '../types/zodUserInfo'
 import { UserRecentTracks, zodUserRecentTracks } from '../types/zodUserRecentTracks'

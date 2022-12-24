@@ -1,6 +1,7 @@
 import { ZodObject } from 'zod'
 import { zodLfmApiError } from '../types/errors/zodLfmApiError'
 import { ApiErrors } from '../types/errors/ApiErrors'
+import axios from 'axios'
 
 type MsApiFetchResponse = {
   success: true
@@ -8,7 +9,10 @@ type MsApiFetchResponse = {
 } | ApiErrors
 
 export const msApiFetch = async (url: string, expectedZodObject: ZodObject<any>): Promise<MsApiFetchResponse> => {
-  const response = await fetch(url).catch((err: any) => {
+  // const response = await fetch(url).catch((err: any) => {
+  //   return new Error(err)
+  // }) To axios
+  const response = await axios.get(url).catch((err: any) => {
     return new Error(err)
   })
   if (response instanceof Error) {
@@ -22,9 +26,10 @@ export const msApiFetch = async (url: string, expectedZodObject: ZodObject<any>)
       }
     }
   }
-  const jsonResponse = await response.json().catch((err: any) => {
-    return new Error(err)
-  })
+  // const jsonResponse = await response.json().catch((err: any) => {
+  //   return new Error(err)
+  // }) To axios
+  const jsonResponse = response.data
   if (jsonResponse instanceof Error) {
     console.error(jsonResponse)
     return {

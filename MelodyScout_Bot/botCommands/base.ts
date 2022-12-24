@@ -1,6 +1,6 @@
 import { MsLastfmApi } from '../../api/msLastfmApi/base'
-import { AdvConsole } from '../../functions/advancedConsole'
-import { PrismaDB } from '../../functions/prismaDB/base'
+import { AdvConsole } from '../../function/advancedConsole'
+import { PrismaDB } from '../../function/prismaDB/base'
 import { BriefCommand } from './commands/brief'
 import { ContactCommand } from './commands/contact'
 import { ForgetmeCommand } from './commands/forgetme'
@@ -11,7 +11,7 @@ import { StartCommand } from './commands/start'
 import { TrackCommand } from './commands/track'
 import { TracklistCommand } from './commands/tracklist'
 import { UntrackCommand } from './commands/untrack'
-import { CtxFunctions } from '../../functions/ctxFunctions'
+import { CtxFunctions } from '../../function/ctxFunctions'
 import { HistoryCommand } from './commands/history'
 
 export class BotCommands {

@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import fastify from 'fastify'
-import { AdvConsole } from '../functions/advancedConsole'
+import { AdvConsole } from '../function/advancedConsole'
 const port = parseInt(process.env.PORT || '3000')
 const host = process.env.HOST || '0.0.0.0'
 const server = fastify()

@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { Album } from './classes/album'
 import { Artist } from './classes/artist'
 import { Track } from './classes/track'
@@ -44,7 +45,7 @@ export class MsLastfmApi {
     success: true
     aboutMe: string
   } | ApiErrors> {
-    const userPageResponse = await fetch(`https://www.last.fm/user/${username}`).catch((err: any) => {
+    const userPageResponse = await axios.get(`https://www.last.fm/user/${username}`).catch((err: any) => {
       return new Error(err)
     })
     if (userPageResponse instanceof Error) {
@@ -69,10 +70,11 @@ export class MsLastfmApi {
         }
       }
     }
-    const userPage = await userPageResponse.text().catch((err: any) => {
-      console.error(`Error getting user page for ${username}, error getting text`, err)
-      return new Error(err)
-    })
+    // const userPage = await userPageResponse.text().catch((err: any) => {
+    //   console.error(`Error getting user page for ${username}, error getting text`, err)
+    //   return new Error(err)
+    // }) To axios
+    const userPage = userPageResponse.data
     if (userPage instanceof Error) {
       console.error(`Error getting user page for ${username}, error getting text`, userPage)
       return {

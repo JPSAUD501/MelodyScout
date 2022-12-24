@@ -1,5 +1,5 @@
 import { CommandContext, Context } from 'grammy'
-import { CtxFunctions } from '../../../functions/ctxFunctions'
+import { CtxFunctions } from '../../../function/ctxFunctions'
 
 export class StartCommand {
   private readonly ctxFunctions: CtxFunctions
