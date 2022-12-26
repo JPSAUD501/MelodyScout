@@ -3,16 +3,21 @@ import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { PrismaDB } from '../../../function/prismaDB/base'
 import { getPlayingnowText } from '../../function/textFabric'
+import { MsSpotifyApi } from '../../../api/msSpotifyApi/base'
+import msConfig from '../../../config'
+import botConfig from '../../config'
 
 export class PlayingnowCommand {
   private readonly ctxFunctions: CtxFunctions
   private readonly msLastfmApi: MsLastfmApi
   private readonly prismaDB: PrismaDB
+  private readonly msSpotifyApi: MsSpotifyApi
 
-  constructor (ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB) {
+  constructor (ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB, msSpotifyApi: MsSpotifyApi) {
     this.ctxFunctions = ctxFunctions
     this.msLastfmApi = msLastfmApi
     this.prismaDB = prismaDB
+    this.msSpotifyApi = msSpotifyApi
   }
 
   async run (ctx: CommandContext<Context>): Promise<void> {
@@ -44,7 +49,9 @@ export class PlayingnowCommand {
     if (!albumInfo.success) return await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
     const trackInfo = await this.msLastfmApi.track.getInfo(mainTrack.artistName, mainTrack.trackName, mainTrack.trackMbid, lastfmUser)
     if (!trackInfo.success) return await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações da música que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-    const inlineKeyboard = new InlineKeyboard().text('Ouvir', `getTrackPreview:-:${mainTrack.trackName}:-:${mainTrack.artistName}`)
-    await this.ctxFunctions.reply(ctx, getPlayingnowText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+    const spotifyTrackInfo = await this.msSpotifyApi.getTrackInfo(mainTrack.trackName, mainTrack.artistName)
+    if (!spotifyTrackInfo.success) return await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do Spotify da música que você está ouvindo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+    const inlineKeyboard = new InlineKeyboard().url('Ouvir no Spotify', spotifyTrackInfo.trackUrl).row().text('Ouvir preview', `${botConfig.telegram.botId}getTrackPreview${msConfig.melodyScout.divider}${mainTrack.trackName}${msConfig.melodyScout.divider}${mainTrack.artistName}`)
+    await this.ctxFunctions.reply(ctx, getPlayingnowText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   }
 }

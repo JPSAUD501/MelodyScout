@@ -44,7 +44,7 @@ export class BotFunctions {
     this.myuserCommand = new MyuserCommand(ctxFunctions, msLastfmApi, prismaDB)
     this.forgetmeCommand = new ForgetmeCommand(ctxFunctions, prismaDB)
     this.briefCommand = new BriefCommand(ctxFunctions, msLastfmApi, prismaDB)
-    this.playingnowCommand = new PlayingnowCommand(ctxFunctions, msLastfmApi, prismaDB)
+    this.playingnowCommand = new PlayingnowCommand(ctxFunctions, msLastfmApi, prismaDB, msSpotifyApi)
     this.historyCommand = new HistoryCommand(ctxFunctions, msLastfmApi, prismaDB)
     this.lyricsCommand = new LyricsCommand(ctxFunctions, msLastfmApi, prismaDB, msGeniusApi)
 

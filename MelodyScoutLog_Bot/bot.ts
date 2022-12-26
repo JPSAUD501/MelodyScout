@@ -28,6 +28,12 @@ export class MelodyScoutLogBot {
     console.log('MelodyScoutLog_Bot - Started')
   }
 
+  async getBotInfo (): Promise<void> {
+    await this.bot.api.getMe().catch((err) => {
+      console.error(`MelodyScout_Bot - Error: ${String(err)}`)
+    })
+  }
+
   sendLog (log: any): void {
     this.messageQueue.push('🔵 - ' + String(log))
   }

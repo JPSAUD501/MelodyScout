@@ -3,6 +3,7 @@ import { ArtistInfo } from '../../api/msLastfmApi/types/zodArtistInfo'
 import { TrackInfo } from '../../api/msLastfmApi/types/zodTrackInfo'
 import { UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
 import { UserRecentTracks } from '../../api/msLastfmApi/types/zodUserRecentTracks'
+import { MsSpotifyTrackInfo } from '../../api/msSpotifyApi/base'
 
 export function getHelpText (): string {
   const textArray: string[] = [
@@ -60,7 +61,7 @@ export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTr
   return text
 }
 
-export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, nowPlaying: boolean): string {
+export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: MsSpotifyTrackInfo, nowPlaying: boolean): string {
   const { user } = userInfo
   const { artist } = artistInfo
   const { album } = albumInfo
@@ -71,13 +72,14 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   textArray.push('')
   switch (nowPlaying) {
     case true:
-      textArray.push(`<b>[🎧] Ouvindo <a href="${track.url}">${track.name}</a>:</b>`)
+      textArray.push(`<b>[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] Ouvindo <a href="${track.url}">${track.name}</a>:</b>`)
       break
     case false:
-      textArray.push('<b>[🎧] Última música ouvida:</b>')
+      textArray.push(`<b>[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] Última música ouvida:</b>`)
       textArray.push(`- Música: <b><a href="${track.url}">${track.name}</a></b>`)
       break
   }
+  if (spotifyTrackInfo.popularity !== undefined) textArray.push(`- Popularidade: ${'★'.repeat(Math.floor(spotifyTrackInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyTrackInfo.popularity / 20))}`)
   textArray.push(`- Álbum: <b><a href="${album.url}">${album.name}</a></b>`)
   textArray.push(`- Artista: <b><a href="${artist.url}">${artist.name}</a></b>`)
   textArray.push('')

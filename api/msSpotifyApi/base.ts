@@ -5,6 +5,14 @@ interface MsSpotifyApiError {
   error: string
 }
 
+export interface MsSpotifyTrackInfo {
+  success: true
+  previewUrl: string
+  trackUrl: string
+  popularity: number | undefined
+  explicit: boolean
+}
+
 export class MsSpotifyApi {
   private readonly clientID: string
   private readonly clientSecret: string
@@ -26,10 +34,7 @@ export class MsSpotifyApi {
     this.client = await this.clientPromise
   }
 
-  async getTrackPreviewUrl (track: string, artist: string): Promise<MsSpotifyApiError | {
-    success: true
-    url: string
-  }> {
+  async getTrackInfo (track: string, artist: string): Promise<MsSpotifyApiError | MsSpotifyTrackInfo> {
     if (this.client === null) return { success: false, error: 'Spotify client is not ready!' }
     const search = await this.client.search(`${track} ${artist}`, { types: ['track'] }).catch((err) => {
       return new Error(err)
@@ -38,10 +43,18 @@ export class MsSpotifyApi {
     if (search.tracks === undefined) return { success: false, error: 'No tracks found!' }
     if (search.tracks.length <= 0) return { success: false, error: 'No tracks found!' }
     if (search.tracks[0] === undefined) return { success: false, error: 'No preview URL found!' }
-    const trackUrl = search.tracks[0].previewURL
+    const previewUrl = search.tracks[0].previewURL
+    if (previewUrl.length <= 0) return { success: false, error: 'Preview URL is empty!' }
+    const trackUrl = search.tracks[0].externalURL.spotify
+    if (trackUrl.length <= 0) return { success: false, error: 'Track URL is empty!' }
+    const popularity = search.tracks[0].popularity
+    const explicit = search.tracks[0].explicit
     return {
       success: true,
-      url: trackUrl
+      previewUrl,
+      trackUrl,
+      popularity,
+      explicit
     }
   }
 }

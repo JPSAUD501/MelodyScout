@@ -1,4 +1,4 @@
-import config from './config'
+import botConfig from './config'
 import { Bot } from 'grammy'
 import { AdvConsole } from '../function/advancedConsole'
 import { PrismaDB } from '../function/prismaDB/base'
@@ -24,7 +24,7 @@ export class MelodyScoutBot {
     this.msGeniusApi = msGeniusApi
     this.msSpotifyApi = msSpotifyApi
     this.botFunctions = new BotFunctions(advConsole, ctxFunctions, msLastfmApi, prismaDB, msGeniusApi, msSpotifyApi)
-    this.bot = new Bot(config.telegram.token)
+    this.bot = new Bot(botConfig.telegram.token)
 
     console.log('MelodyScout_Bot - Loaded')
   }
@@ -56,6 +56,12 @@ export class MelodyScoutBot {
     })
 
     this.advConsole.log('MelodyScout_Bot - Started')
+  }
+
+  async getBotInfo (): Promise<void> {
+    await this.bot.api.getMe().catch((err) => {
+      this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+    })
   }
 
   hear (): void {
@@ -107,8 +113,9 @@ export class MelodyScoutBot {
       await this.botFunctions.lyricsCommand.run(ctx)
     })
 
-    // CallbackQuery: getTrackPreview:-:trackName:-:artistName
-    this.bot.callbackQuery(/^getTrackPreview:-:.+:-:.+$/, async (ctx) => {
+    // `${botConfig.telegram.botId}getTrackPreview${msConfig.melodyScout.divider}${mainTrack.trackName}${msConfig.melodyScout.divider}${mainTrack.artistName}`
+    this.bot.callbackQuery(/getTrackPreview/, async (ctx) => {
+      if (!ctx.callbackQuery?.data.startsWith(`${botConfig.telegram.botId}getTrackPreview`)) return
       await this.botFunctions.trackpreviewCallback.run(ctx)
     })
 

@@ -12,6 +12,7 @@ async function start (): Promise<void> {
   console.log('Starting MelodyScoutLog_Bot and AdvConsole...')
   const melodyScoutLogBot = new MelodyScoutLogBot()
   melodyScoutLogBot.start()
+  await melodyScoutLogBot.getBotInfo()
   const advConsole = new AdvConsole(melodyScoutLogBot)
   console.log('MelodyScoutLog_Bot and AdvConsole started!')
 
@@ -24,6 +25,7 @@ async function start (): Promise<void> {
   const ctxFunctions = new CtxFunctions(advConsole)
   const melodyScoutBot = new MelodyScoutBot(advConsole, ctxFunctions, msLastfmApi, prismaDB, msGeniusApi, msSpotifyApi)
   melodyScoutBot.start()
+  await melodyScoutBot.getBotInfo()
   melodyScoutBot.hear()
   advConsole.log('Start sequence completed')
 }
