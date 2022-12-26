@@ -93,7 +93,7 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   if (Number(album.userplaycount) >= Number(track.userplaycount)) textArray.push(`- Essa música representa <b>${((Number(track.userplaycount) / Number(album.userplaycount)) * 100).toFixed(0)}%</b> de todas suas reproduções desse álbum.`)
   if (Number(artist.stats.userplaycount) >= Number(track.userplaycount)) textArray.push(`- Essa música representa <b>${((Number(track.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)}%</b> de todas suas reproduções desse artista.`)
   if (Number(artist.stats.userplaycount) >= Number(album.userplaycount)) textArray.push(`- Esse álbum representa <b>${((Number(album.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)}%</b> de todas suas reproduções desse artista.`)
-  if (Number(user.playcount) >= Number(artist.stats.userplaycount)) textArray.push(`- Esse artista representa <b>${((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)}%</b> de todas suas reproduções.`)
+  if (Number(user.playcount) >= Number(artist.stats.userplaycount) && Number(((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)) >= 1) textArray.push(`- Esse artista representa <b>${((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)}%</b> de todas suas reproduções.`)
   // textArray.push('')
   // if (track.wiki != null && track.wiki.summary.length > 0) {
   //   textArray.push('<b>[📚] Sobre:</b>')
