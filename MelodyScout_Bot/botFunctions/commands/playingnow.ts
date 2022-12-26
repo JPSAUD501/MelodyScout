@@ -1,4 +1,4 @@
-import { CommandContext, Context } from 'grammy'
+import { CommandContext, Context, InlineKeyboard } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { PrismaDB } from '../../../function/prismaDB/base'
@@ -44,6 +44,7 @@ export class PlayingnowCommand {
     if (!albumInfo.success) return await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
     const trackInfo = await this.msLastfmApi.track.getInfo(mainTrack.artistName, mainTrack.trackName, mainTrack.trackMbid, lastfmUser)
     if (!trackInfo.success) return await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações da música que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-    await this.ctxFunctions.reply(ctx, getPlayingnowText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, mainTrack.nowPlaying))
+    const inlineKeyboard = new InlineKeyboard().text('Ouvir', `getTrackPreview:-:${mainTrack.trackName}:-:${mainTrack.artistName}`)
+    await this.ctxFunctions.reply(ctx, getPlayingnowText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   }
 }

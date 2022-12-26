@@ -39,6 +39,7 @@
     "genius-lyrics-api": "^3.2.0",
     "grammy": "^1.12.0",
     "luxon": "^3.0.1",
+    "spotify-api.js": "^9.2.5",
     "ts-node": "^10.9.1",
     "zod": "^3.20.2"
   }

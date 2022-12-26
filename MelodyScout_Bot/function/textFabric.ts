@@ -92,11 +92,11 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   textArray.push(`- Essa música representa <b>${((Number(track.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)}%</b> de todas suas reproduções desse artista.`)
   textArray.push(`- Esse álbum representa <b>${((Number(album.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)}%</b> de todas suas reproduções desse artista.`)
   textArray.push(`- Esse artista representa <b>${((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)}%</b> de todas suas reproduções.`)
-  textArray.push('')
-  if (track.wiki != null && track.wiki.summary.length > 0) {
-    textArray.push('<b>[📚] Sobre:</b>')
-    textArray.push(`- ${track.wiki.summary}`)
-  }
+  // textArray.push('')
+  // if (track.wiki != null && track.wiki.summary.length > 0) {
+  //   textArray.push('<b>[📚] Sobre:</b>')
+  //   textArray.push(`- ${track.wiki.summary}`)
+  // }
 
   const text = textArray.join('\n')
   return text

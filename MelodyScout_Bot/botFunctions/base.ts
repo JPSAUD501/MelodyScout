@@ -15,8 +15,10 @@ import { CtxFunctions } from '../../function/ctxFunctions'
 import { HistoryCommand } from './commands/history'
 import { LyricsCommand } from './commands/lyrics'
 import { MsGeniusApi } from '../../api/msGeniusApi/base'
+import { MsSpotifyApi } from '../../api/msSpotifyApi/base'
+import { TrackpreviewCallback } from './callbacks/trackpreview'
 
-export class BotCommands {
+export class BotFunctions {
   startCommand: StartCommand
   helpCommand: HelpCommand
   trackCommand: TrackCommand
@@ -30,7 +32,9 @@ export class BotCommands {
   historyCommand: HistoryCommand
   lyricsCommand: LyricsCommand
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB, msGeniusApi: MsGeniusApi) {
+  trackpreviewCallback: TrackpreviewCallback
+
+  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB, msGeniusApi: MsGeniusApi, msSpotifyApi: MsSpotifyApi) {
     this.startCommand = new StartCommand(ctxFunctions)
     this.helpCommand = new HelpCommand(ctxFunctions)
     this.trackCommand = new TrackCommand(ctxFunctions, msLastfmApi, prismaDB)
@@ -43,5 +47,7 @@ export class BotCommands {
     this.playingnowCommand = new PlayingnowCommand(ctxFunctions, msLastfmApi, prismaDB)
     this.historyCommand = new HistoryCommand(ctxFunctions, msLastfmApi, prismaDB)
     this.lyricsCommand = new LyricsCommand(ctxFunctions, msLastfmApi, prismaDB, msGeniusApi)
+
+    this.trackpreviewCallback = new TrackpreviewCallback(ctxFunctions, msSpotifyApi)
   }
 }
