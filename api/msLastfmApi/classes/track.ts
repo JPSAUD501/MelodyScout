@@ -15,7 +15,7 @@ export class Track {
   }
 
   async getInfo (artist: string, track: string, mbid: string, username: string): Promise<GetInfoResponse> {
-    const url = `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&mbid=&artist=${artist}&track=${track}&username=${username}&api_key=${this.apiKey}&format=json`
+    const url = `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&mbid=&artist=${encodeURIComponent(artist)}&track=${encodeURIComponent(track)}&username=${encodeURIComponent(username)}&api_key=${this.apiKey}&format=json`
     const zodObject = zodTrackInfo
     console.log(`Track getInfo: artist: ${artist}, track: ${track}, mbid: ${mbid}, username: ${username}`)
     console.log(`Track getInfo: url: ${url}`)

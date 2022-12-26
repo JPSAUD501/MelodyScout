@@ -17,12 +17,9 @@ export const zodAlbumInfo = z.object({
   album: z.object({
     artist: z.string(),
     mbid: z.string().optional(),
-    tags: z.union([
-      z.object({
-        tag: z.array(z.object({ url: z.string(), name: z.string() }))
-      }),
-      z.string()
-    ]).optional(),
+    tags: z.object({
+      tag: z.array(z.object({ url: z.string(), name: z.string() })).or(z.object({ url: z.string(), name: z.string() }))
+    }).or(z.string()).optional(),
     name: z.string(),
     image: z.array(z.object({ size: z.string(), '#text': z.string() })),
     tracks: z.object({

@@ -44,6 +44,7 @@ export const msApiFetch = async (url: string, expectedZodObject: ZodObject<any>)
   const lfmApiError = zodLfmApiError.safeParse(jsonResponse)
   if (lfmApiError.success) {
     console.error(lfmApiError.data)
+    console.error(JSON.stringify(lfmApiError.data, null, 2))
     return {
       success: false,
       errorType: 'lfmApiError',
@@ -53,6 +54,7 @@ export const msApiFetch = async (url: string, expectedZodObject: ZodObject<any>)
   const expectedData = expectedZodObject.safeParse(jsonResponse)
   if (!expectedData.success) {
     console.error(expectedData.error.issues)
+    console.error(JSON.stringify(expectedData.error.issues, null, 2))
     return {
       success: false,
       errorType: 'msApiError',

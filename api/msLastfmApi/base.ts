@@ -45,7 +45,7 @@ export class MsLastfmApi {
     success: true
     aboutMe: string
   } | ApiErrors> {
-    const userPageResponse = await axios.get(`https://www.last.fm/user/${username}`).catch((err: any) => {
+    const userPageResponse = await axios.get(`https://www.last.fm/user/${encodeURIComponent(username)}`).catch((err: any) => {
       return new Error(err)
     })
     if (userPageResponse instanceof Error) {
