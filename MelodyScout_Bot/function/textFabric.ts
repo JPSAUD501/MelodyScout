@@ -79,7 +79,7 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
       textArray.push(`- Música: <b><a href="${track.url}">${track.name}</a></b>`)
       break
   }
-  if (spotifyTrackInfo.popularity !== undefined) textArray.push(`- Popularidade: <a href="https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/popularity.txt">${'★'.repeat(Math.floor(spotifyTrackInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyTrackInfo.popularity / 20))}</a>`)
+  if (spotifyTrackInfo.popularity !== undefined) textArray.push(`- Popularidade: <a href="https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/popularity.txt">[${spotifyTrackInfo.popularity}][${'★'.repeat(Math.floor(spotifyTrackInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyTrackInfo.popularity / 20))}]</a>`)
   textArray.push(`- Álbum: <b><a href="${album.url}">${album.name}</a></b>`)
   textArray.push(`- Artista: <b><a href="${artist.url}">${artist.name}</a></b>`)
   textArray.push('')
