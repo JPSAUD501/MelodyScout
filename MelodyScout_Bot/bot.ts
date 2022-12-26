@@ -115,7 +115,6 @@ export class MelodyScoutBot {
 
     // `${botConfig.telegram.botId}getTrackPreview${msConfig.melodyScout.divider}${mainTrack.trackName}${msConfig.melodyScout.divider}${mainTrack.artistName}`
     this.bot.callbackQuery(/getTrackPreview/, async (ctx) => {
-      if (!ctx.callbackQuery?.data.startsWith(`${botConfig.telegram.botId}getTrackPreview`)) return
       await this.botFunctions.trackpreviewCallback.run(ctx)
     })
 

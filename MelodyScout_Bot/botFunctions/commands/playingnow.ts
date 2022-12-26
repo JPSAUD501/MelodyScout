@@ -5,7 +5,6 @@ import { PrismaDB } from '../../../function/prismaDB/base'
 import { getPlayingnowText } from '../../function/textFabric'
 import { MsSpotifyApi } from '../../../api/msSpotifyApi/base'
 import msConfig from '../../../config'
-import botConfig from '../../config'
 
 export class PlayingnowCommand {
   private readonly ctxFunctions: CtxFunctions
@@ -51,7 +50,7 @@ export class PlayingnowCommand {
     if (!trackInfo.success) return await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações da música que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
     const spotifyTrackInfo = await this.msSpotifyApi.getTrackInfo(mainTrack.trackName, mainTrack.artistName)
     if (!spotifyTrackInfo.success) return await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do Spotify da música que você está ouvindo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-    const inlineKeyboard = new InlineKeyboard().url('Ouvir no Spotify', spotifyTrackInfo.trackUrl).row().text('Ouvir preview', `${botConfig.telegram.botId}getTrackPreview${msConfig.melodyScout.divider}${mainTrack.trackName}${msConfig.melodyScout.divider}${mainTrack.artistName}`)
+    const inlineKeyboard = new InlineKeyboard().url('Ouvir no Spotify', spotifyTrackInfo.trackUrl).row().text('Ouvir preview', `getTrackPreview${msConfig.melodyScout.divider}${mainTrack.trackName}${msConfig.melodyScout.divider}${mainTrack.artistName}`)
     await this.ctxFunctions.reply(ctx, getPlayingnowText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   }
 }
