@@ -87,16 +87,15 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   textArray.push(`- Artista: <b>${Number(artist.stats.userplaycount)}</b>`)
   textArray.push('')
   textArray.push('<b>[ℹ️] Informações:</b>')
-  if (Number(track.duration) > 0) textArray.push(`- Você já ouviu essa música por <b>${Number((((Number(track.userplaycount) * (Number(track.duration) / 1000)) / 60) / 60).toFixed(1)).toFixed(2)}</b> horas.`)
-  textArray.push(`- Essa música representa <b>${Number(((Number(track.userplaycount) / Number(album.userplaycount)) * 100).toFixed(1)).toFixed(2)}%</b> de todas suas reproduções desse álbum.`)
-  textArray.push(`- Essa música representa <b>${Number(((Number(track.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(1)).toFixed(2)}%</b> de todas suas reproduções desse artista.`)
-  textArray.push(`- Esse álbum representa <b>${Number(((Number(album.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(1)).toFixed(2)}%</b> de todas suas reproduções desse artista.`)
-  textArray.push(`- Esse artista representa <b>${Number(((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(1)).toFixed(2)}%</b> de todas suas reproduções.`)
+  if (Number(track.duration) > 0) textArray.push(`- Você já ouviu essa música por <b>${Math.floor(Number(track.userplaycount) * (Number(track.duration) / 1000) / 3600)} horas</b> e <b>${Math.floor((Number(track.userplaycount) * (Number(track.duration) / 1000) / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) / 1000) / 3600)) * 60)} minutos</b>.`)
+  textArray.push(`- Essa música representa <b>${((Number(track.userplaycount) / Number(album.userplaycount)) * 100).toFixed(0)}%</b> de todas suas reproduções desse álbum.`)
+  textArray.push(`- Essa música representa <b>${((Number(track.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)}%</b> de todas suas reproduções desse artista.`)
+  textArray.push(`- Esse álbum representa <b>${((Number(album.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)}%</b> de todas suas reproduções desse artista.`)
+  textArray.push(`- Esse artista representa <b>${((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)}%</b> de todas suas reproduções.`)
   textArray.push('')
   if (track.wiki != null && track.wiki.summary.length > 0) {
     textArray.push('<b>[📚] Sobre:</b>')
     textArray.push(`- ${track.wiki.summary}`)
-    textArray.push('')
   }
 
   const text = textArray.join('\n')
