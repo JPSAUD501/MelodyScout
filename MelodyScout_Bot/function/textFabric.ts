@@ -3,7 +3,7 @@ import { ArtistInfo } from '../../api/msLastfmApi/types/zodArtistInfo'
 import { TrackInfo } from '../../api/msLastfmApi/types/zodTrackInfo'
 import { UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
 import { UserRecentTracks } from '../../api/msLastfmApi/types/zodUserRecentTracks'
-import { MsSpotifyTrackInfo } from '../../api/msSpotifyApi/base'
+import { MsMusicApiSpotifyTrackInfo } from '../../api/msMusicApi/base'
 
 export function getHelpText (): string {
   const textArray: string[] = [
@@ -61,7 +61,7 @@ export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTr
   return text
 }
 
-export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: MsSpotifyTrackInfo, nowPlaying: boolean): string {
+export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: MsMusicApiSpotifyTrackInfo, nowPlaying: boolean): string {
   const { user } = userInfo
   const { artist } = artistInfo
   const { album } = albumInfo
@@ -89,11 +89,31 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   textArray.push(`- Artista: <b>${Number(artist.stats.userplaycount)}</b>`)
   textArray.push('')
   textArray.push('<b>[ℹ️] Informações:</b>')
-  if (Number(track.duration) > 0) textArray.push(`- Você já ouviu essa música por <b>${Math.floor(Number(track.userplaycount) * (Number(track.duration) / 1000) / 3600)} horas</b> e <b>${Math.floor((Number(track.userplaycount) * (Number(track.duration) / 1000) / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) / 1000) / 3600)) * 60)} minutos</b>.`)
-  if (Number(album.userplaycount) >= Number(track.userplaycount)) textArray.push(`- Essa música representa <b>${((Number(track.userplaycount) / Number(album.userplaycount)) * 100).toFixed(0)}%</b> de todas suas reproduções desse álbum.`)
-  if (Number(artist.stats.userplaycount) >= Number(track.userplaycount)) textArray.push(`- Essa música representa <b>${((Number(track.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)}%</b> de todas suas reproduções desse artista.`)
-  if (Number(artist.stats.userplaycount) >= Number(album.userplaycount)) textArray.push(`- Esse álbum representa <b>${((Number(album.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)}%</b> de todas suas reproduções desse artista.`)
-  if (Number(user.playcount) >= Number(artist.stats.userplaycount) && Number(((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)) >= 1) textArray.push(`- Esse artista representa <b>${((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)}%</b> de todas suas reproduções.`)
+  if (
+    Number(track.duration) > 0 &&
+    Number(track.userplaycount) > 0
+  ) textArray.push(`- Você já ouviu essa música por <b>${Math.floor(Number(track.userplaycount) * (Number(track.duration) / 1000) / 3600)} horas</b> e <b>${Math.floor((Number(track.userplaycount) * (Number(track.duration) / 1000) / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) / 1000) / 3600)) * 60)} minutos</b>.`)
+  if (
+    Number(album.userplaycount) >= Number(track.userplaycount) &&
+    Number(album.userplaycount) > 0 &&
+    Number(track.userplaycount) > 0
+  ) textArray.push(`- Essa música representa <b>${((Number(track.userplaycount) / Number(album.userplaycount)) * 100).toFixed(0)}%</b> de todas suas reproduções desse álbum.`)
+  if (
+    Number(artist.stats.userplaycount) >= Number(track.userplaycount) &&
+    Number(artist.stats.userplaycount) > 0 &&
+    Number(track.userplaycount) > 0
+  ) textArray.push(`- Essa música representa <b>${((Number(track.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)}%</b> de todas suas reproduções desse artista.`)
+  if (
+    Number(artist.stats.userplaycount) >= Number(album.userplaycount) &&
+    Number(artist.stats.userplaycount) > 0 &&
+    Number(album.userplaycount) > 0
+  ) textArray.push(`- Esse álbum representa <b>${((Number(album.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)}%</b> de todas suas reproduções desse artista.`)
+  if (
+    Number(user.playcount) >= Number(artist.stats.userplaycount) &&
+    Number(user.playcount) > 0 &&
+    Number(artist.stats.userplaycount) > 0 &&
+    Number(((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)) >= 1
+  ) textArray.push(`- Esse artista representa <b>${((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)}%</b> de todas suas reproduções.`)
   // textArray.push('')
   // if (track.wiki != null && track.wiki.summary.length > 0) {
   //   textArray.push('<b>[📚] Sobre:</b>')

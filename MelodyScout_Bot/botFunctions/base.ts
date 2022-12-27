@@ -15,8 +15,9 @@ import { CtxFunctions } from '../../function/ctxFunctions'
 import { HistoryCommand } from './commands/history'
 import { LyricsCommand } from './commands/lyrics'
 import { MsGeniusApi } from '../../api/msGeniusApi/base'
-import { MsSpotifyApi } from '../../api/msSpotifyApi/base'
+import { MsMusicApi } from '../../api/msMusicApi/base'
 import { TrackpreviewCallback } from './callbacks/trackpreview'
+import { TrackdownloadCallback } from './callbacks/trackdownload'
 
 export class BotFunctions {
   startCommand: StartCommand
@@ -33,8 +34,9 @@ export class BotFunctions {
   lyricsCommand: LyricsCommand
 
   trackpreviewCallback: TrackpreviewCallback
+  trackdownloadCallback: TrackdownloadCallback
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB, msGeniusApi: MsGeniusApi, msSpotifyApi: MsSpotifyApi) {
+  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi) {
     this.startCommand = new StartCommand(ctxFunctions)
     this.helpCommand = new HelpCommand(ctxFunctions)
     this.trackCommand = new TrackCommand(ctxFunctions, msLastfmApi, prismaDB)
@@ -44,10 +46,11 @@ export class BotFunctions {
     this.myuserCommand = new MyuserCommand(ctxFunctions, msLastfmApi, prismaDB)
     this.forgetmeCommand = new ForgetmeCommand(ctxFunctions, prismaDB)
     this.briefCommand = new BriefCommand(ctxFunctions, msLastfmApi, prismaDB)
-    this.playingnowCommand = new PlayingnowCommand(ctxFunctions, msLastfmApi, prismaDB, msSpotifyApi)
+    this.playingnowCommand = new PlayingnowCommand(ctxFunctions, msLastfmApi, prismaDB, msMusicApi)
     this.historyCommand = new HistoryCommand(ctxFunctions, msLastfmApi, prismaDB)
     this.lyricsCommand = new LyricsCommand(ctxFunctions, msLastfmApi, prismaDB, msGeniusApi)
 
-    this.trackpreviewCallback = new TrackpreviewCallback(ctxFunctions, msSpotifyApi)
+    this.trackpreviewCallback = new TrackpreviewCallback(ctxFunctions, msMusicApi)
+    this.trackdownloadCallback = new TrackdownloadCallback(ctxFunctions, msMusicApi)
   }
 }

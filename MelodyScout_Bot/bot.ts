@@ -6,7 +6,7 @@ import { MsLastfmApi } from '../api/msLastfmApi/base'
 import { BotFunctions } from './botFunctions/base'
 import { CtxFunctions } from '../function/ctxFunctions'
 import { MsGeniusApi } from '../api/msGeniusApi/base'
-import { MsSpotifyApi } from '../api/msSpotifyApi/base'
+import { MsMusicApi } from '../api/msMusicApi/base'
 
 export class MelodyScoutBot {
   private readonly advConsole: AdvConsole
@@ -15,15 +15,15 @@ export class MelodyScoutBot {
   private readonly prismaDB: PrismaDB
   private readonly botFunctions: BotFunctions
   private readonly msGeniusApi: MsGeniusApi
-  private readonly msSpotifyApi: MsSpotifyApi
+  private readonly msMusicApi: MsMusicApi
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB, msGeniusApi: MsGeniusApi, msSpotifyApi: MsSpotifyApi) {
+  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi) {
     this.advConsole = advConsole
     this.msLastfmApi = msLastfmApi
     this.prismaDB = prismaDB
     this.msGeniusApi = msGeniusApi
-    this.msSpotifyApi = msSpotifyApi
-    this.botFunctions = new BotFunctions(advConsole, ctxFunctions, msLastfmApi, prismaDB, msGeniusApi, msSpotifyApi)
+    this.msMusicApi = msMusicApi
+    this.botFunctions = new BotFunctions(advConsole, ctxFunctions, msLastfmApi, prismaDB, msGeniusApi, msMusicApi)
     this.bot = new Bot(botConfig.telegram.token)
 
     console.log('MelodyScout_Bot - Loaded')
@@ -113,9 +113,12 @@ export class MelodyScoutBot {
       await this.botFunctions.lyricsCommand.run(ctx)
     })
 
-    // `${botConfig.telegram.botId}getTrackPreview${msConfig.melodyScout.divider}${mainTrack.trackName}${msConfig.melodyScout.divider}${mainTrack.artistName}`
-    this.bot.callbackQuery(/getTrackPreview/, async (ctx) => {
+    this.bot.callbackQuery(/TP/, async (ctx) => {
       await this.botFunctions.trackpreviewCallback.run(ctx)
+    })
+
+    this.bot.callbackQuery(/TD/, async (ctx) => {
+      await this.botFunctions.trackdownloadCallback.run(ctx)
     })
 
     this.advConsole.log('MelodyScout_Bot - Listening')

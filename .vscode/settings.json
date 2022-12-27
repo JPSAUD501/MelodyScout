@@ -28,11 +28,14 @@
     "toplast",
     "toptags",
     "toptracks",
+    "trackdownload",
+    "Trackdownload",
     "tracklist",
     "trackpreview",
     "Trackpreview",
     "unixtime",
     "userloved",
-    "userplaycount"
+    "userplaycount",
+    "youtube"
   ]
 }
