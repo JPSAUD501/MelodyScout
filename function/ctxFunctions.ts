@@ -48,7 +48,7 @@ export class CtxFunctions {
 
   async replyWithVideo (ctx: CommandContext<Context> | CallbackQueryContext<Context>, video: string | InputFile, options?: Other<RawApi, 'sendVideo', 'chat_id' | 'video'>): Promise<void> {
     if (ctx.chat === undefined) return this.advConsole.error('MelodyScout_Bot - Error: ctx.chat is undefined')
-    const loadingMessage = await ctx.reply('<b>[🎥] Enviando video por favor aguarde!</b>', {
+    const loadingMessage = await ctx.reply('<b>[🎥] Enviando vídeo por favor aguarde!</b>', {
       parse_mode: 'HTML'
     }).catch((err) => {
       this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)

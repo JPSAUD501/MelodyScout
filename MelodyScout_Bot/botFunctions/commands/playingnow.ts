@@ -53,8 +53,9 @@ export class PlayingnowCommand {
     // replace all non alphanumeric characters with spaces
     const inlineKeyboard = new InlineKeyboard()
       .url('Ouvir no Spotify', spotifyTrackInfo.trackUrl).row()
-      .text('Preview', `TP${msConfig.melodyScout.divider}${mainTrack.trackName.replace(/[^a-zA-Z0-9]/g, ' ').replace(/  +/g, ' ')}${msConfig.melodyScout.divider}${mainTrack.artistName.replace(/[^a-zA-Z0-9]/g, ' ').replace(/  +/g, ' ')}`)
-      .text('Download', `TD${msConfig.melodyScout.divider}${mainTrack.trackName.replace(/[^a-zA-Z0-9]/g, ' ').replace(/  +/g, ' ')}${msConfig.melodyScout.divider}${mainTrack.artistName.replace(/[^a-zA-Z0-9]/g, ' ').replace(/  +/g, ' ')}`)
+      .text('Preview', `TP${msConfig.melodyScout.divider}${mainTrack.trackName.replace(/[^a-zA-Z0-9]/g, ' ').replace(/  +/g, ' ')}${msConfig.melodyScout.divider}${mainTrack.artistName.replace(/[^a-zA-Z0-9]/g, ' ').replace(/  +/g, ' ')}`).row()
+      .text('[📥] - Áudio', `TD${msConfig.melodyScout.divider}${mainTrack.trackName.replace(/[^a-zA-Z0-9]/g, ' ').replace(/  +/g, ' ')}${msConfig.melodyScout.divider}${mainTrack.artistName.replace(/[^a-zA-Z0-9]/g, ' ').replace(/  +/g, ' ')}`)
+      .text('[📥] - Vídeo', `TVD${msConfig.melodyScout.divider}${mainTrack.trackName.replace(/[^a-zA-Z0-9]/g, ' ').replace(/  +/g, ' ')}${msConfig.melodyScout.divider}${mainTrack.artistName.replace(/[^a-zA-Z0-9]/g, ' ').replace(/  +/g, ' ')}`)
     await this.ctxFunctions.reply(ctx, getPlayingnowText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   }
 }
