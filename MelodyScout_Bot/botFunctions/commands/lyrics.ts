@@ -42,13 +42,7 @@ export class LyricsCommand {
       void this.ctxFunctions.reply(ctx, 'Para utilizar esse comando envie antes /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
       return
     }
-    const userInfoRequest = await this.msLastfmApi.user.getInfo(lastfmUser)
-    const userRecentTracksRequest = await this.msLastfmApi.user.getRecentTracks(lastfmUser, 1)
-    const [userInfo, userRecentTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest])
-    if (!userInfo.success) {
-      void this.ctxFunctions.reply(ctx, `Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>${lastfmUser}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact`)
-      return
-    }
+    const userRecentTracks = await this.msLastfmApi.user.getRecentTracks(lastfmUser, 1)
     if (!userRecentTracks.success) {
       void this.ctxFunctions.reply(ctx, 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
@@ -66,9 +60,14 @@ export class LyricsCommand {
       artistMbid: userRecentTracks.data.recenttracks.track[0].artist.mbid,
       nowPlaying: userRecentTracks.data.recenttracks.track[0]['@attr']?.nowplaying === 'true'
     }
+    const userInfoRequest = this.msLastfmApi.user.getInfo(lastfmUser)
     const albumInfoRequest = this.msLastfmApi.album.getInfo(mainTrack.artistName, mainTrack.albumName, mainTrack.albumMbid, lastfmUser)
     const trackLyricsRequest = this.msGeniusApi.getLyrics(userRecentTracks.data.recenttracks.track[0].name, userRecentTracks.data.recenttracks.track[0].artist.name)
-    const [albumInfo, trackLyrics] = await Promise.all([albumInfoRequest, trackLyricsRequest])
+    const [userInfo, albumInfo, trackLyrics] = await Promise.all([userInfoRequest, albumInfoRequest, trackLyricsRequest])
+    if (!userInfo.success) {
+      void this.ctxFunctions.reply(ctx, `Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>${lastfmUser}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact`)
+      return
+    }
     if (!albumInfo.success) {
       void this.ctxFunctions.reply(ctx, 'Não foi possível resgatar as informações do álbum dessa música, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return

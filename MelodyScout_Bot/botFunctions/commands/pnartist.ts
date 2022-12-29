@@ -55,23 +55,15 @@ export class PnartistCommand {
       return
     }
     const mainTrack = {
-      albumName: userRecentTracks.data.recenttracks.track[0].album['#text'],
-      albumMbid: userRecentTracks.data.recenttracks.track[0].album.mbid,
       artistName: userRecentTracks.data.recenttracks.track[0].artist.name,
       artistMbid: userRecentTracks.data.recenttracks.track[0].artist.mbid,
       nowPlaying: userRecentTracks.data.recenttracks.track[0]['@attr']?.nowplaying === 'true'
     }
-    const artistInfoRequest = this.msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
-    const albumInfoRequest = this.msLastfmApi.album.getInfo(mainTrack.artistName, mainTrack.albumName, mainTrack.albumMbid, lastfmUser)
-    const [artistInfo, albumInfo] = await Promise.all([artistInfoRequest, albumInfoRequest])
+    const artistInfo = await this.msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
     if (!artistInfo.success) {
       void this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
-    if (!albumInfo.success) {
-      void this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-      return
-    }
-    await this.ctxFunctions.reply(ctx, getPnartistText(userInfo.data, artistInfo.data, albumInfo.data, mainTrack.nowPlaying))
+    await this.ctxFunctions.reply(ctx, getPnartistText(userInfo.data, artistInfo.data, mainTrack.nowPlaying))
   }
 }

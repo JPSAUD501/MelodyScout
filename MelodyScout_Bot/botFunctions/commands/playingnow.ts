@@ -4,7 +4,7 @@ import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { PrismaDB } from '../../../function/prismaDB/base'
 import { getPlayingnowText } from '../../function/textFabric'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
-import msConfig from '../../../config'
+import { getCallbackKey } from '../../../function/callbackMaker'
 
 export class PlayingnowCommand {
   private readonly ctxFunctions: CtxFunctions
@@ -94,11 +94,11 @@ export class PlayingnowCommand {
       return
     }
     const inlineKeyboard = new InlineKeyboard()
-      .url('[🎵] - Spotify', spotifyTrackInfo.trackUrl)
+      .url('[🎧] - Spotify', spotifyTrackInfo.trackUrl)
       .url('[🎥] - YouTube', youtubeTrackInfo.videoUrl)
       .row()
-      .text('[📥] - Preview', `TP${msConfig.melodyScout.divider}${mainTrack.trackName.replace(/  +/g, ' ')}${msConfig.melodyScout.divider}${mainTrack.artistName.replace(/  +/g, ' ')}`)
-      .text('[🧾] - Letra', `TL${msConfig.melodyScout.divider}${mainTrack.trackName.replace(/  +/g, ' ')}${msConfig.melodyScout.divider}${mainTrack.artistName.replace(/  +/g, ' ')}`)
+      .text('[📥] - Preview', getCallbackKey(['TP', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
+      .text('[🧾] - Letra', getCallbackKey(['TL', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
     await this.ctxFunctions.reply(ctx, getPlayingnowText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   }
 }

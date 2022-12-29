@@ -35,7 +35,7 @@ export class TrackpreviewCallback {
     await this.ctxFunctions.replyWithAudio(ctx, new InputFile({ url: spotifyTrackInfo.previewUrl }), {
       title: track,
       performer: artist,
-      caption: `[🎵] Preview de <b>${track}</b> por <b>${artist}</b>\n\nSolicitado por: <b><a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a></b>`,
+      caption: `<b>[🎵] Preview de "${track}" por "${artist}"</b>\n\nSolicitado por: <b><a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a></b>`,
       reply_to_message_id: messageId
     })
   }
