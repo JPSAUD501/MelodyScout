@@ -73,7 +73,9 @@ export class MsMusicApi {
 
   async getYoutubeTrackInfo (track: string, artist: string): Promise<MsMusicApiError | MsMusicApiYoutubeTrackInfo> {
     const ytSearchResult = await youtube.search(`${track} - ${artist}`)
-    const ytStreamInfoResponse = await ytStream.getInfo({ url: ytSearchResult.videos[0].link })
+    if (ytSearchResult.videos.length <= 0) return { success: false, error: 'No videos found!' }
+    const video = ytSearchResult.videos[0]
+    const ytStreamInfoResponse = await ytStream.getInfo({ url: video.link })
     const ytStreamInfo = zodYtSteamInfo.safeParse(ytStreamInfoResponse)
     if (!ytStreamInfo.success) {
       console.log(JSON.stringify(ytStreamInfo.error, null, 2))
@@ -93,7 +95,7 @@ export class MsMusicApi {
       success: true,
       videoWithAudioRawUrl: videoWithAudioFormat.url,
       audioRawUrl: audioFormat.url,
-      videoUrl: ytSearchResult.videos[0].link
+      videoUrl: video.link
     }
   }
 }

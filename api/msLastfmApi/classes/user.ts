@@ -109,7 +109,7 @@ export class User {
   }
 
   async getTopArtists (username: string, limit: number): Promise<GetTopArtistsResponse> {
-    const url = `http://ws.audioscrobbler.com /2.0/?method=user.gettopartists&user=${encodeURIComponent(username)}&limit=${limit}&api_key=${this.apiKey}&format=json`
+    const url = `http://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=${encodeURIComponent(username)}&limit=${limit}&api_key=${this.apiKey}&format=json`
     const zodObject = zodUserTopArtists
     console.log(`User getTopArtists: username: ${username}, limit: ${limit}`)
     console.log(`User getTopArtists: url: ${url}`)

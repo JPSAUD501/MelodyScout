@@ -5,7 +5,7 @@ export const zodYtSteamInfo = z.object({
     videoId: z.string(),
     title: z.string(),
     lengthSeconds: z.string(),
-    keywords: z.array(z.string()),
+    keywords: z.array(z.string()).optional(),
     channelId: z.string(),
     isOwnerViewing: z.boolean(),
     shortDescription: z.string(),

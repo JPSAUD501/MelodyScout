@@ -9,9 +9,6 @@ type MsApiFetchResponse = {
 } | ApiErrors
 
 export const msApiFetch = async (url: string, expectedZodObject: ZodObject<any>): Promise<MsApiFetchResponse> => {
-  // const response = await fetch(url).catch((err: any) => {
-  //   return new Error(err)
-  // }) To axios
   const response = await axios.get(url).catch((err: any) => {
     return new Error(err)
   })
@@ -26,9 +23,6 @@ export const msApiFetch = async (url: string, expectedZodObject: ZodObject<any>)
       }
     }
   }
-  // const jsonResponse = await response.json().catch((err: any) => {
-  //   return new Error(err)
-  // }) To axios
   const jsonResponse = response.data
   if (jsonResponse instanceof Error) {
     console.error(jsonResponse)
