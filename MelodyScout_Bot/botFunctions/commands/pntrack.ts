@@ -2,11 +2,11 @@ import { CallbackQueryContext, CommandContext, Context, InlineKeyboard } from 'g
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { PrismaDB } from '../../../function/prismaDB/base'
-import { getPlayingnowText } from '../../function/textFabric'
+import { getPntrackText } from '../../function/textFabric'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import msConfig from '../../../config'
 
-export class PlayingnowCommand {
+export class PntrackCommand {
   private readonly ctxFunctions: CtxFunctions
   private readonly msLastfmApi: MsLastfmApi
   private readonly prismaDB: PrismaDB
@@ -98,6 +98,6 @@ export class PlayingnowCommand {
       .url('YouTube', youtubeTrackInfo.videoUrl)
       .row()
       .text('[📥] - Preview', `TP${msConfig.melodyScout.divider}${mainTrack.trackName.replace(/  +/g, ' ')}${msConfig.melodyScout.divider}${mainTrack.artistName.replace(/  +/g, ' ')}`)
-    await this.ctxFunctions.reply(ctx, getPlayingnowText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+    await this.ctxFunctions.reply(ctx, getPntrackText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   }
 }

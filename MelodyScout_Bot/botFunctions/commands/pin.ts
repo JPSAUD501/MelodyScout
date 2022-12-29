@@ -1,8 +1,7 @@
-import { CommandContext, Context } from 'grammy'
+import { CommandContext, Context, InlineKeyboard } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
-import { getHelpText } from '../../function/textFabric'
 
-export class HelpCommand {
+export class PinCommand {
   private readonly ctxFunctions: CtxFunctions
 
   constructor (ctxFunctions: CtxFunctions) {
@@ -18,6 +17,10 @@ export class HelpCommand {
       await this.ctxFunctions.reply(ctx, 'Tudo é melhor com amigos, não é mesmo? Crie um grupo com seus amigos e me adicione nele, pode ser um grupo ja criado também o importante e me adicionar nele, prometo que eu sou legal! Em seguida utilize o comando /start lá novamente que eu te ajudarei a me configurar!')
       return
     }
-    await this.ctxFunctions.reply(ctx, getHelpText())
+    const inlineKeyboard = new InlineKeyboard()
+    inlineKeyboard.text('Playing Now', 'PLAYINGNOW')
+    const messageToPin = await this.ctxFunctions.reply(ctx, 'O que vc está ouvindo agr?', { reply_markup: inlineKeyboard })
+    if (messageToPin === undefined) return
+    await this.ctxFunctions.pinMessage(ctx, messageToPin)
   }
 }

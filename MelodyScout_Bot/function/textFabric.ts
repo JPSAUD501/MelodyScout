@@ -168,6 +168,88 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   return text
 }
 
+export function getPntrackText (userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: MsMusicApiSpotifyTrackInfo, nowPlaying: boolean): string {
+  const { user } = userInfo
+  const { artist } = artistInfo
+  const { album } = albumInfo
+  const { track } = trackInfo
+  const textArray: string[] = []
+
+  textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}:</b>`)
+  textArray.push('')
+  switch (nowPlaying) {
+    case true:
+      textArray.push(`<b>[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] Ouvindo <a href="${track.url}">${track.name}</a>:</b>`)
+      break
+    case false:
+      textArray.push(`<b>[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] Última música ouvida:</b>`)
+      textArray.push(`- Música: <b><a href="${track.url}">${track.name}</a></b>`)
+      break
+  }
+  textArray.push(`- Álbum: <b><a href="${album.url}">${album.name}</a></b>`)
+  textArray.push(`- Artista: <b><a href="${artist.url}">${artist.name}</a></b>`)
+  textArray.push('')
+  textArray.push('<b>[📊] Scrobbles:</b>')
+  textArray.push(`- Música: <b>${track.userplaycount}</b>`)
+  if (album.userplaycount !== undefined) textArray.push(`- Álbum: <b>${Number(album.userplaycount)}</b>`)
+  textArray.push(`- Artista: <b>${artist.stats.userplaycount}</b>`)
+
+  const text = textArray.join('\n')
+  return text
+}
+
+export function getPnalbumText (userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, nowPlaying: boolean): string {
+  const { user } = userInfo
+  const { artist } = artistInfo
+  const { album } = albumInfo
+  const textArray: string[] = []
+
+  textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}:</b>`)
+  textArray.push('')
+  switch (nowPlaying) {
+    case true:
+      textArray.push(`<b>[🎧] Ouvindo o album <a href="${album.url}">${album.name}</a>:</b>`)
+      break
+    case false:
+      textArray.push('<b>[🎧] Último album ouvido:</b>')
+      break
+  }
+  textArray.push(`- Álbum: <b><a href="${album.url}">${album.name}</a></b>`)
+  textArray.push(`- Artista: <b><a href="${artist.url}">${artist.name}</a></b>`)
+  textArray.push('')
+  textArray.push('<b>[📊] Scrobbles:</b>')
+  textArray.push(`- Álbum: <b>${Number(album.userplaycount !== undefined ? 0 : album.userplaycount)}</b>`)
+  textArray.push(`- Artista: <b>${artist.stats.userplaycount}</b>`)
+
+  const text = textArray.join('\n')
+  return text
+}
+
+export function getPnartistText (userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, nowPlaying: boolean): string {
+  const { user } = userInfo
+  const { album } = albumInfo
+  const { artist } = artistInfo
+  const textArray: string[] = []
+
+  textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}:</b>`)
+  textArray.push('')
+  switch (nowPlaying) {
+    case true:
+      textArray.push(`<b>[🎧] Ouvindo o artista <a href="${artist.url}">${artist.name}</a>:</b>`)
+      break
+    case false:
+      textArray.push('<b>[🎧] Último artista ouvido:</b>')
+      break
+  }
+  textArray.push(`- Artista: <b><a href="${artist.url}">${artist.name}</a></b>`)
+  textArray.push('')
+  textArray.push('<b>[📊] Scrobbles:</b>')
+  textArray.push(`- Artista: <b>${artist.stats.userplaycount}</b>`)
+
+  const text = textArray.join('\n')
+  return text
+}
+
 export function getHistoryText (userInfo: UserInfo, userRecentTracks: UserRecentTracks): string {
   const { user } = userInfo
   const { recenttracks } = userRecentTracks

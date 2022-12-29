@@ -3,7 +3,7 @@ import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import config from '../../../config'
 
-export class TrackpreviewCallback {
+export class TrackpreviewCommand {
   private readonly ctxFunctions: CtxFunctions
   private readonly msMusicApi: MsMusicApi
 

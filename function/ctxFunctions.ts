@@ -1,6 +1,7 @@
 import { CallbackQueryContext, CommandContext, Context, InputFile, RawApi } from 'grammy'
 import { AdvConsole } from './advancedConsole'
 import { Other } from 'grammy/out/core/api'
+import { Message } from '@grammyjs/types'
 
 export class CtxFunctions {
   private readonly advConsole: AdvConsole
@@ -9,14 +10,39 @@ export class CtxFunctions {
     this.advConsole = advConsole
   }
 
-  async reply (ctx: CommandContext<Context> | CallbackQueryContext<Context>, message: string, options?: Other<RawApi, 'sendMessage', 'text' | 'chat_id'>): Promise<void> {
-    if (ctx.chat === undefined) return this.advConsole.error('MelodyScout_Bot - Error: ctx.chat is undefined')
-    await ctx.api.sendMessage(ctx.chat.id, message, {
+  async pinMessage (ctx: CommandContext<Context> | CallbackQueryContext<Context>, message: Message.TextMessage): Promise<void> {
+    const pinedMessage = await ctx.api.pinChatMessage(message.chat.id, message.message_id).catch((err) => {
+      this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+    })
+    if (pinedMessage === undefined) {
+      if (ctx.chat === undefined) return
+      const alertMessage = await ctx.api.sendMessage(ctx.chat.id, '[⚠] Não foi possível fixar a mensagem automaticamente. Caso queira você ainda pode fixa-la manualmente. Para isso, clique na mensagem acima e em seguida em "Fixar".\n\nEssa mensagem de aviso será apagada em 15 segundos.', { parse_mode: 'HTML' }).catch((err) => {
+        this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+      })
+      if (alertMessage === undefined) return
+      setTimeout(() => {
+        if (ctx.chat === undefined) return
+        void ctx.api.deleteMessage(ctx.chat.id, alertMessage.message_id).catch((err) => {
+          this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+        })
+      }, 15000)
+    }
+  }
+
+  async reply (ctx: CommandContext<Context> | CallbackQueryContext<Context>, message: string, options?: Other<RawApi, 'sendMessage', 'text' | 'chat_id'>): Promise<Message.TextMessage | undefined> {
+    if (ctx.chat === undefined) {
+      this.advConsole.error('MelodyScout_Bot - Error: ctx.chat is undefined')
+      return undefined
+    }
+    const sendedMessage = await ctx.api.sendMessage(ctx.chat.id, message, {
       parse_mode: 'HTML',
       ...options
     }).catch((err) => {
       this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+      return undefined
     })
+    if (sendedMessage === undefined) return
+    return sendedMessage
   }
 
   async answerCallbackQuery (ctx: CallbackQueryContext<Context>, message?: string): Promise<void> {

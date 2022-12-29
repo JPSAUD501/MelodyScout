@@ -11,18 +11,10 @@ import { MsMusicApi } from '../api/msMusicApi/base'
 export class MelodyScoutBot {
   private readonly advConsole: AdvConsole
   private readonly bot: Bot
-  private readonly msLastfmApi: MsLastfmApi
-  private readonly prismaDB: PrismaDB
   private readonly botFunctions: BotFunctions
-  private readonly msGeniusApi: MsGeniusApi
-  private readonly msMusicApi: MsMusicApi
 
   constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi) {
     this.advConsole = advConsole
-    this.msLastfmApi = msLastfmApi
-    this.prismaDB = prismaDB
-    this.msGeniusApi = msGeniusApi
-    this.msMusicApi = msMusicApi
     this.botFunctions = new BotFunctions(advConsole, ctxFunctions, msLastfmApi, prismaDB, msGeniusApi, msMusicApi)
     this.bot = new Bot(botConfig.telegram.token)
 
@@ -50,7 +42,11 @@ export class MelodyScoutBot {
       { command: 'brief', description: 'Show the brief of your Last.fm user' },
       { command: 'playingnow', description: 'Show the currently playing track' },
       { command: 'history', description: 'Show the history of your listened tracks' },
-      { command: 'lyrics', description: 'Show the lyrics of the currently playing track' }
+      { command: 'lyrics', description: 'Show the lyrics of the currently playing track' },
+      { command: 'pin', description: 'Pin a shortcut to the /playingnow command' },
+      { command: 'pntrack', description: 'Show information about the currently playing track' },
+      { command: 'pnalbum', description: 'Show information about the album of the currently playing track' },
+      { command: 'pnartist', description: 'Show information about the artist of the currently playing track' }
     ]).catch((err) => {
       this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
     })
@@ -113,8 +109,28 @@ export class MelodyScoutBot {
       void this.botFunctions.lyricsCommand.run(ctx)
     })
 
+    this.bot.command('pin', async (ctx) => {
+      void this.botFunctions.pinCommand.run(ctx)
+    })
+
+    this.bot.command('pntrack', async (ctx) => {
+      void this.botFunctions.pntrackCommand.run(ctx)
+    })
+
+    this.bot.command('pnalbum', async (ctx) => {
+      void this.botFunctions.pnalbumCommand.run(ctx)
+    })
+
+    this.bot.command('pnartist', async (ctx) => {
+      void this.botFunctions.pnartistCommand.run(ctx)
+    })
+
     this.bot.callbackQuery(/TP/, async (ctx) => {
-      void this.botFunctions.trackpreviewCallback.run(ctx)
+      void this.botFunctions.trackpreviewCommand.run(ctx)
+    })
+
+    this.bot.callbackQuery(/PLAYINGNOW/, async (ctx) => {
+      void this.botFunctions.playingnowCommand.run(ctx)
     })
 
     this.advConsole.log('MelodyScout_Bot - Listening')

@@ -1,10 +1,10 @@
-import { CommandContext, Context } from 'grammy'
+import { CallbackQueryContext, CommandContext, Context } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { PrismaDB } from '../../../function/prismaDB/base'
-import { getHistoryText } from '../../function/textFabric'
+import { getPnalbumText } from '../../function/textFabric'
 
-export class HistoryCommand {
+export class PnalbumCommand {
   private readonly ctxFunctions: CtxFunctions
   private readonly msLastfmApi: MsLastfmApi
   private readonly prismaDB: PrismaDB
@@ -15,7 +15,7 @@ export class HistoryCommand {
     this.prismaDB = prismaDB
   }
 
-  async run (ctx: CommandContext<Context>): Promise<void> {
+  async run (ctx: CommandContext<Context> | CallbackQueryContext<Context>): Promise<void> {
     if (ctx.chat?.type === 'channel') {
       await this.ctxFunctions.reply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
       return
@@ -39,12 +39,13 @@ export class HistoryCommand {
       await this.ctxFunctions.reply(ctx, 'Para utilizar esse comando envie antes /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
       return
     }
-    const userInfo = await this.msLastfmApi.user.getInfo(lastfmUser)
+    const userInfoRequest = this.msLastfmApi.user.getInfo(lastfmUser)
+    const userRecentTracksRequest = this.msLastfmApi.user.getRecentTracks(lastfmUser, 1)
+    const [userInfo, userRecentTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest])
     if (!userInfo.success) {
       await this.ctxFunctions.reply(ctx, `Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>${lastfmUser}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact`)
       return
     }
-    const userRecentTracks = await this.msLastfmApi.user.getRecentTracks(lastfmUser, 20)
     if (!userRecentTracks.success) {
       await this.ctxFunctions.reply(ctx, 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
@@ -53,6 +54,24 @@ export class HistoryCommand {
       await this.ctxFunctions.reply(ctx, 'Parece que você nunca ouviu nada no Last.fm, que tal começar a ouvir algo agora? Se isso não for verdade entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
-    await this.ctxFunctions.reply(ctx, getHistoryText(userInfo.data, userRecentTracks.data))
+    const mainTrack = {
+      albumName: userRecentTracks.data.recenttracks.track[0].album['#text'],
+      albumMbid: userRecentTracks.data.recenttracks.track[0].album.mbid,
+      artistName: userRecentTracks.data.recenttracks.track[0].artist.name,
+      artistMbid: userRecentTracks.data.recenttracks.track[0].artist.mbid,
+      nowPlaying: userRecentTracks.data.recenttracks.track[0]['@attr']?.nowplaying === 'true'
+    }
+    const artistInfoRequest = this.msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
+    const albumInfoRequest = this.msLastfmApi.album.getInfo(mainTrack.artistName, mainTrack.albumName, mainTrack.albumMbid, lastfmUser)
+    const [artistInfo, albumInfo] = await Promise.all([artistInfoRequest, albumInfoRequest])
+    if (!artistInfo.success) {
+      await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      return
+    }
+    if (!albumInfo.success) {
+      await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      return
+    }
+    await this.ctxFunctions.reply(ctx, getPnalbumText(userInfo.data, artistInfo.data, albumInfo.data, mainTrack.nowPlaying))
   }
 }
