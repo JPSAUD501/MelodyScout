@@ -117,14 +117,6 @@ export class MelodyScoutBot {
       void this.botFunctions.trackpreviewCallback.run(ctx)
     })
 
-    this.bot.callbackQuery(/TD/, async (ctx) => {
-      void this.botFunctions.trackdownloadCallback.run(ctx)
-    })
-
-    this.bot.callbackQuery(/TVD/, async (ctx) => {
-      void this.botFunctions.trackvideodownloadCallback.run(ctx)
-    })
-
     this.advConsole.log('MelodyScout_Bot - Listening')
   }
 }

@@ -28,9 +28,10 @@ export class PlayingnowCommand {
     if (!telegramUserDBResponse.success) return await this.ctxFunctions.reply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
     const lastfmUser = telegramUserDBResponse.lastfmUser
     if (lastfmUser === null) return await this.ctxFunctions.reply(ctx, 'Para utilizar esse comando envie antes /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
-    const userInfo = await this.msLastfmApi.user.getInfo(lastfmUser)
+    const userInfoRequest = this.msLastfmApi.user.getInfo(lastfmUser)
+    const userRecentTracksRequest = this.msLastfmApi.user.getRecentTracks(lastfmUser, 1)
+    const [userInfo, userRecentTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest])
     if (!userInfo.success) return await this.ctxFunctions.reply(ctx, `Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>${lastfmUser}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact`)
-    const userRecentTracks = await this.msLastfmApi.user.getRecentTracks(lastfmUser, 1)
     if (!userRecentTracks.success) return await this.ctxFunctions.reply(ctx, 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
     if (userRecentTracks.data.recenttracks.track.length <= 0) return await this.ctxFunctions.reply(ctx, 'Parece que você nunca ouviu nada no Last.fm, que tal começar a ouvir algo agora? Se isso não for verdade entre em contato com o meu desenvolvedor utilizando o comando /contact')
     const mainTrack = {
@@ -42,20 +43,23 @@ export class PlayingnowCommand {
       artistMbid: userRecentTracks.data.recenttracks.track[0].artist.mbid,
       nowPlaying: userRecentTracks.data.recenttracks.track[0]['@attr']?.nowplaying === 'true'
     }
-    const artistInfo = await this.msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
+    const artistInfoRequest = this.msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
+    const albumInfoRequest = this.msLastfmApi.album.getInfo(mainTrack.artistName, mainTrack.albumName, mainTrack.albumMbid, lastfmUser)
+    const trackInfoRequest = this.msLastfmApi.track.getInfo(mainTrack.artistName, mainTrack.trackName, mainTrack.trackMbid, lastfmUser)
+    const spotifyTrackInfoRequest = this.msMusicApi.getSpotifyTrackInfo(mainTrack.trackName, mainTrack.artistName)
+    const youtubeTrackInfoRequest = this.msMusicApi.getYoutubeTrackInfo(mainTrack.trackName, mainTrack.artistName)
+    const [artistInfo, albumInfo, trackInfo, spotifyTrackInfo, youtubeTrackInfo] = await Promise.all([artistInfoRequest, albumInfoRequest, trackInfoRequest, spotifyTrackInfoRequest, youtubeTrackInfoRequest])
     if (!artistInfo.success) return await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-    const albumInfo = await this.msLastfmApi.album.getInfo(mainTrack.artistName, mainTrack.albumName, mainTrack.albumMbid, lastfmUser)
     if (!albumInfo.success) return await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-    const trackInfo = await this.msLastfmApi.track.getInfo(mainTrack.artistName, mainTrack.trackName, mainTrack.trackMbid, lastfmUser)
     if (!trackInfo.success) return await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações da música que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-    const spotifyTrackInfo = await this.msMusicApi.getSpotifyTrackInfo(mainTrack.trackName, mainTrack.artistName)
     if (!spotifyTrackInfo.success) return await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do Spotify da música que você está ouvindo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+    if (!youtubeTrackInfo.success) return await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do YouTube da música que você está ouvindo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
     // replace all non alphanumeric characters with spaces
     const inlineKeyboard = new InlineKeyboard()
-      .url('Ouvir no Spotify', spotifyTrackInfo.trackUrl).row()
-      .text('Preview', `TP${msConfig.melodyScout.divider}${mainTrack.trackName.replace(/[^a-zA-Z0-9]/g, ' ').replace(/  +/g, ' ')}${msConfig.melodyScout.divider}${mainTrack.artistName.replace(/[^a-zA-Z0-9]/g, ' ').replace(/  +/g, ' ')}`).row()
-      .text('[📥] - Áudio', `TD${msConfig.melodyScout.divider}${mainTrack.trackName.replace(/[^a-zA-Z0-9]/g, ' ').replace(/  +/g, ' ')}${msConfig.melodyScout.divider}${mainTrack.artistName.replace(/[^a-zA-Z0-9]/g, ' ').replace(/  +/g, ' ')}`)
-      .text('[📥] - Vídeo', `TVD${msConfig.melodyScout.divider}${mainTrack.trackName.replace(/[^a-zA-Z0-9]/g, ' ').replace(/  +/g, ' ')}${msConfig.melodyScout.divider}${mainTrack.artistName.replace(/[^a-zA-Z0-9]/g, ' ').replace(/  +/g, ' ')}`)
+      .url('Spotify', spotifyTrackInfo.trackUrl)
+      .url('YouTube', youtubeTrackInfo.videoUrl)
+      .row()
+      .text('[📥] - Preview', `TP${msConfig.melodyScout.divider}${mainTrack.trackName.replace(/  +/g, ' ')}${msConfig.melodyScout.divider}${mainTrack.artistName.replace(/  +/g, ' ')}`)
     await this.ctxFunctions.reply(ctx, getPlayingnowText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   }
 }

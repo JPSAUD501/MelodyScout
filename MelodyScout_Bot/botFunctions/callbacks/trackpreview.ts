@@ -1,6 +1,7 @@
 import { CallbackQueryContext, Context, InputFile } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
+import config from '../../../config'
 
 export class TrackpreviewCallback {
   private readonly ctxFunctions: CtxFunctions
@@ -14,7 +15,7 @@ export class TrackpreviewCallback {
   async run (ctx: CallbackQueryContext<Context>): Promise<void> {
     const messageId = ctx.callbackQuery.message?.message_id
     if (messageId === undefined) return await this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Mensagem não encontrada!')
-    const dataArray = ctx.callbackQuery.data.split(':-:')
+    const dataArray = ctx.callbackQuery.data.split(config.melodyScout.divider)
     const track = dataArray[1]
     const artist = dataArray[2]
     if (track === undefined || artist === undefined) return await this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Nome da música ou do artista não encontrado!')

@@ -3,7 +3,7 @@ dotenv.config()
 
 export default {
   melodyScout: {
-    divider: ':-:'
+    divider: '️️'
   },
   lastfm: {
     apiKey: process.env.LASTFM_API_KEY !== undefined ? process.env.LASTFM_API_KEY : ''

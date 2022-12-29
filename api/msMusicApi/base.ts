@@ -1,6 +1,7 @@
 import { Client } from 'spotify-api.js'
 import { youtube } from 'scrape-youtube'
 import ytStream from 'youtube-stream-url'
+import { zodYtSteamInfo } from './types/zodYtStreamInfo'
 
 interface MsMusicApiError {
   success: false
@@ -13,12 +14,14 @@ export interface MsMusicApiSpotifyTrackInfo {
   trackUrl: string
   popularity: number | undefined
   explicit: boolean
+  duration: number
 }
 
 export interface MsMusicApiYoutubeTrackInfo {
   success: true
-  videoWithAudioUrl: string
-  audioUrl: string
+  videoWithAudioRawUrl: string
+  audioRawUrl: string
+  videoUrl: string
 }
 
 export class MsMusicApi {
@@ -57,42 +60,40 @@ export class MsMusicApi {
     if (trackUrl.length <= 0) return { success: false, error: 'Track URL is empty!' }
     const popularity = search.tracks[0].popularity
     const explicit = search.tracks[0].explicit
+    const duration = search.tracks[0].duration
     return {
       success: true,
       previewUrl,
       trackUrl,
       popularity,
-      explicit
+      explicit,
+      duration
     }
   }
 
   async getYoutubeTrackInfo (track: string, artist: string): Promise<MsMusicApiError | MsMusicApiYoutubeTrackInfo> {
     const ytSearchResult = await youtube.search(`${track} - ${artist}`)
-    console.log(ytSearchResult.videos[0])
-    const ytStreamUrl = await ytStream.getInfo({ url: ytSearchResult.videos[0].link })
-    if (ytStreamUrl === undefined) return { success: false, error: 'No formats found!' }
-    const formats = ytStreamUrl.formats
-    if (formats === undefined) return { success: false, error: 'No formats found!' }
+    const ytStreamInfoResponse = await ytStream.getInfo({ url: ytSearchResult.videos[0].link })
+    const ytStreamInfo = zodYtSteamInfo.safeParse(ytStreamInfoResponse)
+    if (!ytStreamInfo.success) {
+      console.log(JSON.stringify(ytStreamInfo.error, null, 2))
+      return { success: false, error: 'YtStream info is not valid!' }
+    }
+    const formats = ytStreamInfo.data.formats
 
-    const audioFormats = formats.filter((format) => format.mimeType.includes('audio/mp4'))
-    if (audioFormats === undefined) return { success: false, error: 'No audio formats found!' }
-    if (audioFormats.length <= 0) return { success: false, error: 'Zero audio formats found!' }
-    const audioFormatsSorted = audioFormats.sort((a, b) => b.bitrate - a.bitrate)
-    const audioFormat = audioFormatsSorted.pop()
-    if (audioFormat === undefined) return { success: false, error: 'No audio format found! (Sorted)' }
+    const audioFormats = formats.filter((format) => format.mimeType.includes('audio/mp4')).sort((a, b) => b.bitrate - a.bitrate)
+    if (audioFormats.length <= 0) return { success: false, error: 'No audio formats found!' }
+    const audioFormat = audioFormats[0]
 
-    const videoFormats = formats.filter((format) => format.mimeType.includes('video/mp4'))
-    if (videoFormats === undefined) return { success: false, error: 'No video formats found!' }
-    if (videoFormats.length <= 0) return { success: false, error: 'Zero video formats found!' }
-    const videoWithAudioFormats = videoFormats.filter((format) => format.audioQuality !== undefined)
-    const videoWithAudioFormatsSorted = videoWithAudioFormats.sort((a, b) => b.bitrate - a.bitrate)
-    const videoWithAudioFormat = videoWithAudioFormatsSorted.pop()
-    if (videoWithAudioFormat === undefined) return { success: false, error: 'No video format found! (Sorted)' }
-    console.log(videoWithAudioFormat.url)
+    const videoFormats = formats.filter((format) => format.mimeType.includes('video/mp4')).filter((format) => format.audioQuality !== undefined).sort((a, b) => b.bitrate - a.bitrate)
+    if (videoFormats.length <= 0) return { success: false, error: 'No video formats found!' }
+    const videoWithAudioFormat = videoFormats[0]
+
     return {
       success: true,
-      videoWithAudioUrl: videoWithAudioFormat.url,
-      audioUrl: audioFormat.url
+      videoWithAudioRawUrl: videoWithAudioFormat.url,
+      audioRawUrl: audioFormat.url,
+      videoUrl: ytSearchResult.videos[0].link
     }
   }
 }

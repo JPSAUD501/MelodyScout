@@ -17,8 +17,6 @@ import { LyricsCommand } from './commands/lyrics'
 import { MsGeniusApi } from '../../api/msGeniusApi/base'
 import { MsMusicApi } from '../../api/msMusicApi/base'
 import { TrackpreviewCallback } from './callbacks/trackpreview'
-import { TrackdownloadCallback } from './callbacks/trackdownload'
-import { TrackvideodownloadCallback } from './callbacks/trackvideodownload'
 
 export class BotFunctions {
   startCommand: StartCommand
@@ -35,8 +33,6 @@ export class BotFunctions {
   lyricsCommand: LyricsCommand
 
   trackpreviewCallback: TrackpreviewCallback
-  trackdownloadCallback: TrackdownloadCallback
-  trackvideodownloadCallback: TrackvideodownloadCallback
 
   constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi) {
     this.startCommand = new StartCommand(ctxFunctions)
@@ -53,7 +49,5 @@ export class BotFunctions {
     this.lyricsCommand = new LyricsCommand(ctxFunctions, msLastfmApi, prismaDB, msGeniusApi)
 
     this.trackpreviewCallback = new TrackpreviewCallback(ctxFunctions, msMusicApi)
-    this.trackdownloadCallback = new TrackdownloadCallback(ctxFunctions, msMusicApi)
-    this.trackvideodownloadCallback = new TrackvideodownloadCallback(ctxFunctions, msMusicApi)
   }
 }
