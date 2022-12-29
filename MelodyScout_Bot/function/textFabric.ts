@@ -212,9 +212,9 @@ export function getPnalbumText (userInfo: UserInfo, artistInfo: ArtistInfo, albu
       break
     case false:
       textArray.push('<b>[🎧] Último album ouvido:</b>')
+      textArray.push(`- Álbum: <b><a href="${album.url}">${album.name}</a></b>`)
       break
   }
-  textArray.push(`- Álbum: <b><a href="${album.url}">${album.name}</a></b>`)
   textArray.push(`- Artista: <b><a href="${artist.url}">${artist.name}</a></b>`)
   textArray.push('')
   textArray.push('<b>[📊] Scrobbles:</b>')
@@ -235,13 +235,13 @@ export function getPnartistText (userInfo: UserInfo, artistInfo: ArtistInfo, alb
   textArray.push('')
   switch (nowPlaying) {
     case true:
-      textArray.push(`<b>[🎧] Ouvindo o artista <a href="${artist.url}">${artist.name}</a>:</b>`)
+      textArray.push(`<b>[🎧] Ouvindo o artista <a href="${artist.url}">${artist.name}</a></b>`)
       break
     case false:
       textArray.push('<b>[🎧] Último artista ouvido:</b>')
+      textArray.push(`- Artista: <b><a href="${artist.url}">${artist.name}</a></b>`)
       break
   }
-  textArray.push(`- Artista: <b><a href="${artist.url}">${artist.name}</a></b>`)
   textArray.push('')
   textArray.push('<b>[📊] Scrobbles:</b>')
   textArray.push(`- Artista: <b>${artist.stats.userplaycount}</b>`)
@@ -297,6 +297,17 @@ export function getLyricsText (userInfo: UserInfo, userRecentTracks: UserRecentT
   textArray.push(`- Artista: <b><a href="${recenttracks.track[0].artist.url}">${recenttracks.track[0].artist.name}</a></b>`)
   textArray.push('')
   textArray.push('<b>[📝] Letra:</b>')
+  textArray.push(`${trackLyrics}`)
+
+  const text = textArray.join('\n')
+  return text
+}
+
+export function getLyricsLiteText (track: string, artist: string, trackLyrics: string): string {
+  const textArray: string[] = []
+
+  textArray.push(`<b>[📝] Letra de ${track} por ${artist}:</b>`)
+  textArray.push('')
   textArray.push(`${trackLyrics}`)
 
   const text = textArray.join('\n')

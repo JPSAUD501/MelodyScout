@@ -20,7 +20,10 @@ export class PinCommand {
     const inlineKeyboard = new InlineKeyboard()
     inlineKeyboard.text('Playing Now', 'PLAYINGNOW')
     const messageToPin = await this.ctxFunctions.reply(ctx, 'O que vc está ouvindo agr?', { reply_markup: inlineKeyboard })
-    if (messageToPin === undefined) return
+    if (messageToPin === undefined) {
+      void this.ctxFunctions.reply(ctx, 'Parece que algo deu errado ao enviar a mensagem, por favor tente novamente!')
+      return
+    }
     await this.ctxFunctions.pinMessage(ctx, messageToPin)
   }
 }

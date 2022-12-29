@@ -3,7 +3,7 @@ import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import config from '../../../config'
 
-export class TrackpreviewCommand {
+export class TrackpreviewCallback {
   private readonly ctxFunctions: CtxFunctions
   private readonly msMusicApi: MsMusicApi
 
@@ -13,6 +13,16 @@ export class TrackpreviewCommand {
   }
 
   async run (ctx: CallbackQueryContext<Context>): Promise<void> {
+    if (ctx.chat?.type === 'channel') {
+      void this.ctxFunctions.reply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
+      void this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Eu não funciono em canais!')
+      return
+    }
+    if (ctx.chat?.type === 'private') {
+      void this.ctxFunctions.reply(ctx, 'Tudo é melhor com amigos, não é mesmo? Crie um grupo com seus amigos e me adicione nele, pode ser um grupo ja criado também o importante e me adicionar nele, prometo que eu sou legal! Em seguida utilize o comando /start lá novamente que eu te ajudarei a me configurar!')
+      void this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Eu não funciono em conversas privadas!')
+      return
+    }
     const messageId = ctx.callbackQuery.message?.message_id
     if (messageId === undefined) return await this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Mensagem não encontrada!')
     const dataArray = ctx.callbackQuery.data.split(config.melodyScout.divider)
@@ -21,13 +31,12 @@ export class TrackpreviewCommand {
     if (track === undefined || artist === undefined) return await this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Nome da música ou do artista não encontrado!')
     const spotifyTrackInfo = await this.msMusicApi.getSpotifyTrackInfo(track, artist)
     if (!spotifyTrackInfo.success) return await this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Ocorreu um erro ao tentar obter a URL de preview da música')
-    await ctx.answerCallbackQuery('🎵 - Enviando preview da música...')
+    void ctx.answerCallbackQuery('🎵 - Enviando preview da música...')
     await this.ctxFunctions.replyWithAudio(ctx, new InputFile({ url: spotifyTrackInfo.previewUrl }), {
       title: track,
       performer: artist,
-      caption: `Preview de <b>${track}</b> por <b>${artist}</b>\n\nSolicitado por: <b><a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a></b>`,
+      caption: `[🎵] Preview de <b>${track}</b> por <b>${artist}</b>\n\nSolicitado por: <b><a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a></b>`,
       reply_to_message_id: messageId
     })
-    await this.ctxFunctions.answerCallbackQuery(ctx)
   }
 }

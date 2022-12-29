@@ -17,26 +17,26 @@ export class BriefCommand {
 
   async run (ctx: CommandContext<Context>): Promise<void> {
     if (ctx.chat?.type === 'channel') {
-      await this.ctxFunctions.reply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
+      void this.ctxFunctions.reply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
       return
     }
     if (ctx.chat?.type === 'private') {
-      await this.ctxFunctions.reply(ctx, 'Tudo é melhor com amigos, não é mesmo? Crie um grupo com seus amigos e me adicione nele, pode ser um grupo ja criado também o importante e me adicionar nele, prometo que eu sou legal! Em seguida utilize o comando /start lá novamente que eu te ajudarei a me configurar!')
+      void this.ctxFunctions.reply(ctx, 'Tudo é melhor com amigos, não é mesmo? Crie um grupo com seus amigos e me adicione nele, pode ser um grupo ja criado também o importante e me adicionar nele, prometo que eu sou legal! Em seguida utilize o comando /start lá novamente que eu te ajudarei a me configurar!')
       return
     }
     const telegramUserId = ctx.from?.id
     if (telegramUserId === undefined) {
-      await this.ctxFunctions.reply(ctx, 'Não foi possível identificar seu usuário no telegram, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Não foi possível identificar seu usuário no telegram, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
     const telegramUserDBResponse = await this.prismaDB.get.telegramUser(`${telegramUserId}`)
     if (!telegramUserDBResponse.success) {
-      await this.ctxFunctions.reply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
     const lastfmUser = telegramUserDBResponse.lastfmUser
     if (lastfmUser === null) {
-      await this.ctxFunctions.reply(ctx, 'Para utilizar esse comando envie antes /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
+      void this.ctxFunctions.reply(ctx, 'Para utilizar esse comando envie antes /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
       return
     }
     const userInfoRequest = this.msLastfmApi.user.getInfo(lastfmUser)
@@ -46,23 +46,23 @@ export class BriefCommand {
     const userTopArtistsRequest = this.msLastfmApi.user.getTopArtists(lastfmUser, 5)
     const [userInfo, userRecentTracks, userTopTracks, userTopAlbums, userTopArtists] = await Promise.all([userInfoRequest, userRecentTracksRequest, userTopTracksRequest, userTopAlbumsRequest, userTopArtistsRequest])
     if (!userInfo.success) {
-      await this.ctxFunctions.reply(ctx, `Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>${lastfmUser}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact`)
+      void this.ctxFunctions.reply(ctx, `Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>${lastfmUser}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact`)
       return
     }
     if (!userRecentTracks.success) {
-      await this.ctxFunctions.reply(ctx, 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
     if (!userTopTracks.success) {
-      await this.ctxFunctions.reply(ctx, 'Estranho, não foi possível resgatar as suas músicas mais tocadas do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Estranho, não foi possível resgatar as suas músicas mais tocadas do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
     if (!userTopAlbums.success) {
-      await this.ctxFunctions.reply(ctx, 'Estranho, não foi possível resgatar os seus álbuns mais tocados do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Estranho, não foi possível resgatar os seus álbuns mais tocados do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
     if (!userTopArtists.success) {
-      await this.ctxFunctions.reply(ctx, 'Estranho, não foi possível resgatar os seus artistas mais tocados do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Estranho, não foi possível resgatar os seus artistas mais tocados do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
     await this.ctxFunctions.reply(ctx, getBriefText(userInfo.data, userRecentTracks.data, userTopTracks.data, userTopAlbums.data, userTopArtists.data))

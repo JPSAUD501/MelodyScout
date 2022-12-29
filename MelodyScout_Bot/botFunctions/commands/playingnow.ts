@@ -1,4 +1,4 @@
-import { CallbackQueryContext, CommandContext, Context, InlineKeyboard } from 'grammy'
+import { CommandContext, Context, InlineKeyboard } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { PrismaDB } from '../../../function/prismaDB/base'
@@ -19,43 +19,43 @@ export class PlayingnowCommand {
     this.msMusicApi = msMusicApi
   }
 
-  async run (ctx: CommandContext<Context> | CallbackQueryContext<Context>): Promise<void> {
+  async run (ctx: CommandContext<Context>): Promise<void> {
     if (ctx.chat?.type === 'channel') {
-      await this.ctxFunctions.reply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
+      void this.ctxFunctions.reply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
       return
     }
     if (ctx.chat?.type === 'private') {
-      await this.ctxFunctions.reply(ctx, 'Tudo é melhor com amigos, não é mesmo? Crie um grupo com seus amigos e me adicione nele, pode ser um grupo ja criado também o importante e me adicionar nele, prometo que eu sou legal! Em seguida utilize o comando /start lá novamente que eu te ajudarei a me configurar!')
+      void this.ctxFunctions.reply(ctx, 'Tudo é melhor com amigos, não é mesmo? Crie um grupo com seus amigos e me adicione nele, pode ser um grupo ja criado também o importante e me adicionar nele, prometo que eu sou legal! Em seguida utilize o comando /start lá novamente que eu te ajudarei a me configurar!')
       return
     }
     const telegramUserId = ctx.from?.id
     if (telegramUserId === undefined) {
-      await this.ctxFunctions.reply(ctx, 'Não foi possível identificar seu usuário no telegram, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Não foi possível identificar seu usuário no telegram, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
     const telegramUserDBResponse = await this.prismaDB.get.telegramUser(`${telegramUserId}`)
     if (!telegramUserDBResponse.success) {
-      await this.ctxFunctions.reply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
     const lastfmUser = telegramUserDBResponse.lastfmUser
     if (lastfmUser === null) {
-      await this.ctxFunctions.reply(ctx, 'Para utilizar esse comando envie antes /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
+      void this.ctxFunctions.reply(ctx, 'Para utilizar esse comando envie antes /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
       return
     }
     const userInfoRequest = this.msLastfmApi.user.getInfo(lastfmUser)
     const userRecentTracksRequest = this.msLastfmApi.user.getRecentTracks(lastfmUser, 1)
     const [userInfo, userRecentTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest])
     if (!userInfo.success) {
-      await this.ctxFunctions.reply(ctx, `Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>${lastfmUser}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact`)
+      void this.ctxFunctions.reply(ctx, `Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>${lastfmUser}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact`)
       return
     }
     if (!userRecentTracks.success) {
-      await this.ctxFunctions.reply(ctx, 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
     if (userRecentTracks.data.recenttracks.track.length <= 0) {
-      await this.ctxFunctions.reply(ctx, 'Parece que você nunca ouviu nada no Last.fm, que tal começar a ouvir algo agora? Se isso não for verdade entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Parece que você nunca ouviu nada no Last.fm, que tal começar a ouvir algo agora? Se isso não for verdade entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
     const mainTrack = {
@@ -74,30 +74,31 @@ export class PlayingnowCommand {
     const youtubeTrackInfoRequest = this.msMusicApi.getYoutubeTrackInfo(mainTrack.trackName, mainTrack.artistName)
     const [artistInfo, albumInfo, trackInfo, spotifyTrackInfo, youtubeTrackInfo] = await Promise.all([artistInfoRequest, albumInfoRequest, trackInfoRequest, spotifyTrackInfoRequest, youtubeTrackInfoRequest])
     if (!artistInfo.success) {
-      await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
     if (!albumInfo.success) {
-      await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
     if (!trackInfo.success) {
-      await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações da música que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações da música que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
     if (!spotifyTrackInfo.success) {
-      await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do Spotify da música que você está ouvindo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do Spotify da música que você está ouvindo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
     if (!youtubeTrackInfo.success) {
-      await this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do YouTube da música que você está ouvindo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do YouTube da música que você está ouvindo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
     const inlineKeyboard = new InlineKeyboard()
-      .url('Spotify', spotifyTrackInfo.trackUrl)
-      .url('YouTube', youtubeTrackInfo.videoUrl)
+      .url('[🎵] - Spotify', spotifyTrackInfo.trackUrl)
+      .url('[🎥] - YouTube', youtubeTrackInfo.videoUrl)
       .row()
       .text('[📥] - Preview', `TP${msConfig.melodyScout.divider}${mainTrack.trackName.replace(/  +/g, ' ')}${msConfig.melodyScout.divider}${mainTrack.artistName.replace(/  +/g, ' ')}`)
+      .text('[🧾] - Letra', `TL${msConfig.melodyScout.divider}${mainTrack.trackName.replace(/  +/g, ' ')}${msConfig.melodyScout.divider}${mainTrack.artistName.replace(/  +/g, ' ')}`)
     await this.ctxFunctions.reply(ctx, getPlayingnowText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   }
 }

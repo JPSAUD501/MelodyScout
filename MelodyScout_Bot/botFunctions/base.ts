@@ -16,11 +16,13 @@ import { HistoryCommand } from './commands/history'
 import { LyricsCommand } from './commands/lyrics'
 import { MsGeniusApi } from '../../api/msGeniusApi/base'
 import { MsMusicApi } from '../../api/msMusicApi/base'
-import { TrackpreviewCommand } from './commands/trackpreview'
+import { TrackpreviewCallback } from './callbacks/trackpreview'
 import { PinCommand } from './commands/pin'
 import { PntrackCommand } from './commands/pntrack'
 import { PnalbumCommand } from './commands/pnalbum'
 import { PnartistCommand } from './commands/pnartist'
+import { PlayingnowCallback } from './callbacks/playingnow'
+import { TracklyricsCallback } from './callbacks/tracklyrics'
 
 export class BotFunctions {
   startCommand: StartCommand
@@ -35,11 +37,14 @@ export class BotFunctions {
   playingnowCommand: PlayingnowCommand
   historyCommand: HistoryCommand
   lyricsCommand: LyricsCommand
-  trackpreviewCommand: TrackpreviewCommand
   pinCommand: PinCommand
   pntrackCommand: PntrackCommand
   pnalbumCommand: PnalbumCommand
   pnartistCommand: PnartistCommand
+
+  trackpreviewCallback: TrackpreviewCallback
+  playingnowCallback: PlayingnowCallback
+  tracklyricsCallback: TracklyricsCallback
 
   constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi) {
     this.startCommand = new StartCommand(ctxFunctions)
@@ -54,10 +59,13 @@ export class BotFunctions {
     this.playingnowCommand = new PlayingnowCommand(ctxFunctions, msLastfmApi, prismaDB, msMusicApi)
     this.historyCommand = new HistoryCommand(ctxFunctions, msLastfmApi, prismaDB)
     this.lyricsCommand = new LyricsCommand(ctxFunctions, msLastfmApi, prismaDB, msGeniusApi)
-    this.trackpreviewCommand = new TrackpreviewCommand(ctxFunctions, msMusicApi)
     this.pinCommand = new PinCommand(ctxFunctions)
     this.pntrackCommand = new PntrackCommand(ctxFunctions, msLastfmApi, prismaDB, msMusicApi)
     this.pnalbumCommand = new PnalbumCommand(ctxFunctions, msLastfmApi, prismaDB)
     this.pnartistCommand = new PnartistCommand(ctxFunctions, msLastfmApi, prismaDB)
+
+    this.trackpreviewCallback = new TrackpreviewCallback(ctxFunctions, msMusicApi)
+    this.playingnowCallback = new PlayingnowCallback(ctxFunctions, msLastfmApi, prismaDB, msMusicApi)
+    this.tracklyricsCallback = new TracklyricsCallback(ctxFunctions, msGeniusApi)
   }
 }
