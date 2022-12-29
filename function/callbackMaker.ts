@@ -33,6 +33,7 @@ export function getCallbackKey (parameters: string[]): string {
     while (Buffer.byteLength(parameter, 'utf8') > maxLongParameterByteSize) {
       if (parameter.endsWith('…')) parameter = parameter.slice(0, -1)
       parameter = parameter.slice(0, -1) + '…'
+      if (parameter.endsWith(' …')) parameter = parameter.slice(0, -2) + '…'
     }
     slicedParameters.push(parameter)
   }
