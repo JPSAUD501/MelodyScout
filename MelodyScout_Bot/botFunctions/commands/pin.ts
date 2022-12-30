@@ -19,7 +19,7 @@ export class PinCommand {
     }
     const inlineKeyboard = new InlineKeyboard()
     inlineKeyboard.text('Playing Now', 'PLAYINGNOW')
-    const messageToPin = await this.ctxFunctions.reply(ctx, '<a href="https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/logo.jpg">️️</a>O que vc está ouvindo agr?', { reply_markup: inlineKeyboard })
+    const messageToPin = await this.ctxFunctions.reply(ctx, '<a href="https://github.com/JPSAUD501/MelodyScout/blob/master/public/logo.jpg?raw=true">️️</a>O que vc está ouvindo agr?', { reply_markup: inlineKeyboard })
     if (messageToPin === undefined) {
       void this.ctxFunctions.reply(ctx, 'Parece que algo deu errado ao enviar a mensagem, por favor tente novamente!')
       return
