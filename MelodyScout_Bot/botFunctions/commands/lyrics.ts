@@ -1,9 +1,10 @@
-import { CommandContext, Context } from 'grammy'
+import { CommandContext, Context, InlineKeyboard } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { PrismaDB } from '../../../function/prismaDB/base'
 import { getLyricsText } from '../../function/textFabric'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
+import { getCallbackKey } from '../../../function/callbackMaker'
 
 export class LyricsCommand {
   private readonly ctxFunctions: CtxFunctions
@@ -76,6 +77,8 @@ export class LyricsCommand {
       void this.ctxFunctions.reply(ctx, 'Não foi possível resgatar a letra dessa música, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
-    await this.ctxFunctions.reply(ctx, getLyricsText(userInfo.data, userRecentTracks.data, albumInfo.data, trackLyrics, mainTrack.nowPlaying))
+    const inlineKeyboard = new InlineKeyboard()
+    inlineKeyboard.text('Traduzir', getCallbackKey(['TTL', mainTrack.trackName, mainTrack.artistName]))
+    await this.ctxFunctions.reply(ctx, getLyricsText(userInfo.data, userRecentTracks.data, albumInfo.data, trackLyrics, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   }
 }

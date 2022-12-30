@@ -297,10 +297,10 @@ export function getLyricsText (userInfo: UserInfo, userRecentTracks: UserRecentT
   return text
 }
 
-export function getLyricsLiteText (track: string, artist: string, trackLyrics: string): string {
+export function getLyricsLiteText (track: string, artist: string, trackLyrics: string, translated: boolean, requestedBy: string): string {
   const textArray: string[] = []
 
-  textArray.push(`<b>[📝] Letra de "${track}" por "${artist}":</b>`)
+  textArray.push(`<b>[📝] Letra de "${track}" por "${artist}"${translated ? ' traduzida para o português' : ''} solicitada por ${requestedBy}:</b>`)
   textArray.push('')
   textArray.push(`${trackLyrics}`)
 

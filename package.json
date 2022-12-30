@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/JPSAUD501/MelodyScout#readme",
   "devDependencies": {
+    "@types/google-translate-api": "^2.3.2",
     "@types/luxon": "^3.0.0",
     "@types/node": "^18.11.17",
     "@typescript-eslint/eslint-plugin": "^5.47.0",
@@ -37,6 +38,7 @@
     "axios": "^1.2.1",
     "dotenv": "^16.0.1",
     "fastify": "^4.4.0",
+    "free-translate": "^0.6.1",
     "fs": "^0.0.1-security",
     "genius-lyrics-api": "^3.2.0",
     "grammy": "^1.12.0",

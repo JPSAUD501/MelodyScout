@@ -1,11 +1,11 @@
-import { CallbackQueryContext, Context, InlineKeyboard } from 'grammy'
+import { CallbackQueryContext, Context } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { getLyricsLiteText } from '../../function/textFabric'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
 import config from '../../../config'
-import { getCallbackKey } from '../../../function/callbackMaker'
+import { translate } from 'free-translate'
 
-export class TracklyricsCallback {
+export class TranslatedtracklyricsCallback {
   private readonly ctxFunctions: CtxFunctions
   private readonly msGeniusApi: MsGeniusApi
 
@@ -38,8 +38,15 @@ export class TracklyricsCallback {
       void this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Erro ao resgatar a letra da música!')
       return
     }
-    const inlineKeyboard = new InlineKeyboard()
-    inlineKeyboard.text('Traduzir', getCallbackKey(['TTL', track, artist]))
-    await this.ctxFunctions.reply(ctx, getLyricsLiteText(track, artist, trackLyrics, false, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId, reply_markup: inlineKeyboard })
+    const translatedTrackLyrics = await translate(trackLyrics, { to: 'pt-BR' }).catch((err) => {
+      console.error(err)
+      return new Error(err)
+    })
+    if (translatedTrackLyrics instanceof Error) {
+      void this.ctxFunctions.reply(ctx, 'Não foi possível traduzir a letra dessa música, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Erro ao traduzir a letra da música!')
+      return
+    }
+    await this.ctxFunctions.reply(ctx, getLyricsLiteText(track, artist, translatedTrackLyrics, true, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId })
   }
 }

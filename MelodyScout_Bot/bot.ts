@@ -125,15 +125,19 @@ export class MelodyScoutBot {
       void this.botFunctions.pnartistCommand.run(ctx)
     })
 
-    this.bot.callbackQuery(/TP/, async (ctx) => {
+    this.bot.callbackQuery(/^TP/, async (ctx) => {
       void this.botFunctions.trackpreviewCallback.run(ctx)
     })
 
-    this.bot.callbackQuery(/TL/, async (ctx) => {
+    this.bot.callbackQuery(/^TL/, async (ctx) => {
       void this.botFunctions.tracklyricsCallback.run(ctx)
     })
 
-    this.bot.callbackQuery(/PLAYINGNOW/, async (ctx) => {
+    this.bot.callbackQuery(/^TTL/, async (ctx) => {
+      void this.botFunctions.translatedtracklyricsCallback.run(ctx)
+    })
+
+    this.bot.callbackQuery('PLAYINGNOW', async (ctx) => {
       void this.botFunctions.playingnowCallback.run(ctx)
     })
 

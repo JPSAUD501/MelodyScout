@@ -23,6 +23,7 @@ import { PnalbumCommand } from './commands/pnalbum'
 import { PnartistCommand } from './commands/pnartist'
 import { PlayingnowCallback } from './callbacks/playingnow'
 import { TracklyricsCallback } from './callbacks/tracklyrics'
+import { TranslatedtracklyricsCallback } from './callbacks/translatedtracklyrics'
 
 export class BotFunctions {
   startCommand: StartCommand
@@ -45,6 +46,7 @@ export class BotFunctions {
   trackpreviewCallback: TrackpreviewCallback
   playingnowCallback: PlayingnowCallback
   tracklyricsCallback: TracklyricsCallback
+  translatedtracklyricsCallback: TranslatedtracklyricsCallback
 
   constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi) {
     this.startCommand = new StartCommand(ctxFunctions)
@@ -67,5 +69,6 @@ export class BotFunctions {
     this.trackpreviewCallback = new TrackpreviewCallback(ctxFunctions, msMusicApi)
     this.playingnowCallback = new PlayingnowCallback(ctxFunctions, msLastfmApi, prismaDB, msMusicApi)
     this.tracklyricsCallback = new TracklyricsCallback(ctxFunctions, msGeniusApi)
+    this.translatedtracklyricsCallback = new TranslatedtracklyricsCallback(ctxFunctions, msGeniusApi)
   }
 }
