@@ -29,6 +29,26 @@ export class CtxFunctions {
     }
   }
 
+  async editMessage (ctx: CommandContext<Context> | CallbackQueryContext<Context>, text: string, options?: Other<RawApi, 'editMessageText', 'text' | 'chat_id' | 'message_id'>): Promise<true | Message.TextMessage | undefined> {
+    if (ctx.chat === undefined) {
+      this.advConsole.error('MelodyScout_Bot - Error: ctx.chat is undefined')
+      return undefined
+    }
+    const editMessageId = ctx.message?.message_id ?? ctx.update.callback_query?.message?.message_id
+    if (editMessageId === undefined) {
+      this.advConsole.error('MelodyScout_Bot - Error: editMessageId is undefined')
+      return undefined
+    }
+    const editedMessage = await ctx.api.editMessageText(ctx.chat.id, editMessageId, text, {
+      parse_mode: 'HTML',
+      ...options
+    }).catch((err) => {
+      this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+    })
+    if (editedMessage === undefined) return
+    return editedMessage
+  }
+
   async reply (ctx: CommandContext<Context> | CallbackQueryContext<Context>, message: string, options?: Other<RawApi, 'sendMessage', 'text' | 'chat_id'>): Promise<Message.TextMessage | undefined> {
     if (ctx.chat === undefined) {
       this.advConsole.error('MelodyScout_Bot - Error: ctx.chat is undefined')
