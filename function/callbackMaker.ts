@@ -5,7 +5,6 @@ const dividerByteSize = Buffer.byteLength(config.melodyScout.divider, 'utf8')
 export function getCallbackKey (parameters: string[]): string {
   const callbackId = parameters.shift()
   if (callbackId === undefined) return ''
-  console.log(parameters)
   const callbackIdByteSize = Buffer.byteLength(callbackId, 'utf8')
 
   const parameterCount = parameters.length
@@ -39,6 +38,5 @@ export function getCallbackKey (parameters: string[]): string {
   }
 
   const callbackKey = `${callbackId}${config.melodyScout.divider}${slicedParameters.join(config.melodyScout.divider)}`
-  console.log(callbackKey)
   return callbackKey
 }

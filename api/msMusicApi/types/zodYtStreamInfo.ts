@@ -43,7 +43,7 @@ export const zodYtSteamInfo = z.object({
       audioSampleRate: z.string().optional(),
       audioChannels: z.number().optional(),
       loudnessDb: z.number().optional(),
-      approxDurationMs: z.string(),
+      approxDurationMs: z.string().optional(),
       url: z.string()
     })
   )
