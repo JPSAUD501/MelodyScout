@@ -3,7 +3,7 @@ import { CtxFunctions } from '../../../function/ctxFunctions'
 import { getLyricsLiteText } from '../../function/textFabric'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
 import config from '../../../config'
-import { translate } from 'free-translate'
+import { translate } from '@vitalets/google-translate-api'
 
 export class TranslatedtracklyricsCallback {
   private readonly ctxFunctions: CtxFunctions
@@ -41,11 +41,11 @@ export class TranslatedtracklyricsCallback {
     console.log('Translating lyrics...')
     const translatedTrackLyrics = await translate(trackLyrics, { to: 'pt-BR' })
     console.log('Lyrics translated!')
-    if (translatedTrackLyrics.length <= 0) {
+    if (translatedTrackLyrics.text.length <= 0) {
       void this.ctxFunctions.reply(ctx, 'Não foi possível traduzir a letra dessa música, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       void this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Erro ao traduzir a letra da música!')
       return
     }
-    await this.ctxFunctions.reply(ctx, getLyricsLiteText(track, artist, translatedTrackLyrics, true, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId })
+    await this.ctxFunctions.reply(ctx, getLyricsLiteText(track, artist, translatedTrackLyrics.text, true, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId })
   }
 }
