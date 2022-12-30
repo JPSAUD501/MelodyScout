@@ -38,11 +38,8 @@ export class TranslatedtracklyricsCallback {
       void this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Erro ao resgatar a letra da música!')
       return
     }
-    const translatedTrackLyrics = await translate(trackLyrics, { to: 'pt-BR' }).catch((err) => {
-      console.error(err)
-      return new Error(err)
-    })
-    if (translatedTrackLyrics instanceof Error) {
+    const translatedTrackLyrics = await translate(trackLyrics, { to: 'pt-BR' })
+    if (translatedTrackLyrics.length <= 0) {
       void this.ctxFunctions.reply(ctx, 'Não foi possível traduzir a letra dessa música, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       void this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Erro ao traduzir a letra da música!')
       return
