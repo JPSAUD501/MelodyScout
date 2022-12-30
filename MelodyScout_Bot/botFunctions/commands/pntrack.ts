@@ -4,7 +4,7 @@ import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { PrismaDB } from '../../../function/prismaDB/base'
 import { getPntrackText } from '../../function/textFabric'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
-import msConfig from '../../../config'
+import { getCallbackKey } from '../../../function/callbackMaker'
 
 export class PntrackCommand {
   private readonly ctxFunctions: CtxFunctions
@@ -73,10 +73,6 @@ export class PntrackCommand {
     const spotifyTrackInfoRequest = this.msMusicApi.getSpotifyTrackInfo(mainTrack.trackName, mainTrack.artistName)
     const youtubeTrackInfoRequest = this.msMusicApi.getYoutubeTrackInfo(mainTrack.trackName, mainTrack.artistName)
     const [artistInfo, albumInfo, trackInfo, spotifyTrackInfo, youtubeTrackInfo] = await Promise.all([artistInfoRequest, albumInfoRequest, trackInfoRequest, spotifyTrackInfoRequest, youtubeTrackInfoRequest])
-    if (!artistInfo.success) {
-      void this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-      return
-    }
     if (!albumInfo.success) {
       void this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
@@ -89,15 +85,12 @@ export class PntrackCommand {
       void this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do Spotify da música que você está ouvindo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
-    if (!youtubeTrackInfo.success) {
-      void this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do YouTube da música que você está ouvindo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-      return
-    }
     const inlineKeyboard = new InlineKeyboard()
-      .url('Spotify', spotifyTrackInfo.trackUrl)
-      .url('YouTube', youtubeTrackInfo.videoUrl)
-      .row()
-      .text('[📥] - Preview', `TP${msConfig.melodyScout.divider}${mainTrack.trackName.replace(/  +/g, ' ')}${msConfig.melodyScout.divider}${mainTrack.artistName.replace(/  +/g, ' ')}`)
-    await this.ctxFunctions.reply(ctx, getPntrackText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+    inlineKeyboard.url('[🎧] - Spotify', spotifyTrackInfo.data.externalURL.spotify)
+    if (youtubeTrackInfo.success) inlineKeyboard.url('[🎥] - YouTube', youtubeTrackInfo.videoUrl)
+    inlineKeyboard.row()
+    inlineKeyboard.text('[📥] - Preview', getCallbackKey(['TP', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
+    inlineKeyboard.text('[🧾] - Letra', getCallbackKey(['TL', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
+    await this.ctxFunctions.reply(ctx, getPntrackText(userInfo.data, artistInfo.success ? artistInfo.data : undefined, albumInfo.data, trackInfo.data, spotifyTrackInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   }
 }

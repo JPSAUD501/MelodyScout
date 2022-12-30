@@ -1,4 +1,4 @@
-import { Client } from 'spotify-api.js'
+import { Client, Track, Artist, Album } from 'spotify-api.js'
 import { youtube } from 'scrape-youtube'
 import ytStream from 'youtube-stream-url'
 import { zodYtSteamInfo } from './types/zodYtStreamInfo'
@@ -10,11 +10,17 @@ interface MsMusicApiError {
 
 export interface MsMusicApiSpotifyTrackInfo {
   success: true
-  previewUrl: string
-  trackUrl: string
-  popularity: number | undefined
-  explicit: boolean
-  duration: number
+  data: Track
+}
+
+export interface MsMusicApiSpotifyAlbumInfo {
+  success: true
+  data: Album
+}
+
+export interface MsMusicApiSpotifyArtistInfo {
+  success: true
+  data: Artist
 }
 
 export interface MsMusicApiYoutubeTrackInfo {
@@ -47,27 +53,40 @@ export class MsMusicApi {
 
   async getSpotifyTrackInfo (track: string, artist: string): Promise<MsMusicApiError | MsMusicApiSpotifyTrackInfo> {
     if (this.client === null) return { success: false, error: 'Spotify client is not ready!' }
-    const search = await this.client.search(`${track} ${artist}`, { types: ['track'] }).catch((err) => {
+    const search = await this.client.tracks.search(`${track} ${artist}`, { includeExternalAudio: true }).catch((err) => {
       return new Error(err)
     })
     if (search instanceof Error) return { success: false, error: search.message }
-    if (search.tracks === undefined) return { success: false, error: 'No tracks found!' }
-    if (search.tracks.length <= 0) return { success: false, error: 'No tracks found!' }
-    if (search.tracks[0] === undefined) return { success: false, error: 'No preview URL found!' }
-    const previewUrl = search.tracks[0].previewURL
-    if (previewUrl.length <= 0) return { success: false, error: 'Preview URL is empty!' }
-    const trackUrl = search.tracks[0].externalURL.spotify
-    if (trackUrl.length <= 0) return { success: false, error: 'Track URL is empty!' }
-    const popularity = search.tracks[0].popularity
-    const explicit = search.tracks[0].explicit
-    const duration = search.tracks[0].duration
+    if (search.length <= 0) return { success: false, error: 'No tracks found!' }
     return {
       success: true,
-      previewUrl,
-      trackUrl,
-      popularity,
-      explicit,
-      duration
+      data: search[0]
+    }
+  }
+
+  async getSpotifyArtistInfo (artist: string): Promise<MsMusicApiError | MsMusicApiSpotifyArtistInfo> {
+    if (this.client === null) return { success: false, error: 'Spotify client is not ready!' }
+    const search = await this.client.artists.search(`${artist}`, { includeExternalAudio: true }).catch((err) => {
+      return new Error(err)
+    })
+    if (search instanceof Error) return { success: false, error: search.message }
+    if (search.length <= 0) return { success: false, error: 'No artists found!' }
+    return {
+      success: true,
+      data: search[0]
+    }
+  }
+
+  async getSpotifyAlbumInfo (album: string, artist: string): Promise<MsMusicApiError | MsMusicApiSpotifyAlbumInfo> {
+    if (this.client === null) return { success: false, error: 'Spotify client is not ready!' }
+    const search = await this.client.albums.search(`${album} ${artist}`, { includeExternalAudio: true }).catch((err) => {
+      return new Error(err)
+    })
+    if (search instanceof Error) return { success: false, error: search.message }
+    if (search.length <= 0) return { success: false, error: 'No albums found!' }
+    return {
+      success: true,
+      data: search[0]
     }
   }
 

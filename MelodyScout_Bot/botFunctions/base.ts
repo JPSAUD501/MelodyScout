@@ -61,8 +61,8 @@ export class BotFunctions {
     this.lyricsCommand = new LyricsCommand(ctxFunctions, msLastfmApi, prismaDB, msGeniusApi)
     this.pinCommand = new PinCommand(ctxFunctions)
     this.pntrackCommand = new PntrackCommand(ctxFunctions, msLastfmApi, prismaDB, msMusicApi)
-    this.pnalbumCommand = new PnalbumCommand(ctxFunctions, msLastfmApi, prismaDB)
-    this.pnartistCommand = new PnartistCommand(ctxFunctions, msLastfmApi, prismaDB)
+    this.pnalbumCommand = new PnalbumCommand(ctxFunctions, msLastfmApi, msMusicApi, prismaDB)
+    this.pnartistCommand = new PnartistCommand(ctxFunctions, msLastfmApi, msMusicApi, prismaDB)
 
     this.trackpreviewCallback = new TrackpreviewCallback(ctxFunctions, msMusicApi)
     this.playingnowCallback = new PlayingnowCallback(ctxFunctions, msLastfmApi, prismaDB, msMusicApi)

@@ -32,7 +32,7 @@ export class TrackpreviewCallback {
     const spotifyTrackInfo = await this.msMusicApi.getSpotifyTrackInfo(track, artist)
     if (!spotifyTrackInfo.success) return await this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Ocorreu um erro ao tentar obter a URL de preview da música')
     void ctx.answerCallbackQuery('🎵 - Enviando preview da música...')
-    await this.ctxFunctions.replyWithAudio(ctx, new InputFile({ url: spotifyTrackInfo.previewUrl }), {
+    await this.ctxFunctions.replyWithAudio(ctx, new InputFile({ url: spotifyTrackInfo.data.previewURL }), {
       title: track,
       performer: artist,
       caption: `<b>[🎵] Preview de "${track}" por "${artist}"</b>\n\nSolicitado por: <b><a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a></b>`,

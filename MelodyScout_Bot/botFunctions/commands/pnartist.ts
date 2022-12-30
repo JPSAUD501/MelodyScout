@@ -1,18 +1,21 @@
-import { CallbackQueryContext, CommandContext, Context } from 'grammy'
+import { CallbackQueryContext, CommandContext, Context, InlineKeyboard } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { PrismaDB } from '../../../function/prismaDB/base'
 import { getPnartistText } from '../../function/textFabric'
+import { MsMusicApi } from '../../../api/msMusicApi/base'
 
 export class PnartistCommand {
   private readonly ctxFunctions: CtxFunctions
   private readonly msLastfmApi: MsLastfmApi
   private readonly prismaDB: PrismaDB
+  private readonly msMusicApi: MsMusicApi
 
-  constructor (ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB) {
+  constructor (ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msMusicApi: MsMusicApi, prismaDB: PrismaDB) {
     this.ctxFunctions = ctxFunctions
     this.msLastfmApi = msLastfmApi
     this.prismaDB = prismaDB
+    this.msMusicApi = msMusicApi
   }
 
   async run (ctx: CommandContext<Context> | CallbackQueryContext<Context>): Promise<void> {
@@ -59,11 +62,19 @@ export class PnartistCommand {
       artistMbid: userRecentTracks.data.recenttracks.track[0].artist.mbid,
       nowPlaying: userRecentTracks.data.recenttracks.track[0]['@attr']?.nowplaying === 'true'
     }
-    const artistInfo = await this.msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
+    const artistInfoRequest = this.msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
+    const spotifyArtistInfoRequest = this.msMusicApi.getSpotifyArtistInfo(mainTrack.artistName)
+    const [artistInfo, spotifyArtistInfo] = await Promise.all([artistInfoRequest, spotifyArtistInfoRequest])
     if (!artistInfo.success) {
       void this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
-    await this.ctxFunctions.reply(ctx, getPnartistText(userInfo.data, artistInfo.data, mainTrack.nowPlaying))
+    if (!spotifyArtistInfo.success) {
+      void this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do Spotify da música que você está ouvindo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      return
+    }
+    const inlineKeyboard = new InlineKeyboard()
+    inlineKeyboard.url('[🎧] - Spotify', spotifyArtistInfo.data.externalURL.spotify)
+    await this.ctxFunctions.reply(ctx, getPnartistText(userInfo.data, artistInfo.data, spotifyArtistInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   }
 }

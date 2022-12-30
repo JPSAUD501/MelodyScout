@@ -1,3 +1,4 @@
+import { Artist, Track } from 'spotify-api.js'
 import { AlbumInfo } from '../../api/msLastfmApi/types/zodAlbumInfo'
 import { ArtistInfo } from '../../api/msLastfmApi/types/zodArtistInfo'
 import { TrackInfo } from '../../api/msLastfmApi/types/zodTrackInfo'
@@ -6,7 +7,6 @@ import { UserRecentTracks } from '../../api/msLastfmApi/types/zodUserRecentTrack
 import { UserTopAlbums } from '../../api/msLastfmApi/types/zodUserTopAlbums'
 import { UserTopArtists } from '../../api/msLastfmApi/types/zodUserTopArtists'
 import { UserTopTracks } from '../../api/msLastfmApi/types/zodUserTopTracks'
-import { MsMusicApiSpotifyTrackInfo } from '../../api/msMusicApi/base'
 
 export function getHelpText (): string {
   const textArray: string[] = [
@@ -94,7 +94,7 @@ export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTr
   return text
 }
 
-export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: MsMusicApiSpotifyTrackInfo, nowPlaying: boolean): string {
+export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, nowPlaying: boolean): string {
   const { user } = userInfo
   const { artist } = artistInfo
   const { album } = albumInfo
@@ -169,14 +169,14 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   return text
 }
 
-export function getPntrackText (userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: MsMusicApiSpotifyTrackInfo, nowPlaying: boolean): string {
+export function getPntrackText (userInfo: UserInfo, artistInfo: ArtistInfo | undefined, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, nowPlaying: boolean): string {
   const { user } = userInfo
-  const { artist } = artistInfo
+  const { artist } = artistInfo ?? {}
   const { album } = albumInfo
   const { track } = trackInfo
   const textArray: string[] = []
 
-  textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}:</b>`)
+  textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}:</b>`)
   textArray.push('')
   switch (nowPlaying) {
     case true:
@@ -188,7 +188,7 @@ export function getPntrackText (userInfo: UserInfo, artistInfo: ArtistInfo, albu
   }
   textArray.push(`- Música: <b><a href="${track.url}">${track.name}</a></b>`)
   textArray.push(`- Álbum: <b><a href="${album.url}">${album.name}</a></b>`)
-  textArray.push(`- Artista: <b><a href="${artist.url}">${artist.name}</a></b>`)
+  textArray.push(`- Artista: <b><a href="${artist?.url ?? ''}">${track.artist.name}</a></b>`)
   textArray.push('')
   textArray.push(`<b>[📊] ${track.userplaycount} Scrobbles</b>`)
 
@@ -202,7 +202,7 @@ export function getPnalbumText (userInfo: UserInfo, artistInfo: ArtistInfo, albu
   const { album } = albumInfo
   const textArray: string[] = []
 
-  textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}:</b>`)
+  textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}:</b>`)
   textArray.push('')
   switch (nowPlaying) {
     case true:
@@ -221,12 +221,12 @@ export function getPnalbumText (userInfo: UserInfo, artistInfo: ArtistInfo, albu
   return text
 }
 
-export function getPnartistText (userInfo: UserInfo, artistInfo: ArtistInfo, nowPlaying: boolean): string {
+export function getPnartistText (userInfo: UserInfo, artistInfo: ArtistInfo, spotifyArtistInfo: Artist, nowPlaying: boolean): string {
   const { user } = userInfo
   const { artist } = artistInfo
   const textArray: string[] = []
 
-  textArray.push(`<b><a href="${artist.image[artist.image.length - 1]['#text']}">️️</a><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}:</b>`)
+  textArray.push(`<b><a href="${spotifyArtistInfo.images?.[0].url ?? ''}">️️</a><a href="${artist.image[user.image.length - 1]['#text']}">️️</a><a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}:</b>`)
   textArray.push('')
   switch (nowPlaying) {
     case true:

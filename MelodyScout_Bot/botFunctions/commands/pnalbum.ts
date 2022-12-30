@@ -1,17 +1,20 @@
-import { CallbackQueryContext, CommandContext, Context } from 'grammy'
+import { CallbackQueryContext, CommandContext, Context, InlineKeyboard } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { PrismaDB } from '../../../function/prismaDB/base'
 import { getPnalbumText } from '../../function/textFabric'
+import { MsMusicApi } from '../../../api/msMusicApi/base'
 
 export class PnalbumCommand {
   private readonly ctxFunctions: CtxFunctions
   private readonly msLastfmApi: MsLastfmApi
+  private readonly msMusicApi: MsMusicApi
   private readonly prismaDB: PrismaDB
 
-  constructor (ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB) {
+  constructor (ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msMusicApi: MsMusicApi, prismaDB: PrismaDB) {
     this.ctxFunctions = ctxFunctions
     this.msLastfmApi = msLastfmApi
+    this.msMusicApi = msMusicApi
     this.prismaDB = prismaDB
   }
 
@@ -63,7 +66,8 @@ export class PnalbumCommand {
     }
     const artistInfoRequest = this.msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
     const albumInfoRequest = this.msLastfmApi.album.getInfo(mainTrack.artistName, mainTrack.albumName, mainTrack.albumMbid, lastfmUser)
-    const [artistInfo, albumInfo] = await Promise.all([artistInfoRequest, albumInfoRequest])
+    const spotifyAlbumInfoRequest = this.msMusicApi.getSpotifyAlbumInfo(mainTrack.artistName, mainTrack.albumName)
+    const [artistInfo, albumInfo, spotifyAlbumInfo] = await Promise.all([artistInfoRequest, albumInfoRequest, spotifyAlbumInfoRequest])
     if (!artistInfo.success) {
       void this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
@@ -72,6 +76,8 @@ export class PnalbumCommand {
       void this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
-    await this.ctxFunctions.reply(ctx, getPnalbumText(userInfo.data, artistInfo.data, albumInfo.data, mainTrack.nowPlaying))
+    const inlineKeyboard = new InlineKeyboard()
+    if (spotifyAlbumInfo.success) inlineKeyboard.url('[🎧] - Spotify', spotifyAlbumInfo.data.externalURL.spotify)
+    await this.ctxFunctions.reply(ctx, getPnalbumText(userInfo.data, artistInfo.data, albumInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   }
 }

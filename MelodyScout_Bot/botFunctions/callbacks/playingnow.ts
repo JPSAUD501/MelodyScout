@@ -97,17 +97,12 @@ export class PlayingnowCallback {
       void this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Erro ao buscar informações do Spotify!')
       return
     }
-    if (!youtubeTrackInfo.success) {
-      void this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do YouTube da música que você está ouvindo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-      void this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Erro ao buscar informações do YouTube!')
-      return
-    }
     const inlineKeyboard = new InlineKeyboard()
-    inlineKeyboard.url('[🎧] - Spotify', spotifyTrackInfo.trackUrl)
+    inlineKeyboard.url('[🎧] - Spotify', spotifyTrackInfo.data.externalURL.spotify)
     if (youtubeTrackInfo.success) inlineKeyboard.url('[🎥] - YouTube', youtubeTrackInfo.videoUrl)
     inlineKeyboard.row()
     inlineKeyboard.text('[📥] - Preview', getCallbackKey(['TP', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
     inlineKeyboard.text('[🧾] - Letra', getCallbackKey(['TL', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
-    await this.ctxFunctions.reply(ctx, getPlayingnowText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+    await this.ctxFunctions.reply(ctx, getPlayingnowText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   }
 }
