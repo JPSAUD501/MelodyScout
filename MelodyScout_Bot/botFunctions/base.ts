@@ -13,7 +13,6 @@ import { TracklistCommand } from './commands/tracklist'
 import { UntrackCommand } from './commands/untrack'
 import { CtxFunctions } from '../../function/ctxFunctions'
 import { HistoryCommand } from './commands/history'
-import { LyricsCommand } from './commands/lyrics'
 import { MsGeniusApi } from '../../api/msGeniusApi/base'
 import { MsMusicApi } from '../../api/msMusicApi/base'
 import { TrackpreviewCallback } from './callbacks/trackpreview'
@@ -37,7 +36,6 @@ export class BotFunctions {
   briefCommand: BriefCommand
   playingnowCommand: PlayingnowCommand
   historyCommand: HistoryCommand
-  lyricsCommand: LyricsCommand
   pinCommand: PinCommand
   pntrackCommand: PntrackCommand
   pnalbumCommand: PnalbumCommand
@@ -60,7 +58,6 @@ export class BotFunctions {
     this.briefCommand = new BriefCommand(ctxFunctions, msLastfmApi, prismaDB)
     this.playingnowCommand = new PlayingnowCommand(ctxFunctions, msLastfmApi, prismaDB, msMusicApi)
     this.historyCommand = new HistoryCommand(ctxFunctions, msLastfmApi, prismaDB)
-    this.lyricsCommand = new LyricsCommand(ctxFunctions, msLastfmApi, prismaDB, msGeniusApi)
     this.pinCommand = new PinCommand(ctxFunctions)
     this.pntrackCommand = new PntrackCommand(ctxFunctions, msLastfmApi, prismaDB, msMusicApi)
     this.pnalbumCommand = new PnalbumCommand(ctxFunctions, msLastfmApi, msMusicApi, prismaDB)

@@ -104,10 +104,6 @@ export class MelodyScoutBot {
       void this.botFunctions.historyCommand.run(ctx)
     })
 
-    this.bot.command('lyrics', async (ctx) => {
-      void this.botFunctions.lyricsCommand.run(ctx)
-    })
-
     this.bot.command('pin', async (ctx) => {
       void this.botFunctions.pinCommand.run(ctx)
     })
