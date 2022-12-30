@@ -1,6 +1,6 @@
 {
   "name": "melodyscout",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Last.fm Telegram Tracker bot",
   "main": "app.ts",
   "scripts": {
