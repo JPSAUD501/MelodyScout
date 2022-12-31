@@ -34,7 +34,7 @@ export class TracklyricsCallback {
     if (track === undefined || artist === undefined) return await this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Nome da música ou do artista não encontrado!')
     const trackLyrics = await this.msGeniusApi.getLyrics(track, artist)
     if (trackLyrics === null) {
-      void this.ctxFunctions.reply(ctx, 'Não foi possível resgatar a letra dessa música, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Infelizmente não foi possível encontrar a letra dessa música na Genius.', { reply_to_message_id: messageId })
       void this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Erro ao resgatar a letra da música!')
       return
     }
