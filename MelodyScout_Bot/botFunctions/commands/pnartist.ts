@@ -2,8 +2,8 @@ import { CallbackQueryContext, CommandContext, Context, InlineKeyboard } from 'g
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { PrismaDB } from '../../../function/prismaDB/base'
-import { getPnartistText } from '../../function/textFabric'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
+import { getPnartistText } from '../../textFabric/pnalbum'
 
 export class PnartistCommand {
   private readonly ctxFunctions: CtxFunctions

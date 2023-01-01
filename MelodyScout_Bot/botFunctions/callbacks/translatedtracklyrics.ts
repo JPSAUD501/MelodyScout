@@ -1,9 +1,9 @@
 import { CallbackQueryContext, Context } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
-import { getLyricsLiteText } from '../../function/textFabric'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
 import config from '../../../config'
 import { translate } from '@vitalets/google-translate-api'
+import { getLyricsLiteText } from '../../textFabric/lyricslite'
 
 export class TranslatedtracklyricsCallback {
   private readonly ctxFunctions: CtxFunctions

@@ -1,6 +1,6 @@
 import { CommandContext, Context } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
-import { getHelpText } from '../../function/textFabric'
+import { getHelpText } from '../../textFabric/help'
 
 export class HelpCommand {
   private readonly ctxFunctions: CtxFunctions

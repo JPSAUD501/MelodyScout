@@ -2,9 +2,9 @@ import { CallbackQueryContext, CommandContext, Context, InlineKeyboard } from 'g
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { PrismaDB } from '../../../function/prismaDB/base'
-import { getPntrackText } from '../../function/textFabric'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { getCallbackKey } from '../../../function/callbackMaker'
+import { getPntrackText } from '../../textFabric/pntrack'
 
 export class PntrackCommand {
   private readonly ctxFunctions: CtxFunctions

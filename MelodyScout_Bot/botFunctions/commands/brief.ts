@@ -2,7 +2,7 @@ import { CommandContext, Context } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { PrismaDB } from '../../../function/prismaDB/base'
-import { getBriefText } from '../../function/textFabric'
+import { getBriefText } from '../../textFabric/brief'
 
 export class BriefCommand {
   private readonly ctxFunctions: CtxFunctions

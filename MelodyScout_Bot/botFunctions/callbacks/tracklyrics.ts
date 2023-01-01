@@ -1,9 +1,9 @@
 import { CallbackQueryContext, Context, InlineKeyboard } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
-import { getLyricsLiteText } from '../../function/textFabric'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
 import config from '../../../config'
 import { getCallbackKey } from '../../../function/callbackMaker'
+import { getLyricsLiteText } from '../../textFabric/lyricslite'
 
 export class TracklyricsCallback {
   private readonly ctxFunctions: CtxFunctions

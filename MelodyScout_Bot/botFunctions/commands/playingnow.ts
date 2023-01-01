@@ -2,9 +2,9 @@ import { CommandContext, Context, InlineKeyboard } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { PrismaDB } from '../../../function/prismaDB/base'
-import { getPlayingnowText } from '../../function/textFabric'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { getCallbackKey } from '../../../function/callbackMaker'
+import { getPlayingnowText } from '../../textFabric/playingnow'
 
 export class PlayingnowCommand {
   private readonly ctxFunctions: CtxFunctions
