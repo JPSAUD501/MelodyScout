@@ -7,6 +7,7 @@ import { UserRecentTracks } from '../../api/msLastfmApi/types/zodUserRecentTrack
 import { UserTopAlbums } from '../../api/msLastfmApi/types/zodUserTopAlbums'
 import { UserTopArtists } from '../../api/msLastfmApi/types/zodUserTopArtists'
 import { UserTopTracks } from '../../api/msLastfmApi/types/zodUserTopTracks'
+import { MsGeniusApiGetSongData } from '../../api/msGeniusApi/base'
 
 export function getHelpText (): string {
   const textArray: string[] = [
@@ -270,12 +271,12 @@ export function getHistoryText (userInfo: UserInfo, userRecentTracks: UserRecent
   return text
 }
 
-export function getLyricsLiteText (track: string, artist: string, trackLyrics: string, translated: boolean, requestedBy: string): string {
+export function getLyricsLiteText (track: string, artist: string, geniusSong: MsGeniusApiGetSongData, requestedBy: string, translatedLyrics?: string): string {
   const textArray: string[] = []
 
-  textArray.push(`<b>[📝] Letra de "${track}" por "${artist}" solicitada por ${requestedBy}${translated ? ' traduzida para o português' : ''}:</b>`)
+  textArray.push(`<b>[📝] Letra de "${track}" por "${artist}" <a href="${geniusSong.song.url}">fornecida pela Genius</a> solicitada por ${requestedBy}${translatedLyrics !== undefined ? ' traduzida para o português' : ''}:</b>`)
   textArray.push('')
-  textArray.push(`${trackLyrics}`)
+  textArray.push(`${translatedLyrics === undefined ? geniusSong.lyrics : translatedLyrics}`)
 
   const text = textArray.join('\n')
   return text

@@ -32,14 +32,14 @@ export class TracklyricsCallback {
     const track = dataArray[1]
     const artist = dataArray[2]
     if (track === undefined || artist === undefined) return await this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Nome da música ou do artista não encontrado!')
-    const trackLyrics = await this.msGeniusApi.getLyrics(track, artist)
-    if (trackLyrics === null) {
+    const geniusSong = await this.msGeniusApi.getSong(track, artist)
+    if (!geniusSong.success) {
       void this.ctxFunctions.reply(ctx, 'Infelizmente não foi possível encontrar a letra dessa música na Genius.', { reply_to_message_id: messageId })
       void this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Erro ao resgatar a letra da música!')
       return
     }
     const inlineKeyboard = new InlineKeyboard()
     inlineKeyboard.text('Traduzir', getCallbackKey(['TTL', track, artist]))
-    await this.ctxFunctions.reply(ctx, getLyricsLiteText(track, artist, trackLyrics, false, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId, reply_markup: inlineKeyboard })
+    await this.ctxFunctions.reply(ctx, getLyricsLiteText(track, artist, geniusSong.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId, reply_markup: inlineKeyboard })
   }
 }
