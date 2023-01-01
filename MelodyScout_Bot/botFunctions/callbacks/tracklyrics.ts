@@ -40,6 +40,6 @@ export class TracklyricsCallback {
     }
     const inlineKeyboard = new InlineKeyboard()
     inlineKeyboard.text('Traduzir', getCallbackKey(['TTL', track, artist]))
-    await this.ctxFunctions.reply(ctx, getLyricsLiteText(track, artist, geniusSong.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId, reply_markup: inlineKeyboard })
+    await this.ctxFunctions.reply(ctx, getLyricsLiteText(track, artist, geniusSong.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId, reply_markup: inlineKeyboard, disable_web_page_preview: true })
   }
 }

@@ -46,6 +46,6 @@ export class TranslatedtracklyricsCallback {
       void this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Erro ao traduzir a letra da música!')
       return
     }
-    await this.ctxFunctions.editMessage(ctx, getLyricsLiteText(track, artist, geniusSong.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, translatedTrackLyrics.text))
+    await this.ctxFunctions.editMessage(ctx, getLyricsLiteText(track, artist, geniusSong.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, translatedTrackLyrics.text), { disable_web_page_preview: true })
   }
 }

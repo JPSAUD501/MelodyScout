@@ -274,7 +274,7 @@ export function getHistoryText (userInfo: UserInfo, userRecentTracks: UserRecent
 export function getLyricsLiteText (track: string, artist: string, geniusSong: MsGeniusApiGetSongData, requestedBy: string, translatedLyrics?: string): string {
   const textArray: string[] = []
 
-  textArray.push(`<b>[📝] Letra de "${track}" por "${artist}" <a href="${geniusSong.song.url}">fornecida pela Genius</a> solicitada por ${requestedBy}${translatedLyrics !== undefined ? ' traduzida para o português' : ''}:</b>`)
+  textArray.push(`<b>[📝] Letra de "${track}" por "${artist}" fornecida pela <a href="${geniusSong.song.url}">Genius</a>${translatedLyrics !== undefined ? ' traduzida para o português' : ''} solicitada por ${requestedBy}:</b>`)
   textArray.push('')
   textArray.push(`${translatedLyrics === undefined ? geniusSong.lyrics : translatedLyrics}`)
 
