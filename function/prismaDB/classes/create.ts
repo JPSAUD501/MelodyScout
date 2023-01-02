@@ -35,7 +35,11 @@ export class Create {
   async trackingUser (lastfmUser: string): Promise<CreateDefaultResponse> {
     const createdTrackingUser = await this.prisma.trackingUsers.create({
       data: {
-        lastfmUser
+        lastfmUser,
+        lastUpdate: new Date().getTime().toString(),
+        lastTrack: '',
+        lastArtist: '',
+        lastscrobbleCount: ''
       }
     }).catch((err) => {
       this.advConsole.error('Error while creating new tracking user! LastFM User: ' + lastfmUser)

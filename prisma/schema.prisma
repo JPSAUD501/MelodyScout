@@ -18,6 +18,10 @@ model TrackerChats {
 model TrackingUsers {
   lastfmUser              String @id @unique
   trackingInChats         TrackerChats[]
+  lastUpdate              String
+  lastTrack               String
+  lastArtist              String
+  lastScrobbleCount       String
 }
 
 model TelegramUsers {
