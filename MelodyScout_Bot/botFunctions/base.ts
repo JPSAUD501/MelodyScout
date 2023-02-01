@@ -67,5 +67,7 @@ export class BotFunctions {
     this.playingnowCallback = new PlayingnowCallback(ctxFunctions, msLastfmApi, prismaDB, msMusicApi)
     this.tracklyricsCallback = new TracklyricsCallback(ctxFunctions, msGeniusApi)
     this.translatedtracklyricsCallback = new TranslatedtracklyricsCallback(ctxFunctions, msGeniusApi)
+
+    advConsole.log('BotFunctions started!')
   }
 }
