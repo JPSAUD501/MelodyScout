@@ -81,7 +81,7 @@ export class MelodyScoutBot {
       void this.botFunctions.briefCommand.run(ctx)
     })
 
-    this.bot.command(['playingnow', 'pn', 'listeningnow', 'ln'], async (ctx) => {
+    this.bot.command(['playingnow', 'pn', 'listeningnow'], async (ctx) => {
       void this.botFunctions.playingnowCommand.run(ctx)
     })
 
@@ -93,15 +93,15 @@ export class MelodyScoutBot {
       void this.botFunctions.pinCommand.run(ctx)
     })
 
-    this.bot.command(['pntrack', 'trk'], async (ctx) => {
+    this.bot.command(['pntrack'], async (ctx) => {
       void this.botFunctions.pntrackCommand.run(ctx)
     })
 
-    this.bot.command(['pnalbum', 'alb'], async (ctx) => {
+    this.bot.command(['pnalbum'], async (ctx) => {
       void this.botFunctions.pnalbumCommand.run(ctx)
     })
 
-    this.bot.command(['pnartist', 'art'], async (ctx) => {
+    this.bot.command(['pnartist'], async (ctx) => {
       void this.botFunctions.pnartistCommand.run(ctx)
     })
 
