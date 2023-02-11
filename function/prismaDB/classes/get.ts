@@ -21,66 +21,6 @@ export class Get {
     this.create = Create
   }
 
-  async trackerChat (chatId: string): Promise<GetDefaultResponseError | { success: true, trackingUsers: string[] }> {
-    const checkIfExists = await this.checkIfExists.trackerChat(chatId)
-    if (!checkIfExists.success) return { success: false, error: checkIfExists.error }
-    if (!checkIfExists.exists) {
-      const createTrackerChat = await this.create.trackerChat(chatId)
-      if (!createTrackerChat.success) return { success: false, error: createTrackerChat.error }
-    }
-    const getTrackerChat = await this.prisma.trackerChats.findUnique({
-      where: {
-        chatId
-      },
-      select: {
-        trackingUsers: true
-      }
-    }).catch((err) => {
-      this.advConsole.error('Error while getting tracker chat! ChatId: ' + chatId)
-      this.advConsole.error(err)
-      return new Error(err)
-    })
-    if (getTrackerChat instanceof Error) return { success: false, error: getTrackerChat.message }
-    if (getTrackerChat === null) return { success: false, error: 'Tracker chat does not exist!' }
-    const trackingUsers = getTrackerChat.trackingUsers.map((trackingUser) => {
-      return trackingUser.lastfmUser
-    })
-    return {
-      success: true,
-      trackingUsers
-    }
-  }
-
-  async trackingUser (lastfmUser: string): Promise<GetDefaultResponseError | { success: true, trackingInChats: string[] }> {
-    const checkIfExists = await this.checkIfExists.trackingUser(lastfmUser)
-    if (!checkIfExists.success) return { success: false, error: checkIfExists.error }
-    if (!checkIfExists.exists) {
-      const createTrackingUser = await this.create.trackingUser(lastfmUser)
-      if (!createTrackingUser.success) return { success: false, error: createTrackingUser.error }
-    }
-    const getTrackingUser = await this.prisma.trackingUsers.findUnique({
-      where: {
-        lastfmUser
-      },
-      select: {
-        trackingInChats: true
-      }
-    }).catch((err) => {
-      this.advConsole.error('Error while getting tracking user! LastfmUser: ' + lastfmUser)
-      this.advConsole.error(err)
-      return new Error(err)
-    })
-    if (getTrackingUser instanceof Error) return { success: false, error: getTrackingUser.message }
-    if (getTrackingUser === null) return { success: false, error: 'Tracking user does not exist!' }
-    const trackingInChats = getTrackingUser.trackingInChats.map((trackerChat) => {
-      return trackerChat.chatId
-    })
-    return {
-      success: true,
-      trackingInChats
-    }
-  }
-
   async telegramUser (telegramUserId: string): Promise<GetDefaultResponseError | { success: true, lastfmUser: string | null, lastUpdate: string }> {
     const checkIfExists = await this.checkIfExists.telegramUser(telegramUserId)
     if (!checkIfExists.success) return { success: false, error: checkIfExists.error }

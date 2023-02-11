@@ -34,9 +34,6 @@ export class MelodyScoutBot {
       { command: 'start', description: 'Hello! I\'m MelodyScout' },
       { command: 'help', description: 'Show help message' },
       { command: 'contact', description: 'Contact the bot owner' },
-      { command: 'track', description: 'Track a new user Last.fm in this chat' },
-      { command: 'untrack', description: 'Untrack a user Last.fm in this chat' },
-      { command: 'tracklist', description: 'Show the list of tracked users Last.fm in this chat' },
       { command: 'myuser', description: 'Set your Last.fm user' },
       { command: 'forgetme', description: 'Forget your Last.fm user' },
       { command: 'brief', description: 'Show the brief of your Last.fm user' },
@@ -66,18 +63,6 @@ export class MelodyScoutBot {
 
     this.bot.command('help', async (ctx) => {
       void this.botFunctions.helpCommand.run(ctx)
-    })
-
-    this.bot.command('track', async (ctx) => {
-      void this.botFunctions.trackCommand.run(ctx)
-    })
-
-    this.bot.command('untrack', async (ctx) => {
-      void this.botFunctions.untrackCommand.run(ctx)
-    })
-
-    this.bot.command('tracklist', async (ctx) => {
-      void this.botFunctions.tracklistCommand.run(ctx)
     })
 
     this.bot.command('contact', async (ctx) => {

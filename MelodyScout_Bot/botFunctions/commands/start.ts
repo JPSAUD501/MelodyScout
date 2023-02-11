@@ -18,7 +18,7 @@ export class StartCommand {
       void this.ctxFunctions.reply(ctx, 'Tudo é melhor com amigos, não é mesmo? Crie um grupo com seus amigos e me adicione nele, pode ser um grupo ja criado também o importante e me adicionar nele, prometo que eu sou legal! Em seguida utilize o comando /start lá novamente que eu te ajudarei a me configurar!')
       return
     }
-    await this.ctxFunctions.reply(ctx, 'Que legal fazer parte desse grupo com vocês! Espero que gostem de mim! Bom, vamos lá!\n\nPrimeiramente eu gostaria de saber quais são os perfis do Last.fm que eu devo rastrear, para isso você deve me enviar os nomes de usuário dos perfis que você deseja que eu rastreie nesse grupo. Para isso basta enviar o comando /track junto com o nome de usuário do perfil que você deseja adicionar a milha lista de rastreio.\n\nPor exemplo: <code>/track MelodyScout</code>')
+    await this.ctxFunctions.reply(ctx, 'Que legal fazer parte desse grupo com vocês! Espero que gostem de mim! Bom, vamos lá!\n\nUtilize o comando <code>/myuser</code> para definir seu nome de usuário do Last.fm!\n\nPor exemplo: <code>/track MelodyScout</code>')
     await this.ctxFunctions.reply(ctx, 'Aproveitando a oportunidade, você pode me enviar o comando /help para saber mais sobre os comandos que eu possuo!')
   }
 }

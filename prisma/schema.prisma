@@ -10,20 +10,6 @@ datasource db {
   url                     = env("DATABASE_URL")
 }
 
-model TrackerChats {
-  chatId                  String @id @unique
-  trackingUsers           TrackingUsers[]
-}
-
-model TrackingUsers {
-  lastfmUser              String @id @unique
-  trackingInChats         TrackerChats[]
-  lastUpdate              String
-  lastTrack               String
-  lastArtist              String
-  lastScrobbleCount       String
-}
-
 model TelegramUsers {
   telegramUserId          String @id @unique
   lastfmUser              String?

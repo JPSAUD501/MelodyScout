@@ -8,9 +8,6 @@ import { HelpCommand } from './commands/help'
 import { MyuserCommand } from './commands/myuser'
 import { PlayingnowCommand } from './commands/playingnow'
 import { StartCommand } from './commands/start'
-import { TrackCommand } from './commands/track'
-import { TracklistCommand } from './commands/tracklist'
-import { UntrackCommand } from './commands/untrack'
 import { CtxFunctions } from '../../function/ctxFunctions'
 import { HistoryCommand } from './commands/history'
 import { MsGeniusApi } from '../../api/msGeniusApi/base'
@@ -27,9 +24,6 @@ import { TranslatedtracklyricsCallback } from './callbacks/translatedtracklyrics
 export class BotFunctions {
   startCommand: StartCommand
   helpCommand: HelpCommand
-  trackCommand: TrackCommand
-  untrackCommand: UntrackCommand
-  tracklistCommand: TracklistCommand
   contactCommand: ContactCommand
   myuserCommand: MyuserCommand
   forgetmeCommand: ForgetmeCommand
@@ -49,9 +43,6 @@ export class BotFunctions {
   constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi) {
     this.startCommand = new StartCommand(ctxFunctions)
     this.helpCommand = new HelpCommand(ctxFunctions)
-    this.trackCommand = new TrackCommand(ctxFunctions, msLastfmApi, prismaDB)
-    this.untrackCommand = new UntrackCommand(ctxFunctions, prismaDB)
-    this.tracklistCommand = new TracklistCommand(ctxFunctions, prismaDB)
     this.contactCommand = new ContactCommand(ctxFunctions)
     this.myuserCommand = new MyuserCommand(ctxFunctions, msLastfmApi, prismaDB)
     this.forgetmeCommand = new ForgetmeCommand(ctxFunctions, prismaDB)
