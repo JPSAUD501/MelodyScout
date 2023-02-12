@@ -110,4 +110,23 @@ export class CtxFunctions {
       this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
     })
   }
+
+  async replyWithFile (ctx: CommandContext<Context> | CallbackQueryContext<Context>, file: string | InputFile, options?: Other<RawApi, 'sendDocument', 'chat_id' | 'document'>): Promise<void> {
+    if (ctx.chat === undefined) return this.advConsole.error('MelodyScout_Bot - Error: ctx.chat is undefined')
+    const loadingMessage = await ctx.reply('<b>[📁] Enviando arquivo por favor aguarde!</b>', {
+      parse_mode: 'HTML'
+    }).catch((err) => {
+      this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+    })
+    if (loadingMessage === undefined) return this.advConsole.error('MelodyScout_Bot - Error: loadingMessage is undefined')
+    await ctx.api.sendDocument(ctx.chat.id, file, {
+      parse_mode: 'HTML',
+      ...options
+    }).catch((err) => {
+      this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+    })
+    await ctx.api.deleteMessage(ctx.chat.id, loadingMessage.message_id).catch((err) => {
+      this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+    })
+  }
 }

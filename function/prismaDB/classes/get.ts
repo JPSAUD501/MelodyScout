@@ -49,4 +49,23 @@ export class Get {
       lastUpdate: getTelegramUser.lastUpdate
     }
   }
+
+  async allTelegramUsers (): Promise<GetDefaultResponseError | { success: true, telegramUsers: Array<{ telegramUserId: string, lastfmUser: string | null, lastUpdate: string }> }> {
+    const getAllTelegramUsers = await this.prisma.telegramUsers.findMany({
+      select: {
+        telegramUserId: true,
+        lastfmUser: true,
+        lastUpdate: true
+      }
+    }).catch((err) => {
+      this.advConsole.error('Error while getting all telegram users!')
+      this.advConsole.error(err)
+      return new Error(err)
+    })
+    if (getAllTelegramUsers instanceof Error) return { success: false, error: getAllTelegramUsers.message }
+    return {
+      success: true,
+      telegramUsers: getAllTelegramUsers
+    }
+  }
 }

@@ -2,13 +2,16 @@ import { CommandContext, Context } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { PrismaDB } from '../../../function/prismaDB/base'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
+import { AdvConsole } from '../../../function/advancedConsole'
 
 export class MyuserCommand {
+  private readonly advConsole: AdvConsole
   private readonly ctxFunctions: CtxFunctions
   private readonly msLastfmApi: MsLastfmApi
   private readonly prismaDB: PrismaDB
 
-  constructor (ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB) {
+  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB) {
+    this.advConsole = advConsole
     this.ctxFunctions = ctxFunctions
     this.msLastfmApi = msLastfmApi
     this.prismaDB = prismaDB
@@ -53,6 +56,7 @@ export class MyuserCommand {
       void this.ctxFunctions.reply(ctx, 'Ops! Parece que eu não consegui registrar o seu nome de usuário do Last.fm! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
       return
     }
+    this.advConsole.log(`O usuário "${telegramUserId}" cadastrou o nome de usuário "${username}" do Last.fm no MelodyScout!`)
     await this.ctxFunctions.reply(ctx, 'Pronto! Seu nome de usuário do Last.fm foi registrado com sucesso! Agradeço imensamente por isso e espero que você aproveite o bot!')
   }
 }

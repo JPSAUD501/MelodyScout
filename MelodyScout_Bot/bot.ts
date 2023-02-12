@@ -105,6 +105,10 @@ export class MelodyScoutBot {
       void this.botFunctions.pnartistCommand.run(ctx)
     })
 
+    this.bot.command(['allusers'], async (ctx) => {
+      void this.botFunctions.allusersCommand.run(ctx)
+    })
+
     this.bot.callbackQuery(/^TP/, async (ctx) => {
       void this.botFunctions.trackpreviewCallback.run(ctx)
     })

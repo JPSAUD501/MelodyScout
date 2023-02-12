@@ -20,6 +20,7 @@ import { PnartistCommand } from './commands/pnartist'
 import { PlayingnowCallback } from './callbacks/playingnow'
 import { TracklyricsCallback } from './callbacks/tracklyrics'
 import { TranslatedtracklyricsCallback } from './callbacks/translatedtracklyrics'
+import { AllusersCommand } from './commands/allusers'
 
 export class BotFunctions {
   startCommand: StartCommand
@@ -34,6 +35,7 @@ export class BotFunctions {
   pntrackCommand: PntrackCommand
   pnalbumCommand: PnalbumCommand
   pnartistCommand: PnartistCommand
+  allusersCommand: AllusersCommand
 
   trackpreviewCallback: TrackpreviewCallback
   playingnowCallback: PlayingnowCallback
@@ -44,7 +46,7 @@ export class BotFunctions {
     this.startCommand = new StartCommand(ctxFunctions)
     this.helpCommand = new HelpCommand(ctxFunctions)
     this.contactCommand = new ContactCommand(ctxFunctions)
-    this.myuserCommand = new MyuserCommand(ctxFunctions, msLastfmApi, prismaDB)
+    this.myuserCommand = new MyuserCommand(advConsole, ctxFunctions, msLastfmApi, prismaDB)
     this.forgetmeCommand = new ForgetmeCommand(ctxFunctions, prismaDB)
     this.briefCommand = new BriefCommand(ctxFunctions, msLastfmApi, prismaDB)
     this.playingnowCommand = new PlayingnowCommand(ctxFunctions, msLastfmApi, prismaDB, msMusicApi)
@@ -53,6 +55,7 @@ export class BotFunctions {
     this.pntrackCommand = new PntrackCommand(ctxFunctions, msLastfmApi, prismaDB, msMusicApi)
     this.pnalbumCommand = new PnalbumCommand(ctxFunctions, msLastfmApi, msMusicApi, prismaDB)
     this.pnartistCommand = new PnartistCommand(ctxFunctions, msLastfmApi, msMusicApi, prismaDB)
+    this.allusersCommand = new AllusersCommand(ctxFunctions, prismaDB)
 
     this.trackpreviewCallback = new TrackpreviewCallback(ctxFunctions, msMusicApi)
     this.playingnowCallback = new PlayingnowCallback(ctxFunctions, msLastfmApi, prismaDB, msMusicApi)
