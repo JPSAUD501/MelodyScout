@@ -25,9 +25,10 @@ export class AllusersCommand {
       await this.ctxFunctions.reply(ctx, 'Infelizmente não foi possível recuperar os usuários do banco de dados, por favor tente novamente mais tarde!')
       return
     }
+    const personsEmojis = ['🧑', '🧔', '🧓', '🧕', '🧙', '🧚', '🧛', '🧜', '🧝', '🧞', '🧟', '👨', '👩', '👱', '👴', '👵', '👲', '👳', '👮', '👷', '💂', '🕵', '👼', '🎅', '👸', '🤴', '👰', '🤵']
     const allUsersString = allUsers.telegramUsers.map((user) => {
-      return `👤 - T:${user.telegramUserId} - L:${user.lastfmUser === null ? '<code>Não cadastrado</code>' : user.lastfmUser}`
+      return `${personsEmojis[Math.floor(Math.random() * personsEmojis.length)]} - TELEGRAM-ID: <code>${user.telegramUserId}</code> | LASTFM-USER: <code>${user.lastfmUser === null ? 'Não cadastrado' : user.lastfmUser}</code> | LAST-UPDATE: <code>${user.lastUpdate}</code>`
     }).join('\n')
-    await this.ctxFunctions.reply(ctx, `👥 - Lista de usuários do MelodyScout:\n\n${allUsersString}`)
+    await this.ctxFunctions.reply(ctx, `<b>[🗃] Lista de usuários do MelodyScout:</b>\n\n${allUsersString}`)
   }
 }
