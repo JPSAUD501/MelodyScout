@@ -57,15 +57,15 @@ export class MelodyScoutBot {
   }
 
   hear (): void {
-    this.bot.command('start', async (ctx) => {
+    this.bot.command(['start'], async (ctx) => {
       void this.botFunctions.startCommand.run(ctx)
     })
 
-    this.bot.command('help', async (ctx) => {
+    this.bot.command(['help'], async (ctx) => {
       void this.botFunctions.helpCommand.run(ctx)
     })
 
-    this.bot.command('contact', async (ctx) => {
+    this.bot.command(['contact'], async (ctx) => {
       void this.botFunctions.contactCommand.run(ctx)
     })
 
@@ -73,11 +73,11 @@ export class MelodyScoutBot {
       void this.botFunctions.myuserCommand.run(ctx)
     })
 
-    this.bot.command('forgetme', async (ctx) => {
+    this.bot.command(['forgetme'], async (ctx) => {
       void this.botFunctions.forgetmeCommand.run(ctx)
     })
 
-    this.bot.command('brief', async (ctx) => {
+    this.bot.command(['brief'], async (ctx) => {
       void this.botFunctions.briefCommand.run(ctx)
     })
 
@@ -85,11 +85,11 @@ export class MelodyScoutBot {
       void this.botFunctions.playingnowCommand.run(ctx)
     })
 
-    this.bot.command('history', async (ctx) => {
+    this.bot.command(['history'], async (ctx) => {
       void this.botFunctions.historyCommand.run(ctx)
     })
 
-    this.bot.command('pin', async (ctx) => {
+    this.bot.command(['pin'], async (ctx) => {
       void this.botFunctions.pinCommand.run(ctx)
     })
 

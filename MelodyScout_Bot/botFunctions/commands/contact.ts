@@ -9,6 +9,6 @@ export class ContactCommand {
   }
 
   async run (ctx: CommandContext<Context>): Promise<void> {
-    await this.ctxFunctions.reply(ctx, 'Para entrar em contato com o desenvolvedor do bot, envie uma mensagem para o @jpsaud501!')
+    await this.ctxFunctions.reply(ctx, 'Para entrar em contato com o desenvolvedor do bot, envie uma mensagem para o @jpsaud!')
   }
 }
