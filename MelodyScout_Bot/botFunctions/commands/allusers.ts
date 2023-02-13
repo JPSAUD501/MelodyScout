@@ -27,8 +27,8 @@ export class AllusersCommand {
     }
     const personsEmojis = ['🧑', '🧔', '🧓', '🧕', '🧙', '🧚', '🧛', '🧜', '🧝', '🧞', '🧟', '👨', '👩', '👱', '👴', '👵', '👲', '👳', '👮', '👷', '💂', '🕵', '👼', '🎅', '👸', '🤴', '👰', '🤵']
     const allUsersString = allUsers.telegramUsers.map((user) => {
-      return `${personsEmojis[Math.floor(Math.random() * personsEmojis.length)]} - TELEGRAM-ID: <code>${user.telegramUserId}</code> | LASTFM-USER: <code>${user.lastfmUser === null ? 'Não cadastrado' : user.lastfmUser}</code> | LAST-UPDATE: <code>${user.lastUpdate}</code>`
+      return `<b>[${personsEmojis[Math.floor(Math.random() * personsEmojis.length)]}] ${user.lastfmUser === null ? 'Descadastrado' : user.lastfmUser}</b>\n- TelegramID: <code>${user.telegramUserId}</code>\nLastUpdate: <code>${user.lastUpdate}</code>\n`
     }).join('\n')
-    await this.ctxFunctions.reply(ctx, `<b>[🗃] Lista de usuários do MelodyScout:</b>\n\n${allUsersString}`)
+    await this.ctxFunctions.reply(ctx, `<b>[🗃] Lista de usuários do MelodyScout:</b>\n- Total de usuários: <code>${allUsers.telegramUsers.length}</code>\n\n${allUsersString}`)
   }
 }

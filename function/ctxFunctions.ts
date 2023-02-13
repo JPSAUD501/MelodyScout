@@ -59,6 +59,7 @@ export class CtxFunctions {
       ...options
     }).catch((err) => {
       this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+      this.advConsole.error(`MelodyScout_Bot - In Reply: ${message}`)
       return undefined
     })
     if (sendedMessage === undefined) return
