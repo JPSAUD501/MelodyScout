@@ -56,7 +56,7 @@ export class MyuserCommand {
       void this.ctxFunctions.reply(ctx, 'Ops! Parece que eu não consegui registrar o seu nome de usuário do Last.fm! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
       return
     }
-    this.advConsole.log(`O usuário "${telegramUserId}" cadastrou o nome de usuário "${username}" do Last.fm no MelodyScout!`)
+    this.advConsole.info(`O usuário "${telegramUserId}" cadastrou o nome de usuário "${username}" do Last.fm no MelodyScout!`)
     await this.ctxFunctions.reply(ctx, 'Pronto! Seu nome de usuário do Last.fm foi registrado com sucesso! Agradeço imensamente por isso e espero que você aproveite o bot!')
   }
 }
