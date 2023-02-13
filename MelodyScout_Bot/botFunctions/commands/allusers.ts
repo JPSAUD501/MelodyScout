@@ -13,7 +13,10 @@ export class AllusersCommand {
   }
 
   async run (ctx: CommandContext<Context>): Promise<void> {
-    // Check if ctx from id is in the admin list
+    if (ctx.chat?.type === 'channel') {
+      await this.ctxFunctions.reply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
+      return
+    }
     const ctxFromId = ctx.from?.id
     if (ctxFromId === undefined) {
       await this.ctxFunctions.reply(ctx, 'Infelizmente não foi possível identificar seu id, por favor tente novamente mais tarde!')

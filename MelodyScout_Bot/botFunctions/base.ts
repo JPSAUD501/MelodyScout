@@ -21,6 +21,9 @@ import { PlayingnowCallback } from './callbacks/playingnow'
 import { TracklyricsCallback } from './callbacks/tracklyrics'
 import { TranslatedtracklyricsCallback } from './callbacks/translatedtracklyrics'
 import { AllusersCommand } from './commands/allusers'
+import { MaintenanceCommand } from './commands/maintenance'
+import { MaintenanceinformCommand } from './commands/maintenanceinform'
+import { MaintenanceinformCallback } from './callbacks/maintenanceinform'
 
 export class BotFunctions {
   startCommand: StartCommand
@@ -36,11 +39,14 @@ export class BotFunctions {
   pnalbumCommand: PnalbumCommand
   pnartistCommand: PnartistCommand
   allusersCommand: AllusersCommand
+  maintenanceCommand: MaintenanceCommand
+  maintenanceinformCommand: MaintenanceinformCommand
 
   trackpreviewCallback: TrackpreviewCallback
   playingnowCallback: PlayingnowCallback
   tracklyricsCallback: TracklyricsCallback
   translatedtracklyricsCallback: TranslatedtracklyricsCallback
+  maintenanceinformCallback: MaintenanceinformCallback
 
   constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi) {
     this.startCommand = new StartCommand(ctxFunctions)
@@ -56,11 +62,14 @@ export class BotFunctions {
     this.pnalbumCommand = new PnalbumCommand(ctxFunctions, msLastfmApi, msMusicApi, prismaDB)
     this.pnartistCommand = new PnartistCommand(ctxFunctions, msLastfmApi, msMusicApi, prismaDB)
     this.allusersCommand = new AllusersCommand(ctxFunctions, prismaDB)
+    this.maintenanceCommand = new MaintenanceCommand(advConsole, ctxFunctions)
+    this.maintenanceinformCommand = new MaintenanceinformCommand(advConsole, ctxFunctions)
 
     this.trackpreviewCallback = new TrackpreviewCallback(ctxFunctions, msMusicApi)
     this.playingnowCallback = new PlayingnowCallback(ctxFunctions, msLastfmApi, prismaDB, msMusicApi)
     this.tracklyricsCallback = new TracklyricsCallback(ctxFunctions, msGeniusApi)
     this.translatedtracklyricsCallback = new TranslatedtracklyricsCallback(ctxFunctions, msGeniusApi)
+    this.maintenanceinformCallback = new MaintenanceinformCallback(advConsole, ctxFunctions)
 
     advConsole.log('BotFunctions started!')
   }

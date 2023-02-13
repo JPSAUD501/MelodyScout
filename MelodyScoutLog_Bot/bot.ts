@@ -38,6 +38,10 @@ export class MelodyScoutLogBot {
     this.messageQueue.push('🔵 - ' + String(log))
   }
 
+  sendInfo (info: any): void {
+    this.messageQueue.push('🟠 - ' + String(info))
+  }
+
   sendError (error: any): void {
     this.messageQueue.push('🔴 - ' + String(error))
   }

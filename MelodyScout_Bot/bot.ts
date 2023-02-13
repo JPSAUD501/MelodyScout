@@ -12,6 +12,7 @@ export class MelodyScoutBot {
   private readonly advConsole: AdvConsole
   private readonly bot: Bot
   private readonly botFunctions: BotFunctions
+  private maintenanceMode = false
 
   constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi) {
     this.advConsole = advConsole
@@ -57,6 +58,12 @@ export class MelodyScoutBot {
   }
 
   hear (): void {
+    this.bot.command(['maintenance'], async (ctx) => {
+      const maintenanceCommandResponse = await this.botFunctions.maintenanceCommand.run(ctx)
+      if (!maintenanceCommandResponse.success) return
+      this.maintenanceMode = maintenanceCommandResponse.maintenanceMode
+    })
+
     this.bot.command(['start'], async (ctx) => {
       void this.botFunctions.startCommand.run(ctx)
     })
@@ -70,22 +77,42 @@ export class MelodyScoutBot {
     })
 
     this.bot.command(['myuser', 'setuser', 'reg', 'register'], async (ctx) => {
+      if (this.maintenanceMode) {
+        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        return
+      }
       void this.botFunctions.myuserCommand.run(ctx)
     })
 
     this.bot.command(['forgetme'], async (ctx) => {
+      if (this.maintenanceMode) {
+        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        return
+      }
       void this.botFunctions.forgetmeCommand.run(ctx)
     })
 
     this.bot.command(['brief'], async (ctx) => {
+      if (this.maintenanceMode) {
+        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        return
+      }
       void this.botFunctions.briefCommand.run(ctx)
     })
 
     this.bot.command(['playingnow', 'pn', 'listeningnow'], async (ctx) => {
+      if (this.maintenanceMode) {
+        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        return
+      }
       void this.botFunctions.playingnowCommand.run(ctx)
     })
 
     this.bot.command(['history'], async (ctx) => {
+      if (this.maintenanceMode) {
+        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        return
+      }
       void this.botFunctions.historyCommand.run(ctx)
     })
 
@@ -94,34 +121,66 @@ export class MelodyScoutBot {
     })
 
     this.bot.command(['pntrack'], async (ctx) => {
+      if (this.maintenanceMode) {
+        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        return
+      }
       void this.botFunctions.pntrackCommand.run(ctx)
     })
 
     this.bot.command(['pnalbum'], async (ctx) => {
+      if (this.maintenanceMode) {
+        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        return
+      }
       void this.botFunctions.pnalbumCommand.run(ctx)
     })
 
     this.bot.command(['pnartist'], async (ctx) => {
+      if (this.maintenanceMode) {
+        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        return
+      }
       void this.botFunctions.pnartistCommand.run(ctx)
     })
 
     this.bot.command(['allusers'], async (ctx) => {
+      if (this.maintenanceMode) {
+        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        return
+      }
       void this.botFunctions.allusersCommand.run(ctx)
     })
 
     this.bot.callbackQuery(/^TP/, async (ctx) => {
+      if (this.maintenanceMode) {
+        void this.botFunctions.maintenanceinformCallback.run(ctx)
+        return
+      }
       void this.botFunctions.trackpreviewCallback.run(ctx)
     })
 
     this.bot.callbackQuery(/^TL/, async (ctx) => {
+      if (this.maintenanceMode) {
+        void this.botFunctions.maintenanceinformCallback.run(ctx)
+        return
+      }
       void this.botFunctions.tracklyricsCallback.run(ctx)
     })
 
     this.bot.callbackQuery(/^TTL/, async (ctx) => {
+      if (this.maintenanceMode) {
+        void this.botFunctions.maintenanceinformCallback.run(ctx)
+        return
+      }
       void this.botFunctions.translatedtracklyricsCallback.run(ctx)
     })
 
     this.bot.callbackQuery('PLAYINGNOW', async (ctx) => {
+      if (this.maintenanceMode) {
+        void this.botFunctions.maintenanceinformCallback.run(ctx)
+        return
+      }
       void this.botFunctions.playingnowCallback.run(ctx)
     })
 
