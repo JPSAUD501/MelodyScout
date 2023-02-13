@@ -36,10 +36,12 @@ export class MaintenanceCommand {
     }
     switch (args[1]) {
       case 'on': {
+        await this.ctxFunctions.reply(ctx, 'Modo de manutenção ativado!')
         this.advConsole.log('Maintenance mode activated!')
         return { success: true, maintenanceMode: true }
       }
       case 'off': {
+        await this.ctxFunctions.reply(ctx, 'Modo de manutenção desativado!')
         this.advConsole.log('Maintenance mode deactivated!')
         return { success: true, maintenanceMode: false }
       }
