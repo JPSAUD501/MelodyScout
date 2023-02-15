@@ -6,14 +6,14 @@ export function getHistoryText (userInfo: UserInfo, userRecentTracks: UserRecent
   const { recenttracks } = userRecentTracks
   const textArray: string[] = []
 
-  textArray.push(`<b><a href="${recenttracks.track[0].image[recenttracks.track[0].image.length - 1]['#text']}">️️</a><a href="${user.image[user.image.length - 1]['#text']}">️️</a>Histórico de reprodução de <a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a>:</b>`)
+  textArray.push(`<b><a href="${recenttracks.track[0].image[recenttracks.track[0].image.length - 1]['#text']}">️️</a><a href="${user.image[user.image.length - 1]['#text']}">️️</a>Histórico de reprodução de <a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a></b>`)
   textArray.push('')
   if (recenttracks.track[0]['@attr']?.nowplaying === 'true') {
     const track = recenttracks.track[0]
     textArray.push(`<b>[🎧] Ouvindo agora <a href="${track.url}">${track.name}</a> de <a href="${track.artist.url}">${track.artist.name}</a></b>`)
     textArray.push('')
   }
-  textArray.push('<b>[📒] Histórico de reprodução:</b>')
+  textArray.push('<b>[📒] Histórico de reprodução</b>')
   if (recenttracks.track.length > 0) {
     for (let i = 0; i < recenttracks.track.length; i++) {
       const track = recenttracks.track[i]

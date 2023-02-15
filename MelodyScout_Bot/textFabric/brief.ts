@@ -20,23 +20,23 @@ export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTr
       recenttracks.track[0]['@attr'].nowplaying === 'true'
   ) {
     const track = recenttracks.track[0]
-    textArray.push('<b>[🎧] Ouvindo agora:</b>')
+    textArray.push('<b>[🎧] Ouvindo agora</b>')
     textArray.push(`- <a href="${track.url}">${track.name}</a> de <a href="${track.artist.url}">${track.artist.name}</a>`)
     textArray.push('')
   }
-  textArray.push('<b>[📊] Métricas:</b>')
+  textArray.push('<b>[📊] Métricas</b>')
   textArray.push(`- Músicas ouvidas: <b>${Number(user.playcount)}</b>`)
   textArray.push(`- Músicas conhecidas: <b>${Number(user.track_count)}</b>`)
   textArray.push(`- Músicas repetidas: <b>${Number(user.playcount) - Number(user.track_count)}</b>`)
   textArray.push(`- Artistas conhecidos: <b>${Number(user.artist_count)}</b>`)
   textArray.push(`- Álbuns conhecidos: <b>${Number(user.album_count)}</b>`)
   textArray.push('')
-  textArray.push('<b>[ℹ️] Informações:</b>')
+  textArray.push('<b>[ℹ️] Informações</b>')
   textArray.push(`- Dentre as suas músicas ouvidas <b>${((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount) * 100).toFixed(2)}%</b> são repetidas e <b>${((Number(user.track_count) / Number(user.playcount)) * 100).toFixed(2)}%</b> são novas.`)
   textArray.push(`- Em média você repete <b>${((Number(user.playcount) - Number(user.track_count)) / Number(user.track_count)).toFixed(2)}</b> vezes cada música que conhece.`)
   textArray.push('')
   if (toptracks.track.length > 0) {
-    textArray.push('<b>[🎵] Músicas mais tocadas:</b>')
+    textArray.push('<b>[🎵] Músicas mais tocadas</b>')
     for (let i = 0; i < toptracks.track.length; i++) {
       const track = toptracks.track[i]
       textArray.push(`- [${i + 1}] <b><a href="${track.url}">${track.name}</a> de <a href="${track.artist.url}">${track.artist.name}</a></b>`)
@@ -45,7 +45,7 @@ export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTr
     textArray.push('')
   }
   if (topalbums.album.length > 0) {
-    textArray.push('<b>[💿] Álbuns mais tocados:</b>')
+    textArray.push('<b>[💿] Álbuns mais tocados</b>')
     for (let i = 0; i < topalbums.album.length; i++) {
       const album = topalbums.album[i]
       textArray.push(`- [${i + 1}] <b><a href="${album.url}">${album.name}</a> de <a href="${album.artist.url}">${album.artist.name}</a></b>`)
@@ -54,7 +54,7 @@ export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTr
     textArray.push('')
   }
   if (topartists.artist.length > 0) {
-    textArray.push('<b>[👨‍🎤] Artistas mais tocados:</b>')
+    textArray.push('<b>[👨‍🎤] Artistas mais tocados</b>')
     for (let i = 0; i < topartists.artist.length; i++) {
       const artist = topartists.artist[i]
       textArray.push(`- [${i + 1}] <b><a href="${artist.url}">${artist.name}</a></b>`)
@@ -63,7 +63,7 @@ export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTr
     // textArray.push('')
   }
   // if (recenttracks.track.length > 0) {
-  //   textArray.push('<b>[📒] Histórico de reprodução:</b>')
+  //   textArray.push('<b>[📒] Histórico de reprodução</b>')
   //   for (let i = 0; i < recenttracks.track.length; i++) {
   //     const track = recenttracks.track[i]
   //     if ((track['@attr'] != null) && track['@attr'].nowplaying === 'true') continue
