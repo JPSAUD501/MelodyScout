@@ -9,8 +9,39 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   const { artist } = artistInfo
   const { album } = albumInfo
   const { track } = trackInfo
-  const textArray: string[] = []
 
+  const tweetTextArray: string[] = []
+  tweetTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no MelodyScoutBot.t.me:`)
+  tweetTextArray.push('')
+  tweetTextArray.push(`[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] ${track.name}`)
+  tweetTextArray.push(`- Álbum: ${album.name}`)
+  tweetTextArray.push(`- Artista: ${artist.name}`)
+  tweetTextArray.push('')
+  tweetTextArray.push('[📊] Scrobbles:')
+  tweetTextArray.push(`- Música: ${Number(track.userplaycount)}`)
+  if (album.userplaycount !== undefined) tweetTextArray.push(`- Álbum: ${Number(album.userplaycount)}`)
+  tweetTextArray.push(`- Artista: ${Number(artist.stats.userplaycount)}`)
+  const tweetInfoArray: string[] = []
+  if (
+    Number(track.userplaycount) > 0 &&
+    (
+      Number(track.duration) > 0 ||
+      Number(spotifyTrackInfo.duration) > 0
+    )
+  ) tweetInfoArray.push(`- Já ouviu essa música por ${Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)} horas e ${Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)) * 60)} minutos.`)
+  if (tweetInfoArray.length > 0) {
+    tweetTextArray.push('')
+    tweetTextArray.push('[ℹ️] Informações:')
+    tweetTextArray.push(...tweetInfoArray)
+  }
+  tweetTextArray.push('')
+  tweetTextArray.push(`${spotifyTrackInfo.externalURL.spotify}`)
+  // Convert to URI encoded string
+  const encodedTweetTextArray = tweetTextArray.map((text) => encodeURIComponent(text))
+  const tweetText = encodedTweetTextArray.join('%0A')
+  const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText}`
+
+  const textArray: string[] = []
   textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}:</b>`)
   textArray.push('')
   switch (nowPlaying) {
@@ -29,7 +60,6 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   textArray.push(`- Música: <b>${Number(track.userplaycount)}</b>`)
   if (album.userplaycount !== undefined) textArray.push(`- Álbum: <b>${Number(album.userplaycount)}</b>`)
   textArray.push(`- Artista: <b>${Number(artist.stats.userplaycount)}</b>`)
-  textArray.push('')
   const infoArray: string[] = []
   if (
     Number(track.userplaycount) > 0 &&
@@ -66,14 +96,13 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
     Number(((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)) >= 10
   ) infoArray.push(`- Esse artista representa <b>${((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)}%</b> de todas suas reproduções.`)
   if (infoArray.length > 0) {
+    textArray.push('')
     textArray.push('<b>[ℹ️] Informações:</b>')
     textArray.push(...infoArray)
   }
-  // textArray.push('')
-  // if (track.wiki != null && track.wiki.summary.length > 0) {
-  //   textArray.push('<b>[📚] Sobre:</b>')
-  //   textArray.push(`- ${track.wiki.summary}`)
-  // }
+  textArray.push('')
+  textArray.push('<b>[🔗] Compartilhe!</b>')
+  textArray.push(`- <a href="${tweetUrl}">Compartilhar no Twitter</a>`)
 
   const text = textArray.join('\n')
   return text
