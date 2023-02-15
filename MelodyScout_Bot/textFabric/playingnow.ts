@@ -14,12 +14,10 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   tweetTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no MelodyScoutBot.t.me:`)
   tweetTextArray.push('')
   tweetTextArray.push(`[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] ${track.name}`)
-  tweetTextArray.push(`- Álbum: ${album.name}`)
   tweetTextArray.push(`- Artista: ${artist.name}`)
   tweetTextArray.push('')
   tweetTextArray.push('[📊] Scrobbles:')
   tweetTextArray.push(`- Música: ${Number(track.userplaycount)}`)
-  if (album.userplaycount !== undefined) tweetTextArray.push(`- Álbum: ${Number(album.userplaycount)}`)
   tweetTextArray.push(`- Artista: ${Number(artist.stats.userplaycount)}`)
   const tweetInfoArray: string[] = []
   if (
