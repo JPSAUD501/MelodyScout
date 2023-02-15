@@ -54,7 +54,7 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   textArray.push(`- Álbum: <b><a href="${album.url}">${album.name}</a></b>`)
   textArray.push(`- Artista: <b><a href="${artist.url}">${artist.name}</a></b>`)
   textArray.push('')
-  textArray.push('<b>[📊] Scrobbles:</b>')
+  textArray.push('<b>[📊] Scrobbles</b>')
   textArray.push(`- Música: <b>${Number(track.userplaycount)}</b>`)
   if (album.userplaycount !== undefined) textArray.push(`- Álbum: <b>${Number(album.userplaycount)}</b>`)
   textArray.push(`- Artista: <b>${Number(artist.stats.userplaycount)}</b>`)
