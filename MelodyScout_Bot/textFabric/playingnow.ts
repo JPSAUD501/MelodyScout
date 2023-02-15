@@ -11,9 +11,9 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   const { track } = trackInfo
 
   const tweetTextArray: string[] = []
-  tweetTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no MelodyScoutBot.t.me:`)
+  tweetTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no MelodyScout`)
   tweetTextArray.push('')
-  tweetTextArray.push(`[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] ${track.name}`)
+  tweetTextArray.push(`[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] ${track.name}:`)
   tweetTextArray.push(`- Artista: ${artist.name}`)
   tweetTextArray.push('')
   tweetTextArray.push('[📊] Scrobbles:')
@@ -99,8 +99,8 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
     textArray.push(...infoArray)
   }
   textArray.push('')
-  textArray.push('<b>[🔗] Compartilhe!</b>')
-  textArray.push(`- <a href="${tweetUrl}">Compartilhar no Twitter</a>`)
+  textArray.push('<b>[🔗] Compartilhe:</b>')
+  textArray.push(`- <a href="${tweetUrl}">Compartilhar no Twitter!</a>`)
 
   const text = textArray.join('\n')
   return text
