@@ -19,18 +19,15 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   tweetTextArray.push('[📊] Scrobbles')
   tweetTextArray.push(`- Música: ${Number(track.userplaycount)}`)
   tweetTextArray.push(`- Artista: ${Number(artist.stats.userplaycount)}`)
-  const tweetInfoArray: string[] = []
   if (
     Number(track.userplaycount) > 0 &&
     (
       Number(track.duration) > 0 ||
       Number(spotifyTrackInfo.duration) > 0
     )
-  ) tweetInfoArray.push(`- Já ouviu essa música por ${Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)} horas e ${Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)) * 60)} minutos.`)
-  if (tweetInfoArray.length > 0) {
+  ) {
     tweetTextArray.push('')
-    tweetTextArray.push('[ℹ️] Informações')
-    tweetTextArray.push(...tweetInfoArray)
+    tweetTextArray.push(`[ℹ️] Já ouviu essa música por ${Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)} horas e ${Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)) * 60)} minutos.`)
   }
   tweetTextArray.push('')
   tweetTextArray.push(`${spotifyTrackInfo.externalURL.spotify}`)
