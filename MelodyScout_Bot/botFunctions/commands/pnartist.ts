@@ -3,7 +3,7 @@ import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { PrismaDB } from '../../../function/prismaDB/base'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
-import { getPnartistText } from '../../textFabric/pnalbum'
+import { getPnartistText } from '../../textFabric/pnartist'
 
 export class PnartistCommand {
   private readonly ctxFunctions: CtxFunctions

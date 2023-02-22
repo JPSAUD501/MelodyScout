@@ -4,6 +4,7 @@ import { ArtistInfo } from '../../api/msLastfmApi/types/zodArtistInfo'
 import { TrackInfo } from '../../api/msLastfmApi/types/zodTrackInfo'
 import { UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
 import config from '../../config'
+import { sanitizeText } from '../../function/sanitizeText'
 
 export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, nowPlaying: boolean): string {
   const { user } = userInfo
@@ -37,19 +38,19 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText}`
 
   const textArray: string[] = []
-  textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${config.melodyScout.userImgUrl}">️️</a><a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}</b>`)
+  textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${config.melodyScout.trackImgUrl}">️️</a><a href="${user.url}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}</b>`)
   textArray.push('')
   switch (nowPlaying) {
     case true:
-      textArray.push(`<b>[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] Ouvindo <a href="${track.url}">${track.name}</a></b>`)
+      textArray.push(`<b>[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] Ouvindo <a href="${track.url}">${sanitizeText(track.name)}</a></b>`)
       break
     case false:
       textArray.push(`<b>[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] Última música ouvida</b>`)
-      textArray.push(`- Música: <b><a href="${track.url}">${track.name}</a></b>`)
+      textArray.push(`- Música: <b><a href="${track.url}">${sanitizeText(track.name)}</a></b>`)
       break
   }
-  textArray.push(`- Álbum: <b><a href="${album.url}">${album.name}</a></b>`)
-  textArray.push(`- Artista: <b><a href="${artist.url}">${artist.name}</a></b>`)
+  textArray.push(`- Álbum: <b><a href="${album.url}">${sanitizeText(album.name)}</a></b>`)
+  textArray.push(`- Artista: <b><a href="${artist.url}">${sanitizeText(artist.name)}</a></b>`)
   textArray.push('')
   textArray.push('<b>[📊] Scrobbles</b>')
   textArray.push(`- Música: <b>${Number(track.userplaycount)}</b>`)

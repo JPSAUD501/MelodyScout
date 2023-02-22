@@ -4,6 +4,7 @@ import { UserTopAlbums } from '../../api/msLastfmApi/types/zodUserTopAlbums'
 import { UserTopArtists } from '../../api/msLastfmApi/types/zodUserTopArtists'
 import { UserTopTracks } from '../../api/msLastfmApi/types/zodUserTopTracks'
 import config from '../../config'
+import { sanitizeText } from '../../function/sanitizeText'
 
 export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTracks, userTopTracks: UserTopTracks, userTopAlbums: UserTopAlbums, userTopArtists: UserTopArtists): string {
   const { user } = userInfo
@@ -13,7 +14,7 @@ export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTr
   const { topartists } = userTopArtists
   const textArray: string[] = []
 
-  textArray.push(`<b><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${config.melodyScout.userImgUrl}">️️</a>Resumo musical de <a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a></b>`)
+  textArray.push(`<b><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${config.melodyScout.userImgUrl}">️️</a>Resumo musical de <a href="${user.url}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a></b>`)
   textArray.push('')
   if (
     recenttracks.track.length > 0 &&
@@ -61,17 +62,7 @@ export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTr
       textArray.push(`- [${i + 1}] <b><a href="${artist.url}">${artist.name}</a></b>`)
       textArray.push(`  (${artist.playcount} Scrobbles)`)
     }
-    // textArray.push('')
   }
-  // if (recenttracks.track.length > 0) {
-  //   textArray.push('<b>[📒] Histórico de reprodução</b>')
-  //   for (let i = 0; i < recenttracks.track.length; i++) {
-  //     const track = recenttracks.track[i]
-  //     if ((track['@attr'] != null) && track['@attr'].nowplaying === 'true') continue
-  //     textArray.push(`- <a href="${track.url}">${track.name}</a> de <a href="${track.artist.url}">${track.artist.name}</a>`)
-  //   }
-  //   textArray.push('')
-  // }
 
   const text = textArray.join('\n')
   return text

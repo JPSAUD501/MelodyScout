@@ -1,13 +1,14 @@
 import { UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
 import { UserRecentTracks } from '../../api/msLastfmApi/types/zodUserRecentTracks'
 import config from '../../config'
+import { sanitizeText } from '../../function/sanitizeText'
 
 export function getHistoryText (userInfo: UserInfo, userRecentTracks: UserRecentTracks): string {
   const { user } = userInfo
   const { recenttracks } = userRecentTracks
   const textArray: string[] = []
 
-  textArray.push(`<b><a href="${recenttracks.track[0].image[recenttracks.track[0].image.length - 1]['#text']}">️️</a><a href="${config.melodyScout.userImgUrl}">️️</a>Histórico de reprodução de <a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a></b>`)
+  textArray.push(`<b><a href="${recenttracks.track[0].image[recenttracks.track[0].image.length - 1]['#text']}">️️</a><a href="${config.melodyScout.userImgUrl}">️️</a>Histórico de reprodução de <a href="${user.url}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a></b>`)
   textArray.push('')
   if (recenttracks.track[0]['@attr']?.nowplaying === 'true') {
     const track = recenttracks.track[0]
