@@ -27,6 +27,15 @@ export class MyuserCommand {
       void this.ctxFunctions.reply(ctx, 'Estranho! Parece que eu não consegui identificar o seu ID no Telegram! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
       return
     }
+    const checkIfExistsTgUserDBResponse = await this.prismaDB.checkIfExists.telegramUser(`${telegramUserId}`)
+    if (!checkIfExistsTgUserDBResponse.success) {
+      void this.ctxFunctions.reply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      return
+    }
+    if (!checkIfExistsTgUserDBResponse.exists) {
+      void this.ctxFunctions.reply(ctx, 'Parece que você ainda não possui um usuário do Last.fm registrado, para registrar um usuário do Last.fm envie o comando /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
+      return
+    }
     const telegramUserDBResponse = await this.prismaDB.get.telegramUser(telegramUserId)
     if (!telegramUserDBResponse.success) {
       void this.ctxFunctions.reply(ctx, 'Ops! Parece que eu não consegui verificar se você já está cadastrado no MelodyScout! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')

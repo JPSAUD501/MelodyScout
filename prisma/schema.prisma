@@ -21,5 +21,6 @@ model TelegramUsers {
 //   date                    String
 //   error                   String
 //   userId                  String
-//   messageId               String
+//   chatId                  String
+//   messageId               String?
 // }

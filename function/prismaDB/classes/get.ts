@@ -22,12 +22,6 @@ export class Get {
   }
 
   async telegramUser (telegramUserId: string): Promise<GetDefaultResponseError | { success: true, lastfmUser: string | null, lastUpdate: string }> {
-    const checkIfExists = await this.checkIfExists.telegramUser(telegramUserId)
-    if (!checkIfExists.success) return { success: false, error: checkIfExists.error }
-    if (!checkIfExists.exists) {
-      const createTelegramUser = await this.create.telegramUser(telegramUserId)
-      if (!createTelegramUser.success) return { success: false, error: createTelegramUser.error }
-    }
     const getTelegramUser = await this.prisma.telegramUsers.findUnique({
       where: {
         telegramUserId

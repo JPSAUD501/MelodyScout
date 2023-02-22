@@ -33,6 +33,15 @@ export class PntrackCommand {
       void this.ctxFunctions.reply(ctx, 'Não foi possível identificar seu usuário no telegram, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
+    const checkIfExistsTgUserDBResponse = await this.prismaDB.checkIfExists.telegramUser(`${telegramUserId}`)
+    if (!checkIfExistsTgUserDBResponse.success) {
+      void this.ctxFunctions.reply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      return
+    }
+    if (!checkIfExistsTgUserDBResponse.exists) {
+      void this.ctxFunctions.reply(ctx, 'Parece que você ainda não possui um usuário do Last.fm registrado, para registrar um usuário do Last.fm envie o comando /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
+      return
+    }
     const telegramUserDBResponse = await this.prismaDB.get.telegramUser(`${telegramUserId}`)
     if (!telegramUserDBResponse.success) {
       void this.ctxFunctions.reply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
@@ -40,7 +49,7 @@ export class PntrackCommand {
     }
     const lastfmUser = telegramUserDBResponse.lastfmUser
     if (lastfmUser === null) {
-      void this.ctxFunctions.reply(ctx, 'Para utilizar esse comando envie antes /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
+      void this.ctxFunctions.reply(ctx, 'Parece que você me pediu para esquecer seu usuário do Last.fm e não me informou um novo usuário, para registrar o seu usuário do Last.fm envie o comando /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
       return
     }
     const userInfoRequest = this.msLastfmApi.user.getInfo(lastfmUser)

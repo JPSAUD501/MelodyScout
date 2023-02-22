@@ -3,6 +3,7 @@ import { UserRecentTracks } from '../../api/msLastfmApi/types/zodUserRecentTrack
 import { UserTopAlbums } from '../../api/msLastfmApi/types/zodUserTopAlbums'
 import { UserTopArtists } from '../../api/msLastfmApi/types/zodUserTopArtists'
 import { UserTopTracks } from '../../api/msLastfmApi/types/zodUserTopTracks'
+import config from '../../config'
 
 export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTracks, userTopTracks: UserTopTracks, userTopAlbums: UserTopAlbums, userTopArtists: UserTopArtists): string {
   const { user } = userInfo
@@ -12,7 +13,7 @@ export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTr
   const { topartists } = userTopArtists
   const textArray: string[] = []
 
-  textArray.push(`<b><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${toptracks.track[0].image[recenttracks.track[0].image.length - 1]['#text']}">️️</a>Resumo musical de <a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a></b>`)
+  textArray.push(`<b><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${config.melodyScout.userImgUrl}">️️</a>Resumo musical de <a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a></b>`)
   textArray.push('')
   if (
     recenttracks.track.length > 0 &&
