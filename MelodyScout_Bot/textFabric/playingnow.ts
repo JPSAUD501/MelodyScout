@@ -3,6 +3,7 @@ import { AlbumInfo } from '../../api/msLastfmApi/types/zodAlbumInfo'
 import { ArtistInfo } from '../../api/msLastfmApi/types/zodArtistInfo'
 import { TrackInfo } from '../../api/msLastfmApi/types/zodTrackInfo'
 import { UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
+import config from '../../config'
 
 export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, nowPlaying: boolean): string {
   const { user } = userInfo
@@ -31,13 +32,12 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   }
   tweetTextArray.push('')
   tweetTextArray.push(`${spotifyTrackInfo.externalURL.spotify}`)
-  // Convert to URI encoded string
   const encodedTweetTextArray = tweetTextArray.map((text) => encodeURIComponent(text))
   const tweetText = encodedTweetTextArray.join('%0A')
   const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText}`
 
   const textArray: string[] = []
-  textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}</b>`)
+  textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${config.melodyScout.userImgUrl}">️️</a><a href="${user.url}">${user.realname.length > 0 ? user.realname : user.name}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}</b>`)
   textArray.push('')
   switch (nowPlaying) {
     case true:

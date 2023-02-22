@@ -16,3 +16,10 @@ model TelegramUsers {
   lastUpdate              String
 }
 
+// model errorLog {
+//   id                      Int @id @default(autoincrement())
+//   date                    String
+//   error                   String
+//   userId                  String
+//   messageId               String
+// }

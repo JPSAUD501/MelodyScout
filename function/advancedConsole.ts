@@ -12,9 +12,9 @@ export class AdvConsole {
     this.bot.sendLog(log)
   }
 
-  info (infor: any): void {
-    console.info(infor)
-    this.bot.sendInfo(infor)
+  info (info: any): void {
+    console.info(info)
+    this.bot.sendInfo(info)
   }
 
   error (error: any): void {
