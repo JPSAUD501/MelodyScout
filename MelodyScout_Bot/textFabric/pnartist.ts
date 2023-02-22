@@ -20,6 +20,13 @@ export function getPnartistText (userInfo: UserInfo, artistInfo: ArtistInfo, spo
       break
   }
   textArray.push(`- Artista: <b><a href="${artist.url}">${sanitizeText(artist.name)}</a></b>`)
+  const infoArray: string[] = []
+  if (spotifyArtistInfo.popularity !== undefined) infoArray.push(`- A <a href="${config.melodyScout.popularityImgUrl}">popularidade</a> atual desse artista é: <b>[${spotifyArtistInfo.popularity}][${'★'.repeat(Math.floor(spotifyArtistInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyArtistInfo.popularity / 20))}]</b>`)
+  if (infoArray.length > 0) {
+    textArray.push('')
+    textArray.push('<b>[ℹ️] Informações</b>')
+    textArray.push(...infoArray)
+  }
   textArray.push('')
   textArray.push(`<b>[📊] ${artist.stats.userplaycount} Scrobbles</b>`)
 

@@ -26,6 +26,13 @@ export function getPntrackText (userInfo: UserInfo, artistInfo: ArtistInfo | und
   textArray.push(`- Música: <b><a href="${track.url}">${sanitizeText(track.name)}</a></b>`)
   textArray.push(`- Álbum: <b><a href="${album.url}">${sanitizeText(album.name)}</a></b>`)
   textArray.push(`- Artista: <b><a href="${artist?.url ?? ''}">${sanitizeText(track.artist.name)}</a></b>`)
+  const infoArray: string[] = []
+  if (spotifyTrackInfo.popularity !== undefined) infoArray.push(`- A <a href="${config.melodyScout.popularityImgUrl}">popularidade</a> atual dessa música é: <b>[${spotifyTrackInfo.popularity}][${'★'.repeat(Math.floor(spotifyTrackInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyTrackInfo.popularity / 20))}]</b>`)
+  if (infoArray.length > 0) {
+    textArray.push('')
+    textArray.push('<b>[ℹ️] Informações</b>')
+    textArray.push(...infoArray)
+  }
   textArray.push('')
   textArray.push(`<b>[📊] ${track.userplaycount} Scrobbles</b>`)
 

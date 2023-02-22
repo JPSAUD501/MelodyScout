@@ -85,8 +85,12 @@ export class PnalbumCommand {
       void this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
+    if (!spotifyAlbumInfo.success) {
+      void this.ctxFunctions.reply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Spotify! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      return
+    }
     const inlineKeyboard = new InlineKeyboard()
     if (spotifyAlbumInfo.success) inlineKeyboard.url('[🎧] - Spotify', spotifyAlbumInfo.data.externalURL.spotify)
-    await this.ctxFunctions.reply(ctx, getPnalbumText(userInfo.data, artistInfo.data, albumInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+    await this.ctxFunctions.reply(ctx, getPnalbumText(userInfo.data, artistInfo.data, albumInfo.data, spotifyAlbumInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   }
 }
