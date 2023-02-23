@@ -4,8 +4,7 @@
   "description": "Last.fm Telegram Tracker bot",
   "main": "app.ts",
   "scripts": {
-    "start": "ts-node --transpile-only ./app.ts",
-    "deploy": "yarn prisma migrate deploy",
+    "start": "yarn prisma migrate deploy && ts-node --transpile-only ./app.ts",
     "dev": "ts-node ./app.ts",
     "build": "tsc",
     "start-server": "node ./dist/app.js"
