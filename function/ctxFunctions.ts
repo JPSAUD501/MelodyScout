@@ -11,8 +11,8 @@ export class CtxFunctions {
   }
 
   async pinMessage (ctx: CommandContext<Context> | CallbackQueryContext<Context>, message: Message.TextMessage): Promise<void> {
-    const pinedMessage = await ctx.api.pinChatMessage(message.chat.id, message.message_id).catch((err) => {
-      this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+    const pinedMessage = await ctx.api.pinChatMessage(message.chat.id, message.message_id).catch((_err) => {
+      return undefined
     })
     if (pinedMessage === undefined) {
       if (ctx.chat === undefined) return

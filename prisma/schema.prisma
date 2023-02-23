@@ -1,26 +1,23 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider                = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider                = "postgresql"
-  url                     = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model TelegramUsers {
-  telegramUserId          String @id @unique
-  lastfmUser              String?
-  lastUpdate              String
+  telegramUserId String  @id @unique
+  lastfmUser     String?
+  lastUpdate     String
 }
 
-// model errorLog {
-//   id                      Int @id @default(autoincrement())
-//   date                    String
-//   error                   String
-//   userId                  String
-//   chatId                  String
-//   messageId               String?
-// }
+model ErrorLog {
+   id                      Int @id @unique @default(autoincrement())
+   date                    String
+   error                   String
+   userId                  String
+   chatId                  String
+   messageId               String?
+}

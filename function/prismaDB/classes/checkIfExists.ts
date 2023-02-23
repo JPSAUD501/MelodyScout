@@ -40,4 +40,27 @@ export class CheckIfExists {
       exists: true
     }
   }
+
+  async errorLog (errorId: string): Promise<CheckIfExistsDefaultResponse> {
+    const errorLogExists = await this.prisma.errorLog.findUnique({
+      where: {
+        id: Number(errorId)
+      }
+    }).catch((err) => {
+      this.advConsole.error('Error while checking if error log exists in database! Error ID: ' + errorId)
+      this.advConsole.error(err)
+      return new Error(err)
+    })
+    if (errorLogExists instanceof Error) return { success: false, error: errorLogExists.message }
+    if (errorLogExists === null) {
+      return {
+        success: true,
+        exists: false
+      }
+    }
+    return {
+      success: true,
+      exists: true
+    }
+  }
 }
