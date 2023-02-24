@@ -5,7 +5,7 @@ export default {
   melodyScout: {
     divider: '️️',
     admins: process.env.ADMINS !== undefined ? process.env.ADMINS.split(',') : [],
-    logoImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/logo.jpg',
+    logoImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/newlogo.jpg',
     userImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/user.jpg',
     trackImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/track.jpg',
     popularityImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/popularity.jpg'
