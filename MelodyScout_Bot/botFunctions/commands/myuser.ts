@@ -33,27 +33,32 @@ export class MyuserCommand {
       return
     }
     if (!checkIfExistsTgUserDBResponse.exists) {
-      void this.ctxFunctions.reply(ctx, 'Parece que você ainda não possui um usuário do Last.fm registrado, para registrar um usuário do Last.fm envie o comando /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
-      return
+      void this.ctxFunctions.reply(ctx, 'Verifiquei que é seu primeiro cadastro no MelodyScout! Que bom que você decidiu me conhecer!')
+      const createTelegramUserDBResponse = await this.prismaDB.create.telegramUser(telegramUserId)
+      if (!createTelegramUserDBResponse.success) {
+        void this.ctxFunctions.reply(ctx, 'Ops! Parece que eu não consegui salvar suas informações no banco de dados! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
+        return
+      }
+      this.advConsole.info(`New user "${telegramUserId}" registered!`)
     }
     const telegramUserDBResponse = await this.prismaDB.get.telegramUser(telegramUserId)
     if (!telegramUserDBResponse.success) {
-      void this.ctxFunctions.reply(ctx, 'Ops! Parece que eu não consegui verificar se você já está cadastrado no MelodyScout! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
-      return
-    }
-    if (telegramUserDBResponse.lastfmUser !== null) {
-      void this.ctxFunctions.reply(ctx, 'Ops! Parece que você já está cadastrado no MelodyScout! Por favor, utilize o comando /forgetme para que eu esqueça o seu cadastro no MelodyScout e depois utilize o comando /myuser novamente para cadastrar o seu nome de usuário do Last.fm!')
+      void this.ctxFunctions.reply(ctx, 'Ops! Parece que eu não consegui resgatar suas informações do banco de dados! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
       return
     }
     const message = ((ctx.message?.text?.split(' ')) != null) ? ctx.message?.text?.split(' ') : []
-    if (message.length < 2) {
+    if (message.length < 2 && telegramUserDBResponse.lastfmUser === null) {
       void this.ctxFunctions.reply(ctx, 'Ops! Parece que você não me informou o seu nome de usuário do Last.fm! Por favor, tente novamente informando o seu nome de usuário do Last.fm como no exemplo a seguir: <code>/myuser MelodyScout</code>')
+      return
+    }
+    if (message.length < 2 && telegramUserDBResponse.lastfmUser !== null) {
+      void this.ctxFunctions.reply(ctx, `Vi aqui que você já tem um nome de usuário do Last.fm cadastrado! Ele é "<code>${telegramUserDBResponse.lastfmUser}</code>"! Se você quiser atualizar ele, por favor, tente novamente informando o seu nome de usuário do Last.fm como no exemplo a seguir: <code>/myuser MelodyScout</code>`)
       return
     }
     const username = message[1]
     const userExists = await this.msLastfmApi.checkIfUserExists(username)
     if (!userExists.success) {
-      void this.ctxFunctions.reply(ctx, 'Ops! Parece que eu não consegui verificar se o seu nome de usuário do Last.fm existe! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
+      void this.ctxFunctions.reply(ctx, 'Ops! Eu não consegui verificar se o seu nome de usuário do Last.fm existe! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
       return
     }
     if (!userExists.exists) {

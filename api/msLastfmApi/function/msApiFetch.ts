@@ -10,6 +10,9 @@ type MsApiFetchResponse = {
 
 export const msApiFetch = async (url: string, expectedZodObject: ZodObject<any>): Promise<MsApiFetchResponse> => {
   const response = await axios.get(url).catch((err: any) => {
+    if (err.response.status === 404) {
+      return err.response.data
+    }
     return new Error(err)
   })
   if (response instanceof Error) {
