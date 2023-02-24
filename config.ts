@@ -5,10 +5,10 @@ export default {
   melodyScout: {
     divider: '️️',
     admins: process.env.ADMINS !== undefined ? process.env.ADMINS.split(',') : [],
-    logoImgUrl: 'https://github.com/JPSAUD501/MelodyScout/blob/master/public/logo.png?raw=true',
-    userImgUrl: 'https://github.com/JPSAUD501/MelodyScout/blob/master/public/user.jpg?raw=true',
-    trackImgUrl: 'https://github.com/JPSAUD501/MelodyScout/blob/master/public/track.jpg?raw=true',
-    popularityImgUrl: 'https://github.com/JPSAUD501/MelodyScout/blob/master/public/popularity.jpg?raw=true'
+    logoImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/logo.jpg',
+    userImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/user.jpg',
+    trackImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/track.jpg',
+    popularityImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/popularity.jpg'
   },
   lastfm: {
     apiKey: process.env.LASTFM_API_KEY !== undefined ? process.env.LASTFM_API_KEY : ''
