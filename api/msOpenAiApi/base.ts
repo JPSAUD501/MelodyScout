@@ -32,11 +32,20 @@ export class MsOpenAiApi {
       prompt,
       max_tokens: 300,
       temperature: 0.7
+    }).catch((err) => {
+      return new Error(String(err))
     })
+    if (response instanceof Error) {
+      this.advConsole.log(`MsOpenAiAPi - Error while generating explanation for lyrics: ${lyrics.substring(0, 40)}... - ${response.message}`)
+      return {
+        success: false,
+        error: 'Error while generating explanation'
+      }
+    }
     const explanation = response.data.choices[0]
     // console.log(explanation)
     if (explanation === undefined) {
-      this.advConsole.log(`MsOpenAiAPi - No choices generated for lyrics: ${lyrics.substring(0, 20)}...`)
+      this.advConsole.log(`MsOpenAiAPi - No choices generated for lyrics: ${lyrics.substring(0, 40)}...`)
       return {
         success: false,
         error: 'No choices generated'
@@ -44,7 +53,7 @@ export class MsOpenAiApi {
     }
     let explanationText = explanation.text
     if (explanationText === undefined) {
-      this.advConsole.log(`MsOpenAiAPi - No explanation text generated for lyrics: ${lyrics.substring(0, 20)}...`)
+      this.advConsole.log(`MsOpenAiAPi - No explanation text generated for lyrics: ${lyrics.substring(0, 40)}...`)
       return {
         success: false,
         error: 'No explanation text generated'
