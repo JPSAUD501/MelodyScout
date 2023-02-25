@@ -3,7 +3,7 @@ import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
 import config from '../../../config'
 import { translate } from '@vitalets/google-translate-api'
-import { getLyricsLiteText } from '../../textFabric/lyricslite'
+import { getLyricsText } from '../../textFabric/lyrics'
 
 export class TranslatedtracklyricsCallback {
   private readonly ctxFunctions: CtxFunctions
@@ -35,7 +35,6 @@ export class TranslatedtracklyricsCallback {
     const geniusSong = await this.msGeniusApi.getSong(track, artist)
     if (!geniusSong.success) {
       void this.ctxFunctions.reply(ctx, 'Não foi possível resgatar a letra dessa música, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-      void this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Erro ao resgatar a letra da música!')
       return
     }
     console.log('Translating lyrics...')
@@ -43,9 +42,8 @@ export class TranslatedtracklyricsCallback {
     console.log('Lyrics translated!')
     if (translatedTrackLyrics.text.length <= 0) {
       void this.ctxFunctions.reply(ctx, 'Não foi possível traduzir a letra dessa música, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
-      void this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Erro ao traduzir a letra da música!')
       return
     }
-    await this.ctxFunctions.editMessage(ctx, getLyricsLiteText(track, artist, geniusSong.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, translatedTrackLyrics.text), { disable_web_page_preview: true })
+    await this.ctxFunctions.editMessage(ctx, getLyricsText(track, artist, geniusSong.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, translatedTrackLyrics.text), { disable_web_page_preview: true })
   }
 }

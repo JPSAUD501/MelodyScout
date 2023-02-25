@@ -1,7 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { AdvConsole } from '../../advancedConsole'
-import { CheckIfExists } from './checkIfExists'
-import { Create } from './create'
+import { AdvConsole } from '../../../function/advancedConsole'
 
 interface GetDefaultResponseError {
   success: false
@@ -11,14 +9,10 @@ interface GetDefaultResponseError {
 export class Get {
   private readonly advConsole: AdvConsole
   private readonly prisma: PrismaClient
-  private readonly checkIfExists: CheckIfExists
-  private readonly create: Create
 
-  constructor (AdvConsole: AdvConsole, PrismaDB: PrismaClient, CheckIfExists: CheckIfExists, Create: Create) {
-    this.advConsole = AdvConsole
-    this.prisma = PrismaDB
-    this.checkIfExists = CheckIfExists
-    this.create = Create
+  constructor (advConsole: AdvConsole, MsPrismaDbApi: PrismaClient) {
+    this.advConsole = advConsole
+    this.prisma = MsPrismaDbApi
   }
 
   async telegramUser (telegramUserId: string): Promise<GetDefaultResponseError | { success: true, lastfmUser: string | null, lastUpdate: string }> {

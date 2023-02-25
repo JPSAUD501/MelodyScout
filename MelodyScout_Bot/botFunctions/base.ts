@@ -1,6 +1,6 @@
 import { MsLastfmApi } from '../../api/msLastfmApi/base'
 import { AdvConsole } from '../../function/advancedConsole'
-import { PrismaDB } from '../../function/prismaDB/base'
+import { MsPrismaDbApi } from '../../api/msPrismaDbApi/base'
 import { BriefCommand } from './commands/brief'
 import { ContactCommand } from './commands/contact'
 import { ForgetmeCommand } from './commands/forgetme'
@@ -24,6 +24,8 @@ import { AllusersCommand } from './commands/allusers'
 import { MaintenanceCommand } from './commands/maintenance'
 import { MaintenanceinformCommand } from './commands/maintenanceinform'
 import { MaintenanceinformCallback } from './callbacks/maintenanceinform'
+import { TracklyricsexplanationCallback } from './callbacks/tracklyricsexplanation'
+import { MsOpenAiApi } from '../../api/msOpenAiApi/base'
 
 export class BotFunctions {
   startCommand: StartCommand
@@ -47,29 +49,31 @@ export class BotFunctions {
   tracklyricsCallback: TracklyricsCallback
   translatedtracklyricsCallback: TranslatedtracklyricsCallback
   maintenanceinformCallback: MaintenanceinformCallback
+  tracklyricsexplanationCallback: TracklyricsexplanationCallback
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, prismaDB: PrismaDB, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi) {
+  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi) {
     this.startCommand = new StartCommand(ctxFunctions)
     this.helpCommand = new HelpCommand(ctxFunctions)
     this.contactCommand = new ContactCommand(ctxFunctions)
-    this.myuserCommand = new MyuserCommand(advConsole, ctxFunctions, msLastfmApi, prismaDB)
-    this.forgetmeCommand = new ForgetmeCommand(ctxFunctions, prismaDB)
-    this.briefCommand = new BriefCommand(ctxFunctions, msLastfmApi, prismaDB)
-    this.playingnowCommand = new PlayingnowCommand(ctxFunctions, msLastfmApi, prismaDB, msMusicApi)
-    this.historyCommand = new HistoryCommand(ctxFunctions, msLastfmApi, prismaDB)
+    this.myuserCommand = new MyuserCommand(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi)
+    this.forgetmeCommand = new ForgetmeCommand(ctxFunctions, msPrismaDbApi)
+    this.briefCommand = new BriefCommand(ctxFunctions, msLastfmApi, msPrismaDbApi)
+    this.playingnowCommand = new PlayingnowCommand(ctxFunctions, msLastfmApi, msPrismaDbApi, msMusicApi)
+    this.historyCommand = new HistoryCommand(ctxFunctions, msLastfmApi, msPrismaDbApi)
     this.pinCommand = new PinCommand(ctxFunctions)
-    this.pntrackCommand = new PntrackCommand(ctxFunctions, msLastfmApi, prismaDB, msMusicApi)
-    this.pnalbumCommand = new PnalbumCommand(ctxFunctions, msLastfmApi, msMusicApi, prismaDB)
-    this.pnartistCommand = new PnartistCommand(ctxFunctions, msLastfmApi, msMusicApi, prismaDB)
-    this.allusersCommand = new AllusersCommand(ctxFunctions, prismaDB)
+    this.pntrackCommand = new PntrackCommand(ctxFunctions, msLastfmApi, msPrismaDbApi, msMusicApi)
+    this.pnalbumCommand = new PnalbumCommand(ctxFunctions, msLastfmApi, msMusicApi, msPrismaDbApi)
+    this.pnartistCommand = new PnartistCommand(ctxFunctions, msLastfmApi, msMusicApi, msPrismaDbApi)
+    this.allusersCommand = new AllusersCommand(ctxFunctions, msPrismaDbApi)
     this.maintenanceCommand = new MaintenanceCommand(advConsole, ctxFunctions)
     this.maintenanceinformCommand = new MaintenanceinformCommand(advConsole, ctxFunctions)
 
     this.trackpreviewCallback = new TrackpreviewCallback(ctxFunctions, msMusicApi)
-    this.playingnowCallback = new PlayingnowCallback(ctxFunctions, msLastfmApi, prismaDB, msMusicApi)
+    this.playingnowCallback = new PlayingnowCallback(ctxFunctions, msLastfmApi, msPrismaDbApi, msMusicApi)
     this.tracklyricsCallback = new TracklyricsCallback(ctxFunctions, msGeniusApi)
     this.translatedtracklyricsCallback = new TranslatedtracklyricsCallback(ctxFunctions, msGeniusApi)
     this.maintenanceinformCallback = new MaintenanceinformCallback(advConsole, ctxFunctions)
+    this.tracklyricsexplanationCallback = new TracklyricsexplanationCallback(ctxFunctions, msGeniusApi, msOpenAiApi)
 
     advConsole.log('BotFunctions started!')
   }

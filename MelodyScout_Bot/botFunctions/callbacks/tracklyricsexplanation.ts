@@ -1,17 +1,19 @@
-import { CallbackQueryContext, Context, InlineKeyboard } from 'grammy'
+import { CallbackQueryContext, Context } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
 import config from '../../../config'
-import { getCallbackKey } from '../../../function/callbackMaker'
-import { getLyricsText } from '../../textFabric/lyrics'
+import { getTracklyricsexplanationText } from '../../textFabric/tracklyricsexplanation'
+import { MsOpenAiApi } from '../../../api/msOpenAiApi/base'
 
-export class TracklyricsCallback {
+export class TracklyricsexplanationCallback {
   private readonly ctxFunctions: CtxFunctions
   private readonly msGeniusApi: MsGeniusApi
+  private readonly msOpenAiApi: MsOpenAiApi
 
-  constructor (ctxFunctions: CtxFunctions, msGeniusApi: MsGeniusApi) {
+  constructor (ctxFunctions: CtxFunctions, msGeniusApi: MsGeniusApi, msOpenAiApi: MsOpenAiApi) {
     this.ctxFunctions = ctxFunctions
     this.msGeniusApi = msGeniusApi
+    this.msOpenAiApi = msOpenAiApi
   }
 
   async run (ctx: CallbackQueryContext<Context>): Promise<void> {
@@ -38,13 +40,21 @@ export class TracklyricsCallback {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao buscar a música, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
       return
     }
+    const loadingMessage = await this.ctxFunctions.loadingReply(ctx, '⏳ - Gerando explicação da letra da música...', 10000, { reply_to_message_id: messageId })
+    if (loadingMessage === undefined) {
+      void this.ctxFunctions.reply(ctx, 'Algo deu errado ao enviar a mensagem de carregamento, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
+      return
+    }
     const geniusSong = await this.msGeniusApi.getSong(track, artist)
     if (!geniusSong.success) {
       void this.ctxFunctions.reply(ctx, 'Infelizmente não foi possível encontrar a letra dessa música na Genius.', { reply_to_message_id: messageId })
       return
     }
-    const inlineKeyboard = new InlineKeyboard()
-    inlineKeyboard.text('Traduzir', getCallbackKey(['TTL', track, artist]))
-    await this.ctxFunctions.reply(ctx, getLyricsText(track, artist, geniusSong.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId, reply_markup: inlineKeyboard, disable_web_page_preview: true })
+    const openAiResponse = await this.msOpenAiApi.getLyricsExplanation(geniusSong.data.lyrics)
+    if (!openAiResponse.success) {
+      void this.ctxFunctions.reply(ctx, 'Ocorreu um erro ao tentar gerar a explicação da letra dessa música, por favor tente novamente mais tarde.', { reply_to_message_id: messageId })
+      return
+    }
+    await this.ctxFunctions.reply(ctx, getTracklyricsexplanationText(track, artist, openAiResponse.explanation, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId, disable_web_page_preview: true })
   }
 }

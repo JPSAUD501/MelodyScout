@@ -2,6 +2,7 @@ import { Client, Track, Artist, Album } from 'spotify-api.js'
 import { youtube } from 'scrape-youtube'
 import ytStream from 'youtube-stream-url'
 import { zodYtSteamInfo } from './types/zodYtStreamInfo'
+import { AdvConsole } from '../../function/advancedConsole'
 
 interface MsMusicApiError {
   success: false
@@ -31,12 +32,14 @@ export interface MsMusicApiYoutubeTrackInfo {
 }
 
 export class MsMusicApi {
+  private readonly advConsole: AdvConsole
   private readonly clientID: string
   private readonly clientSecret: string
   private readonly clientPromise: Promise<Client>
   private client: Client | null = null
 
-  constructor (clientID: string, clientSecret: string) {
+  constructor (advConsole: AdvConsole, clientID: string, clientSecret: string) {
+    this.advConsole = advConsole
     this.clientID = clientID
     this.clientSecret = clientSecret
     this.clientPromise = Client.create({
@@ -56,7 +59,10 @@ export class MsMusicApi {
     const search = await this.client.tracks.search(`${track} ${artist}`, { includeExternalAudio: true }).catch((err) => {
       return new Error(err)
     })
-    if (search instanceof Error) return { success: false, error: search.message }
+    if (search instanceof Error) {
+      this.advConsole.error(`Error while getting track info from Spotify! Track: ${track} Artist: ${artist} - Error: ${String(search.message)}`)
+      return { success: false, error: search.message }
+    }
     if (search.length <= 0) return { success: false, error: 'No tracks found!' }
     return {
       success: true,
@@ -69,7 +75,10 @@ export class MsMusicApi {
     const search = await this.client.artists.search(`${artist}`, { includeExternalAudio: true }).catch((err) => {
       return new Error(err)
     })
-    if (search instanceof Error) return { success: false, error: search.message }
+    if (search instanceof Error) {
+      this.advConsole.error(`Error while getting artist info from Spotify! Artist: ${artist} - Error: ${String(search.message)}`)
+      return { success: false, error: search.message }
+    }
     if (search.length <= 0) return { success: false, error: 'No artists found!' }
     return {
       success: true,
@@ -82,7 +91,10 @@ export class MsMusicApi {
     const search = await this.client.albums.search(`${album} ${artist}`, { includeExternalAudio: true }).catch((err) => {
       return new Error(err)
     })
-    if (search instanceof Error) return { success: false, error: search.message }
+    if (search instanceof Error) {
+      this.advConsole.error(`Error while getting album info from Spotify! Album: ${album} Artist: ${artist} - Error: ${String(search.message)}`)
+      return { success: false, error: search.message }
+    }
     if (search.length <= 0) return { success: false, error: 'No albums found!' }
     return {
       success: true,
@@ -97,7 +109,7 @@ export class MsMusicApi {
     const ytStreamInfoResponse = await ytStream.getInfo({ url: video.link })
     const ytStreamInfo = zodYtSteamInfo.safeParse(ytStreamInfoResponse)
     if (!ytStreamInfo.success) {
-      console.log(JSON.stringify(ytStreamInfo.error, null, 2))
+      this.advConsole.error(`Error while getting track info from Youtube! YtStream info is not valid! Track: ${track} Artist: ${artist} - Error: ${JSON.stringify(ytStreamInfo.error, null, 2)}`)
       return { success: false, error: 'YtStream info is not valid!' }
     }
     const formats = ytStreamInfo.data.formats

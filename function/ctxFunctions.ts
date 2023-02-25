@@ -12,6 +12,7 @@ export class CtxFunctions {
 
   async pinMessage (ctx: CommandContext<Context> | CallbackQueryContext<Context>, message: Message.TextMessage): Promise<void> {
     const pinedMessage = await ctx.api.pinChatMessage(message.chat.id, message.message_id).catch((_err) => {
+      this.advConsole.error(`MelodyScout_Bot - Error: ${String(_err)}`)
       return undefined
     })
     if (pinedMessage === undefined) {
@@ -63,6 +64,29 @@ export class CtxFunctions {
       return undefined
     })
     if (sendedMessage === undefined) return
+    return sendedMessage
+  }
+
+  async loadingReply (ctx: CommandContext<Context> | CallbackQueryContext<Context>, message: string, timeout: number, options?: Other<RawApi, 'sendMessage', 'text' | 'chat_id'>): Promise<Message.TextMessage | undefined> {
+    if (ctx.chat === undefined) {
+      this.advConsole.error('MelodyScout_Bot - Error: ctx.chat is undefined')
+      return undefined
+    }
+    const sendedMessage = await ctx.api.sendMessage(ctx.chat.id, message, {
+      parse_mode: 'HTML',
+      ...options
+    }).catch((err) => {
+      this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+      this.advConsole.error(`MelodyScout_Bot - In Reply: ${message}`)
+      return undefined
+    })
+    if (sendedMessage === undefined) return
+    setTimeout(() => {
+      if (ctx.chat === undefined) return
+      void ctx.api.deleteMessage(ctx.chat.id, sendedMessage.message_id).catch(() => {
+        this.advConsole.error('MelodyScout_Bot - Error: Failed to delete loading message')
+      })
+    }, timeout)
     return sendedMessage
   }
 

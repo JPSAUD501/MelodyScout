@@ -1,15 +1,15 @@
 import { CommandContext, Context } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import config from '../../../config'
-import { PrismaDB } from '../../../function/prismaDB/base'
+import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 
 export class AllusersCommand {
   private readonly ctxFunctions: CtxFunctions
-  private readonly prismaDB: PrismaDB
+  private readonly msPrismaDbApi: MsPrismaDbApi
 
-  constructor (ctxFunctions: CtxFunctions, prismaDB: PrismaDB) {
+  constructor (ctxFunctions: CtxFunctions, msPrismaDbApi: MsPrismaDbApi) {
     this.ctxFunctions = ctxFunctions
-    this.prismaDB = prismaDB
+    this.msPrismaDbApi = msPrismaDbApi
   }
 
   async run (ctx: CommandContext<Context>): Promise<void> {
@@ -23,7 +23,7 @@ export class AllusersCommand {
       return
     }
     if (!config.melodyScout.admins.includes(ctxFromId.toString())) return
-    const allUsers = await this.prismaDB.get.allTelegramUsers()
+    const allUsers = await this.msPrismaDbApi.get.allTelegramUsers()
     if (!allUsers.success) {
       await this.ctxFunctions.reply(ctx, 'Infelizmente não foi possível recuperar os usuários do banco de dados, por favor tente novamente mais tarde!')
       return

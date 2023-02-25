@@ -24,7 +24,10 @@ export class TrackpreviewCallback {
       return
     }
     const messageId = ctx.callbackQuery.message?.message_id
-    if (messageId === undefined) return await this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Mensagem não encontrada!')
+    if (messageId === undefined) {
+      void this.ctxFunctions.reply(ctx, 'Algo deu errado ao buscar a mensagem que você clicou, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
+      return
+    }
     const dataArray = ctx.callbackQuery.data.split(config.melodyScout.divider)
     const track = dataArray[1]
     const artist = dataArray[2]

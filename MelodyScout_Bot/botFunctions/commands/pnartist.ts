@@ -1,20 +1,20 @@
 import { CallbackQueryContext, CommandContext, Context, InlineKeyboard } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
-import { PrismaDB } from '../../../function/prismaDB/base'
+import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { getPnartistText } from '../../textFabric/pnartist'
 
 export class PnartistCommand {
   private readonly ctxFunctions: CtxFunctions
   private readonly msLastfmApi: MsLastfmApi
-  private readonly prismaDB: PrismaDB
+  private readonly msPrismaDbApi: MsPrismaDbApi
   private readonly msMusicApi: MsMusicApi
 
-  constructor (ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msMusicApi: MsMusicApi, prismaDB: PrismaDB) {
+  constructor (ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi) {
     this.ctxFunctions = ctxFunctions
     this.msLastfmApi = msLastfmApi
-    this.prismaDB = prismaDB
+    this.msPrismaDbApi = msPrismaDbApi
     this.msMusicApi = msMusicApi
   }
 
@@ -32,7 +32,7 @@ export class PnartistCommand {
       void this.ctxFunctions.reply(ctx, 'Não foi possível identificar seu usuário no telegram, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
-    const checkIfExistsTgUserDBResponse = await this.prismaDB.checkIfExists.telegramUser(`${telegramUserId}`)
+    const checkIfExistsTgUserDBResponse = await this.msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
     if (!checkIfExistsTgUserDBResponse.success) {
       void this.ctxFunctions.reply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
@@ -41,7 +41,7 @@ export class PnartistCommand {
       void this.ctxFunctions.reply(ctx, 'Parece que você ainda não possui um usuário do Last.fm registrado, para registrar um usuário do Last.fm envie o comando /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
       return
     }
-    const telegramUserDBResponse = await this.prismaDB.get.telegramUser(`${telegramUserId}`)
+    const telegramUserDBResponse = await this.msPrismaDbApi.get.telegramUser(`${telegramUserId}`)
     if (!telegramUserDBResponse.success) {
       void this.ctxFunctions.reply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return

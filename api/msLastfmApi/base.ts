@@ -4,8 +4,10 @@ import { Artist } from './classes/artist'
 import { Track } from './classes/track'
 import { User } from './classes/user'
 import { ApiErrors } from './types/errors/ApiErrors'
+import { AdvConsole } from '../../function/advancedConsole'
 
 export class MsLastfmApi {
+  private readonly advConsole: AdvConsole
   private readonly apiKey: string
 
   public album: Album
@@ -13,13 +15,14 @@ export class MsLastfmApi {
   public artist: Artist
   public track: Track
 
-  constructor (apiKey: string) {
+  constructor (advConsole: AdvConsole, apiKey: string) {
+    this.advConsole = advConsole
     this.apiKey = apiKey
 
-    this.album = new Album(this.apiKey)
-    this.user = new User(this.apiKey)
-    this.artist = new Artist(this.apiKey)
-    this.track = new Track(this.apiKey)
+    this.album = new Album(advConsole, this.apiKey)
+    this.user = new User(advConsole, this.apiKey)
+    this.artist = new Artist(advConsole, this.apiKey)
+    this.track = new Track(advConsole, this.apiKey)
   }
 
   async checkIfUserExists (username: string): Promise<{
@@ -28,8 +31,14 @@ export class MsLastfmApi {
   } | ApiErrors> {
     const userInfo = await this.user.getInfo(username)
     if (!userInfo.success) {
-      if (userInfo.errorType !== 'lfmApiError') return userInfo
-      if (userInfo.errorData.error !== 6) return userInfo
+      if (userInfo.errorType !== 'lfmApiError') {
+        this.advConsole.error(`Error while checking if user exists in Last.fm! (errorType !== 'lfmApiError') Username: ${username} - Error: ${String(userInfo)}`)
+        return userInfo
+      }
+      if (userInfo.errorData.error !== 6) {
+        this.advConsole.error(`Error while checking if user exists in Last.fm! (errorData.error !== 6) Username: ${username} - Error: ${String(userInfo)}`)
+        return userInfo
+      }
       return {
         success: true,
         exists: false
@@ -49,7 +58,7 @@ export class MsLastfmApi {
       return new Error(err)
     })
     if (userPageResponse instanceof Error) {
-      console.error(`Error getting user page for ${username}`, userPageResponse)
+      this.advConsole.error(`Error getting user page for ${username} - Error: ${String(userPageResponse)}`)
       return {
         success: false,
         errorType: 'msApiError',
@@ -60,7 +69,7 @@ export class MsLastfmApi {
       }
     }
     if (userPageResponse.status !== 200) {
-      console.error(`Error getting user page for ${username}, status code not 200`, userPageResponse)
+      this.advConsole.error(`Error getting user page for ${username}, status code not 200 - Error: ${String(userPageResponse)}`)
       return {
         success: false,
         errorType: 'msApiError',
@@ -70,13 +79,9 @@ export class MsLastfmApi {
         }
       }
     }
-    // const userPage = await userPageResponse.text().catch((err: any) => {
-    //   console.error(`Error getting user page for ${username}, error getting text`, err)
-    //   return new Error(err)
-    // }) To axios
     const userPage = userPageResponse.data
     if (userPage instanceof Error) {
-      console.error(`Error getting user page for ${username}, error getting text`, userPage)
+      this.advConsole.error(`Error getting user page for ${username}, error getting text - Error: ${String(userPage)}`)
       return {
         success: false,
         errorType: 'msApiError',

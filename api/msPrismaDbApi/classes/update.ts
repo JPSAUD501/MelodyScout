@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { AdvConsole } from '../../advancedConsole'
+import { AdvConsole } from '../../../function/advancedConsole'
 import { CheckIfExists } from './checkIfExists'
 import { Create } from './create'
 
@@ -17,9 +17,9 @@ export class Update {
   private readonly checkIfExists: CheckIfExists
   private readonly create: Create
 
-  constructor (AdvConsole: AdvConsole, PrismaDB: PrismaClient, CheckIfExists: CheckIfExists, Create: Create) {
-    this.advConsole = AdvConsole
-    this.prisma = PrismaDB
+  constructor (advConsole: AdvConsole, MsPrismaDbApi: PrismaClient, CheckIfExists: CheckIfExists, Create: Create) {
+    this.advConsole = advConsole
+    this.prisma = MsPrismaDbApi
     this.checkIfExists = CheckIfExists
     this.create = Create
   }

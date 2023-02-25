@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { AdvConsole } from '../../advancedConsole'
+import { AdvConsole } from '../../../function/advancedConsole'
 
 type CheckIfExistsDefaultResponse = {
   success: true
@@ -13,9 +13,9 @@ export class CheckIfExists {
   private readonly advConsole: AdvConsole
   private readonly prisma: PrismaClient
 
-  constructor (AdvConsole: AdvConsole, PrismaDB: PrismaClient) {
-    this.advConsole = AdvConsole
-    this.prisma = PrismaDB
+  constructor (advConsole: AdvConsole, MsPrismaDbApi: PrismaClient) {
+    this.advConsole = advConsole
+    this.prisma = MsPrismaDbApi
   }
 
   async telegramUser (telegramUserId: string): Promise<CheckIfExistsDefaultResponse> {
