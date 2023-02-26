@@ -50,7 +50,7 @@ export class TracklyricsexplanationCallback {
       void this.ctxFunctions.reply(ctx, 'Infelizmente não foi possível encontrar a letra dessa música na Genius.', { reply_to_message_id: messageId })
       return
     }
-    const openAiResponse = await this.msOpenAiApi.getLyricsExplanation(geniusSong.data.lyrics)
+    const openAiResponse = await this.msOpenAiApi.getLyricsExplanation(track, geniusSong.data.lyrics)
     if (!openAiResponse.success) {
       void this.ctxFunctions.reply(ctx, 'Ocorreu um erro ao tentar gerar a explicação da letra dessa música, por favor tente novamente mais tarde.', { reply_to_message_id: messageId })
       return

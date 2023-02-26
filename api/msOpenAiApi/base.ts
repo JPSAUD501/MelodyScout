@@ -25,8 +25,8 @@ export class MsOpenAiApi {
     this.advConsole.log('OpenAiApi started!')
   }
 
-  async getLyricsExplanation (lyrics: string): Promise<MsOpenAiApiGetLyricsExplanationResponse> {
-    const prompt = `${lyrics}\n\nExplicação da letra:`
+  async getLyricsExplanation (track: string, lyrics: string): Promise<MsOpenAiApiGetLyricsExplanationResponse> {
+    const prompt = `${track}\n\n${lyrics}\n\nExplicação da letra:`
     const response = await this.openai.createCompletion({
       model: 'text-davinci-003',
       prompt,
@@ -62,7 +62,16 @@ export class MsOpenAiApi {
     explanationText = explanationText.replace(/\n/g, '')
     if (explanation.finish_reason !== 'stop') {
       this.advConsole.log(`MsOpenAiAPi - Explanation for lyrics: ${lyrics.substring(0, 40)}... - was not finished! Finish reason: ${explanation.finish_reason ?? 'undefined'}`)
-      explanationText += '...\n(Desculpe por isso mas a explicação excedeu o limite de caracteres)'
+      switch (explanation.finish_reason) {
+        case undefined: {
+          explanationText += '...\n(Desculpe por isso mas a explicação foi interrompida por um erro desconhecido)'
+          break
+        }
+        default: {
+          explanationText += '...\n(Desculpe por isso mas a explicação excedeu o limite de caracteres)'
+          break
+        }
+      }
     }
 
     return {
