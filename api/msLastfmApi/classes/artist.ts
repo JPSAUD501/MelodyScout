@@ -24,7 +24,7 @@ export class Artist {
     console.log(`Artist getInfo: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.log(`Error while fetching artist info! Artist: ${artist}, mbid: ${mbid}, username: ${username} - Error: ${String(msApiFetchResponse.errorData)}`)
+      this.advConsole.log(`Error while fetching artist info! Artist: ${artist}, mbid: ${mbid}, username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const artistInfo = zodObject.parse(msApiFetchResponse.data)

@@ -54,7 +54,7 @@ export class User {
     console.log(`User getInfo: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.log(`Error while fetching user info! Username: ${username} - Error: ${String(msApiFetchResponse.errorData)}`)
+      this.advConsole.log(`Error while fetching user info! Username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const userInfo = zodObject.parse(msApiFetchResponse.data)
@@ -71,7 +71,7 @@ export class User {
     console.log(`User getRecentTracks: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.log(`Error while fetching user recent tracks! Username: ${username} - Error: ${String(msApiFetchResponse.errorData)}`)
+      this.advConsole.log(`Error while fetching user recent tracks! Username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const userRecentTracks = zodObject.parse(msApiFetchResponse.data)
@@ -88,7 +88,7 @@ export class User {
     console.log(`User getTopTracks: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.log(`Error while fetching user top tracks! Username: ${username} - Error: ${String(msApiFetchResponse.errorData)}`)
+      this.advConsole.log(`Error while fetching user top tracks! Username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const userTopTracks = zodObject.parse(msApiFetchResponse.data)
@@ -105,7 +105,7 @@ export class User {
     console.log(`User getTopAlbums: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.log(`Error while fetching user top albums! Username: ${username} - Error: ${String(msApiFetchResponse.errorData)}`)
+      this.advConsole.log(`Error while fetching user top albums! Username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const userTopAlbums = zodObject.parse(msApiFetchResponse.data)
@@ -122,7 +122,7 @@ export class User {
     console.log(`User getTopArtists: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.log(`Error while fetching user top artists! Username: ${username} - Error: ${String(msApiFetchResponse.errorData)}`)
+      this.advConsole.log(`Error while fetching user top artists! Username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const userTopArtists = zodObject.parse(msApiFetchResponse.data)
@@ -139,7 +139,7 @@ export class User {
     console.log(`User getTopTags: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.log(`Error while fetching user top tags! Username: ${username} - Error: ${String(msApiFetchResponse.errorData)}`)
+      this.advConsole.log(`Error while fetching user top tags! Username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const userTopTags = zodObject.parse(msApiFetchResponse.data)

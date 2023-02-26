@@ -31,10 +31,10 @@ export class MsGeniusApi {
       return new Error(err)
     })
     if (songArray instanceof Error) {
-      this.advConsole.error(`MsGeniusApi - Error while getting song info from Genius! Track: ${track} Artist: ${artist} - Error: ${String(songArray)}`)
+      this.advConsole.error(`MsGeniusApi - Error while getting song info from Genius! Track: ${track} Artist: ${artist} - Error: ${songArray.message}`)
       return {
         success: false,
-        error: String(songArray)
+        error: songArray.message
       }
     }
     if (songArray.length <= 0) {
@@ -49,10 +49,10 @@ export class MsGeniusApi {
       return new Error(err)
     })
     if (lyrics instanceof Error) {
-      this.advConsole.error(`MsGeniusApi - Error while getting lyrics from Genius! Track: ${track} Artist: ${artist} - Error: ${String(lyrics)}`)
+      this.advConsole.error(`MsGeniusApi - Error while getting lyrics from Genius! Track: ${track} Artist: ${artist} - Error: ${lyrics.message}`)
       return {
         success: false,
-        error: String(lyrics)
+        error: lyrics.message
       }
     }
     return {

@@ -60,7 +60,7 @@ export class MsMusicApi {
       return new Error(err)
     })
     if (search instanceof Error) {
-      this.advConsole.error(`Error while getting track info from Spotify! Track: ${track} Artist: ${artist} - Error: ${String(search.message)}`)
+      this.advConsole.error(`Error while getting track info from Spotify! Track: ${track} Artist: ${artist} - Error: ${search.message}`)
       return { success: false, error: search.message }
     }
     if (search.length <= 0) return { success: false, error: 'No tracks found!' }
@@ -76,7 +76,7 @@ export class MsMusicApi {
       return new Error(err)
     })
     if (search instanceof Error) {
-      this.advConsole.error(`Error while getting artist info from Spotify! Artist: ${artist} - Error: ${String(search.message)}`)
+      this.advConsole.error(`Error while getting artist info from Spotify! Artist: ${artist} - Error: ${search.message}`)
       return { success: false, error: search.message }
     }
     if (search.length <= 0) return { success: false, error: 'No artists found!' }
@@ -92,7 +92,7 @@ export class MsMusicApi {
       return new Error(err)
     })
     if (search instanceof Error) {
-      this.advConsole.error(`Error while getting album info from Spotify! Album: ${album} Artist: ${artist} - Error: ${String(search.message)}`)
+      this.advConsole.error(`Error while getting album info from Spotify! Album: ${album} Artist: ${artist} - Error: ${search.message}`)
       return { success: false, error: search.message }
     }
     if (search.length <= 0) return { success: false, error: 'No albums found!' }

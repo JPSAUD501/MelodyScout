@@ -32,11 +32,11 @@ export class MsLastfmApi {
     const userInfo = await this.user.getInfo(username)
     if (!userInfo.success) {
       if (userInfo.errorType !== 'lfmApiError') {
-        this.advConsole.error(`Error while checking if user exists in Last.fm! (errorType !== 'lfmApiError') Username: ${username} - Error: ${String(userInfo)}`)
+        this.advConsole.error(`Error while checking if user exists in Last.fm! (errorType !== 'lfmApiError') Username: ${username} - Error: ${JSON.stringify(userInfo)}`)
         return userInfo
       }
       if (userInfo.errorData.error !== 6) {
-        this.advConsole.error(`Error while checking if user exists in Last.fm! (errorData.error !== 6) Username: ${username} - Error: ${String(userInfo)}`)
+        this.advConsole.error(`Error while checking if user exists in Last.fm! (errorData.error !== 6) Username: ${username} - Error: ${JSON.stringify(userInfo)}`)
         return userInfo
       }
       return {
@@ -58,7 +58,7 @@ export class MsLastfmApi {
       return new Error(err)
     })
     if (userPageResponse instanceof Error) {
-      this.advConsole.error(`Error getting user page for ${username} - Error: ${String(userPageResponse)}`)
+      this.advConsole.error(`Error getting user page for ${username} - Error: ${userPageResponse.message}`)
       return {
         success: false,
         errorType: 'msApiError',
@@ -81,7 +81,7 @@ export class MsLastfmApi {
     }
     const userPage = userPageResponse.data
     if (userPage instanceof Error) {
-      this.advConsole.error(`Error getting user page for ${username}, error getting text - Error: ${String(userPage)}`)
+      this.advConsole.error(`Error getting user page for ${username}, error getting text - Error: ${userPage.message}`)
       return {
         success: false,
         errorType: 'msApiError',
