@@ -61,13 +61,14 @@ export class MsOpenAiApi {
     }
     explanationText = explanationText.replace(/\n/g, '')
     if (explanation.finish_reason !== 'stop') {
-      this.advConsole.log(`MsOpenAiAPi - Explanation for lyrics: ${lyrics.substring(0, 40)}... - was not finished! Finish reason: ${explanation.finish_reason ?? 'undefined'}`)
       switch (explanation.finish_reason) {
         case undefined: {
+          this.advConsole.log(`MsOpenAiAPi - Explanation for lyrics: ${lyrics.substring(0, 40)}... - was not finished! Finish reason: undefined`)
           explanationText += '...\n(Desculpe por isso mas a explicação foi interrompida por um erro desconhecido)'
           break
         }
         default: {
+          this.advConsole.log(`MsOpenAiAPi - Explanation for lyrics: ${lyrics.substring(0, 40)}... - was not finished! Finish reason: ${explanation.finish_reason}`)
           explanationText += '...\n(Desculpe por isso mas a explicação excedeu o limite de caracteres)'
           break
         }
