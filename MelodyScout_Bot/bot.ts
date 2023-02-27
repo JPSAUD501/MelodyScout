@@ -1,5 +1,5 @@
 import botConfig from './config'
-import { Bot } from 'grammy'
+import { Bot, CallbackQueryContext, CommandContext, Context } from 'grammy'
 import { AdvConsole } from '../function/advancedConsole'
 import { MsPrismaDbApi } from '../api/msPrismaDbApi/base'
 import { MsLastfmApi } from '../api/msLastfmApi/base'
@@ -59,26 +59,39 @@ export class MelodyScoutBot {
     })
   }
 
+  logNewCommand (ctx: CommandContext<Context>): void {
+    this.advConsole.log(`MelodyScout_Bot - New command from ${ctx.message?.from?.first_name ?? 'undefined'} ${ctx.message?.from?.last_name ?? 'undefined'} (@${ctx.message?.from?.username ?? 'undefined'}) with id ${ctx.message?.from?.id ?? 'undefined'} in chat ${ctx.message?.chat.type ?? 'undefined'} with id ${ctx.message?.chat.id ?? 'undefined'}, command: ${ctx.message?.text ?? 'undefined'}`)
+  }
+
+  logNewCallbackQuery (ctx: CallbackQueryContext<Context>): void {
+    this.advConsole.log(`MelodyScout_Bot - New callback query command from ${ctx.callbackQuery?.from.first_name ?? 'undefined'} ${ctx.callbackQuery?.from.last_name ?? 'undefined'} (@${ctx.callbackQuery?.from.username ?? 'undefined'}) with id ${ctx.callbackQuery?.from.id ?? 'undefined'} in chat ${ctx.callbackQuery?.message?.chat.type ?? 'undefined'} with id ${ctx.callbackQuery?.message?.chat.id ?? 'undefined'}, callback query: ${ctx.callbackQuery?.data ?? 'undefined'}`)
+  }
+
   hear (): void {
     this.bot.command(['maintenance'], async (ctx) => {
+      this.logNewCommand(ctx)
       const maintenanceCommandResponse = await this.botFunctions.maintenanceCommand.run(ctx)
       if (!maintenanceCommandResponse.success) return
       this.maintenanceMode = maintenanceCommandResponse.maintenanceMode
     })
 
     this.bot.command(['start'], async (ctx) => {
+      this.logNewCommand(ctx)
       void this.botFunctions.startCommand.run(ctx)
     })
 
     this.bot.command(['help'], async (ctx) => {
+      this.logNewCommand(ctx)
       void this.botFunctions.helpCommand.run(ctx)
     })
 
     this.bot.command(['contact'], async (ctx) => {
+      this.logNewCommand(ctx)
       void this.botFunctions.contactCommand.run(ctx)
     })
 
     this.bot.command(['myuser', 'setuser', 'reg', 'register'], async (ctx) => {
+      this.logNewCommand(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCommand.run(ctx)
         return
@@ -87,6 +100,7 @@ export class MelodyScoutBot {
     })
 
     this.bot.command(['forgetme'], async (ctx) => {
+      this.logNewCommand(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCommand.run(ctx)
         return
@@ -95,6 +109,7 @@ export class MelodyScoutBot {
     })
 
     this.bot.command(['brief'], async (ctx) => {
+      this.logNewCommand(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCommand.run(ctx)
         return
@@ -103,6 +118,7 @@ export class MelodyScoutBot {
     })
 
     this.bot.command(['playingnow', 'pn', 'listeningnow'], async (ctx) => {
+      this.logNewCommand(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCommand.run(ctx)
         return
@@ -111,6 +127,7 @@ export class MelodyScoutBot {
     })
 
     this.bot.command(['history'], async (ctx) => {
+      this.logNewCommand(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCommand.run(ctx)
         return
@@ -119,10 +136,12 @@ export class MelodyScoutBot {
     })
 
     this.bot.command(['pin'], async (ctx) => {
+      this.logNewCommand(ctx)
       void this.botFunctions.pinCommand.run(ctx)
     })
 
     this.bot.command(['pntrack'], async (ctx) => {
+      this.logNewCommand(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCommand.run(ctx)
         return
@@ -131,6 +150,7 @@ export class MelodyScoutBot {
     })
 
     this.bot.command(['pnalbum'], async (ctx) => {
+      this.logNewCommand(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCommand.run(ctx)
         return
@@ -139,6 +159,7 @@ export class MelodyScoutBot {
     })
 
     this.bot.command(['pnartist'], async (ctx) => {
+      this.logNewCommand(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCommand.run(ctx)
         return
@@ -147,6 +168,7 @@ export class MelodyScoutBot {
     })
 
     this.bot.command(['allusers'], async (ctx) => {
+      this.logNewCommand(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCommand.run(ctx)
         return
@@ -154,7 +176,12 @@ export class MelodyScoutBot {
       void this.botFunctions.allusersCommand.run(ctx)
     })
 
+    this.bot.on('message', async (ctx) => {
+      this.advConsole.log(`MelodyScout_Bot - New message not handled: ${JSON.stringify(ctx, null, 2)}`)
+    })
+
     this.bot.callbackQuery(new RegExp(`^TP${config.melodyScout.divider}`), async (ctx) => {
+      this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCallback.run(ctx)
         return
@@ -163,6 +190,7 @@ export class MelodyScoutBot {
     })
 
     this.bot.callbackQuery(new RegExp(`^TL${config.melodyScout.divider}`), async (ctx) => {
+      this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCallback.run(ctx)
         return
@@ -171,6 +199,7 @@ export class MelodyScoutBot {
     })
 
     this.bot.callbackQuery(new RegExp(`^TTL${config.melodyScout.divider}`), async (ctx) => {
+      this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCallback.run(ctx)
         return
@@ -179,6 +208,7 @@ export class MelodyScoutBot {
     })
 
     this.bot.callbackQuery('PLAYINGNOW', async (ctx) => {
+      this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCallback.run(ctx)
         return
@@ -187,11 +217,16 @@ export class MelodyScoutBot {
     })
 
     this.bot.callbackQuery(new RegExp(`^TLE${config.melodyScout.divider}`), async (ctx) => {
+      this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCallback.run(ctx)
         return
       }
       void this.botFunctions.tracklyricsexplanationCallback.run(ctx)
+    })
+
+    this.bot.on('callback_query', async (ctx) => {
+      this.advConsole.log(`MelodyScout_Bot - New callback_query not handled: ${JSON.stringify(ctx, null, 2)}`)
     })
 
     this.advConsole.log('MelodyScout_Bot - Listening')
