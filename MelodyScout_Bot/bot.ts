@@ -60,11 +60,14 @@ export class MelodyScoutBot {
   }
 
   logNewCommand (ctx: CommandContext<Context>): void {
-    this.advConsole.log(`MelodyScout_Bot - New command: ${JSON.stringify(ctx, null, 2)}`)
+    if (!((ctx.message?.text?.startsWith('/')) ?? false)) return
+    const chatTittle = (ctx.chat.type === 'private') ? 'Private' : ctx.chat.title ?? 'Unknown'
+    this.advConsole.log(`MelodyScout_Bot - New command:\nFrom: (${ctx.message?.from?.id ?? 'No ID'}) ${ctx.message?.from?.first_name ?? 'No name'} ${ctx.message?.from?.last_name ?? ''} - ${ctx.message?.from.username ?? 'No username'}\nIn: (${ctx.chat?.id}) ${chatTittle} - ${ctx.chat.type}\nCommand: ${ctx.message?.text ?? ''}`)
   }
 
   logNewCallbackQuery (ctx: CallbackQueryContext<Context>): void {
-    this.advConsole.log(`MelodyScout_Bot - New callback_query: ${JSON.stringify(ctx, null, 2)}`)
+    const chatTittle = (ctx.chat?.type === 'private') ? 'Private' : ctx.chat?.title ?? 'Unknown'
+    this.advConsole.log(`MelodyScout_Bot - New callback_query not handled:\nFrom: (${ctx.from?.id ?? 'No ID'}) ${ctx.from?.first_name ?? 'No name'} ${ctx.from?.last_name ?? ''} - ${ctx.from?.username ?? 'No username'}\nIn: (${ctx.chat?.id ?? 'No ID'}) ${chatTittle} - ${ctx.chat?.type ?? 'No type'}\nData: ${ctx.callbackQuery?.data ?? 'No data'}`)
   }
 
   hear (): void {
@@ -179,7 +182,7 @@ export class MelodyScoutBot {
     this.bot.on('message', async (ctx) => {
       if (!((ctx.message?.text?.startsWith('/')) ?? false)) return
       const chatTittle = (ctx.chat.type === 'private') ? 'Private' : ctx.chat.title ?? 'Unknown'
-      this.advConsole.log(`MelodyScout_Bot - New command not handled:\nFrom: (${ctx.message?.from?.id}) ${ctx.message?.from?.first_name} ${ctx.message?.from?.last_name ?? ''} - ${ctx.message.from.username ?? 'No username'}\nIn: (${ctx.chat?.id}) ${chatTittle}\nCommand: ${ctx.message?.text ?? ''}`)
+      this.advConsole.log(`MelodyScout_Bot - New command:\nFrom: (${ctx.message?.from?.id ?? 'No ID'}) ${ctx.message?.from?.first_name ?? 'No name'} ${ctx.message?.from?.last_name ?? ''} - ${ctx.message?.from.username ?? 'No username'}\nIn: (${ctx.chat?.id}) ${chatTittle} - ${ctx.chat.type}\nCommand: ${ctx.message?.text ?? ''}`)
     })
 
     this.bot.callbackQuery(new RegExp(`^TP${config.melodyScout.divider}`), async (ctx) => {
@@ -228,7 +231,8 @@ export class MelodyScoutBot {
     })
 
     this.bot.on('callback_query', async (ctx) => {
-      this.advConsole.log(`MelodyScout_Bot - New callback_query not handled: ${JSON.stringify(ctx, null, 2)}`)
+      const chatTittle = (ctx.chat?.type === 'private') ? 'Private' : ctx.chat?.title ?? 'Unknown'
+      this.advConsole.log(`MelodyScout_Bot - New callback_query not handled:\nFrom: (${ctx.from?.id ?? 'No ID'}) ${ctx.from?.first_name ?? 'No name'} ${ctx.from?.last_name ?? ''} - ${ctx.from?.username ?? 'No username'}\nIn: (${ctx.chat?.id ?? 'No ID'}) ${chatTittle} - ${ctx.chat?.type ?? 'No type'}\nData: ${ctx.callbackQuery?.data ?? 'No data'}`)
     })
 
     this.advConsole.log('MelodyScout_Bot - Listening')
