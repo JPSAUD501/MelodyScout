@@ -60,11 +60,11 @@ export class MelodyScoutBot {
   }
 
   logNewCommand (ctx: CommandContext<Context>): void {
-    this.advConsole.log(`MelodyScout_Bot - New command from ${ctx.message?.from?.first_name ?? 'undefined'} ${ctx.message?.from?.last_name ?? 'undefined'} (@${ctx.message?.from?.username ?? 'undefined'}) with id ${ctx.message?.from?.id ?? 'undefined'} in chat ${ctx.message?.chat.type ?? 'undefined'} with id ${ctx.message?.chat.id ?? 'undefined'}, command: ${ctx.message?.text ?? 'undefined'}`)
+    this.advConsole.log(`MelodyScout_Bot - New command: ${JSON.stringify(ctx, null, 2)}`)
   }
 
   logNewCallbackQuery (ctx: CallbackQueryContext<Context>): void {
-    this.advConsole.log(`MelodyScout_Bot - New callback query command from ${ctx.callbackQuery?.from.first_name ?? 'undefined'} ${ctx.callbackQuery?.from.last_name ?? 'undefined'} (@${ctx.callbackQuery?.from.username ?? 'undefined'}) with id ${ctx.callbackQuery?.from.id ?? 'undefined'} in chat ${ctx.callbackQuery?.message?.chat.type ?? 'undefined'} with id ${ctx.callbackQuery?.message?.chat.id ?? 'undefined'}, callback query: ${ctx.callbackQuery?.data ?? 'undefined'}`)
+    this.advConsole.log(`MelodyScout_Bot - New callback_query: ${JSON.stringify(ctx, null, 2)}`)
   }
 
   hear (): void {
