@@ -40,7 +40,7 @@ export class TracklyricsexplanationCallback {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao buscar a música, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
       return
     }
-    const loadingMessage = await this.ctxFunctions.loadingReply(ctx, '⏳ - Gerando explicação da música com inteligência artificial, aguarde um momento...', 10000, { reply_to_message_id: messageId })
+    const loadingMessage = await this.ctxFunctions.loadingReply(ctx, '⏳ - Gerando explicação da música com inteligência artificial, aguarde um momento...', 12500, { reply_to_message_id: messageId })
     if (loadingMessage === undefined) {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao enviar a mensagem de carregamento, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
       return
@@ -50,7 +50,7 @@ export class TracklyricsexplanationCallback {
       void this.ctxFunctions.reply(ctx, 'Infelizmente não foi possível encontrar a letra dessa música na Genius.', { reply_to_message_id: messageId })
       return
     }
-    const openAiResponse = await this.msOpenAiApi.getLyricsExplanation(track, geniusSong.data.lyrics)
+    const openAiResponse = await this.msOpenAiApi.getLyricsExplanation(geniusSong.data.lyrics)
     if (!openAiResponse.success) {
       void this.ctxFunctions.reply(ctx, 'Ocorreu um erro ao tentar gerar a explicação da letra dessa música, por favor tente novamente mais tarde.', { reply_to_message_id: messageId })
       return
