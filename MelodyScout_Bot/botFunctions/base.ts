@@ -73,7 +73,7 @@ export class BotFunctions {
     this.tracklyricsCallback = new TracklyricsCallback(ctxFunctions, msGeniusApi)
     this.translatedtracklyricsCallback = new TranslatedtracklyricsCallback(ctxFunctions, msGeniusApi)
     this.maintenanceinformCallback = new MaintenanceinformCallback(advConsole, ctxFunctions)
-    this.tracklyricsexplanationCallback = new TracklyricsexplanationCallback(ctxFunctions, msGeniusApi, msOpenAiApi)
+    this.tracklyricsexplanationCallback = new TracklyricsexplanationCallback(advConsole, ctxFunctions, msGeniusApi, msOpenAiApi)
 
     advConsole.log('BotFunctions started!')
   }

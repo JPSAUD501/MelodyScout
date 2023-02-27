@@ -37,10 +37,10 @@ export class MsOpenAiApi {
       return new Error(String(err))
     })
     if (response instanceof Error) {
-      this.advConsole.log(`MsOpenAiAPi - Error while generating explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - ${response.message}`)
+      this.advConsole.log(`MsOpenAiAPi - Error while generating explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - ${response.message} - ${response.stack ?? 'No STACK'} - ${response.name}`)
       return {
         success: false,
-        error: 'Error while generating explanation'
+        error: response.message
       }
     }
     const explanation = response.data.choices[0]
@@ -70,7 +70,7 @@ export class MsOpenAiApi {
         }
         case null: {
           this.advConsole.log(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: null`)
-          explanationText += '...\n(Desculpe por isso mas a explicação foi interrompida por um erro desconhecido)'
+          // explanationText += '...\n(Desculpe por isso mas a explicação foi interrompida por um erro desconhecido)'
           break
         }
         default: {

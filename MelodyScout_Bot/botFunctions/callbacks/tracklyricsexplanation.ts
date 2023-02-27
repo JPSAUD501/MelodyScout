@@ -4,13 +4,16 @@ import { MsGeniusApi } from '../../../api/msGeniusApi/base'
 import config from '../../../config'
 import { getTracklyricsexplanationText } from '../../textFabric/tracklyricsexplanation'
 import { MsOpenAiApi } from '../../../api/msOpenAiApi/base'
+import { AdvConsole } from '../../../function/advancedConsole'
 
 export class TracklyricsexplanationCallback {
+  private readonly advConsole: AdvConsole
   private readonly ctxFunctions: CtxFunctions
   private readonly msGeniusApi: MsGeniusApi
   private readonly msOpenAiApi: MsOpenAiApi
 
-  constructor (ctxFunctions: CtxFunctions, msGeniusApi: MsGeniusApi, msOpenAiApi: MsOpenAiApi) {
+  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msGeniusApi: MsGeniusApi, msOpenAiApi: MsOpenAiApi) {
+    this.advConsole = advConsole
     this.ctxFunctions = ctxFunctions
     this.msGeniusApi = msGeniusApi
     this.msOpenAiApi = msOpenAiApi
@@ -55,6 +58,7 @@ export class TracklyricsexplanationCallback {
       void this.ctxFunctions.reply(ctx, 'Ocorreu um erro ao tentar gerar a explicação da letra dessa música, por favor tente novamente mais tarde.', { reply_to_message_id: messageId })
       return
     }
+    this.advConsole.log(`New track lyrics explanation generated for ${track} by ${artist} by user ${ctx.from.id}: ${openAiResponse.explanation}`)
     await this.ctxFunctions.reply(ctx, getTracklyricsexplanationText(track, artist, openAiResponse.explanation, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId, disable_web_page_preview: true })
   }
 }
