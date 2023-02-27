@@ -1,22 +1,25 @@
-import { CallbackQueryContext, Context } from 'grammy'
+import { CallbackQueryContext, Context, InputFile } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
 import config from '../../../config'
 import { getTracklyricsexplanationText } from '../../textFabric/tracklyricsexplanation'
 import { MsOpenAiApi } from '../../../api/msOpenAiApi/base'
 import { AdvConsole } from '../../../function/advancedConsole'
+import { MsTextToSpeechApi } from '../../../api/msTextToSpeechApi/base'
 
 export class TracklyricsexplanationCallback {
   private readonly advConsole: AdvConsole
   private readonly ctxFunctions: CtxFunctions
   private readonly msGeniusApi: MsGeniusApi
   private readonly msOpenAiApi: MsOpenAiApi
+  private readonly msTextToSpeechApi: MsTextToSpeechApi
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msGeniusApi: MsGeniusApi, msOpenAiApi: MsOpenAiApi) {
+  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msGeniusApi: MsGeniusApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi) {
     this.advConsole = advConsole
     this.ctxFunctions = ctxFunctions
     this.msGeniusApi = msGeniusApi
     this.msOpenAiApi = msOpenAiApi
+    this.msTextToSpeechApi = msTextToSpeechApi
   }
 
   async run (ctx: CallbackQueryContext<Context>): Promise<void> {
@@ -43,7 +46,7 @@ export class TracklyricsexplanationCallback {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao buscar a música, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
       return
     }
-    const loadingMessage = await this.ctxFunctions.loadingReply(ctx, '⏳ - Gerando explicação da música com inteligência artificial, aguarde um momento...', 12500, { reply_to_message_id: messageId })
+    const loadingMessage = await this.ctxFunctions.loadingReply(ctx, '⏳ - Gerando explicação da música com inteligência artificial, aguarde um momento...', 15000, { reply_to_message_id: messageId })
     if (loadingMessage === undefined) {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao enviar a mensagem de carregamento, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
       return
@@ -59,6 +62,17 @@ export class TracklyricsexplanationCallback {
       return
     }
     this.advConsole.log(`New track lyrics explanation generated for ${track} by ${artist} by user ${ctx.from.id}: ${openAiResponse.explanation}`)
-    await this.ctxFunctions.reply(ctx, getTracklyricsexplanationText(track, artist, openAiResponse.explanation, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId, disable_web_page_preview: true })
+    const TTSAudio = await this.msTextToSpeechApi.getTTS(openAiResponse.explanation)
+    if (!TTSAudio.success) {
+      void this.ctxFunctions.reply(ctx, 'Ocorreu um erro ao tentar gerar o áudio da explicação da letra dessa música, por favor tente novamente mais tarde.', { reply_to_message_id: messageId })
+      return
+    }
+    const TTSAudioInputFile = new InputFile(TTSAudio.data.audio, `${track}-MelodyScoutAi.mp3`)
+    await this.ctxFunctions.replyWithAudio(ctx, TTSAudioInputFile, {
+      reply_to_message_id: messageId,
+      caption: getTracklyricsexplanationText(track, artist, openAiResponse.explanation, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`),
+      performer: `${TTSAudio.data.voice.emoji} - MelodyScoutAi`,
+      title: `${track}`
+    })
   }
 }

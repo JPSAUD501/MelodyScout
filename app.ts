@@ -8,6 +8,7 @@ import { CtxFunctions } from './function/ctxFunctions'
 import { MsGeniusApi } from './api/msGeniusApi/base'
 import { MsMusicApi } from './api/msMusicApi/base'
 import { MsOpenAiApi } from './api/msOpenAiApi/base'
+import { MsTextToSpeechApi } from './api/msTextToSpeechApi/base'
 
 async function start (): Promise<void> {
   console.log('Starting MelodyScoutLog_Bot and AdvConsole...')
@@ -23,9 +24,10 @@ async function start (): Promise<void> {
   const msGeniusApi = new MsGeniusApi(advConsole, config.genius.accessToken)
   const msOpenAiApi = new MsOpenAiApi(advConsole, config.openai.apiKey)
   const msMusicApi = new MsMusicApi(advConsole, config.spotify.clientID, config.spotify.clientSecret)
+  const msTextToSpeechApi = new MsTextToSpeechApi(advConsole)
   await msMusicApi.start()
   const ctxFunctions = new CtxFunctions(advConsole)
-  const melodyScoutBot = new MelodyScoutBot(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi)
+  const melodyScoutBot = new MelodyScoutBot(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi)
   melodyScoutBot.start()
   await melodyScoutBot.getBotInfo()
   melodyScoutBot.hear()

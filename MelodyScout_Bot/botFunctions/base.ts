@@ -26,6 +26,7 @@ import { MaintenanceinformCommand } from './commands/maintenanceinform'
 import { MaintenanceinformCallback } from './callbacks/maintenanceinform'
 import { TracklyricsexplanationCallback } from './callbacks/tracklyricsexplanation'
 import { MsOpenAiApi } from '../../api/msOpenAiApi/base'
+import { MsTextToSpeechApi } from '../../api/msTextToSpeechApi/base'
 
 export class BotFunctions {
   startCommand: StartCommand
@@ -51,7 +52,7 @@ export class BotFunctions {
   maintenanceinformCallback: MaintenanceinformCallback
   tracklyricsexplanationCallback: TracklyricsexplanationCallback
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi) {
+  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi) {
     this.startCommand = new StartCommand(ctxFunctions)
     this.helpCommand = new HelpCommand(ctxFunctions)
     this.contactCommand = new ContactCommand(ctxFunctions)
@@ -73,7 +74,7 @@ export class BotFunctions {
     this.tracklyricsCallback = new TracklyricsCallback(ctxFunctions, msGeniusApi)
     this.translatedtracklyricsCallback = new TranslatedtracklyricsCallback(ctxFunctions, msGeniusApi)
     this.maintenanceinformCallback = new MaintenanceinformCallback(advConsole, ctxFunctions)
-    this.tracklyricsexplanationCallback = new TracklyricsexplanationCallback(advConsole, ctxFunctions, msGeniusApi, msOpenAiApi)
+    this.tracklyricsexplanationCallback = new TracklyricsexplanationCallback(advConsole, ctxFunctions, msGeniusApi, msOpenAiApi, msTextToSpeechApi)
 
     advConsole.log('BotFunctions started!')
   }

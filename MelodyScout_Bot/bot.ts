@@ -1,5 +1,6 @@
 import botConfig from './config'
 import { Bot, CallbackQueryContext, CommandContext, Context } from 'grammy'
+// import { run } from '@grammyjs/runner'
 import { AdvConsole } from '../function/advancedConsole'
 import { MsPrismaDbApi } from '../api/msPrismaDbApi/base'
 import { MsLastfmApi } from '../api/msLastfmApi/base'
@@ -9,6 +10,8 @@ import { MsGeniusApi } from '../api/msGeniusApi/base'
 import { MsMusicApi } from '../api/msMusicApi/base'
 import { MsOpenAiApi } from '../api/msOpenAiApi/base'
 import config from '../config'
+import { MsTextToSpeechApi } from '../api/msTextToSpeechApi/base'
+// import { apiThrottler } from '@grammyjs/transformer-throttler'
 
 export class MelodyScoutBot {
   private readonly advConsole: AdvConsole
@@ -16,10 +19,23 @@ export class MelodyScoutBot {
   private readonly botFunctions: BotFunctions
   private maintenanceMode = false
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi) {
+  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi) {
     this.advConsole = advConsole
-    this.botFunctions = new BotFunctions(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi)
+    this.botFunctions = new BotFunctions(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi)
+    // const throttler = apiThrottler()
     this.bot = new Bot(botConfig.telegram.token)
+    // this.bot.api.config.use(throttler)
+    // const runner = run(this.bot, 1, null, {
+    //   retryInterval: 5000
+    // })
+
+    // const stopRunner = (): void => {
+    //   if (runner.isRunning() === true) {
+    //     runner.stop()
+    //   }
+    // }
+    // process.once('SIGINT', stopRunner)
+    // process.once('SIGTERM', stopRunner)
 
     console.log('MelodyScout_Bot - Loaded')
   }
@@ -182,7 +198,7 @@ export class MelodyScoutBot {
     this.bot.on('message', async (ctx) => {
       if (!((ctx.message?.text?.startsWith('/')) ?? false)) return
       const chatTittle = (ctx.chat.type === 'private') ? 'Private' : ctx.chat.title ?? 'Unknown'
-      this.advConsole.log(`MelodyScout_Bot - New command:\nFrom: (${ctx.message?.from?.id ?? 'No ID'}) ${ctx.message?.from?.first_name ?? 'No name'} ${ctx.message?.from?.last_name ?? ''} - ${ctx.message?.from.username ?? 'No username'}\nIn: (${ctx.chat?.id}) ${chatTittle} - ${ctx.chat.type}\nCommand: ${ctx.message?.text ?? ''}`)
+      this.advConsole.log(`MelodyScout_Bot - New command not handled:\nFrom: (${ctx.message?.from?.id ?? 'No ID'}) ${ctx.message?.from?.first_name ?? 'No name'} ${ctx.message?.from?.last_name ?? ''} - ${ctx.message?.from.username ?? 'No username'}\nIn: (${ctx.chat?.id}) ${chatTittle} - ${ctx.chat.type}\nCommand: ${ctx.message?.text ?? ''}`)
     })
 
     this.bot.callbackQuery(new RegExp(`^TP${config.melodyScout.divider}`), async (ctx) => {

@@ -9,7 +9,7 @@ export default {
     userImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/user.jpg',
     trackImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/track.jpg',
     popularityImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/popularity.jpg',
-    aboutMelodyScoutAi: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/aboutMelodyScoutAi.jpg'
+    aboutMelodyScoutAi: 'https://i.imgur.com/oW2WNrR.jpg' // 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/aboutMelodyScoutAi.jpg'
   },
   lastfm: {
     apiKey: process.env.LASTFM_API_KEY !== undefined ? process.env.LASTFM_API_KEY : ''
