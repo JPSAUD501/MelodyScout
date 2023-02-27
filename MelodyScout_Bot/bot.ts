@@ -177,7 +177,9 @@ export class MelodyScoutBot {
     })
 
     this.bot.on('message', async (ctx) => {
-      this.advConsole.log(`MelodyScout_Bot - New message not handled: ${JSON.stringify(ctx, null, 2)}`)
+      if (!((ctx.message?.text?.startsWith('/')) ?? false)) return
+      const chatTittle = (ctx.chat.type === 'private') ? 'Private' : ctx.chat.title ?? 'Unknown'
+      this.advConsole.log(`MelodyScout_Bot - New command not handled:\nFrom: (${ctx.message?.from?.id}) ${ctx.message?.from?.first_name} ${ctx.message?.from?.last_name ?? ''} - ${ctx.message.from.username ?? 'No username'}\nIn: (${ctx.chat?.id}) ${chatTittle}\nCommand: ${ctx.message?.text ?? ''}`)
     })
 
     this.bot.callbackQuery(new RegExp(`^TP${config.melodyScout.divider}`), async (ctx) => {
