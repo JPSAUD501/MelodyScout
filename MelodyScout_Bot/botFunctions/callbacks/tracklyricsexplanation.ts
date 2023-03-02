@@ -68,11 +68,9 @@ export class TracklyricsexplanationCallback {
       return
     }
     const TTSAudioInputFile = new InputFile(TTSAudio.data.audio, `${track}-MelodyScoutAi.mp3`)
-    await this.ctxFunctions.replyWithAudio(ctx, TTSAudioInputFile, {
+    await this.ctxFunctions.replyWithVoice(ctx, TTSAudioInputFile, {
       reply_to_message_id: messageId,
-      caption: getTracklyricsexplanationText(track, artist, openAiResponse.explanation, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`),
-      performer: `${TTSAudio.data.voice.emoji} - MelodyScoutAi`,
-      title: `${track}`
+      caption: getTracklyricsexplanationText(track, artist, openAiResponse.explanation, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`)
     })
   }
 }
