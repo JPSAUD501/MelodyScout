@@ -56,13 +56,19 @@ export class TracklyricsexplanationCallback {
       void this.ctxFunctions.reply(ctx, 'Infelizmente não foi possível encontrar a letra dessa música na Genius.', { reply_to_message_id: messageId })
       return
     }
-    const openAiResponse = await this.msOpenAiApi.getLyricsExplanation(geniusSong.data.lyrics)
-    if (!openAiResponse.success) {
+    const lyricsExplanationRequest = this.msOpenAiApi.getLyricsExplanation(geniusSong.data.lyrics)
+    const lyricsEmojisRequest = this.msOpenAiApi.getLyricsEmojis(geniusSong.data.lyrics)
+    const [lyricsExplanation, lyricsEmojis] = await Promise.all([lyricsExplanationRequest, lyricsEmojisRequest])
+    if (!lyricsExplanation.success) {
       void this.ctxFunctions.reply(ctx, 'Ocorreu um erro ao tentar gerar a explicação da letra dessa música, por favor tente novamente mais tarde.', { reply_to_message_id: messageId })
       return
     }
-    this.advConsole.log(`New track lyrics explanation generated for ${track} by ${artist} by user ${ctx.from.id}: ${openAiResponse.explanation}`)
-    const TTSAudio = await this.msTextToSpeechApi.getTTS(`Explicação da música "${track}" de "${artist}" gerada pela inteligência artificial do MelodyScout. ${openAiResponse.explanation}`)
+    if (!lyricsEmojis.success) {
+      void this.ctxFunctions.reply(ctx, 'Ocorreu um erro ao tentar gerar os emojis da letra dessa música, por favor tente novamente mais tarde.', { reply_to_message_id: messageId })
+      return
+    }
+    this.advConsole.log(`New track lyrics explanation generated for ${track} by ${artist} by user ${ctx.from.id}: ${lyricsExplanation.explanation}`)
+    const TTSAudio = await this.msTextToSpeechApi.getTTS(`Explicação da música "${track}" de "${artist}" gerada pela inteligência artificial do MelodyScout. ${lyricsExplanation.explanation}`)
     if (!TTSAudio.success) {
       void this.ctxFunctions.reply(ctx, 'Ocorreu um erro ao tentar gerar o áudio da explicação da letra dessa música, por favor tente novamente mais tarde.', { reply_to_message_id: messageId })
       return
@@ -70,7 +76,7 @@ export class TracklyricsexplanationCallback {
     const TTSAudioInputFile = new InputFile(TTSAudio.data.audio, `${track}-MelodyScoutAi.mp3`)
     await this.ctxFunctions.replyWithVoice(ctx, TTSAudioInputFile, {
       reply_to_message_id: messageId,
-      caption: getTracklyricsexplanationText(track, artist, openAiResponse.explanation, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`)
+      caption: getTracklyricsexplanationText(track, artist, lyricsExplanation.explanation, lyricsEmojis.emojis, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`)
     })
   }
 }
