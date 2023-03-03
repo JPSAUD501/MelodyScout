@@ -96,11 +96,11 @@ export class MsOpenAiApi {
 
   async getLyricsEmojis (lyrics: string): Promise<MsOpenAiApiGetLyricsEmojisResponse> {
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
-    const prompt = `${lyricsParsed}\n\nEmojis que representam a letra da música:`
+    const prompt = `${lyricsParsed}\n\nAté 15 emojis que representam a letra da música:`
     const response = await this.openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: [
-        { role: 'system', content: 'Você é o MelodyScoutAI, uma inteligencia artificial que ajuda os usuários a entenderem a letra das músicas que eles ouvem. Você só responde em emojis.' },
+        { role: 'system', content: 'Você é o MelodyScoutAI, uma inteligencia artificial que ajuda os usuários a entenderem a letra das músicas que eles ouvem.' },
         { role: 'user', content: prompt }
       ],
       max_tokens: 50,

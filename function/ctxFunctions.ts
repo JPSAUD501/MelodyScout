@@ -35,6 +35,11 @@ export class CtxFunctions {
       this.advConsole.error('MelodyScout_Bot - Error: ctx.chat is undefined')
       return undefined
     }
+    if (text.length > 4096) {
+      this.advConsole.error('MelodyScout_Bot - Error: text length is greater than 4096')
+      await this.reply(ctx, 'Ocorreu um erro ao tentar responder ao seu comando. Nossa equipe já foi notificada e está trabalhando para resolver o problema o mais rápido possível. Desculpe pelo transtorno. Por favor, tente novamente!')
+      return undefined
+    }
     const editMessageId = ctx.message?.message_id ?? ctx.update.callback_query?.message?.message_id
     if (editMessageId === undefined) {
       this.advConsole.error('MelodyScout_Bot - Error: editMessageId is undefined')
@@ -54,6 +59,11 @@ export class CtxFunctions {
     if (ctx.chat === undefined) {
       this.advConsole.error('MelodyScout_Bot - Error: ctx.chat is undefined')
       return undefined
+    }
+    if (message.length > 4096) {
+      this.advConsole.error('MelodyScout_Bot - Error: message length is greater than 4096')
+      await this.reply(ctx, 'Ocorreu um erro ao tentar responder ao seu comando. Nossa equipe já foi notificada e está trabalhando para resolver o problema o mais rápido possível. Desculpe pelo transtorno. Por favor, tente novamente!')
+      return
     }
     const sendedMessage = await ctx.api.sendMessage(ctx.chat.id, message, {
       parse_mode: 'HTML',
@@ -100,6 +110,11 @@ export class CtxFunctions {
 
   async replyWithVoice (ctx: CommandContext<Context> | CallbackQueryContext<Context>, audio: string | InputFile, options?: Other<RawApi, 'sendVoice', 'chat_id' | 'voice'>): Promise<void> {
     if (ctx.chat === undefined) return this.advConsole.error('MelodyScout_Bot - Error: ctx.chat is undefined')
+    if ((options?.caption?.length ?? 0) > 1024) {
+      this.advConsole.error('MelodyScout_Bot - Error: options.caption.length > 1024')
+      void this.reply(ctx, 'Ocorreu um erro ao enviar a resposta pois o tamanho da mensagem ficou maior que 1024 caracteres! Nossa equipe já foi notificada e irá corrigir o problema o mais rápido possível! Por favor tente novamente!')
+      return
+    }
     const loadingMessage = await ctx.reply('<b>[🎤] Enviando audio por favor aguarde!</b>', {
       parse_mode: 'HTML'
     }).catch((err) => {
@@ -119,6 +134,11 @@ export class CtxFunctions {
 
   async replyWithAudio (ctx: CommandContext<Context> | CallbackQueryContext<Context>, audio: string | InputFile, options?: Other<RawApi, 'sendAudio', 'audio' | 'chat_id'>): Promise<void> {
     if (ctx.chat === undefined) return this.advConsole.error('MelodyScout_Bot - Error: ctx.chat is undefined')
+    if ((options?.caption?.length ?? 0) > 1024) {
+      this.advConsole.error('MelodyScout_Bot - Error: options.caption.length > 1024')
+      void this.reply(ctx, 'Ocorreu um erro ao enviar a resposta pois o tamanho da mensagem ficou maior que 1024 caracteres! Nossa equipe já foi notificada e irá corrigir o problema o mais rápido possível! Por favor tente novamente!')
+      return
+    }
     const loadingMessage = await ctx.reply('<b>[🎵] Enviando audio por favor aguarde!</b>', {
       parse_mode: 'HTML'
     }).catch((err) => {
@@ -138,6 +158,11 @@ export class CtxFunctions {
 
   async replyWithVideo (ctx: CommandContext<Context> | CallbackQueryContext<Context>, video: string | InputFile, options?: Other<RawApi, 'sendVideo', 'chat_id' | 'video'>): Promise<void> {
     if (ctx.chat === undefined) return this.advConsole.error('MelodyScout_Bot - Error: ctx.chat is undefined')
+    if ((options?.caption?.length ?? 0) > 1024) {
+      this.advConsole.error('MelodyScout_Bot - Error: options.caption.length > 1024')
+      void this.reply(ctx, 'Ocorreu um erro ao enviar a resposta pois o tamanho da mensagem ficou maior que 1024 caracteres! Nossa equipe já foi notificada e irá corrigir o problema o mais rápido possível! Por favor tente novamente!')
+      return
+    }
     const loadingMessage = await ctx.reply('<b>[🎥] Enviando vídeo por favor aguarde!</b>', {
       parse_mode: 'HTML'
     }).catch((err) => {
@@ -157,6 +182,11 @@ export class CtxFunctions {
 
   async replyWithFile (ctx: CommandContext<Context> | CallbackQueryContext<Context>, file: string | InputFile, options?: Other<RawApi, 'sendDocument', 'chat_id' | 'document'>): Promise<void> {
     if (ctx.chat === undefined) return this.advConsole.error('MelodyScout_Bot - Error: ctx.chat is undefined')
+    if ((options?.caption?.length ?? 0) > 1024) {
+      this.advConsole.error('MelodyScout_Bot - Error: options.caption.length > 1024')
+      void this.reply(ctx, 'Ocorreu um erro ao enviar a resposta pois o tamanho da mensagem ficou maior que 1024 caracteres! Nossa equipe já foi notificada e irá corrigir o problema o mais rápido possível! Por favor tente novamente!')
+      return
+    }
     const loadingMessage = await ctx.reply('<b>[📁] Enviando arquivo por favor aguarde!</b>', {
       parse_mode: 'HTML'
     }).catch((err) => {
