@@ -28,9 +28,12 @@ export class MsOpenAiApi {
   async getLyricsExplanation (lyrics: string): Promise<MsOpenAiApiGetLyricsExplanationResponse> {
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
     const prompt = `${lyricsParsed}\n\nExplicação da letra da música:`
-    const response = await this.openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt,
+    const response = await this.openai.createChatCompletion({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        { role: 'system', content: 'You are MelodyScoutAI, an artificial intelligence that helps you understand the lyrics of a song.' },
+        { role: 'user', content: prompt }
+      ],
       max_tokens: 300,
       temperature: 0.7
     }).catch((err) => {
@@ -52,7 +55,7 @@ export class MsOpenAiApi {
         error: 'No choices generated'
       }
     }
-    let explanationText = explanation.text
+    let explanationText: string | undefined = explanation.message?.content.replace(/\n/g, '')
     if (explanationText === undefined) {
       this.advConsole.log(`MsOpenAiAPi - No explanation text generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
       return {
@@ -60,7 +63,6 @@ export class MsOpenAiApi {
         error: 'No explanation text generated'
       }
     }
-    explanationText = explanationText.replace(/\n/g, '')
     if (explanation.finish_reason !== 'stop') {
       switch (explanation.finish_reason) {
         case undefined: {
@@ -74,7 +76,7 @@ export class MsOpenAiApi {
           break
         }
         default: {
-          this.advConsole.log(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: ${explanation.finish_reason}`)
+          this.advConsole.log(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: ${JSON.stringify(explanation.finish_reason, null, 2)}`)
           explanationText += '...\n(A explicação excedeu o limite de caracteres)'
           break
         }
