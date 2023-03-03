@@ -36,7 +36,7 @@ export class MsOpenAiApi {
     const response = await this.openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: [
-        { role: 'system', content: 'You are MelodyScoutAI, an artificial intelligence that helps you understand the lyrics of a song.' },
+        { role: 'system', content: 'Você é o MelodyScoutAI, uma inteligencia artificial que ajuda os usuários a entenderem a letra das músicas que eles ouvem.' },
         { role: 'user', content: prompt }
       ],
       max_tokens: 300,
@@ -100,7 +100,7 @@ export class MsOpenAiApi {
     const response = await this.openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: [
-        { role: 'system', content: 'You are MelodyScoutAI, an artificial intelligence that helps you understand the lyrics of a song.' },
+        { role: 'system', content: 'Você é o MelodyScoutAI, uma inteligencia artificial que ajuda os usuários a entenderem a letra das músicas que eles ouvem.' },
         { role: 'user', content: prompt }
       ],
       max_tokens: 50,
