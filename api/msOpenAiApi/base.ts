@@ -100,7 +100,7 @@ export class MsOpenAiApi {
     const response = await this.openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: [
-        { role: 'system', content: 'Você é o MelodyScoutAI, uma inteligencia artificial que ajuda os usuários a entenderem a letra das músicas que eles ouvem.' },
+        { role: 'system', content: 'Você é o MelodyScoutAI, uma inteligencia artificial que ajuda os usuários a entenderem a letra das músicas que eles ouvem. Você só responde em emojis.' },
         { role: 'user', content: prompt }
       ],
       max_tokens: 50,
@@ -135,17 +135,14 @@ export class MsOpenAiApi {
       switch (explanation.finish_reason) {
         case undefined: {
           this.advConsole.log(`MsOpenAiAPi - Emojis for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: undefined`)
-          // emojisText += '...\n(Erro desconhecido)'
           break
         }
         case null: {
           this.advConsole.log(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: null`)
-          // emojisText += '...\n(Erro desconhecido)'
           break
         }
         default: {
           this.advConsole.log(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: ${JSON.stringify(explanation.finish_reason, null, 2)}`)
-          // emojisText += '...\n(Limite de caracteres)'
           break
         }
       }
