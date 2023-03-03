@@ -68,7 +68,7 @@ export class TracklyricsexplanationCallback {
       return
     }
     this.advConsole.log(`New track lyrics explanation generated for ${track} by ${artist} by user ${ctx.from.id}: ${lyricsExplanation.explanation} / ${lyricsEmojis.emojis}`)
-    const TTSAudio = await this.msTextToSpeechApi.getTTS(`Explicação da música "${track}" de "${artist}" gerada pela inteligência artificial do MelodyScout. ${lyricsExplanation.explanation}`)
+    const TTSAudio = await this.msTextToSpeechApi.getTTS(`Explicação da música "${track}" de "${artist}" pelo MelodyScout. ${lyricsExplanation.explanation}`)
     if (!TTSAudio.success) {
       void this.ctxFunctions.reply(ctx, 'Ocorreu um erro ao tentar gerar o áudio da explicação da letra dessa música, por favor tente novamente mais tarde.', { reply_to_message_id: messageId })
       return

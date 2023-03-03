@@ -96,7 +96,7 @@ export class MsOpenAiApi {
 
   async getLyricsEmojis (lyrics: string): Promise<MsOpenAiApiGetLyricsEmojisResponse> {
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
-    const prompt = `${lyricsParsed}\n\n10 emojis que representam a letra da música:`
+    const prompt = `${lyricsParsed}\n\nEmojis que representam a letra da música:`
     const response = await this.openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: [
