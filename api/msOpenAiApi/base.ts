@@ -103,7 +103,7 @@ export class MsOpenAiApi {
         { role: 'system', content: 'You are MelodyScoutAI, an artificial intelligence that helps you understand the lyrics of a song.' },
         { role: 'user', content: prompt }
       ],
-      max_tokens: 300,
+      max_tokens: 50,
       temperature: 0.7
     }).catch((err) => {
       return new Error(String(err))
@@ -116,7 +116,6 @@ export class MsOpenAiApi {
       }
     }
     const explanation = response.data.choices[0]
-    // console.log(explanation)
     if (explanation === undefined) {
       this.advConsole.log(`MsOpenAiAPi - No choices emojis generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
       return {
@@ -124,7 +123,7 @@ export class MsOpenAiApi {
         error: 'No choices generated'
       }
     }
-    let emojisText: string | undefined = explanation.message?.content.replace(/\n{2,}/g, '\n\n').trim()
+    const emojisText: string | undefined = explanation.message?.content.replace(/\n{2,}/g, '\n\n').trim()
     if (emojisText === undefined) {
       this.advConsole.log(`MsOpenAiAPi - No emojis text generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
       return {
@@ -136,17 +135,17 @@ export class MsOpenAiApi {
       switch (explanation.finish_reason) {
         case undefined: {
           this.advConsole.log(`MsOpenAiAPi - Emojis for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: undefined`)
-          emojisText += '...\n(A explicação foi interrompida por um erro desconhecido)'
+          // emojisText += '...\n(Erro desconhecido)'
           break
         }
         case null: {
           this.advConsole.log(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: null`)
-          // emojisText += '...\n(A explicação foi interrompida por um erro desconhecido)'
+          // emojisText += '...\n(Erro desconhecido)'
           break
         }
         default: {
           this.advConsole.log(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: ${JSON.stringify(explanation.finish_reason, null, 2)}`)
-          emojisText += '...\n(A explicação excedeu o limite de caracteres)'
+          // emojisText += '...\n(Limite de caracteres)'
           break
         }
       }
