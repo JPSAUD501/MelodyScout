@@ -188,10 +188,6 @@ export class MelodyScoutBot {
 
     this.bot.command(['allusers'], async (ctx) => {
       this.logNewCommand(ctx)
-      if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCommand.run(ctx)
-        return
-      }
       void this.botFunctions.allusersCommand.run(ctx)
     })
 
