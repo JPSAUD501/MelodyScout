@@ -1,0 +1,120 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Minha grade de imagens 1:1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 0px;
+      }
+
+      .grid-item {
+        position: relative;
+        width: 100%;
+        padding-bottom: 100%;
+        overflow: hidden;
+        border-right: 5px solid #DB5461;
+        border-top: 5px solid #DB5461;
+        border-left: 5px solid #DB5461;
+      }
+
+      /* Apenas a ultima linha da grade */
+      .grid-container > .grid-item:nth-last-child(-n+3) {
+        border-bottom: 5px solid #DB5461;
+      }
+
+      .grid-item img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .grid-item h1 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 5px;
+        margin: 0;
+        background-color: #171738;
+        color: #E3D8F1;
+        font-family: 'Poppins', sans-serif;
+        font-size: 25px;
+        font-weight: 600;
+        line-height: 1;
+        text-align: center;
+        width: 100%;
+      }
+
+      .grid-item p {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        padding: 5px;
+        margin: 0;
+        background-color: #171738;
+        color: #E3D8F1;
+        font-family: 'Poppins', sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 1;
+        text-align: center;
+        width: 100%;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="grid-container">
+      <div class="grid-item">
+        <img src="https://lastfm.freetls.fastly.net/i/u/300x300/57d3c847e5f6241694159b5af0875681.png">
+        <h1>Name</h1>
+        <p>10 Scrobbles</p>
+      </div>
+      <div class="grid-item">
+        <img src="https://lastfm.freetls.fastly.net/i/u/300x300/57d3c847e5f6241694159b5af0875681.png">
+        <h1>Name</h1>
+        <p>10 Scrobbles</p>
+      </div>
+      <div class="grid-item">
+        <img src="https://lastfm.freetls.fastly.net/i/u/300x300/57d3c847e5f6241694159b5af0875681.png">
+        <h1>Name</h1>
+        <p>10 Scrobbles</p>
+      </div>
+      <div class="grid-item">
+        <img src="https://lastfm.freetls.fastly.net/i/u/300x300/57d3c847e5f6241694159b5af0875681.png">
+        <h1>Name</h1>
+        <p>10 Scrobbles</p>
+      </div>
+      <div class="grid-item">
+        <img src="https://lastfm.freetls.fastly.net/i/u/300x300/57d3c847e5f6241694159b5af0875681.png">
+        <h1>Name</h1>
+        <p>10 Scrobbles</p>
+      </div>
+      <div class="grid-item">
+        <img src="https://lastfm.freetls.fastly.net/i/u/300x300/57d3c847e5f6241694159b5af0875681.png">
+        <h1>Name</h1>
+        <p>10 Scrobbles</p>
+      </div>
+      <div class="grid-item">
+        <img src="https://lastfm.freetls.fastly.net/i/u/300x300/57d3c847e5f6241694159b5af0875681.png">
+        <h1>Name</h1>
+        <p>10 Scrobbles</p>
+      </div>
+      <div class="grid-item">
+        <img src="https://lastfm.freetls.fastly.net/i/u/300x300/57d3c847e5f6241694159b5af0875681.png">
+        <h1>Name</h1>
+        <p>10 Scrobbles</p>
+      </div>
+      <div class="grid-item">
+        <img src="https://lastfm.freetls.fastly.net/i/u/300x300/57d3c847e5f6241694159b5af0875681.png">
+        <h1>Name</h1>
+        <p>10 Scrobbles</p>
+      </div>
+    </div>
+  </body>
+</html>
