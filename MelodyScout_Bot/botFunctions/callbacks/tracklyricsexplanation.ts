@@ -64,10 +64,10 @@ export class TracklyricsexplanationCallback {
       return
     }
     if (!lyricsEmojis.success) {
-      void this.ctxFunctions.reply(ctx, 'Ocorreu um erro ao tentar gerar os emojis da letra dessa música, por favor tente novamente mais tarde.', { reply_to_message_id: messageId })
-      return
+      // void this.ctxFunctions.reply(ctx, 'Ocorreu um erro ao tentar gerar os emojis da letra dessa música, por favor tente novamente mais tarde.', { reply_to_message_id: messageId })
+      // return
     }
-    this.advConsole.log(`New track lyrics explanation generated for ${track} by ${artist} by user ${ctx.from.id}: ${lyricsExplanation.explanation} / ${lyricsEmojis.emojis}`)
+    this.advConsole.log(`New track lyrics explanation generated for ${track} by ${artist} by user ${ctx.from.id}: ${lyricsExplanation.explanation} / ${lyricsEmojis.success ? lyricsEmojis.emojis : 'No emojis'}`)
     const TTSAudio = await this.msTextToSpeechApi.getTTS(`Explicação da música "${track}" de "${artist}" pelo MelodyScout. ${lyricsExplanation.explanation}`)
     if (!TTSAudio.success) {
       void this.ctxFunctions.reply(ctx, 'Ocorreu um erro ao tentar gerar o áudio da explicação da letra dessa música, por favor tente novamente mais tarde.', { reply_to_message_id: messageId })
@@ -76,7 +76,7 @@ export class TracklyricsexplanationCallback {
     const TTSAudioInputFile = new InputFile(TTSAudio.data.audio, `${track}-MelodyScoutAi.mp3`)
     await this.ctxFunctions.replyWithVoice(ctx, TTSAudioInputFile, {
       reply_to_message_id: messageId,
-      caption: getTracklyricsexplanationText(track, artist, lyricsExplanation.explanation, lyricsEmojis.emojis, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`)
+      caption: getTracklyricsexplanationText(track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`)
     })
   }
 }
