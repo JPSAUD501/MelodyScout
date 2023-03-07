@@ -140,13 +140,7 @@ export class MsTextToSpeechApi {
   }
 
   async getTTS (text: string): Promise<MsTextToSpeechApiGetTTSResponse> {
-    const splittedText = googleTTS.getAllAudioUrls(text, {
-      lang: 'pt',
-      slow: false,
-      splitPunct: ',;.!?:'
-    }).map((obg) => {
-      return obg.shortText
-    })
+    const splittedText = text.match(/.{1,200}([,;.!?:]|$|\n)/g) ?? []
     const tiktokTTSResponse = await this.getTiktokTTS(splittedText)
     if (tiktokTTSResponse.success) {
       return tiktokTTSResponse

@@ -39,7 +39,7 @@ export class MsOpenAiApi {
         { role: 'system', content: 'Você é o MelodyScoutAI, uma inteligencia artificial que ajuda os usuários a entenderem a letra das músicas que eles ouvem.' },
         { role: 'user', content: prompt }
       ],
-      max_tokens: 300,
+      max_tokens: 350,
       temperature: 0.7
     }).catch((err) => {
       return new Error(String(err))
@@ -76,8 +76,6 @@ export class MsOpenAiApi {
           break
         }
         case null: {
-          this.advConsole.log(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: null`)
-          // explanationText += '...\n(A explicação foi interrompida por um erro desconhecido)'
           break
         }
         default: {
@@ -100,10 +98,11 @@ export class MsOpenAiApi {
     const response = await this.openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: [
-        { role: 'system', content: 'Você é o MelodyScoutAI, uma inteligencia artificial que ajuda os usuários a entenderem a letra das músicas que eles ouvem.' },
+        // { role: 'system', content: 'Você é o MelodyScoutAI, uma inteligencia artificial que ajuda os usuários a entenderem a letra das músicas que eles ouvem.' },
+        { role: 'system', content: 'Você é o MelodyScoutAI, uma inteligencia artificial que converte letras de músicas em emojis.' },
         { role: 'user', content: prompt }
       ],
-      max_tokens: 50,
+      max_tokens: 75,
       temperature: 0.7
     }).catch((err) => {
       return new Error(String(err))

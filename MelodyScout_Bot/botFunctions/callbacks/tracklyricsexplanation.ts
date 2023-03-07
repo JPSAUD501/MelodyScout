@@ -46,7 +46,7 @@ export class TracklyricsexplanationCallback {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao buscar a música, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
       return
     }
-    const loadingMessage = await this.ctxFunctions.loadingReply(ctx, '⏳ - Gerando explicação da música com inteligência artificial, aguarde um momento...', 15000, { reply_to_message_id: messageId })
+    const loadingMessage = await this.ctxFunctions.loadingReply(ctx, '⏳ - Gerando explicação da música com inteligência artificial, aguarde um momento...', 15000, { reply_to_message_id: messageId, disable_notification: true })
     if (loadingMessage === undefined) {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao enviar a mensagem de carregamento, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
       return
@@ -63,10 +63,6 @@ export class TracklyricsexplanationCallback {
       void this.ctxFunctions.reply(ctx, 'Ocorreu um erro ao tentar gerar a explicação da letra dessa música, por favor tente novamente mais tarde.', { reply_to_message_id: messageId })
       return
     }
-    if (!lyricsEmojis.success) {
-      // void this.ctxFunctions.reply(ctx, 'Ocorreu um erro ao tentar gerar os emojis da letra dessa música, por favor tente novamente mais tarde.', { reply_to_message_id: messageId })
-      // return
-    }
     this.advConsole.log(`New track lyrics explanation generated for ${track} by ${artist} by user ${ctx.from.id}: ${lyricsExplanation.explanation} / ${lyricsEmojis.success ? lyricsEmojis.emojis : 'No emojis'}`)
     const TTSAudio = await this.msTextToSpeechApi.getTTS(`Explicação da música "${track}" de "${artist}" pelo MelodyScout. ${lyricsExplanation.explanation}`)
     if (!TTSAudio.success) {
@@ -74,9 +70,15 @@ export class TracklyricsexplanationCallback {
       return
     }
     const TTSAudioInputFile = new InputFile(TTSAudio.data.audio, `${track}-MelodyScoutAi.mp3`)
-    await this.ctxFunctions.replyWithVoice(ctx, TTSAudioInputFile, {
+    const commandResponse = await this.ctxFunctions.reply(ctx, getTracklyricsexplanationText(track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), {
       reply_to_message_id: messageId,
-      caption: getTracklyricsexplanationText(track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`)
+      disable_web_page_preview: true
     })
+    if (commandResponse !== undefined) {
+      await this.ctxFunctions.replyWithVoice(ctx, TTSAudioInputFile, {
+        reply_to_message_id: commandResponse.message_id,
+        disable_notification: true
+      })
+    }
   }
 }

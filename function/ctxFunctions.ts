@@ -116,7 +116,8 @@ export class CtxFunctions {
       return
     }
     const loadingMessage = await ctx.reply('<b>[🎤] Enviando audio por favor aguarde!</b>', {
-      parse_mode: 'HTML'
+      parse_mode: 'HTML',
+      disable_notification: true
     }).catch((err) => {
       this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
     })
@@ -140,7 +141,8 @@ export class CtxFunctions {
       return
     }
     const loadingMessage = await ctx.reply('<b>[🎵] Enviando audio por favor aguarde!</b>', {
-      parse_mode: 'HTML'
+      parse_mode: 'HTML',
+      disable_notification: true
     }).catch((err) => {
       this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
     })
@@ -164,7 +166,8 @@ export class CtxFunctions {
       return
     }
     const loadingMessage = await ctx.reply('<b>[🎥] Enviando vídeo por favor aguarde!</b>', {
-      parse_mode: 'HTML'
+      parse_mode: 'HTML',
+      disable_notification: true
     }).catch((err) => {
       this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
     })
@@ -188,7 +191,8 @@ export class CtxFunctions {
       return
     }
     const loadingMessage = await ctx.reply('<b>[📁] Enviando arquivo por favor aguarde!</b>', {
-      parse_mode: 'HTML'
+      parse_mode: 'HTML',
+      disable_notification: true
     }).catch((err) => {
       this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
     })
