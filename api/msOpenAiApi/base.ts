@@ -39,7 +39,7 @@ export class MsOpenAiApi {
         { role: 'system', content: 'Você é o MelodyScoutAI, uma inteligencia artificial que ajuda os usuários a entenderem a letra das músicas que eles ouvem.' },
         { role: 'user', content: prompt }
       ],
-      max_tokens: 350,
+      max_tokens: 425,
       temperature: 0.7
     }).catch((err) => {
       return new Error(String(err))
