@@ -64,12 +64,12 @@ export class TracklyricsexplanationCallback {
       return
     }
     this.advConsole.log(`New track lyrics explanation generated for ${track} by ${artist} by user ${ctx.from.id}: ${lyricsExplanation.explanation} / ${lyricsEmojis.success ? lyricsEmojis.emojis : 'No emojis'}`)
-    const TTSAudio = await this.msTextToSpeechApi.getTTS(`Explicação da música "${track}" de "${artist}" pelo MelodyScout. ${lyricsExplanation.explanation}`)
+    const TTSAudio = await this.msTextToSpeechApi.getTTS(`Explicação da música "${track}" de "${artist}" pelo MelodyScout.`, `${lyricsExplanation.explanation}`)
     if (!TTSAudio.success) {
       void this.ctxFunctions.reply(ctx, 'Ocorreu um erro ao tentar gerar o áudio da explicação da letra dessa música, por favor tente novamente mais tarde.', { reply_to_message_id: messageId })
       return
     }
-    const TTSAudioInputFile = new InputFile(TTSAudio.data.audio, `${track}-MelodyScoutAi.mp3`)
+    const TTSAudioInputFile = new InputFile(TTSAudio.data.audio.buffer, `${track}-MelodyScoutAi.mp3`)
     const commandResponse = await this.ctxFunctions.reply(ctx, getTracklyricsexplanationText(track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), {
       reply_to_message_id: messageId,
       disable_web_page_preview: true
