@@ -9,6 +9,7 @@ import { MsGeniusApi } from './api/msGeniusApi/base'
 import { MsMusicApi } from './api/msMusicApi/base'
 import { MsOpenAiApi } from './api/msOpenAiApi/base'
 import { MsTextToSpeechApi } from './api/msTextToSpeechApi/base'
+import { MsImgFabricApi } from './api/msImgFabricApi/base'
 
 async function start (): Promise<void> {
   console.log('Starting MelodyScoutLog_Bot and AdvConsole...')
@@ -25,9 +26,10 @@ async function start (): Promise<void> {
   const msOpenAiApi = new MsOpenAiApi(advConsole, config.openai.apiKey)
   const msMusicApi = new MsMusicApi(advConsole, config.spotify.clientID, config.spotify.clientSecret)
   const msTextToSpeechApi = new MsTextToSpeechApi(advConsole)
+  const msImgFabricApi = new MsImgFabricApi(advConsole)
   await msMusicApi.start()
   const ctxFunctions = new CtxFunctions(advConsole)
-  const melodyScoutBot = new MelodyScoutBot(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi)
+  const melodyScoutBot = new MelodyScoutBot(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi, msImgFabricApi)
   melodyScoutBot.start()
   await melodyScoutBot.getBotInfo()
   melodyScoutBot.hear()

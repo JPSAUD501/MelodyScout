@@ -1,6 +1,5 @@
 import botConfig from './config'
 import { Bot, CallbackQueryContext, CommandContext, Context } from 'grammy'
-// import { run } from '@grammyjs/runner'
 import { AdvConsole } from '../function/advancedConsole'
 import { MsPrismaDbApi } from '../api/msPrismaDbApi/base'
 import { MsLastfmApi } from '../api/msLastfmApi/base'
@@ -11,7 +10,7 @@ import { MsMusicApi } from '../api/msMusicApi/base'
 import { MsOpenAiApi } from '../api/msOpenAiApi/base'
 import config from '../config'
 import { MsTextToSpeechApi } from '../api/msTextToSpeechApi/base'
-// import { apiThrottler } from '@grammyjs/transformer-throttler'
+import { MsImgFabricApi } from '../api/msImgFabricApi/base'
 
 export class MelodyScoutBot {
   private readonly advConsole: AdvConsole
@@ -19,23 +18,10 @@ export class MelodyScoutBot {
   private readonly botFunctions: BotFunctions
   private maintenanceMode = false
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi) {
+  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi, msImgFabricApi: MsImgFabricApi) {
     this.advConsole = advConsole
-    this.botFunctions = new BotFunctions(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi)
-    // const throttler = apiThrottler()
+    this.botFunctions = new BotFunctions(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi, msImgFabricApi)
     this.bot = new Bot(botConfig.telegram.token)
-    // this.bot.api.config.use(throttler)
-    // const runner = run(this.bot, 1, null, {
-    //   retryInterval: 5000
-    // })
-
-    // const stopRunner = (): void => {
-    //   if (runner.isRunning() === true) {
-    //     runner.stop()
-    //   }
-    // }
-    // process.once('SIGINT', stopRunner)
-    // process.once('SIGTERM', stopRunner)
 
     console.log('MelodyScout_Bot - Loaded')
   }
@@ -61,7 +47,8 @@ export class MelodyScoutBot {
       { command: 'pin', description: 'Pin a shortcut to the /playingnow command' },
       { command: 'pntrack', description: 'Show information about the currently playing track' },
       { command: 'pnalbum', description: 'Show information about the album of the currently playing track' },
-      { command: 'pnartist', description: 'Show information about the artist of the currently playing track' }
+      { command: 'pnartist', description: 'Show information about the artist of the currently playing track' },
+      { command: 'collage', description: 'Show a collage of your top tracks' },
     ]).catch((err) => {
       this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
     })
@@ -189,6 +176,15 @@ export class MelodyScoutBot {
     this.bot.command(['allusers'], async (ctx) => {
       this.logNewCommand(ctx)
       void this.botFunctions.allusersCommand.run(ctx)
+    })
+
+    this.bot.command(['collage'], async (ctx) => {
+      this.logNewCommand(ctx)
+      if (this.maintenanceMode) {
+        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        return
+      }
+      void this.botFunctions.collageCommand.run(ctx)
     })
 
     this.bot.on('message', async (ctx) => {

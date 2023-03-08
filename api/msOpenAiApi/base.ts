@@ -27,7 +27,7 @@ export class MsOpenAiApi {
     })
     this.openai = new OpenAIApi(configuration)
 
-    this.advConsole.log('OpenAiApi started!')
+    this.advConsole.log('MsOpenAiApi started!')
   }
 
   async getLyricsExplanation (lyrics: string): Promise<MsOpenAiApiGetLyricsExplanationResponse> {

@@ -207,4 +207,29 @@ export class CtxFunctions {
       this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
     })
   }
+
+  async replyWithPhoto (ctx: CommandContext<Context> | CallbackQueryContext<Context>, photo: string | InputFile, options?: Other<RawApi, 'sendPhoto', 'chat_id' | 'photo'>): Promise<void> {
+    if (ctx.chat === undefined) return this.advConsole.error('MelodyScout_Bot - Error: ctx.chat is undefined')
+    if ((options?.caption?.length ?? 0) > 1024) {
+      this.advConsole.error('MelodyScout_Bot - Error: options.caption.length > 1024')
+      void this.reply(ctx, 'Ocorreu um erro ao enviar a resposta pois o tamanho da mensagem ficou maior que 1024 caracteres! Nossa equipe já foi notificada e irá corrigir o problema o mais rápido possível! Por favor tente novamente!')
+      return
+    }
+    const loadingMessage = await ctx.reply('<b>[📷] Enviando foto por favor aguarde!</b>', {
+      parse_mode: 'HTML',
+      disable_notification: true
+    }).catch((err) => {
+      this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+    })
+    if (loadingMessage === undefined) return this.advConsole.error('MelodyScout_Bot - Error: loadingMessage is undefined')
+    await ctx.api.sendPhoto(ctx.chat.id, photo, {
+      parse_mode: 'HTML',
+      ...options
+    }).catch((err) => {
+      this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+    })
+    await ctx.api.deleteMessage(ctx.chat.id, loadingMessage.message_id).catch((err) => {
+      this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+    })
+  }
 }

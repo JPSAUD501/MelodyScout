@@ -1,7 +1,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Minha grade de imagens 1:1</title>
+    <title>TOP SONGS 3x3</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
       .grid-container {
@@ -15,14 +15,18 @@
         width: 100%;
         padding-bottom: 100%;
         overflow: hidden;
-        border-right: 5px solid #DB5461;
-        border-top: 5px solid #DB5461;
-        border-left: 5px solid #DB5461;
+        border-top: 5px solid #171738;
+        border-left: 5px solid #171738;
       }
 
       /* Apenas a ultima linha da grade */
       .grid-container > .grid-item:nth-last-child(-n+3) {
-        border-bottom: 5px solid #DB5461;
+        border-bottom: 5px solid #171738;
+      }
+
+      /* Apenas a ultima coluna da grade */
+      .grid-container > .grid-item:nth-child(3n) {
+        border-right: 5px solid #171738;
       }
 
       .grid-item img {
@@ -40,10 +44,10 @@
         left: 0;
         padding: 5px;
         margin: 0;
-        background-color: #171738;
-        color: #E3D8F1;
+        background-color: #E3D8F1;
+        color: #171738;
         font-family: 'Poppins', sans-serif;
-        font-size: 25px;
+        font-size: 22px;
         font-weight: 600;
         line-height: 1;
         text-align: center;
@@ -71,49 +75,49 @@
   <body>
     <div class="grid-container">
       <div class="grid-item">
-        <img src="https://lastfm.freetls.fastly.net/i/u/300x300/57d3c847e5f6241694159b5af0875681.png">
-        <h1>Name</h1>
-        <p>10 Scrobbles</p>
+        <img src="{{url1}}">
+        <h1>{{name1}}</h1>
+        <p>{{description1}}</p>
       </div>
       <div class="grid-item">
-        <img src="https://lastfm.freetls.fastly.net/i/u/300x300/57d3c847e5f6241694159b5af0875681.png">
-        <h1>Name</h1>
-        <p>10 Scrobbles</p>
+        <img src="{{url2}}">
+        <h1>{{name2}}</h1>
+        <p>{{description2}}</p>
       </div>
       <div class="grid-item">
-        <img src="https://lastfm.freetls.fastly.net/i/u/300x300/57d3c847e5f6241694159b5af0875681.png">
-        <h1>Name</h1>
-        <p>10 Scrobbles</p>
+        <img src="{{url3}}">
+        <h1>{{name3}}</h1>
+        <p>{{description3}}</p>
       </div>
       <div class="grid-item">
-        <img src="https://lastfm.freetls.fastly.net/i/u/300x300/57d3c847e5f6241694159b5af0875681.png">
-        <h1>Name</h1>
-        <p>10 Scrobbles</p>
+        <img src="{{url4}}">
+        <h1>{{name4}}</h1>
+        <p>{{description4}}</p>
       </div>
       <div class="grid-item">
-        <img src="https://lastfm.freetls.fastly.net/i/u/300x300/57d3c847e5f6241694159b5af0875681.png">
-        <h1>Name</h1>
-        <p>10 Scrobbles</p>
+        <img src="{{url5}}">
+        <h1>{{name5}}</h1>
+        <p>{{description5}}</p>
       </div>
       <div class="grid-item">
-        <img src="https://lastfm.freetls.fastly.net/i/u/300x300/57d3c847e5f6241694159b5af0875681.png">
-        <h1>Name</h1>
-        <p>10 Scrobbles</p>
+        <img src="{{url6}}">
+        <h1>{{name6}}</h1>
+        <p>{{description6}}</p>
       </div>
       <div class="grid-item">
-        <img src="https://lastfm.freetls.fastly.net/i/u/300x300/57d3c847e5f6241694159b5af0875681.png">
-        <h1>Name</h1>
-        <p>10 Scrobbles</p>
+        <img src="{{url7}}">
+        <h1>{{name7}}</h1>
+        <p>{{description7}}</p>
       </div>
       <div class="grid-item">
-        <img src="https://lastfm.freetls.fastly.net/i/u/300x300/57d3c847e5f6241694159b5af0875681.png">
-        <h1>Name</h1>
-        <p>10 Scrobbles</p>
+        <img src="{{url8}}">
+        <h1>{{name8}}</h1>
+        <p>{{description8}}</p>
       </div>
       <div class="grid-item">
-        <img src="https://lastfm.freetls.fastly.net/i/u/300x300/57d3c847e5f6241694159b5af0875681.png">
-        <h1>Name</h1>
-        <p>10 Scrobbles</p>
+        <img src="{{url9}}">
+        <h1>{{name9}}</h1>
+        <p>{{description9}}</p>
       </div>
     </div>
   </body>

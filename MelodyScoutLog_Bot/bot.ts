@@ -8,9 +8,7 @@ export class MelodyScoutLogBot {
   private readonly messageQueue: string[]
 
   constructor () {
-    // const throttler = apiThrottler()
     this.bot = new Bot(config.telegram.token)
-    // this.bot.api.config.use(throttler)
     this.messageQueue = []
 
     console.log('MelodyScoutLog_Bot - Loaded')
@@ -26,18 +24,6 @@ export class MelodyScoutLogBot {
       console.error(err)
       console.error('MelodyScoutLog_Bot - Error')
     })
-
-    // const runner = run(this.bot, 1, null, {
-    //   retryInterval: 5000
-    // })
-
-    // const stopRunner = (): void => {
-    //   if (runner.isRunning() === true) {
-    //     runner.stop()
-    //   }
-    // }
-    // process.once('SIGINT', stopRunner)
-    // process.once('SIGTERM', stopRunner)
 
     this.startLogQueue()
 

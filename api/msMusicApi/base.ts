@@ -6,7 +6,7 @@ import { AdvConsole } from '../../function/advancedConsole'
 // import YoutubeMp3Downloader from 'youtube-mp3-downloader'
 // import fs from 'fs'
 
-interface MsMusicApiError {
+export interface MsMusicApiError {
   success: false
   error: string
 }
