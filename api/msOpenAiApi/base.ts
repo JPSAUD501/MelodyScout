@@ -23,7 +23,7 @@ export class MsOpenAiApi {
   constructor (advConsole: AdvConsole, openAiApiKey: string) {
     this.advConsole = advConsole
     const configuration = new Configuration({
-      apiKey: process.env.OPENAI_API_KEY
+      apiKey: openAiApiKey
     })
     this.openai = new OpenAIApi(configuration)
 
@@ -98,7 +98,6 @@ export class MsOpenAiApi {
     const response = await this.openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: [
-        // { role: 'system', content: 'Você é o MelodyScoutAI, uma inteligencia artificial que ajuda os usuários a entenderem a letra das músicas que eles ouvem.' },
         { role: 'system', content: 'Você é o MelodyScoutAI, uma inteligencia artificial que converte letras de músicas em emojis.' },
         { role: 'user', content: prompt }
       ],

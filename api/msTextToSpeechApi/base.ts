@@ -36,10 +36,7 @@ interface MsTextToSpeechApiError {
 type MsTextToSpeechApiGetTiktokTTSResponse = {
   success: true
   data: {
-    audio: {
-      buffer: Buffer
-      base64: string
-    }
+    audio: Buffer
     voice: {
       id: string
       emoji: string
@@ -50,10 +47,7 @@ type MsTextToSpeechApiGetTiktokTTSResponse = {
 type MsTextToSpeechApiGetTTSResponse = {
   success: true
   data: {
-    audio: {
-      buffer: Buffer
-      base64: string
-    }
+    audio: Buffer
     voice: {
       id: string
       emoji: string
@@ -139,45 +133,36 @@ export class MsTextToSpeechApi {
     return {
       success: true,
       data: {
-        audio: {
-          buffer: concatenatedAudio,
-          base64: concatenatedAudio.toString('base64')
-        },
+        audio: concatenatedAudio,
         voice: tiktokApiDefaultVoice
       }
     }
   }
 
   async getTTS (header: string, text: string): Promise<MsTextToSpeechApiGetTTSResponse> {
-    const googleTTSHeaderResponse = await googleTTS.getAllAudioBase64(header, {
+    const headerGoogleTTSResponse = await googleTTS.getAllAudioBase64(header, {
       lang: 'pt',
       slow: false,
       splitPunct: ',;.!?:'
     }).catch((error) => {
       return new Error(error)
     })
-    if (googleTTSHeaderResponse instanceof Error) {
-      this.advConsole.error(`MsTextToSpeechApi - Error while generating Google TTS for header: ${header.substring(0, 40)}... - ${googleTTSHeaderResponse.message}`)
+    if (headerGoogleTTSResponse instanceof Error) {
+      this.advConsole.error(`MsTextToSpeechApi - Error while generating Google TTS for header: ${header.substring(0, 40)}... - ${headerGoogleTTSResponse.message}`)
       return {
         success: false,
-        error: googleTTSHeaderResponse.message
+        error: headerGoogleTTSResponse.message
       }
     }
-    const googleTTSHeaderBase64 = googleTTSHeaderResponse.map((audio) => {
-      return audio.base64
-    })
-    const googleTTSHeaderBuffer = Buffer.concat(googleTTSHeaderBase64.map(base64 => Buffer.from(base64, 'base64')))
+    const headerGoogleTTSBuffer = Buffer.concat(headerGoogleTTSResponse.map(base64 => Buffer.from(base64.base64, 'base64')))
     const splittedText = text.match(/.{1,200}([,;.!?:]|$|\n)/g) ?? []
+    console.log(splittedText)
     const tiktokTTSResponse = await this.getTiktokTTS(splittedText)
     if (tiktokTTSResponse.success) {
-      const concatenatedAudio = Buffer.concat([googleTTSHeaderBuffer, tiktokTTSResponse.data.audio.buffer])
       return {
         success: true,
         data: {
-          audio: {
-            buffer: concatenatedAudio,
-            base64: concatenatedAudio.toString('base64')
-          },
+          audio: Buffer.concat([headerGoogleTTSBuffer, tiktokTTSResponse.data.audio]),
           voice: tiktokTTSResponse.data.voice
         }
       }
@@ -200,14 +185,10 @@ export class MsTextToSpeechApi {
       return TTSObject.base64
     })
     const concatenatedAudio = Buffer.concat(GoogleTTSBase64Array.map(base64 => Buffer.from(base64, 'base64')))
-    const finalAudio = Buffer.concat([googleTTSHeaderBuffer, concatenatedAudio])
     return {
       success: true,
       data: {
-        audio: {
-          buffer: finalAudio,
-          base64: finalAudio.toString('base64')
-        },
+        audio: Buffer.concat([headerGoogleTTSBuffer, concatenatedAudio]),
         voice: defaultGoogleTTSVoice
       }
     }
