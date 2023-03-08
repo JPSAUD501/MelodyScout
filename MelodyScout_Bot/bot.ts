@@ -48,7 +48,7 @@ export class MelodyScoutBot {
       { command: 'pntrack', description: 'Show information about the currently playing track' },
       { command: 'pnalbum', description: 'Show information about the album of the currently playing track' },
       { command: 'pnartist', description: 'Show information about the artist of the currently playing track' },
-      { command: 'collage', description: 'Show a collage of your top tracks' },
+      { command: 'collage', description: 'Show a collage of your top tracks' }
     ]).catch((err) => {
       this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
     })
