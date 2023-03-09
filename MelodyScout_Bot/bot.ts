@@ -10,7 +10,7 @@ import { MsMusicApi } from '../api/msMusicApi/base'
 import { MsOpenAiApi } from '../api/msOpenAiApi/base'
 import config from '../config'
 import { MsTextToSpeechApi } from '../api/msTextToSpeechApi/base'
-import { MsImgFabricApi } from '../api/msImgFabricApi/base'
+// import { MsImgFabricApi } from '../api/msImgFabricApi/base'
 
 export class MelodyScoutBot {
   private readonly advConsole: AdvConsole
@@ -18,9 +18,9 @@ export class MelodyScoutBot {
   private readonly botFunctions: BotFunctions
   private maintenanceMode = false
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi, msImgFabricApi: MsImgFabricApi) {
+  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi/*, msImgFabricApi: MsImgFabricApi */) {
     this.advConsole = advConsole
-    this.botFunctions = new BotFunctions(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi, msImgFabricApi)
+    this.botFunctions = new BotFunctions(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi/* , msImgFabricApi */)
     this.bot = new Bot(botConfig.telegram.token)
 
     console.log('MelodyScout_Bot - Loaded')
@@ -45,10 +45,10 @@ export class MelodyScoutBot {
       { command: 'playingnow', description: 'Show the currently playing track' },
       { command: 'history', description: 'Show the history of your listened tracks' },
       { command: 'pin', description: 'Pin a shortcut to the /playingnow command' },
+      // { command: 'collage', description: 'Show a collage of your top tracks' },
       { command: 'pntrack', description: 'Show information about the currently playing track' },
       { command: 'pnalbum', description: 'Show information about the album of the currently playing track' },
-      { command: 'pnartist', description: 'Show information about the artist of the currently playing track' },
-      { command: 'collage', description: 'Show a collage of your top tracks' }
+      { command: 'pnartist', description: 'Show information about the artist of the currently playing track' }
     ]).catch((err) => {
       this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
     })
@@ -178,14 +178,14 @@ export class MelodyScoutBot {
       void this.botFunctions.allusersCommand.run(ctx)
     })
 
-    this.bot.command(['collage'], async (ctx) => {
-      this.logNewCommand(ctx)
-      if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCommand.run(ctx)
-        return
-      }
-      void this.botFunctions.collageCommand.run(ctx)
-    })
+    // this.bot.command(['collage'], async (ctx) => {
+    //   this.logNewCommand(ctx)
+    //   if (this.maintenanceMode) {
+    //     void this.botFunctions.maintenanceinformCommand.run(ctx)
+    //     return
+    //   }
+    //   void this.botFunctions.collageCommand.run(ctx)
+    // })
 
     this.bot.on('message', async (ctx) => {
       if (!((ctx.message?.text?.startsWith('/')) ?? false)) return
