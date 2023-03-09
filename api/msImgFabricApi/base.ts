@@ -102,6 +102,9 @@ export class MsImgFabricApi {
         url9: collageData.item9.url,
         name9: collageData.item9.name,
         description9: collageData.item9.description
+      },
+      puppeteerArgs: {
+        product: 'firefox'
       }
     }).catch((error) => {
       return new Error(error)
