@@ -72,6 +72,10 @@ export class MsImgFabricApi {
       description: string
     }
   }): Promise<MsImgFabricApiGet3x3CollageResponse> {
+    console.log(path.join(
+      __dirname,
+      '../../../chrome/chromium'
+    ))
     const htmlPattern = fs.readFileSync(path.join(__dirname, './patterns/3x3Collage.html'), 'utf8')
     const image = await nodeHtmlToImage({
       html: htmlPattern,
