@@ -1,7 +1,5 @@
 import { Bot } from 'grammy'
 import config from './config'
-// import { apiThrottler } from '@grammyjs/transformer-throttler'
-// import { run } from '@grammyjs/runner'
 
 export class MelodyScoutLogBot {
   private readonly bot: Bot

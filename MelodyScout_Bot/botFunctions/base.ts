@@ -27,8 +27,8 @@ import { MaintenanceinformCallback } from './callbacks/maintenanceinform'
 import { TracklyricsexplanationCallback } from './callbacks/tracklyricsexplanation'
 import { MsOpenAiApi } from '../../api/msOpenAiApi/base'
 import { MsTextToSpeechApi } from '../../api/msTextToSpeechApi/base'
-// import { CollageCommand } from './commands/collage'
-// import { MsImgFabricApi } from '../../api/msImgFabricApi/base'
+import { CollageCommand } from './commands/collage'
+import { MsImgFabricApi } from '../../api/msImgFabricApi/base'
 
 export class BotFunctions {
   startCommand: StartCommand
@@ -46,7 +46,7 @@ export class BotFunctions {
   allusersCommand: AllusersCommand
   maintenanceCommand: MaintenanceCommand
   maintenanceinformCommand: MaintenanceinformCommand
-  // collageCommand: CollageCommand
+  collageCommand: CollageCommand
 
   trackpreviewCallback: TrackpreviewCallback
   playingnowCallback: PlayingnowCallback
@@ -55,7 +55,7 @@ export class BotFunctions {
   maintenanceinformCallback: MaintenanceinformCallback
   tracklyricsexplanationCallback: TracklyricsexplanationCallback
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi/* , msImgFabricApi: MsImgFabricApi */) {
+  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi, msImgFabricApi: MsImgFabricApi) {
     this.startCommand = new StartCommand(ctxFunctions)
     this.helpCommand = new HelpCommand(ctxFunctions)
     this.contactCommand = new ContactCommand(ctxFunctions)
@@ -71,7 +71,7 @@ export class BotFunctions {
     this.allusersCommand = new AllusersCommand(ctxFunctions, msPrismaDbApi)
     this.maintenanceCommand = new MaintenanceCommand(advConsole, ctxFunctions)
     this.maintenanceinformCommand = new MaintenanceinformCommand(advConsole, ctxFunctions)
-    // this.collageCommand = new CollageCommand(ctxFunctions, msLastfmApi, msPrismaDbApi, msMusicApi, msImgFabricApi)
+    this.collageCommand = new CollageCommand(ctxFunctions, msLastfmApi, msPrismaDbApi, msMusicApi, msImgFabricApi)
 
     this.trackpreviewCallback = new TrackpreviewCallback(ctxFunctions, msMusicApi)
     this.playingnowCallback = new PlayingnowCallback(ctxFunctions, msLastfmApi, msPrismaDbApi, msMusicApi)

@@ -3,8 +3,6 @@ import { youtube } from 'scrape-youtube'
 import ytStream from 'youtube-stream-url'
 import { zodYtSteamInfo } from './types/zodYtStreamInfo'
 import { AdvConsole } from '../../function/advancedConsole'
-// import YoutubeMp3Downloader from 'youtube-mp3-downloader'
-// import fs from 'fs'
 
 export interface MsMusicApiError {
   success: false
@@ -131,23 +129,4 @@ export class MsMusicApi {
       videoUrl: video.link
     }
   }
-
-  // async getYoutubeAudio (trackUrl: string): Promise<MsMusicApiError | void> {
-  //   if (!fs.existsSync('../../temp')) {
-  //     fs.mkdirSync('../../temp')
-  //   }
-  //   const videoId = trackUrl.split('/').pop()
-  //   if (!fs.existsSync(`../../temp/${videoId}`)) {
-  //     fs.mkdirSync(`../../temp/${videoId}`)
-  //   }
-  //   const YD = new YoutubeMp3Downloader({
-  //     ffmpegPath: '../../FFMPEG/ffmpeg.exe',
-  //     outputPath: `../../temp/${videoId}`,
-  //     youtubeVideoQuality: 'highestaudio',
-  //     queueParallelism: 1,
-  //     allowWebm: true,
-  //     progressTimeout: 2000
-  //   })
-  //   YD.download(trackUrl)
-  // }
 }

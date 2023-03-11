@@ -5,7 +5,6 @@ import { TiktokTTSApi, zodTiktokTTSApi } from './types/zodTiktokTTSApi'
 
 const tiktokApiEndpoint = 'https://tiktok-tts.weilnet.workers.dev'
 const tiktokApiMaxTextLength = 300
-// const tiktokApiVoices = ['br_003', 'br_004', 'br_005', ''br_ghostface']
 const tiktokApiVoices = [{
   id: 'br_003',
   emoji: '👧'
