@@ -63,6 +63,7 @@ export class HistoryCommand {
       void this.ctxFunctions.reply(ctx, 'Parece que você nunca ouviu nada no Last.fm, que tal começar a ouvir algo agora? Se isso não for verdade entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
+    console.log(getHistoryText(userInfo.data, userRecentTracks.data))
     await this.ctxFunctions.reply(ctx, getHistoryText(userInfo.data, userRecentTracks.data))
   }
 }
