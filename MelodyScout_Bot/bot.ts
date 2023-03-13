@@ -178,14 +178,14 @@ export class MelodyScoutBot {
       void this.botFunctions.allusersCommand.run(ctx)
     })
 
-    this.bot.command(['collage'], async (ctx) => {
-      this.logNewCommand(ctx)
-      if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCommand.run(ctx)
-        return
-      }
-      void this.botFunctions.collageCommand.run(ctx)
-    })
+    // this.bot.command(['collage'], async (ctx) => {
+    // this.logNewCommand(ctx)
+    // if (this.maintenanceMode) {
+    //   void this.botFunctions.maintenanceinformCommand.run(ctx)
+    //   return
+    // }
+    // void this.botFunctions.collageCommand.run(ctx)
+    // })
 
     this.bot.on('message', async (ctx) => {
       if (!((ctx.message?.text?.startsWith('/')) ?? false)) return
