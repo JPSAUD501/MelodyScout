@@ -28,8 +28,5 @@ export default {
   server: {
     port: process.env.PORT !== undefined ? Number(process.env.PORT) : 3000,
     host: process.env.HOST !== undefined ? process.env.HOST : '0.0.0.0'
-  },
-  msImgFabricApi: {
-    skipChromiumDownload: process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD === 'true'
   }
 }

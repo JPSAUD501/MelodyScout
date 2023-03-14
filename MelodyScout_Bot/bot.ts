@@ -10,7 +10,6 @@ import { MsMusicApi } from '../api/msMusicApi/base'
 import { MsOpenAiApi } from '../api/msOpenAiApi/base'
 import config from '../config'
 import { MsTextToSpeechApi } from '../api/msTextToSpeechApi/base'
-import { MsImgFabricApi } from '../api/msImgFabricApi/base'
 
 export class MelodyScoutBot {
   private readonly advConsole: AdvConsole
@@ -18,9 +17,9 @@ export class MelodyScoutBot {
   private readonly botFunctions: BotFunctions
   private maintenanceMode = false
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi, msImgFabricApi: MsImgFabricApi) {
+  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi) {
     this.advConsole = advConsole
-    this.botFunctions = new BotFunctions(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi, msImgFabricApi)
+    this.botFunctions = new BotFunctions(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi)
     this.bot = new Bot(botConfig.telegram.token)
 
     console.log('MelodyScout_Bot - Loaded')
@@ -236,6 +235,15 @@ export class MelodyScoutBot {
         return
       }
       void this.botFunctions.tracklyricsexplanationCallback.run(ctx)
+    })
+
+    this.bot.callbackQuery(new RegExp(`^TD${config.melodyScout.divider}`), async (ctx) => {
+      this.logNewCallbackQuery(ctx)
+      if (this.maintenanceMode) {
+        void this.botFunctions.maintenanceinformCallback.run(ctx)
+        return
+      }
+      void this.botFunctions.trackDownloadCallback.run(ctx)
     })
 
     this.bot.on('callback_query', async (ctx) => {
