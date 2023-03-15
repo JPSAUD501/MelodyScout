@@ -5,6 +5,7 @@ import { UserTopArtists } from '../../api/msLastfmApi/types/zodUserTopArtists'
 import { UserTopTracks } from '../../api/msLastfmApi/types/zodUserTopTracks'
 import config from '../../config'
 import { sanitizeText } from '../../function/sanitizeText'
+import { urlLimiter } from '../../function/urlLimiter'
 
 export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTracks, userTopTracks: UserTopTracks, userTopAlbums: UserTopAlbums, userTopArtists: UserTopArtists): string {
   const { user } = userInfo
@@ -14,7 +15,7 @@ export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTr
   const { topartists } = userTopArtists
   const textArray: string[] = []
 
-  textArray.push(`<b><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${config.melodyScout.userImgUrl}">️️</a>Resumo musical de <a href="${user.url}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a></b>`)
+  textArray.push(`<b><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${config.melodyScout.userImgUrl}">️️</a>Resumo musical de <a href="${urlLimiter(user.url)}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a></b>`)
   textArray.push('')
   if (
     recenttracks.track.length > 0 &&
@@ -23,7 +24,7 @@ export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTr
   ) {
     const track = recenttracks.track[0]
     textArray.push('<b>[🎧] Ouvindo agora</b>')
-    textArray.push(`- <a href="${track.url}">${track.name}</a> de <a href="${track.artist.url}">${track.artist.name}</a>`)
+    textArray.push(`- <a href="${urlLimiter(track.url)}">${track.name}</a> de <a href="${urlLimiter(track.artist.url)}">${track.artist.name}</a>`)
     textArray.push('')
   }
   textArray.push('<b>[📊] Métricas</b>')
@@ -41,7 +42,7 @@ export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTr
     textArray.push('<b>[🎵] Músicas mais tocadas</b>')
     for (let i = 0; i < toptracks.track.length; i++) {
       const track = toptracks.track[i]
-      textArray.push(`- [${i + 1}] <b><a href="${track.url}">${track.name}</a> de <a href="${track.artist.url}">${track.artist.name}</a></b>`)
+      textArray.push(`- [${i + 1}] <b><a href="${urlLimiter(track.url)}">${track.name}</a> de <a href="${urlLimiter(track.artist.url)}">${track.artist.name}</a></b>`)
       textArray.push(`  (${track.playcount} Scrobbles)`)
     }
     textArray.push('')
@@ -50,7 +51,7 @@ export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTr
     textArray.push('<b>[💿] Álbuns mais tocados</b>')
     for (let i = 0; i < topalbums.album.length; i++) {
       const album = topalbums.album[i]
-      textArray.push(`- [${i + 1}] <b><a href="${album.url}">${album.name}</a> de <a href="${album.artist.url}">${album.artist.name}</a></b>`)
+      textArray.push(`- [${i + 1}] <b><a href="${urlLimiter(album.url)}">${album.name}</a> de <a href="${urlLimiter(album.artist.url)}">${album.artist.name}</a></b>`)
       textArray.push(`  (${album.playcount} Scrobbles)`)
     }
     textArray.push('')
@@ -59,7 +60,7 @@ export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTr
     textArray.push('<b>[👨‍🎤] Artistas mais tocados</b>')
     for (let i = 0; i < topartists.artist.length; i++) {
       const artist = topartists.artist[i]
-      textArray.push(`- [${i + 1}] <b><a href="${artist.url}">${artist.name}</a></b>`)
+      textArray.push(`- [${i + 1}] <b><a href="${urlLimiter(artist.url)}">${artist.name}</a></b>`)
       textArray.push(`  (${artist.playcount} Scrobbles)`)
     }
   }

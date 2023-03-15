@@ -2,6 +2,7 @@ import { UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
 import { UserRecentTracks } from '../../api/msLastfmApi/types/zodUserRecentTracks'
 import config from '../../config'
 import { sanitizeText } from '../../function/sanitizeText'
+import { urlLimiter } from '../../function/urlLimiter'
 
 export function getHistoryText (userInfo: UserInfo, userRecentTracks: UserRecentTracks): string {
   const { user } = userInfo
@@ -20,11 +21,7 @@ export function getHistoryText (userInfo: UserInfo, userRecentTracks: UserRecent
     for (let i = 0; i < recenttracks.track.length; i++) {
       const track = recenttracks.track[i]
       if (track['@attr']?.nowplaying === 'true') continue
-      if (track.url.length >= 150) {
-        textArray.push(`- <a href="${config.melodyScout.urltoolong}">${track.name}</a> de <a href="${track.artist.url}">${track.artist.name}</a>`)
-        continue
-      }
-      textArray.push(`- <a href="${track.url}">${track.name}</a> de <a href="${track.artist.url}">${track.artist.name}</a>`)
+      textArray.push(`- <a href="${urlLimiter(track.url)}">${track.name}</a> de <a href="${track.artist.url}">${track.artist.name}</a>`)
     }
     textArray.push('')
   }
