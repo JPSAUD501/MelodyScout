@@ -37,7 +37,7 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
       break
     }
     case 1: {
-      tweetTextArray.push('')	
+      tweetTextArray.push('')
       tweetTextArray.push(`[ℹ️] ${tweetInfoArray[0]}`)
       break
     }
