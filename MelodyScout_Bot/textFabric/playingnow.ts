@@ -22,6 +22,7 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   tweetTextArray.push('[📊] Scrobbles')
   tweetTextArray.push(`- Música: ${Number(track.userplaycount)}`)
   tweetTextArray.push(`- Artista: ${Number(artist.stats.userplaycount)}`)
+  const tweetInfoArray: string[] = []
   if (
     Number(track.userplaycount) > 0 &&
     (
@@ -29,8 +30,24 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
       Number(spotifyTrackInfo.duration) > 0
     )
   ) {
-    tweetTextArray.push('')
-    tweetTextArray.push(`[ℹ️] Já ouviu essa música por ${Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)} horas e ${Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)) * 60)} minutos.`)
+    tweetInfoArray.push(`Já ouviu essa música por ${Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)} horas e ${Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)) * 60)} minutos.`)
+  }
+  switch (tweetInfoArray.length) {
+    case 0: {
+      break
+    }
+    case 1: {
+      tweetTextArray.push('')	
+      tweetTextArray.push(`[ℹ️] ${tweetInfoArray[0]}`)
+      break
+    }
+    default: {
+      tweetTextArray.push('')
+      tweetTextArray.push('[ℹ️] Informações')
+      tweetInfoArray.forEach((info) => {
+        tweetTextArray.push(`- ${info}`)
+      })
+    }
   }
   tweetTextArray.push('')
   tweetTextArray.push(`${spotifyTrackInfo.externalURL.spotify}`)

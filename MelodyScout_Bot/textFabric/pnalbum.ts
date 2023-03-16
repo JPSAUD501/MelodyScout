@@ -14,6 +14,36 @@ export function getPnalbumText (userInfo: UserInfo, artistInfo: ArtistInfo, albu
   const tweetTextArray: string[] = []
   tweetTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no MelodyScout`)
   tweetTextArray.push('')
+  tweetTextArray.push('[🎧] Sobre o album')
+  tweetTextArray.push(`- Álbum: ${album.name}`)
+  tweetTextArray.push(`- Artista: ${artist.name}`)
+  tweetTextArray.push('')
+  tweetTextArray.push(`[📊] ${album.userplaycount !== undefined ? album.userplaycount : 0} Scrobbles`)
+  const tweetInfoArray: string[] = []
+  if (spotifyAlbumInfo.popularity !== undefined) tweetInfoArray.push(`A popularidade atual desse album é: [${spotifyAlbumInfo.popularity}][${'★'.repeat(Math.floor(spotifyAlbumInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyAlbumInfo.popularity / 20))}]`)
+  switch (tweetInfoArray.length) {
+    case 0: {
+      break
+    }
+    case 1: {
+      tweetTextArray.push('')
+      tweetTextArray.push(`[ℹ️] ${tweetInfoArray[0]}`)
+      break
+    }
+    default: {
+      tweetTextArray.push('')
+      tweetTextArray.push('[ℹ️] Informações')
+      tweetInfoArray.forEach((info) => {
+        tweetTextArray.push(`- ${info}`)
+      })
+      break
+    }
+  }
+  tweetTextArray.push('')
+  tweetTextArray.push(`${spotifyAlbumInfo.externalURL.spotify}`)
+  const encodedTweetTextArray = tweetTextArray.map((text) => encodeURIComponent(text))
+  const tweetText = encodedTweetTextArray.join('%0A')
+  const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText}`
 
   const textArray: string[] = []
   textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${config.melodyScout.trackImgUrl}">️️</a><a href="${urlLimiter(user.url)}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}:</b>`)
@@ -37,6 +67,9 @@ export function getPnalbumText (userInfo: UserInfo, artistInfo: ArtistInfo, albu
   }
   textArray.push('')
   textArray.push(`<b>[📊] ${album.userplaycount !== undefined ? album.userplaycount : 0} Scrobbles</b>`)
+  textArray.push('')
+  textArray.push('<b>[🔗] Compartilhe</b>')
+  textArray.push(`- <a href="${tweetUrl}">Compartilhar no Twitter!</a>`)
 
   const text = textArray.join('\n')
   return text
