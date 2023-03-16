@@ -10,8 +10,12 @@ export function getPnalbumText (userInfo: UserInfo, artistInfo: ArtistInfo, albu
   const { user } = userInfo
   const { artist } = artistInfo
   const { album } = albumInfo
-  const textArray: string[] = []
 
+  const tweetTextArray: string[] = []
+  tweetTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no MelodyScout`)
+  tweetTextArray.push('')
+
+  const textArray: string[] = []
   textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${config.melodyScout.trackImgUrl}">️️</a><a href="${urlLimiter(user.url)}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}:</b>`)
   textArray.push('')
   switch (nowPlaying) {
