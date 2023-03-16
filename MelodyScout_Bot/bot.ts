@@ -44,7 +44,7 @@ export class MelodyScoutBot {
       { command: 'playingnow', description: 'Show the currently playing track' },
       { command: 'history', description: 'Show the history of your listened tracks' },
       { command: 'pin', description: 'Pin a shortcut to the /playingnow command' },
-      { command: 'collage', description: 'Show a collage of your top tracks' },
+      // { command: 'collage', description: 'Show a collage of your top tracks' },
       { command: 'pntrack', description: 'Show information about the currently playing track' },
       { command: 'pnalbum', description: 'Show information about the album of the currently playing track' },
       { command: 'pnartist', description: 'Show information about the artist of the currently playing track' }
