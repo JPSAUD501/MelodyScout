@@ -45,7 +45,7 @@ export class TrackDownloadCallback {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao buscar a música, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
       return
     }
-    const loadingMessage = await this.ctxFunctions.loadingReply(ctx, '⏳ - Fazendo download da música...', 10000, { reply_to_message_id: messageId, disable_notification: true })
+    const loadingMessage = await this.ctxFunctions.loadingReply(ctx, '⏳ - Fazendo download da música...', 5000, { reply_to_message_id: messageId, disable_notification: true })
     if (loadingMessage === undefined) {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao enviar a mensagem de carregamento, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
       return
