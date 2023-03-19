@@ -83,7 +83,7 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
   } else {
     tweetText.infos.textArray.push(`- ${((Number(user.track_count) / Number(user.playcount)) * 100).toFixed(2)}% das músicas ouvidas são novas`)
   }
-  tweetText.infos.textArray.push(`- Em média repete ${((Number(user.playcount) - Number(user.track_count)) / Number(user.track_count)).toFixed(2)} vezes cada música que conhece.`)
+  tweetText.infos.textArray.push(`- Em média repete ${((Number(user.playcount) - Number(user.track_count)) / Number(user.track_count)).toFixed(2)}x cada música que conhece.`)
   tweetText.mostPlayedTracks.textArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
   tweetText.mostPlayedTracks.textArray.push('')
   tweetText.mostPlayedTracks.textArray.push('[🎵] Músicas mais ouvidas')
