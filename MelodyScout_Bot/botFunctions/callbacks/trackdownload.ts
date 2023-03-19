@@ -60,7 +60,7 @@ export class TrackDownloadCallback {
     await this.ctxFunctions.replyWithAudio(ctx, inputFile, {
       title: track,
       performer: artist,
-      caption: `[🎵] Download de "${track}" por "${artist}"\n\nSolicitado por: <b><a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a></b>`,
+      caption: `<b>[🎵] Download de "${track}" por "${artist}"</b>\n\nSolicitado por: <b><a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a></b>`,
       reply_to_message_id: messageId
     })
   }
