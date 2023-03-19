@@ -1,5 +1,4 @@
 import { UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
-import { UserRecentTracks } from '../../api/msLastfmApi/types/zodUserRecentTracks'
 import { UserTopAlbums } from '../../api/msLastfmApi/types/zodUserTopAlbums'
 import { UserTopArtists } from '../../api/msLastfmApi/types/zodUserTopArtists'
 import { UserTopTracks } from '../../api/msLastfmApi/types/zodUserTopTracks'
@@ -7,61 +6,143 @@ import config from '../../config'
 import { sanitizeText } from '../../function/sanitizeText'
 import { urlLimiter } from '../../function/urlLimiter'
 
-export function getBriefText (userInfo: UserInfo, userRecentTracks: UserRecentTracks, userTopTracks: UserTopTracks, userTopAlbums: UserTopAlbums, userTopArtists: UserTopArtists): string {
+export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, userTopAlbums: UserTopAlbums, userTopArtists: UserTopArtists): string {
   const { user } = userInfo
-  const { recenttracks } = userRecentTracks
   const { toptracks } = userTopTracks
   const { topalbums } = userTopAlbums
   const { topartists } = userTopArtists
-  const textArray: string[] = []
 
+  const tweetText: {
+    metrics: {
+      textArray: string[]
+      tweetUrl: () => string
+    }
+    infos: {
+      textArray: string[]
+      tweetUrl: () => string
+    }
+    mostPlayedTracks: {
+      textArray: string[]
+      tweetUrl: () => string
+    }
+    mostPlayedAlbums: {
+      textArray: string[]
+      tweetUrl: () => string
+    }
+    mostPlayedArtists: {
+      textArray: string[]
+      tweetUrl: () => string
+    }
+  } = {
+    metrics: {
+      textArray: [],
+      tweetUrl: () => {
+        return `https://twitter.com/intent/tweet?text=${tweetText.metrics.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+      }
+    },
+    infos: {
+      textArray: [],
+      tweetUrl: () => {
+        return `https://twitter.com/intent/tweet?text=${tweetText.infos.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+      }
+    },
+    mostPlayedTracks: {
+      textArray: [],
+      tweetUrl: () => {
+        return `https://twitter.com/intent/tweet?text=${tweetText.mostPlayedTracks.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+      }
+    },
+    mostPlayedAlbums: {
+      textArray: [],
+      tweetUrl: () => {
+        return `https://twitter.com/intent/tweet?text=${tweetText.mostPlayedAlbums.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+      }
+    },
+    mostPlayedArtists: {
+      textArray: [],
+      tweetUrl: () => {
+        return `https://twitter.com/intent/tweet?text=${tweetText.mostPlayedArtists.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+      }
+    }
+  }
+
+  tweetText.metrics.textArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
+  tweetText.metrics.textArray.push('')
+  tweetText.metrics.textArray.push('[📊] Métricas')
+  tweetText.metrics.textArray.push(`- Músicas ouvidas: ${Number(user.playcount)}`)
+  tweetText.metrics.textArray.push(`- Músicas conhecidas: ${Number(user.track_count)}`)
+  // tweetText.metrics.textArray.push(`- Músicas repetidas: ${Number(user.playcount) - Number(user.track_count)}`)
+  tweetText.metrics.textArray.push(`- Artistas conhecidos: ${Number(user.artist_count)}`)
+  tweetText.metrics.textArray.push(`- Álbuns conhecidos: ${Number(user.album_count)}`)
+
+  tweetText.infos.textArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
+  tweetText.infos.textArray.push('')
+  tweetText.infos.textArray.push('[ℹ️] Informações')
+  if (((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount)) > ((Number(user.track_count) / Number(user.playcount)))) {
+    tweetText.infos.textArray.push(`- ${((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount) * 100).toFixed(2)}% das músicas ouvidas são repetidas.`)
+  } else {
+    tweetText.infos.textArray.push(`- ${((Number(user.track_count) / Number(user.playcount)) * 100).toFixed(2)}% das músicas ouvidas são novas`)
+  }
+  tweetText.infos.textArray.push(`- Em média repete ${((Number(user.playcount) - Number(user.track_count)) / Number(user.track_count)).toFixed(2)} vezes cada música que conhece.`)
+  tweetText.mostPlayedTracks.textArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
+  tweetText.mostPlayedTracks.textArray.push('')
+  tweetText.mostPlayedTracks.textArray.push('[🎵] Músicas mais ouvidas')
+  for (let i = 0; i < toptracks.track.length && i < 3; i++) {
+    const track = toptracks.track[i]
+    tweetText.mostPlayedTracks.textArray.push(`- (${track.playcount}x) ${track.name} de ${track.artist.name}`)
+  }
+
+  tweetText.mostPlayedAlbums.textArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
+  tweetText.mostPlayedAlbums.textArray.push('')
+  tweetText.mostPlayedAlbums.textArray.push('[💿] Álbuns mais ouvidos')
+  for (let i = 0; i < topalbums.album.length && i < 3; i++) {
+    const album = topalbums.album[i]
+    tweetText.mostPlayedAlbums.textArray.push(`- (${album.playcount}x) ${album.name} de ${album.artist.name}`)
+  }
+
+  tweetText.mostPlayedArtists.textArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
+  tweetText.mostPlayedArtists.textArray.push('')
+  tweetText.mostPlayedArtists.textArray.push('[👨‍🎤] Artistas mais ouvidos')
+  for (let i = 0; i < topartists.artist.length && i < 3; i++) {
+    const artist = topartists.artist[i]
+    tweetText.mostPlayedArtists.textArray.push(`- (${artist.playcount}x) ${artist.name}`)
+  }
+
+  const textArray: string[] = []
   textArray.push(`<b><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${config.melodyScout.userImgUrl}">️️</a>Resumo musical de <a href="${urlLimiter(user.url)}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a></b>`)
   textArray.push('')
-  if (
-    recenttracks.track.length > 0 &&
-      (recenttracks.track[0]['@attr'] != null) &&
-      recenttracks.track[0]['@attr'].nowplaying === 'true'
-  ) {
-    const track = recenttracks.track[0]
-    textArray.push('<b>[🎧] Ouvindo agora</b>')
-    textArray.push(`- <a href="${urlLimiter(track.url)}">${track.name}</a> de <a href="${urlLimiter(track.artist.url)}">${track.artist.name}</a>`)
-    textArray.push('')
-  }
-  textArray.push('<b>[📊] Métricas</b>')
+  textArray.push(`<b>[📊] Métricas</b> (<i><a href="${tweetText.metrics.tweetUrl()}">Tweetar</a></i>)`)
   textArray.push(`- Músicas ouvidas: <b>${Number(user.playcount)}</b>`)
   textArray.push(`- Músicas conhecidas: <b>${Number(user.track_count)}</b>`)
   textArray.push(`- Músicas repetidas: <b>${Number(user.playcount) - Number(user.track_count)}</b>`)
   textArray.push(`- Artistas conhecidos: <b>${Number(user.artist_count)}</b>`)
   textArray.push(`- Álbuns conhecidos: <b>${Number(user.album_count)}</b>`)
   textArray.push('')
-  textArray.push('<b>[ℹ️] Informações</b>')
+  textArray.push(`<b>[ℹ️] Informações</b> (<i><a href="${tweetText.infos.tweetUrl()}">Tweetar</a></i>)`)
   textArray.push(`- Dentre as suas músicas ouvidas <b>${((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount) * 100).toFixed(2)}%</b> são repetidas e <b>${((Number(user.track_count) / Number(user.playcount)) * 100).toFixed(2)}%</b> são novas.`)
   textArray.push(`- Em média você repete <b>${((Number(user.playcount) - Number(user.track_count)) / Number(user.track_count)).toFixed(2)}</b> vezes cada música que conhece.`)
   textArray.push('')
   if (toptracks.track.length > 0) {
-    textArray.push('<b>[🎵] Músicas mais tocadas</b>')
+    textArray.push(`<b>[🎵] Músicas mais tocadas</b> (<i><a href="${tweetText.mostPlayedTracks.tweetUrl()}">Tweetar</a></i>)`)
     for (let i = 0; i < toptracks.track.length; i++) {
       const track = toptracks.track[i]
-      textArray.push(`- [${i + 1}] <b><a href="${urlLimiter(track.url)}">${track.name}</a> de <a href="${urlLimiter(track.artist.url)}">${track.artist.name}</a></b>`)
-      textArray.push(`  (${track.playcount} Scrobbles)`)
+      textArray.push(`- (${track.playcount}x) <a href="${urlLimiter(track.url)}"><b>${track.name}</b> de <b>${track.artist.name}</b></a>`)
     }
     textArray.push('')
   }
   if (topalbums.album.length > 0) {
-    textArray.push('<b>[💿] Álbuns mais tocados</b>')
+    textArray.push(`<b>[💿] Álbuns mais tocados</b> (<i><a href="${tweetText.mostPlayedAlbums.tweetUrl()}">Tweetar</a></i>)`)
     for (let i = 0; i < topalbums.album.length; i++) {
       const album = topalbums.album[i]
-      textArray.push(`- [${i + 1}] <b><a href="${urlLimiter(album.url)}">${album.name}</a> de <a href="${urlLimiter(album.artist.url)}">${album.artist.name}</a></b>`)
-      textArray.push(`  (${album.playcount} Scrobbles)`)
+      textArray.push(`- (${album.playcount}x) <a href="${urlLimiter(album.url)}"><b>${album.name}</b> de <b>${album.artist.name}</b></a>`)
     }
     textArray.push('')
   }
   if (topartists.artist.length > 0) {
-    textArray.push('<b>[👨‍🎤] Artistas mais tocados</b>')
+    textArray.push(`<b>[👨‍🎤] Artistas mais tocados</b> (<i><a href="${tweetText.mostPlayedArtists.tweetUrl()}">Tweetar</a></i>)`)
     for (let i = 0; i < topartists.artist.length; i++) {
       const artist = topartists.artist[i]
-      textArray.push(`- [${i + 1}] <b><a href="${urlLimiter(artist.url)}">${artist.name}</a></b>`)
-      textArray.push(`  (${artist.playcount} Scrobbles)`)
+      textArray.push(`- (${artist.playcount}x) <a href="${urlLimiter(artist.url)}"><b>${artist.name}</b></a>`)
     }
   }
 

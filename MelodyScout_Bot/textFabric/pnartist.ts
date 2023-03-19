@@ -10,7 +10,7 @@ export function getPnartistText (userInfo: UserInfo, artistInfo: ArtistInfo, spo
   const { artist } = artistInfo
 
   const tweetTextArray: string[] = []
-  tweetTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no MelodyScout`)
+  tweetTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
   tweetTextArray.push('')
   tweetTextArray.push('[🎧] Sobre o artista')
   tweetTextArray.push(`- Artista: ${artist.name}`)
@@ -38,9 +38,7 @@ export function getPnartistText (userInfo: UserInfo, artistInfo: ArtistInfo, spo
   }
   tweetTextArray.push('')
   tweetTextArray.push(`${spotifyArtistInfo.externalURL.spotify}`)
-  const encodedTweetTextArray = tweetTextArray.map((text) => encodeURIComponent(text))
-  const tweetText = encodedTweetTextArray.join('%0A')
-  const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText}`
+  const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
 
   const textArray: string[] = []
   textArray.push(`<b><a href="${spotifyArtistInfo.images?.[0].url ?? ''}">️️</a><a href="${artist.image[user.image.length - 1]['#text']}">️️</a><a href="${config.melodyScout.userImgUrl}">️️</a><a href="${urlLimiter(user.url)}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}</b>`)

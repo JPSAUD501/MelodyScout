@@ -14,7 +14,7 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   const { track } = trackInfo
 
   const tweetTextArray: string[] = []
-  tweetTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no MelodyScout`)
+  tweetTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
   tweetTextArray.push('')
   tweetTextArray.push(`[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] ${track.name}`)
   tweetTextArray.push(`- Artista: ${artist.name}`)
@@ -51,9 +51,7 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   }
   tweetTextArray.push('')
   tweetTextArray.push(`${spotifyTrackInfo.externalURL.spotify}`)
-  const encodedTweetTextArray = tweetTextArray.map((text) => encodeURIComponent(text))
-  const tweetText = encodedTweetTextArray.join('%0A')
-  const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText}`
+  const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
 
   const textArray: string[] = []
   textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${config.melodyScout.trackImgUrl}">️️</a><a href="${urlLimiter(user.url)}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}</b>`)

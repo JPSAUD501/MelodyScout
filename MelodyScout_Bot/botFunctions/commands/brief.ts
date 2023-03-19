@@ -49,17 +49,12 @@ export class BriefCommand {
       return
     }
     const userInfoRequest = this.msLastfmApi.user.getInfo(lastfmUser)
-    const userRecentTracksRequest = this.msLastfmApi.user.getRecentTracks(lastfmUser, 3)
     const userTopTracksRequest = this.msLastfmApi.user.getTopTracks(lastfmUser, 5)
     const userTopAlbumsRequest = this.msLastfmApi.user.getTopAlbums(lastfmUser, 5)
     const userTopArtistsRequest = this.msLastfmApi.user.getTopArtists(lastfmUser, 5)
-    const [userInfo, userRecentTracks, userTopTracks, userTopAlbums, userTopArtists] = await Promise.all([userInfoRequest, userRecentTracksRequest, userTopTracksRequest, userTopAlbumsRequest, userTopArtistsRequest])
+    const [userInfo, userTopTracks, userTopAlbums, userTopArtists] = await Promise.all([userInfoRequest, userTopTracksRequest, userTopAlbumsRequest, userTopArtistsRequest])
     if (!userInfo.success) {
       void this.ctxFunctions.reply(ctx, `Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>${lastfmUser}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact`)
-      return
-    }
-    if (!userRecentTracks.success) {
-      void this.ctxFunctions.reply(ctx, 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
     if (!userTopTracks.success) {
@@ -74,6 +69,6 @@ export class BriefCommand {
       void this.ctxFunctions.reply(ctx, 'Estranho, não foi possível resgatar os seus artistas mais tocados do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
       return
     }
-    await this.ctxFunctions.reply(ctx, getBriefText(userInfo.data, userRecentTracks.data, userTopTracks.data, userTopAlbums.data, userTopArtists.data))
+    await this.ctxFunctions.reply(ctx, getBriefText(userInfo.data, userTopTracks.data, userTopAlbums.data, userTopArtists.data))
   }
 }
