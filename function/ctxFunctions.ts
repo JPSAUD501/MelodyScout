@@ -1,7 +1,7 @@
 import { CallbackQueryContext, CommandContext, Context, InputFile, RawApi } from 'grammy'
 import { AdvConsole } from './advancedConsole'
-import { Other } from 'grammy/out/core/api'
 import { Message } from '@grammyjs/types'
+import { Other } from 'grammy/out/core/api'
 
 export class CtxFunctions {
   private readonly advConsole: AdvConsole
@@ -115,7 +115,7 @@ export class CtxFunctions {
       void this.reply(ctx, 'Ocorreu um erro ao enviar a resposta pois o tamanho da mensagem ficou maior que 1024 caracteres! Nossa equipe já foi notificada e irá corrigir o problema o mais rápido possível! Por favor tente novamente!')
       return
     }
-    const loadingMessage = await ctx.reply('<b>[🎤] Enviando audio por favor aguarde!</b>', {
+    const loadingMessage = await ctx.reply('<b>[🎤] Enviando áudio por favor aguarde!</b>', {
       parse_mode: 'HTML',
       disable_notification: true
     }).catch((err) => {
@@ -140,7 +140,7 @@ export class CtxFunctions {
       void this.reply(ctx, 'Ocorreu um erro ao enviar a resposta pois o tamanho da mensagem ficou maior que 1024 caracteres! Nossa equipe já foi notificada e irá corrigir o problema o mais rápido possível! Por favor tente novamente!')
       return
     }
-    const loadingMessage = await ctx.reply('<b>[🎵] Enviando audio por favor aguarde!</b>', {
+    const loadingMessage = await ctx.reply('<b>[🎵] Enviando áudio por favor aguarde!</b>', {
       parse_mode: 'HTML',
       disable_notification: true
     }).catch((err) => {

@@ -103,11 +103,11 @@ export class PlayingnowCommand {
     inlineKeyboard.url('[🎧] - Spotify', spotifyTrackInfo.data.externalURL.spotify)
     if (youtubeTrackInfo.success) inlineKeyboard.url('[🎥] - YouTube', youtubeTrackInfo.videoUrl)
     inlineKeyboard.row()
-    inlineKeyboard.text('[📥] - Preview', getCallbackKey(['TP', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
     inlineKeyboard.text('[🧾] - Letra', getCallbackKey(['TL', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
+    inlineKeyboard.text('[✨] - Explicação', getCallbackKey(['TLE', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
     inlineKeyboard.row()
-    // inlineKeyboard.text('[📥] - Download', getCallbackKey(['TD', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
-    inlineKeyboard.text('[✨] - Explicação da música', getCallbackKey(['TLE', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
+    inlineKeyboard.text('[📥] - Preview', getCallbackKey(['TP', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
+    inlineKeyboard.text('[📥] - Download', getCallbackKey(['TD', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
     await this.ctxFunctions.reply(ctx, getPlayingnowText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   }
 }

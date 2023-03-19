@@ -107,3 +107,4 @@ dist
 *.db
 *.db-journal
 dist/
+temp/

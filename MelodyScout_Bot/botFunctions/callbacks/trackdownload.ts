@@ -3,7 +3,7 @@ import { CtxFunctions } from '../../../function/ctxFunctions'
 import config from '../../../config'
 import { AdvConsole } from '../../../function/advancedConsole'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
-import axios from 'axios'
+// import axios from 'axios'
 
 export class TrackDownloadCallback {
   advConsole: AdvConsole
@@ -45,25 +45,17 @@ export class TrackDownloadCallback {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao buscar a música, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
       return
     }
-    const loadingMessage = await this.ctxFunctions.loadingReply(ctx, '⏳ - Fazendo download da música... Isso pode demorar um pouco!', 60000, { reply_to_message_id: messageId, disable_notification: true })
+    const loadingMessage = await this.ctxFunctions.loadingReply(ctx, '⏳ - Fazendo download da música...', 10000, { reply_to_message_id: messageId, disable_notification: true })
     if (loadingMessage === undefined) {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao enviar a mensagem de carregamento, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
       return
     }
-    const audioBuffer = await axios.get(trackInfo.audioRawUrl, {
-      responseType: 'arraybuffer'
-    }).catch((err) => {
-      return new Error(err)
-    })
-    if (audioBuffer instanceof Error) {
+    const alternativeDownload = await this.msMusicApi.youtubeTrackDownloadAudio(trackInfo.videoUrl)
+    if (!alternativeDownload.success) {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao baixar a música, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
       return
     }
-    if (audioBuffer.data === undefined) {
-      void this.ctxFunctions.reply(ctx, 'Algo deu errado ao baixar a música, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
-      return
-    }
-    const inputFile = new InputFile(audioBuffer.data)
+    const inputFile = new InputFile(alternativeDownload.audioBuffer)
 
     await this.ctxFunctions.replyWithAudio(ctx, inputFile, {
       title: track,
