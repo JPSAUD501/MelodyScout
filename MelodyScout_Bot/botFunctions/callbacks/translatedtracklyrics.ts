@@ -34,14 +34,14 @@ export class TranslatedtracklyricsCallback {
     if (track === undefined || artist === undefined) return await this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Nome da música ou do artista não encontrado!')
     const geniusSong = await this.msGeniusApi.getSong(track, artist)
     if (!geniusSong.success) {
-      void this.ctxFunctions.reply(ctx, 'Não foi possível resgatar a letra dessa música, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Não foi possível resgatar a letra dessa música, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
       return
     }
     console.log('Translating lyrics...')
     const translatedTrackLyrics = await translate(geniusSong.data.lyrics, { to: 'pt-BR' })
     console.log('Lyrics translated!')
     if (translatedTrackLyrics.text.length <= 0) {
-      void this.ctxFunctions.reply(ctx, 'Não foi possível traduzir a letra dessa música, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Não foi possível traduzir a letra dessa música, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
       return
     }
     await this.ctxFunctions.editMessage(ctx, getLyricsText(track, artist, geniusSong.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, translatedTrackLyrics.text), { disable_web_page_preview: true })

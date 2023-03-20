@@ -24,7 +24,7 @@ export class ForgetmeCommand {
     await this.ctxFunctions.reply(ctx, 'Ok! Deixa eu verificar alguns dados...')
     const checkIfExistsTgUserDBResponse = await this.msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
     if (!checkIfExistsTgUserDBResponse.success) {
-      void this.ctxFunctions.reply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
       return
     }
     if (!checkIfExistsTgUserDBResponse.exists) {

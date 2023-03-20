@@ -36,19 +36,19 @@ export class TracklyricsexplanationCallback {
     void this.ctxFunctions.answerCallbackQuery(ctx, '⏳ - Carregando...')
     const messageId = ctx.callbackQuery.message?.message_id
     if (messageId === undefined) {
-      void this.ctxFunctions.reply(ctx, 'Algo deu errado ao buscar a mensagem que você clicou, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Algo deu errado ao buscar a mensagem que você clicou, por favor tente novamente mais tarde ou entre em contato através do comando /contact.')
       return
     }
     const dataArray = ctx.callbackQuery.data.split(config.melodyScout.divider)
     const track = dataArray[1]
     const artist = dataArray[2]
     if (track === undefined || artist === undefined) {
-      void this.ctxFunctions.reply(ctx, 'Algo deu errado ao buscar a música, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Algo deu errado ao buscar a música, por favor tente novamente mais tarde ou entre em contato através do comando /contact.')
       return
     }
     const loadingMessage = await this.ctxFunctions.tempReply(ctx, '⏳ - Gerando explicação da música com inteligência artificial, aguarde um momento...', 15000, { reply_to_message_id: messageId, disable_notification: true })
     if (loadingMessage === undefined) {
-      void this.ctxFunctions.reply(ctx, 'Algo deu errado ao enviar a mensagem de carregamento, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
+      void this.ctxFunctions.reply(ctx, 'Algo deu errado ao enviar a mensagem de carregamento, por favor tente novamente mais tarde ou entre em contato através do comando /contact.')
       return
     }
     const geniusSong = await this.msGeniusApi.getSong(track, artist)
