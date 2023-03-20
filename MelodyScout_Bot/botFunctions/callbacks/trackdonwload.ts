@@ -1,8 +1,9 @@
-import { CallbackQueryContext, Context, InputFile } from 'grammy'
+import { CallbackQueryContext, Context, InlineKeyboard } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import config from '../../../config'
 import { AdvConsole } from '../../../function/advancedConsole'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
+import { getCallbackKey } from '../../../function/callbackMaker'
 // import axios from 'axios'
 
 export class TrackDownloadCallback {
@@ -40,28 +41,13 @@ export class TrackDownloadCallback {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao buscar a música, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
       return
     }
-    const trackInfo = await this.msMusicApi.getYoutubeTrackInfo(track, artist)
-    if (!trackInfo.success) {
-      void this.ctxFunctions.reply(ctx, 'Algo deu errado ao buscar a música, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
-      return
-    }
-    const loadingMessage = await this.ctxFunctions.loadingReply(ctx, '⏳ - Fazendo download da música...', 5000, { reply_to_message_id: messageId, disable_notification: true })
-    if (loadingMessage === undefined) {
-      void this.ctxFunctions.reply(ctx, 'Algo deu errado ao enviar a mensagem de carregamento, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
-      return
-    }
-    const alternativeDownload = await this.msMusicApi.youtubeTrackDownloadAudio(trackInfo.videoUrl)
-    if (!alternativeDownload.success) {
-      void this.ctxFunctions.reply(ctx, 'Algo deu errado ao baixar a música, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
-      return
-    }
-    const inputFile = new InputFile(alternativeDownload.audioBuffer)
-
-    await this.ctxFunctions.replyWithAudio(ctx, inputFile, {
-      title: track,
-      performer: artist,
-      caption: `<b>[🎵] Download de "${track}" por "${artist}"</b>\n\nSolicitado por: <b><a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a></b>`,
-      reply_to_message_id: messageId
+    const inlineKeyboard = new InlineKeyboard()
+    inlineKeyboard.text('[📥] - Audio', getCallbackKey(['TAD', track.replace(/  +/g, ' '), artist.replace(/  +/g, ' ')]))
+    inlineKeyboard.text('[📥] - Video', getCallbackKey(['TVD', track.replace(/  +/g, ' '), artist.replace(/  +/g, ' ')]))
+    await this.ctxFunctions.tempReply(ctx, `<b>[📥] Download de "${track}" por "${artist}"</b>\n- Por favor escolha uma opção abaixo.\n\nSolicitado por: <b><a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a></b>`, 10000, {
+      reply_markup: inlineKeyboard,
+      reply_to_message_id: messageId,
+      disable_notification: true
     })
   }
 }

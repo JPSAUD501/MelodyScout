@@ -4,9 +4,9 @@ import ytStream from 'youtube-stream-url'
 import { zodYtSteamInfo } from './types/zodYtStreamInfo'
 import { AdvConsole } from '../../function/advancedConsole'
 import youtubedl from 'youtube-dl-exec'
-import fs from 'fs'
+import fs, { ReadStream } from 'fs'
 import path from 'path'
-import { uuid } from 'uuidv4'
+import { v4 as uuidv4 } from 'uuid'
 
 export interface MsMusicApiError {
   success: false
@@ -35,9 +35,12 @@ export interface MsMusicApiYoutubeTrackInfo {
   videoUrl: string
 }
 
-export interface MsMusicApiYoutubeTrackDownloadAudio {
+export interface MsMusicApiYoutubeTrackDownload {
   success: true
-  audioBuffer: Buffer
+  file: {
+    // readStream: ReadStream
+    buffer: Buffer
+  }
 }
 
 export class MsMusicApi {
@@ -139,12 +142,12 @@ export class MsMusicApi {
     }
   }
 
-  async youtubeTrackDownloadAudio (youtubeUrl: string): Promise<MsMusicApiError | MsMusicApiYoutubeTrackDownloadAudio> {
+  async youtubeTrackDownload (youtubeUrl: string): Promise<MsMusicApiError | MsMusicApiYoutubeTrackDownload> {
     if (!fs.existsSync(path.join(__dirname, './temp'))) {
       fs.mkdirSync(path.join(__dirname, './temp'))
     }
-    const id = uuid()
-    const pathToSave = path.join(__dirname, `./temp/${id}.webm`)
+    const id = uuidv4()
+    const pathToSave = path.join(__dirname, `./temp/${id}.mp4`)
     if (fs.existsSync(pathToSave)) {
       return {
         success: false,
@@ -152,57 +155,78 @@ export class MsMusicApi {
       }
     }
     const output = await youtubedl.exec(youtubeUrl, {
-      format: 'bestaudio',
+      format: 'best',
       noWarnings: true,
       callHome: false,
       noCheckCertificates: true,
       noPart: true,
       noPlaylist: true,
-      output: pathToSave
+      output: pathToSave,
+      maxFilesize: '30m'
     }).catch((err) => {
       return new Error(String(err))
     })
     const deleteFile = async (): Promise<void> => {
       try {
-        fs.rmSync(pathToSave)
+        // fs.rmSync(pathToSave)
       } catch (err) {
-        this.advConsole.error(`Error while deleting file! File: ${id}.webm - Error: ${String(err)}`)
+        this.advConsole.error(`Error while deleting file! File: ${id}.* - Error: ${String(err)}`)
       }
     }
     if (output instanceof Error) {
-      this.advConsole.error(`Error while downloading audio from Youtube! Url: ${youtubeUrl} - Error: ${output.message}`)
+      this.advConsole.error(`Error while downloading video from Youtube! Url: ${youtubeUrl} - Error: ${output.message}`)
       await deleteFile()
       return { success: false, error: output.message }
     }
     if (!fs.existsSync(pathToSave)) {
-      this.advConsole.error(`Error while downloading audio from Youtube! Url: ${youtubeUrl} - Error: File not found!`)
+      this.advConsole.error(`Error while downloading video from Youtube! Url: ${youtubeUrl} - Error: File not found!`)
       await deleteFile()
       return { success: false, error: 'File not found!' }
     }
     const readFileResult: {
-      result: Buffer | Error | undefined
+      buffer: Buffer | Error | undefined
+      readStream: ReadStream | Error | undefined
     } = {
-      result: undefined
+      buffer: undefined,
+      readStream: undefined
     }
     try {
-      readFileResult.result = fs.readFileSync(pathToSave)
+      readFileResult.buffer = fs.readFileSync(pathToSave)
     } catch (err) {
-      readFileResult.result = new Error(String(err))
+      readFileResult.buffer = new Error(String(err))
     }
-    if (readFileResult.result instanceof Error) {
-      this.advConsole.error(`Error while reading file! File: ${id}.webm - Error: ${readFileResult.result.message}`)
+    // try {
+    //   readFileResult.readStream = fs.createReadStream(pathToSave)
+    // } catch (err) {
+    //   readFileResult.readStream = new Error(String(err))
+    // }
+    if (readFileResult.buffer instanceof Error) {
+      this.advConsole.error(`Error while reading file! File: ${id}.* - Error: ${readFileResult.buffer.message}`)
       await deleteFile()
-      return { success: false, error: readFileResult.result.message }
+      return { success: false, error: readFileResult.buffer.message }
     }
-    if (readFileResult.result === undefined) {
-      this.advConsole.error(`Error while reading file! File: ${id}.webm - Error: Buffer is undefined!`)
+    if (readFileResult.buffer === undefined) {
+      this.advConsole.error(`Error while reading file! File: ${id}.* - Error: Buffer is undefined!`)
       await deleteFile()
       return { success: false, error: 'Buffer is undefined!' }
     }
+    // if (readFileResult.readStream instanceof Error) {
+    //   this.advConsole.error(`Error while reading file! File: ${id}.* - Error: ${readFileResult.readStream.message}`)
+    //   await deleteFile()
+    //   return { success: false, error: readFileResult.readStream.message }
+    // }
+    // if (readFileResult.readStream === undefined) {
+    //   this.advConsole.error(`Error while reading file! File: ${id}.* - Error: ReadStream is undefined!`)
+    //   await deleteFile()
+    //   return { success: false, error: 'Buffer is undefined!' }
+    // }
     await deleteFile()
     return {
       success: true,
-      audioBuffer: readFileResult.result
+      file: {
+        // readStream: readFileResult.readStream,
+        buffer: readFileResult.buffer
+      }
     }
   }
 }

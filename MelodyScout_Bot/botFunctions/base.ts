@@ -27,7 +27,9 @@ import { MaintenanceinformCallback } from './callbacks/maintenanceinform'
 import { TracklyricsexplanationCallback } from './callbacks/tracklyricsexplanation'
 import { MsOpenAiApi } from '../../api/msOpenAiApi/base'
 import { MsTextToSpeechApi } from '../../api/msTextToSpeechApi/base'
-import { TrackDownloadCallback } from './callbacks/trackdownload'
+import { TrackAudioDownloadCallback } from './callbacks/trackaudiodownload'
+import { TrackDownloadCallback } from './callbacks/trackdonwload'
+import { TrackVideoDownloadCallback } from './callbacks/trackvideodownload'
 
 export class BotFunctions {
   startCommand: StartCommand
@@ -52,6 +54,8 @@ export class BotFunctions {
   translatedtracklyricsCallback: TranslatedtracklyricsCallback
   maintenanceinformCallback: MaintenanceinformCallback
   tracklyricsexplanationCallback: TracklyricsexplanationCallback
+  trackAudioDownloadCallback: TrackAudioDownloadCallback
+  trackVideoDownloadCallback: TrackVideoDownloadCallback
   trackDownloadCallback: TrackDownloadCallback
 
   constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi) {
@@ -70,8 +74,9 @@ export class BotFunctions {
     this.allusersCommand = new AllusersCommand(ctxFunctions, msPrismaDbApi)
     this.maintenanceCommand = new MaintenanceCommand(advConsole, ctxFunctions)
     this.maintenanceinformCommand = new MaintenanceinformCommand(advConsole, ctxFunctions)
+    this.trackAudioDownloadCallback = new TrackAudioDownloadCallback(advConsole, ctxFunctions, msMusicApi)
+    this.trackVideoDownloadCallback = new TrackVideoDownloadCallback(advConsole, ctxFunctions, msMusicApi)
     this.trackDownloadCallback = new TrackDownloadCallback(advConsole, ctxFunctions, msMusicApi)
-
     this.trackpreviewCallback = new TrackpreviewCallback(ctxFunctions, msMusicApi)
     this.playingnowCallback = new PlayingnowCallback(ctxFunctions, msLastfmApi, msPrismaDbApi, msMusicApi)
     this.tracklyricsCallback = new TracklyricsCallback(ctxFunctions, msGeniusApi)

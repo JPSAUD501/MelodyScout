@@ -246,6 +246,24 @@ export class MelodyScoutBot {
       void this.botFunctions.trackDownloadCallback.run(ctx)
     })
 
+    this.bot.callbackQuery(new RegExp(`^TAD${config.melodyScout.divider}`), async (ctx) => {
+      this.logNewCallbackQuery(ctx)
+      if (this.maintenanceMode) {
+        void this.botFunctions.maintenanceinformCallback.run(ctx)
+        return
+      }
+      void this.botFunctions.trackAudioDownloadCallback.run(ctx)
+    })
+
+    this.bot.callbackQuery(new RegExp(`^TVD${config.melodyScout.divider}`), async (ctx) => {
+      this.logNewCallbackQuery(ctx)
+      if (this.maintenanceMode) {
+        void this.botFunctions.maintenanceinformCallback.run(ctx)
+        return
+      }
+      void this.botFunctions.trackVideoDownloadCallback.run(ctx)
+    })
+
     this.bot.on('callback_query', async (ctx) => {
       const chatTittle = (ctx.chat?.type === 'private') ? 'Private' : ctx.chat?.title ?? 'Unknown'
       this.advConsole.log(`MelodyScout_Bot - New callback_query not handled:\nFrom: (${ctx.from?.id ?? 'No ID'}) ${ctx.from?.first_name ?? 'No name'} ${ctx.from?.last_name ?? ''} - ${ctx.from?.username ?? 'No username'}\nIn: (${ctx.chat?.id ?? 'No ID'}) ${chatTittle} - ${ctx.chat?.type ?? 'No type'}\nData: ${ctx.callbackQuery?.data ?? 'No data'}`)

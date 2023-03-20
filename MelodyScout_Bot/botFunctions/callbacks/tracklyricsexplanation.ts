@@ -46,7 +46,7 @@ export class TracklyricsexplanationCallback {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao buscar a música, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
       return
     }
-    const loadingMessage = await this.ctxFunctions.loadingReply(ctx, '⏳ - Gerando explicação da música com inteligência artificial, aguarde um momento...', 15000, { reply_to_message_id: messageId, disable_notification: true })
+    const loadingMessage = await this.ctxFunctions.tempReply(ctx, '⏳ - Gerando explicação da música com inteligência artificial, aguarde um momento...', 15000, { reply_to_message_id: messageId, disable_notification: true })
     if (loadingMessage === undefined) {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao enviar a mensagem de carregamento, por favor tente novamente mais tarde ou entre em contato através do comando /contact')
       return

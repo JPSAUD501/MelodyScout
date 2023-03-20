@@ -77,7 +77,7 @@ export class CtxFunctions {
     return sendedMessage
   }
 
-  async loadingReply (ctx: CommandContext<Context> | CallbackQueryContext<Context>, message: string, timeout: number, options?: Other<RawApi, 'sendMessage', 'text' | 'chat_id'>): Promise<Message.TextMessage | undefined> {
+  async tempReply (ctx: CommandContext<Context> | CallbackQueryContext<Context>, message: string, timeout: number, options?: Other<RawApi, 'sendMessage', 'text' | 'chat_id'>): Promise<Message.TextMessage | undefined> {
     if (ctx.chat === undefined) {
       this.advConsole.error('MelodyScout_Bot - Error: ctx.chat is undefined')
       return undefined
