@@ -44,7 +44,7 @@ export class TrackDownloadCallback {
     const inlineKeyboard = new InlineKeyboard()
     inlineKeyboard.text('[📥] - Audio', getCallbackKey(['TAD', track.replace(/  +/g, ' '), artist.replace(/  +/g, ' ')]))
     inlineKeyboard.text('[📥] - Video', getCallbackKey(['TVD', track.replace(/  +/g, ' '), artist.replace(/  +/g, ' ')]))
-    await this.ctxFunctions.tempReply(ctx, `<b>[📥] Download de "${track}" por "${artist}"</b>\n- Por favor escolha uma opção abaixo.\n\nSolicitado por: <b><a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a></b>`, 10000, {
+    await this.ctxFunctions.tempReply(ctx, `<b>[📥] Download de "${track}" por "${artist}"</b>\n- Por favor escolha uma opção abaixo.\n\nSolicitado por: <b><a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a></b>`, 15000, {
       reply_markup: inlineKeyboard,
       reply_to_message_id: messageId,
       disable_notification: true
