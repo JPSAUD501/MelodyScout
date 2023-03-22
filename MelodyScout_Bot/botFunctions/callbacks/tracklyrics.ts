@@ -20,11 +20,6 @@ export class TracklyricsCallback {
       void this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Eu não funciono em canais!')
       return
     }
-    if (ctx.chat?.type === 'private') {
-      void this.ctxFunctions.reply(ctx, 'Tudo é melhor com amigos, não é mesmo? Crie um grupo com seus amigos e me adicione nele, pode ser um grupo ja criado também o importante e me adicionar nele, prometo que eu sou legal! Em seguida utilize o comando /start lá novamente que eu te ajudarei a me configurar!')
-      void this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Eu não funciono em conversas privadas!')
-      return
-    }
     void this.ctxFunctions.answerCallbackQuery(ctx, '⏳ - Carregando...')
     const messageId = ctx.callbackQuery.message?.message_id
     if (messageId === undefined) {

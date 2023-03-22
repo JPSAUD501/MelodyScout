@@ -24,11 +24,7 @@ export class PlayingnowCommand {
       void this.ctxFunctions.reply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
       return
     }
-    if (ctx.chat?.type === 'private') {
-      void this.ctxFunctions.reply(ctx, 'Tudo é melhor com amigos, não é mesmo? Crie um grupo com seus amigos e me adicione nele, pode ser um grupo ja criado também o importante e me adicionar nele, prometo que eu sou legal! Em seguida utilize o comando /start lá novamente que eu te ajudarei a me configurar!')
-      return
-    }
-    // New command use case "/playingnow @TelegramUser"
+    // TODO New command use case "/playingnow @TelegramUser"
     const telegramUserId = ctx.from?.id
     if (telegramUserId === undefined) {
       void this.ctxFunctions.reply(ctx, 'Não foi possível identificar seu usuário no telegram, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
