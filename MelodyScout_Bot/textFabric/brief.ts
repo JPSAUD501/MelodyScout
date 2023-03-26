@@ -111,7 +111,16 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
   const textArray: string[] = []
   textArray.push(`<b><a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${config.melodyScout.userImgUrl}">️️</a>Resumo musical de <a href="${urlLimiter(user.url)}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a></b>`)
   textArray.push('')
-  textArray.push(`<b>[📊] Métricas</b> (<i><a href="${tweetText.metrics.tweetUrl()}">Tweetar</a></i>)`)
+  switch (true) {
+    case (tweetText.metrics.tweetUrl().length < 300): {
+      textArray.push(`<b>[📊] Métricas</b> (<i><a href="${tweetText.metrics.tweetUrl()}">Tweetar</a></i>)`)
+      break
+    }
+    default: {
+      textArray.push('<b>[📊] Métricas</b>')
+      break
+    }
+  }
   textArray.push(`- Músicas ouvidas: <b>${Number(user.playcount)}</b>`)
   textArray.push(`- Músicas conhecidas: <b>${Number(user.track_count)}</b>`)
   textArray.push(`- Músicas repetidas: <b>${Number(user.playcount) - Number(user.track_count)}</b>`)
@@ -123,7 +132,16 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
   textArray.push(`- Em média você repete <b>${((Number(user.playcount) - Number(user.track_count)) / Number(user.track_count)).toFixed(2)}</b> vezes cada música que conhece.`)
   textArray.push('')
   if (toptracks.track.length > 0) {
-    textArray.push(`<b>[🎵] Músicas mais tocadas</b> (<i><a href="${tweetText.mostPlayedTracks.tweetUrl()}">Tweetar</a></i>)`)
+    switch (true) {
+      case (tweetText.mostPlayedTracks.tweetUrl().length < 300): {
+        textArray.push(`<b>[🎵] Músicas mais tocadas</b> (<i><a href="${tweetText.mostPlayedTracks.tweetUrl()}">Tweetar</a></i>)`)
+        break
+      }
+      default: {
+        textArray.push('<b>[🎵] Músicas mais tocadas</b>')
+        break
+      }
+    }
     for (let i = 0; i < toptracks.track.length; i++) {
       const track = toptracks.track[i]
       textArray.push(`- (${track.playcount}x) <a href="${urlLimiter(track.url)}"><b>${track.name}</b> de <b>${track.artist.name}</b></a>`)
@@ -131,7 +149,16 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
     textArray.push('')
   }
   if (topalbums.album.length > 0) {
-    textArray.push(`<b>[💿] Álbuns mais tocados</b> (<i><a href="${tweetText.mostPlayedAlbums.tweetUrl()}">Tweetar</a></i>)`)
+    switch (true) {
+      case (tweetText.mostPlayedAlbums.tweetUrl().length < 300): {
+        textArray.push(`<b>[💿] Álbuns mais tocados</b> (<i><a href="${tweetText.mostPlayedAlbums.tweetUrl()}">Tweetar</a></i>)`)
+        break
+      }
+      default: {
+        textArray.push('<b>[💿] Álbuns mais tocados</b>')
+        break
+      }
+    }
     for (let i = 0; i < topalbums.album.length; i++) {
       const album = topalbums.album[i]
       textArray.push(`- (${album.playcount}x) <a href="${urlLimiter(album.url)}"><b>${album.name}</b> de <b>${album.artist.name}</b></a>`)
@@ -139,7 +166,16 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
     textArray.push('')
   }
   if (topartists.artist.length > 0) {
-    textArray.push(`<b>[👨‍🎤] Artistas mais tocados</b> (<i><a href="${tweetText.mostPlayedArtists.tweetUrl()}">Tweetar</a></i>)`)
+    switch (true) {
+      case (tweetText.mostPlayedArtists.tweetUrl().length < 300): {
+        textArray.push(`<b>[👨‍🎤] Artistas mais tocados</b> (<i><a href="${tweetText.mostPlayedArtists.tweetUrl()}">Tweetar</a></i>)`)
+        break
+      }
+      default: {
+        textArray.push('<b>[👨‍🎤] Artistas mais tocados</b>')
+        break
+      }
+    }
     for (let i = 0; i < topartists.artist.length; i++) {
       const artist = topartists.artist[i]
       textArray.push(`- (${artist.playcount}x) <a href="${urlLimiter(artist.url)}"><b>${artist.name}</b></a>`)
