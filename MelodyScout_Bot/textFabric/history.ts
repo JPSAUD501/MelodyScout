@@ -13,7 +13,7 @@ export function getHistoryText (userInfo: UserInfo, userRecentTracks: UserRecent
   textArray.push('')
   if (recenttracks.track[0]['@attr']?.nowplaying === 'true') {
     const track = recenttracks.track[0]
-    textArray.push(`<b>[🎧] Ouvindo agora <a href="${urlLimiter(track.url)}">${track.name}</a> de <a href="${urlLimiter(track.artist.url)}">${track.artist.name}</a></b>`)
+    textArray.push(`<b>[🎧] Ouvindo agora <a href="${urlLimiter(track.url)}">${track.name} de ${track.artist.name}</a></b>`)
     textArray.push('')
   }
   textArray.push('<b>[📒] Histórico de reprodução</b>')
@@ -21,7 +21,7 @@ export function getHistoryText (userInfo: UserInfo, userRecentTracks: UserRecent
     for (let i = 0; i < recenttracks.track.length; i++) {
       const track = recenttracks.track[i]
       if (track['@attr']?.nowplaying === 'true') continue
-      textArray.push(`- <a href="${urlLimiter(track.url)}">${track.name}</a> de <a href="${urlLimiter(track.artist.url)}">${track.artist.name}</a>`)
+      textArray.push(`- <a href="${urlLimiter(track.url)}">${track.name} de ${track.artist.name}</a>`)
     }
     textArray.push('')
   }
