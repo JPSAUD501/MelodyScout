@@ -21,7 +21,7 @@ export function getHistoryText (userInfo: UserInfo, userRecentTracks: UserRecent
     for (let i = 0; i < recenttracks.track.length; i++) {
       const track = recenttracks.track[i]
       if (track['@attr']?.nowplaying === 'true') continue
-      textArray.push(`- <a href="${urlLimiter(track.url)}">${track.name} de ${track.artist.name}</a>`)
+      textArray.push(`- <a href="${urlLimiter(track.url)}"><b>${track.name}</b> de <b>${track.artist.name}</b></a>`)
     }
     textArray.push('')
   }
