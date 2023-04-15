@@ -19,7 +19,7 @@ export function getPntrackText (userInfo: UserInfo, artistInfo: ArtistInfo, albu
   tweetTextArray.push(`[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] ${track.name}`)
   tweetTextArray.push(`- Artista: ${artist.name}`)
   tweetTextArray.push('')
-  tweetTextArray.push(`[📊] ${track.userplaycount} Scrobbles`)
+  tweetTextArray.push(`[📊] ${Number(track.userplaycount).toLocaleString('pt-BR')} Scrobbles`)
   const tweetInfoArray: string[] = []
   if (spotifyTrackInfo.popularity !== undefined) tweetInfoArray.push(`A popularidade atual dessa música é: [${spotifyTrackInfo.popularity}][${'★'.repeat(Math.floor(spotifyTrackInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyTrackInfo.popularity / 20))}]`)
   switch (tweetInfoArray.length) {
@@ -66,7 +66,7 @@ export function getPntrackText (userInfo: UserInfo, artistInfo: ArtistInfo, albu
     textArray.push(...infoArray)
   }
   textArray.push('')
-  textArray.push(`<b>[📊] ${track.userplaycount} Scrobbles</b>`)
+  textArray.push(`<b>[📊] ${Number(track.userplaycount).toLocaleString('pt-BR')} Scrobbles</b>`)
   textArray.push('')
   textArray.push('<b>[🔗] Compartilhe</b>')
   textArray.push(`- <a href="${tweetUrl}">Compartilhar no Twitter!</a>`)

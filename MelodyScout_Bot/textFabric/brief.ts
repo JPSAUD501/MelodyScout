@@ -69,27 +69,27 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
   tweetText.metrics.textArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
   tweetText.metrics.textArray.push('')
   tweetText.metrics.textArray.push('[📊] Métricas')
-  tweetText.metrics.textArray.push(`- Músicas ouvidas: ${Number(user.playcount)}`)
-  tweetText.metrics.textArray.push(`- Músicas conhecidas: ${Number(user.track_count)}`)
+  tweetText.metrics.textArray.push(`- Músicas ouvidas: ${Number(user.playcount).toLocaleString('pt-BR')}`)
+  tweetText.metrics.textArray.push(`- Músicas conhecidas: ${Number(user.track_count).toLocaleString('pt-BR')}`)
   // tweetText.metrics.textArray.push(`- Músicas repetidas: ${Number(user.playcount) - Number(user.track_count)}`)
-  tweetText.metrics.textArray.push(`- Artistas conhecidos: ${Number(user.artist_count)}`)
-  tweetText.metrics.textArray.push(`- Álbuns conhecidos: ${Number(user.album_count)}`)
+  tweetText.metrics.textArray.push(`- Artistas conhecidos: ${Number(user.artist_count).toLocaleString('pt-BR')}`)
+  tweetText.metrics.textArray.push(`- Álbuns conhecidos: ${Number(user.album_count).toLocaleString('pt-BR')}`)
 
   tweetText.infos.textArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
   tweetText.infos.textArray.push('')
   tweetText.infos.textArray.push('[ℹ️] Informações')
   if (((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount)) > ((Number(user.track_count) / Number(user.playcount)))) {
-    tweetText.infos.textArray.push(`- ${((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount) * 100).toFixed(2)}% das músicas ouvidas são repetidas.`)
+    tweetText.infos.textArray.push(`- ${Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount) * 100).toFixed(2)).toLocaleString('pt-BR')}% das músicas ouvidas são repetidas.`)
   } else {
-    tweetText.infos.textArray.push(`- ${((Number(user.track_count) / Number(user.playcount)) * 100).toFixed(2)}% das músicas ouvidas são novas`)
+    tweetText.infos.textArray.push(`- ${Number(((Number(user.track_count) / Number(user.playcount)) * 100).toFixed(2)).toLocaleString('pt-BR')}% das músicas ouvidas são novas`)
   }
-  tweetText.infos.textArray.push(`- Em média repete ${((Number(user.playcount) - Number(user.track_count)) / Number(user.track_count)).toFixed(2)}x cada música que conhece.`)
+  tweetText.infos.textArray.push(`- Em média repete ${Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.track_count)).toFixed(2)).toLocaleString('pt-BR')}x cada música que conhece.`)
   tweetText.mostPlayedTracks.textArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
   tweetText.mostPlayedTracks.textArray.push('')
   tweetText.mostPlayedTracks.textArray.push('[🎵] Músicas mais ouvidas')
   for (let i = 0; i < toptracks.track.length && i < 3; i++) {
     const track = toptracks.track[i]
-    tweetText.mostPlayedTracks.textArray.push(`- (${track.playcount}x) ${track.name} de ${track.artist.name}`)
+    tweetText.mostPlayedTracks.textArray.push(`- (${Number(track.playcount).toLocaleString('pt-BR')}x) ${track.name} de ${track.artist.name}`)
   }
 
   tweetText.mostPlayedAlbums.textArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
@@ -97,7 +97,7 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
   tweetText.mostPlayedAlbums.textArray.push('[💿] Álbuns mais ouvidos')
   for (let i = 0; i < topalbums.album.length && i < 3; i++) {
     const album = topalbums.album[i]
-    tweetText.mostPlayedAlbums.textArray.push(`- (${album.playcount}x) ${album.name} de ${album.artist.name}`)
+    tweetText.mostPlayedAlbums.textArray.push(`- (${Number(album.playcount).toLocaleString('pt-BR')}x) ${album.name} de ${album.artist.name}`)
   }
 
   tweetText.mostPlayedArtists.textArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
@@ -105,7 +105,7 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
   tweetText.mostPlayedArtists.textArray.push('[👨‍🎤] Artistas mais ouvidos')
   for (let i = 0; i < topartists.artist.length && i < 3; i++) {
     const artist = topartists.artist[i]
-    tweetText.mostPlayedArtists.textArray.push(`- (${artist.playcount}x) ${artist.name}`)
+    tweetText.mostPlayedArtists.textArray.push(`- (${Number(artist.playcount).toLocaleString('pt-BR')}x) ${artist.name}`)
   }
 
   const textArray: string[] = []
@@ -121,15 +121,15 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
       break
     }
   }
-  textArray.push(`- Músicas ouvidas: <b>${Number(user.playcount)}</b>`)
-  textArray.push(`- Músicas conhecidas: <b>${Number(user.track_count)}</b>`)
-  textArray.push(`- Músicas repetidas: <b>${Number(user.playcount) - Number(user.track_count)}</b>`)
-  textArray.push(`- Artistas conhecidos: <b>${Number(user.artist_count)}</b>`)
-  textArray.push(`- Álbuns conhecidos: <b>${Number(user.album_count)}</b>`)
+  textArray.push(`- Músicas ouvidas: <b>${Number(user.playcount).toLocaleString('pt-BR')}</b>`)
+  textArray.push(`- Músicas conhecidas: <b>${Number(user.track_count).toLocaleString('pt-BR')}</b>`)
+  textArray.push(`- Músicas repetidas: <b>${(Number(user.playcount) - Number(user.track_count)).toLocaleString('pt-BR')}</b>`)
+  textArray.push(`- Artistas conhecidos: <b>${Number(user.artist_count).toLocaleString('pt-BR')}</b>`)
+  textArray.push(`- Álbuns conhecidos: <b>${Number(user.album_count).toLocaleString('pt-BR')}</b>`)
   textArray.push('')
   textArray.push(`<b>[ℹ️] Informações</b> (<i><a href="${tweetText.infos.tweetUrl()}">Tweetar</a></i>)`)
-  textArray.push(`- Dentre as suas músicas ouvidas <b>${((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount) * 100).toFixed(2)}%</b> são repetidas e <b>${((Number(user.track_count) / Number(user.playcount)) * 100).toFixed(2)}%</b> são novas.`)
-  textArray.push(`- Em média você repete <b>${((Number(user.playcount) - Number(user.track_count)) / Number(user.track_count)).toFixed(2)}</b> vezes cada música que conhece.`)
+  textArray.push(`- Dentre as suas músicas ouvidas <b>${Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount) * 100).toFixed(2)).toLocaleString('pt-BR')}%</b> são repetidas e <b>${Number(((Number(user.track_count) / Number(user.playcount)) * 100).toFixed(2)).toLocaleString('pt-BR')}%</b> são novas.`)
+  textArray.push(`- Em média você repete <b>${Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.track_count)).toFixed(2)).toLocaleString('pt-BR')}</b> vezes cada música que conhece.`)
   textArray.push('')
   if (toptracks.track.length > 0) {
     switch (true) {
@@ -144,7 +144,7 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
     }
     for (let i = 0; i < toptracks.track.length; i++) {
       const track = toptracks.track[i]
-      textArray.push(`- (${track.playcount}x) <a href="${urlLimiter(track.url)}"><b>${track.name}</b> de <b>${track.artist.name}</b></a>`)
+      textArray.push(`- (${Number(track.playcount).toLocaleString('pt-BR')}x) <a href="${urlLimiter(track.url)}"><b>${track.name}</b> de <b>${track.artist.name}</b></a>`)
     }
     textArray.push('')
   }
@@ -161,7 +161,7 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
     }
     for (let i = 0; i < topalbums.album.length; i++) {
       const album = topalbums.album[i]
-      textArray.push(`- (${album.playcount}x) <a href="${urlLimiter(album.url)}"><b>${album.name}</b> de <b>${album.artist.name}</b></a>`)
+      textArray.push(`- (${Number(album.playcount).toLocaleString('pt-BR')}x) <a href="${urlLimiter(album.url)}"><b>${album.name}</b> de <b>${album.artist.name}</b></a>`)
     }
     textArray.push('')
   }
@@ -178,7 +178,7 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
     }
     for (let i = 0; i < topartists.artist.length; i++) {
       const artist = topartists.artist[i]
-      textArray.push(`- (${artist.playcount}x) <a href="${urlLimiter(artist.url)}"><b>${artist.name}</b></a>`)
+      textArray.push(`- (${Number(artist.playcount).toLocaleString('pt-BR')}x) <a href="${urlLimiter(artist.url)}"><b>${artist.name}</b></a>`)
     }
   }
 

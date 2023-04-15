@@ -20,8 +20,8 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   tweetTextArray.push(`- Artista: ${artist.name}`)
   tweetTextArray.push('')
   tweetTextArray.push('[📊] Scrobbles')
-  tweetTextArray.push(`- Música: ${Number(track.userplaycount)}`)
-  tweetTextArray.push(`- Artista: ${Number(artist.stats.userplaycount)}`)
+  tweetTextArray.push(`- Música: ${Number(track.userplaycount).toLocaleString('pt-BR')}`)
+  tweetTextArray.push(`- Artista: ${Number(artist.stats.userplaycount).toLocaleString('pt-BR')}`)
   const tweetInfoArray: string[] = []
   if (
     Number(track.userplaycount) > 0 &&
@@ -69,9 +69,9 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   textArray.push(`- Artista: <b><a href="${urlLimiter(artist.url)}">${sanitizeText(artist.name)}</a></b>`)
   textArray.push('')
   textArray.push('<b>[📊] Scrobbles</b>')
-  textArray.push(`- Música: <b>${Number(track.userplaycount)}</b>`)
-  if (album.userplaycount !== undefined) textArray.push(`- Álbum: <b>${Number(album.userplaycount)}</b>`)
-  textArray.push(`- Artista: <b>${Number(artist.stats.userplaycount)}</b>`)
+  textArray.push(`- Música: <b>${Number(track.userplaycount).toLocaleString('pt-BR')}</b>`)
+  if (album.userplaycount !== undefined) textArray.push(`- Álbum: <b>${Number(album.userplaycount).toLocaleString('pt-BR')}</b>`)
+  textArray.push(`- Artista: <b>${Number(artist.stats.userplaycount).toLocaleString('pt-BR')}</b>`)
   const infoArray: string[] = []
   if (
     Number(track.userplaycount) > 0 &&
@@ -86,25 +86,25 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
     Number(album.userplaycount) > 0 &&
     Number(track.userplaycount) > 0 &&
     Number(((Number(track.userplaycount) / Number(album.userplaycount)) * 100).toFixed(0)) !== 100
-  ) infoArray.push(`- Essa música representa <b>${((Number(track.userplaycount) / Number(album.userplaycount)) * 100).toFixed(0)}%</b> de todas suas reproduções desse álbum.`)
+  ) infoArray.push(`- Essa música representa <b>${Number(((Number(track.userplaycount) / Number(album.userplaycount)) * 100).toFixed(0)).toLocaleString('pt-BR')}%</b> de todas suas reproduções desse álbum.`)
   if (
     Number(artist.stats.userplaycount) >= Number(track.userplaycount) &&
     Number(artist.stats.userplaycount) > 0 &&
     Number(track.userplaycount) > 0 &&
     Number(((Number(track.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)) >= 5
-  ) infoArray.push(`- Essa música representa <b>${((Number(track.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)}%</b> de todas suas reproduções desse artista.`)
+  ) infoArray.push(`- Essa música representa <b>${Number(((Number(track.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)).toLocaleString('pt-BR')}%</b> de todas suas reproduções desse artista.`)
   if (
     Number(artist.stats.userplaycount) >= Number(album.userplaycount) &&
     Number(artist.stats.userplaycount) > 0 &&
     Number(album.userplaycount) > 0 &&
     Number(((Number(album.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)) >= 5
-  ) infoArray.push(`- Esse álbum representa <b>${((Number(album.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)}%</b> de todas suas reproduções desse artista.`)
+  ) infoArray.push(`- Esse álbum representa <b>${Number(((Number(album.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)).toLocaleString('pt-BR')}%</b> de todas suas reproduções desse artista.`)
   if (
     Number(user.playcount) >= Number(artist.stats.userplaycount) &&
     Number(user.playcount) > 0 &&
     Number(artist.stats.userplaycount) > 0 &&
     Number(((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)) >= 10
-  ) infoArray.push(`- Esse artista representa <b>${((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)}%</b> de todas suas reproduções.`)
+  ) infoArray.push(`- Esse artista representa <b>${Number(((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)).toLocaleString('pt-BR')}%</b> de todas suas reproduções.`)
   if (infoArray.length > 0) {
     textArray.push('')
     textArray.push('<b>[ℹ️] Informações</b>')

@@ -15,7 +15,7 @@ export function getPnartistText (userInfo: UserInfo, artistInfo: ArtistInfo, spo
   tweetTextArray.push('[🎧] Sobre o artista')
   tweetTextArray.push(`- Artista: ${artist.name}`)
   tweetTextArray.push('')
-  tweetTextArray.push(`[📊] ${artist.stats.userplaycount} Scrobbles`)
+  tweetTextArray.push(`[📊] ${Number(artist.stats.userplaycount).toLocaleString('pt-BR')} Scrobbles`)
   const tweetInfoArray: string[] = []
   if (spotifyArtistInfo.popularity !== undefined) tweetInfoArray.push(`A popularidade atual desse artista é: [${spotifyArtistInfo.popularity}][${'★'.repeat(Math.floor(spotifyArtistInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyArtistInfo.popularity / 20))}]`)
   switch (tweetInfoArray.length) {
@@ -60,7 +60,7 @@ export function getPnartistText (userInfo: UserInfo, artistInfo: ArtistInfo, spo
     textArray.push(...infoArray)
   }
   textArray.push('')
-  textArray.push(`<b>[📊] ${artist.stats.userplaycount} Scrobbles</b>`)
+  textArray.push(`<b>[📊] ${Number(artist.stats.userplaycount).toLocaleString('pt-BR')} Scrobbles</b>`)
   textArray.push('')
   textArray.push('<b>[🔗] Compartilhe</b>')
   textArray.push(`- <a href="${tweetUrl}">Compartilhar no Twitter!</a>`)

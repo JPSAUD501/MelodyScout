@@ -18,7 +18,7 @@ export function getPnalbumText (userInfo: UserInfo, artistInfo: ArtistInfo, albu
   tweetTextArray.push(`- Álbum: ${album.name}`)
   tweetTextArray.push(`- Artista: ${artist.name}`)
   tweetTextArray.push('')
-  tweetTextArray.push(`[📊] ${album.userplaycount !== undefined ? album.userplaycount : 0} Scrobbles`)
+  tweetTextArray.push(`[📊] ${(album.userplaycount !== undefined ? album.userplaycount : 0).toLocaleString('pt-BR')} Scrobbles`)
   const tweetInfoArray: string[] = []
   if (spotifyAlbumInfo.popularity !== undefined) tweetInfoArray.push(`A popularidade atual desse album é: [${spotifyAlbumInfo.popularity}][${'★'.repeat(Math.floor(spotifyAlbumInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyAlbumInfo.popularity / 20))}]`)
   switch (tweetInfoArray.length) {
@@ -64,7 +64,7 @@ export function getPnalbumText (userInfo: UserInfo, artistInfo: ArtistInfo, albu
     textArray.push(...infoArray)
   }
   textArray.push('')
-  textArray.push(`<b>[📊] ${album.userplaycount !== undefined ? album.userplaycount : 0} Scrobbles</b>`)
+  textArray.push(`<b>[📊] ${(album.userplaycount !== undefined ? album.userplaycount : 0).toLocaleString('pt-BR')} Scrobbles</b>`)
   textArray.push('')
   textArray.push('<b>[🔗] Compartilhe</b>')
   textArray.push(`- <a href="${tweetUrl}">Compartilhar no Twitter!</a>`)
