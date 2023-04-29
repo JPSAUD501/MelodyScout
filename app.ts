@@ -9,8 +9,12 @@ import { MsGeniusApi } from './api/msGeniusApi/base'
 import { MsMusicApi } from './api/msMusicApi/base'
 import { MsOpenAiApi } from './api/msOpenAiApi/base'
 import { MsTextToSpeechApi } from './api/msTextToSpeechApi/base'
+import { Server } from './server'
 
 async function start (): Promise<void> {
+  console.log('Starting Server...')
+  const server = new Server()
+  server.start()
   console.log('Starting MelodyScoutLog_Bot and AdvConsole...')
   const melodyScoutLogBot = new MelodyScoutLogBot()
   melodyScoutLogBot.start()

@@ -25,7 +25,7 @@ export default {
   openai: {
     apiKey: process.env.OPENAI_API_KEY !== undefined ? process.env.OPENAI_API_KEY : ''
   },
-  server: {
+  serverConfig: {
     port: process.env.PORT !== undefined ? Number(process.env.PORT) : 3000,
     host: process.env.HOST !== undefined ? process.env.HOST : '0.0.0.0'
   }
