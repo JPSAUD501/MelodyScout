@@ -89,7 +89,7 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
   tweetText.mostPlayedTracks.textArray.push('[🎵] Músicas mais ouvidas')
   for (let i = 0; i < toptracks.track.length && i < 3; i++) {
     const track = toptracks.track[i]
-    tweetText.mostPlayedTracks.textArray.push(`- (${Number(track.playcount).toLocaleString('pt-BR')}x) ${track.name} de ${track.artist.name}`)
+    tweetText.mostPlayedTracks.textArray.push(`- (${Number(track.playcount).toLocaleString('pt-BR')}x) ${sanitizeText(track.name)} de ${track.artist.name}`)
   }
 
   tweetText.mostPlayedAlbums.textArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
@@ -144,7 +144,7 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
     }
     for (let i = 0; i < toptracks.track.length; i++) {
       const track = toptracks.track[i]
-      textArray.push(`- (${Number(track.playcount).toLocaleString('pt-BR')}x) <a href="${urlLimiter(track.url)}"><b>${track.name}</b> de <b>${track.artist.name}</b></a>`)
+      textArray.push(`- (${Number(track.playcount).toLocaleString('pt-BR')}x) <a href="${urlLimiter(track.url)}"><b>${sanitizeText(track.name)}</b> de <b>${track.artist.name}</b></a>`)
     }
     textArray.push('')
   }
