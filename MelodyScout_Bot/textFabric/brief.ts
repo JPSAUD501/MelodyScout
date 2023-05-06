@@ -97,7 +97,7 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
   tweetText.mostPlayedAlbums.textArray.push('[💿] Álbuns mais ouvidos')
   for (let i = 0; i < topalbums.album.length && i < 3; i++) {
     const album = topalbums.album[i]
-    tweetText.mostPlayedAlbums.textArray.push(`- (${Number(album.playcount).toLocaleString('pt-BR')}x) ${album.name} de ${album.artist.name}`)
+    tweetText.mostPlayedAlbums.textArray.push(`- (${Number(album.playcount).toLocaleString('pt-BR')}x) ${sanitizeText(album.name)} de ${sanitizeText(album.artist.name)}`)
   }
 
   tweetText.mostPlayedArtists.textArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
@@ -105,7 +105,7 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
   tweetText.mostPlayedArtists.textArray.push('[👨‍🎤] Artistas mais ouvidos')
   for (let i = 0; i < topartists.artist.length && i < 3; i++) {
     const artist = topartists.artist[i]
-    tweetText.mostPlayedArtists.textArray.push(`- (${Number(artist.playcount).toLocaleString('pt-BR')}x) ${artist.name}`)
+    tweetText.mostPlayedArtists.textArray.push(`- (${Number(artist.playcount).toLocaleString('pt-BR')}x) ${sanitizeText(artist.name)}`)
   }
 
   const textArray: string[] = []
@@ -161,7 +161,7 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
     }
     for (let i = 0; i < topalbums.album.length; i++) {
       const album = topalbums.album[i]
-      textArray.push(`- (${Number(album.playcount).toLocaleString('pt-BR')}x) <a href="${urlLimiter(album.url)}"><b>${album.name}</b> de <b>${album.artist.name}</b></a>`)
+      textArray.push(`- (${Number(album.playcount).toLocaleString('pt-BR')}x) <a href="${urlLimiter(album.url)}"><b>${sanitizeText(album.name)}</b> de <b>${sanitizeText(album.artist.name)}</b></a>`)
     }
     textArray.push('')
   }
@@ -178,7 +178,7 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
     }
     for (let i = 0; i < topartists.artist.length; i++) {
       const artist = topartists.artist[i]
-      textArray.push(`- (${Number(artist.playcount).toLocaleString('pt-BR')}x) <a href="${urlLimiter(artist.url)}"><b>${artist.name}</b></a>`)
+      textArray.push(`- (${Number(artist.playcount).toLocaleString('pt-BR')}x) <a href="${urlLimiter(artist.url)}"><b>${sanitizeText(artist.name)}</b></a>`)
     }
   }
 

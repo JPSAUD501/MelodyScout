@@ -13,7 +13,7 @@ export function getPnartistText (userInfo: UserInfo, artistInfo: ArtistInfo, spo
   tweetTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
   tweetTextArray.push('')
   tweetTextArray.push('[🎧] Sobre o artista')
-  tweetTextArray.push(`- Artista: ${artist.name}`)
+  tweetTextArray.push(`- Artista: ${sanitizeText(artist.name)}`)
   tweetTextArray.push('')
   tweetTextArray.push(`[📊] ${Number(artist.stats.userplaycount).toLocaleString('pt-BR')} Scrobbles`)
   const tweetInfoArray: string[] = []

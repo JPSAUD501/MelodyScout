@@ -15,8 +15,8 @@ export function getPnalbumText (userInfo: UserInfo, artistInfo: ArtistInfo, albu
   tweetTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
   tweetTextArray.push('')
   tweetTextArray.push('[🎧] Sobre o album')
-  tweetTextArray.push(`- Álbum: ${album.name}`)
-  tweetTextArray.push(`- Artista: ${artist.name}`)
+  tweetTextArray.push(`- Álbum: ${sanitizeText(album.name)}`)
+  tweetTextArray.push(`- Artista: ${sanitizeText(artist.name)}`)
   tweetTextArray.push('')
   tweetTextArray.push(`[📊] ${(album.userplaycount !== undefined ? album.userplaycount : 0).toLocaleString('pt-BR')} Scrobbles`)
   const tweetInfoArray: string[] = []

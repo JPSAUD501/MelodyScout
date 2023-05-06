@@ -17,7 +17,7 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   tweetTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
   tweetTextArray.push('')
   tweetTextArray.push(`[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] ${sanitizeText(track.name)}`)
-  tweetTextArray.push(`- Artista: ${artist.name}`)
+  tweetTextArray.push(`- Artista: ${sanitizeText(artist.name)}`)
   tweetTextArray.push('')
   tweetTextArray.push('[📊] Scrobbles')
   tweetTextArray.push(`- Música: ${Number(track.userplaycount).toLocaleString('pt-BR')}`)
