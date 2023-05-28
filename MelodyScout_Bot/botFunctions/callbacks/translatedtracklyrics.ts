@@ -1,7 +1,7 @@
 import { CallbackQueryContext, Context } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
-import config from '../../../config'
+import { melodyScoutConfig } from '../../../config'
 import { translate } from '@vitalets/google-translate-api'
 import { getLyricsText } from '../../textFabric/lyrics'
 
@@ -23,7 +23,7 @@ export class TranslatedtracklyricsCallback {
     void this.ctxFunctions.answerCallbackQuery(ctx, '⏳ - Carregando...')
     const messageId = ctx.callbackQuery.message?.message_id
     if (messageId === undefined) return await this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Mensagem não encontrada!')
-    const dataArray = ctx.callbackQuery.data.split(config.melodyScout.divider)
+    const dataArray = ctx.callbackQuery.data.split(melodyScoutConfig.divider)
     const track = dataArray[1]
     const artist = dataArray[2]
     if (track === undefined || artist === undefined) return await this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Nome da música ou do artista não encontrado!')

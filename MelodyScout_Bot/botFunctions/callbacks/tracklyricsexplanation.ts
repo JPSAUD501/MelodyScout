@@ -1,11 +1,11 @@
 import { CallbackQueryContext, Context, InputFile } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
-import config from '../../../config'
 import { getTracklyricsexplanationText } from '../../textFabric/tracklyricsexplanation'
 import { MsOpenAiApi } from '../../../api/msOpenAiApi/base'
 import { AdvConsole } from '../../../function/advancedConsole'
 import { MsTextToSpeechApi } from '../../../api/msTextToSpeechApi/base'
+import { melodyScoutConfig } from '../../../config'
 
 export class TracklyricsexplanationCallback {
   private readonly advConsole: AdvConsole
@@ -34,7 +34,7 @@ export class TracklyricsexplanationCallback {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao buscar a mensagem que você clicou, por favor tente novamente mais tarde ou entre em contato através do comando /contact.')
       return
     }
-    const dataArray = ctx.callbackQuery.data.split(config.melodyScout.divider)
+    const dataArray = ctx.callbackQuery.data.split(melodyScoutConfig.divider)
     const track = dataArray[1]
     const artist = dataArray[2]
     if (track === undefined || artist === undefined) {

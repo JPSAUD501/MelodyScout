@@ -1,9 +1,9 @@
 import { CallbackQueryContext, Context, InlineKeyboard } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
-import config from '../../../config'
 import { AdvConsole } from '../../../function/advancedConsole'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { getCallbackKey } from '../../../function/callbackMaker'
+import { melodyScoutConfig } from '../../../config'
 // import axios from 'axios'
 
 export class TrackDownloadCallback {
@@ -29,7 +29,7 @@ export class TrackDownloadCallback {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao buscar a mensagem que você clicou, por favor tente novamente mais tarde ou entre em contato através do comando /contact.')
       return
     }
-    const dataArray = ctx.callbackQuery.data.split(config.melodyScout.divider)
+    const dataArray = ctx.callbackQuery.data.split(melodyScoutConfig.divider)
     const track = dataArray[1]
     const artist = dataArray[2]
     if (track === undefined || artist === undefined) {

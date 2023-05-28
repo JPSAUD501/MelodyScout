@@ -8,7 +8,7 @@ import { CtxFunctions } from '../function/ctxFunctions'
 import { MsGeniusApi } from '../api/msGeniusApi/base'
 import { MsMusicApi } from '../api/msMusicApi/base'
 import { MsOpenAiApi } from '../api/msOpenAiApi/base'
-import config from '../config'
+import { melodyScoutConfig } from '../config'
 import { MsTextToSpeechApi } from '../api/msTextToSpeechApi/base'
 
 export class MelodyScoutBot {
@@ -192,7 +192,7 @@ export class MelodyScoutBot {
       this.advConsole.log(`MelodyScout_Bot - New command not handled:\nFrom: (${ctx.message?.from?.id ?? 'No ID'}) ${ctx.message?.from?.first_name ?? 'No name'} ${ctx.message?.from?.last_name ?? ''} - ${ctx.message?.from.username ?? 'No username'}\nIn: (${ctx.chat?.id}) ${chatTittle} - ${ctx.chat.type}\nCommand: ${ctx.message?.text ?? ''}`)
     })
 
-    this.bot.callbackQuery(new RegExp(`^TP${config.melodyScout.divider}`), async (ctx) => {
+    this.bot.callbackQuery(new RegExp(`^TP${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCallback.run(ctx)
@@ -201,7 +201,7 @@ export class MelodyScoutBot {
       void this.botFunctions.trackpreviewCallback.run(ctx)
     })
 
-    this.bot.callbackQuery(new RegExp(`^TL${config.melodyScout.divider}`), async (ctx) => {
+    this.bot.callbackQuery(new RegExp(`^TL${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCallback.run(ctx)
@@ -210,7 +210,7 @@ export class MelodyScoutBot {
       void this.botFunctions.tracklyricsCallback.run(ctx)
     })
 
-    this.bot.callbackQuery(new RegExp(`^TTL${config.melodyScout.divider}`), async (ctx) => {
+    this.bot.callbackQuery(new RegExp(`^TTL${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCallback.run(ctx)
@@ -228,7 +228,7 @@ export class MelodyScoutBot {
       void this.botFunctions.playingnowCallback.run(ctx)
     })
 
-    this.bot.callbackQuery(new RegExp(`^TLE${config.melodyScout.divider}`), async (ctx) => {
+    this.bot.callbackQuery(new RegExp(`^TLE${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCallback.run(ctx)
@@ -237,7 +237,7 @@ export class MelodyScoutBot {
       void this.botFunctions.tracklyricsexplanationCallback.run(ctx)
     })
 
-    this.bot.callbackQuery(new RegExp(`^TD${config.melodyScout.divider}`), async (ctx) => {
+    this.bot.callbackQuery(new RegExp(`^TD${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCallback.run(ctx)
@@ -246,7 +246,7 @@ export class MelodyScoutBot {
       void this.botFunctions.trackDownloadCallback.run(ctx)
     })
 
-    this.bot.callbackQuery(new RegExp(`^TAD${config.melodyScout.divider}`), async (ctx) => {
+    this.bot.callbackQuery(new RegExp(`^TAD${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCallback.run(ctx)
@@ -255,7 +255,7 @@ export class MelodyScoutBot {
       void this.botFunctions.trackAudioDownloadCallback.run(ctx)
     })
 
-    this.bot.callbackQuery(new RegExp(`^TVD${config.melodyScout.divider}`), async (ctx) => {
+    this.bot.callbackQuery(new RegExp(`^TVD${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void this.botFunctions.maintenanceinformCallback.run(ctx)

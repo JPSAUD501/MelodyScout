@@ -1,4 +1,3 @@
-import config from './config'
 import { AdvConsole } from './function/advancedConsole'
 import { MsPrismaDbApi } from './api/msPrismaDbApi/base'
 import { MelodyScoutLogBot } from './MelodyScoutLog_Bot/bot'
@@ -9,12 +8,10 @@ import { MsGeniusApi } from './api/msGeniusApi/base'
 import { MsMusicApi } from './api/msMusicApi/base'
 import { MsOpenAiApi } from './api/msOpenAiApi/base'
 import { MsTextToSpeechApi } from './api/msTextToSpeechApi/base'
-import { Server } from './server'
+import { geniusConfig, lastfmConfig, openaiConfig, spotifyConfig } from './config'
+import { Server } from './Server/server'
 
 async function start (): Promise<void> {
-  console.log('Starting Server...')
-  const server = new Server()
-  server.start()
   console.log('Starting MelodyScoutLog_Bot and AdvConsole...')
   const melodyScoutLogBot = new MelodyScoutLogBot()
   melodyScoutLogBot.start()
@@ -22,12 +19,17 @@ async function start (): Promise<void> {
   const advConsole = new AdvConsole(melodyScoutLogBot)
   console.log('MelodyScoutLog_Bot and AdvConsole started!')
 
+  console.log('Starting Server...')
+  const server = new Server(advConsole)
+  await server.start()
+  console.log('Server started!')
+
   advConsole.log('Running the start sequence...')
   const msPrismaDbApi = new MsPrismaDbApi(advConsole)
-  const msLastfmApi = new MsLastfmApi(advConsole, config.lastfm.apiKey)
-  const msGeniusApi = new MsGeniusApi(advConsole, config.genius.accessToken)
-  const msOpenAiApi = new MsOpenAiApi(advConsole, config.openai.apiKey)
-  const msMusicApi = new MsMusicApi(advConsole, config.spotify.clientID, config.spotify.clientSecret)
+  const msLastfmApi = new MsLastfmApi(advConsole, lastfmConfig.apiKey)
+  const msGeniusApi = new MsGeniusApi(advConsole, geniusConfig.accessToken)
+  const msOpenAiApi = new MsOpenAiApi(advConsole, openaiConfig.apiKey)
+  const msMusicApi = new MsMusicApi(advConsole, spotifyConfig.clientID, spotifyConfig.clientSecret)
   const msTextToSpeechApi = new MsTextToSpeechApi(advConsole)
   await msMusicApi.start()
   const ctxFunctions = new CtxFunctions(advConsole)

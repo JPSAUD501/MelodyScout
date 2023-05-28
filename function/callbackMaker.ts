@@ -1,6 +1,6 @@
-import config from '../config'
+import { melodyScoutConfig } from '../config'
 
-const dividerByteSize = Buffer.byteLength(config.melodyScout.divider, 'utf8')
+const dividerByteSize = Buffer.byteLength(melodyScoutConfig.divider, 'utf8')
 
 export function getCallbackKey (parameters: string[]): string {
   const callbackId = parameters.shift()
@@ -37,6 +37,6 @@ export function getCallbackKey (parameters: string[]): string {
     slicedParameters.push(parameter)
   }
 
-  const callbackKey = `${callbackId}${config.melodyScout.divider}${slicedParameters.join(config.melodyScout.divider)}`
+  const callbackKey = `${callbackId}${melodyScoutConfig.divider}${slicedParameters.join(melodyScoutConfig.divider)}`
   return callbackKey
 }

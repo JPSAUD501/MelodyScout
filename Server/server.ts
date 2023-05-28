@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import fastify from 'fastify'
 import { AdvConsole } from '../function/advancedConsole'
-import config from '../config'
+import { serverConfig } from '../config'
 const server = fastify()
 
 export class Server {
@@ -23,8 +23,8 @@ export class Server {
     })
 
     server.listen({
-      port: config.server.port,
-      host: config.server.host
+      port: serverConfig.port,
+      host: serverConfig.host
     }, (err, address) => {
       if (err instanceof Error) {
         this.advConsole.error(`Server error: ${err.message}`)

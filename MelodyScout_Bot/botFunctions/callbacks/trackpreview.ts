@@ -1,7 +1,7 @@
 import { CallbackQueryContext, Context, InputFile } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
-import config from '../../../config'
+import { melodyScoutConfig } from '../../../config'
 
 export class TrackpreviewCallback {
   private readonly ctxFunctions: CtxFunctions
@@ -23,7 +23,7 @@ export class TrackpreviewCallback {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao buscar a mensagem que você clicou, por favor tente novamente mais tarde ou entre em contato através do comando /contact.')
       return
     }
-    const dataArray = ctx.callbackQuery.data.split(config.melodyScout.divider)
+    const dataArray = ctx.callbackQuery.data.split(melodyScoutConfig.divider)
     const track = dataArray[1]
     const artist = dataArray[2]
     if (track === undefined || artist === undefined) return await this.ctxFunctions.answerCallbackQuery(ctx, '⚠ - Nome da música ou do artista não encontrado!')

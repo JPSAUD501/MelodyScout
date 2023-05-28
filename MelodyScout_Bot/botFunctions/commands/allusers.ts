@@ -1,7 +1,7 @@
 import { CommandContext, Context } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
-import config from '../../../config'
 import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
+import { melodyScoutConfig } from '../../../config'
 
 export class AllusersCommand {
   private readonly ctxFunctions: CtxFunctions
@@ -22,7 +22,7 @@ export class AllusersCommand {
       await this.ctxFunctions.reply(ctx, 'Infelizmente não foi possível identificar seu id, por favor tente novamente mais tarde!')
       return
     }
-    if (!config.melodyScout.admins.includes(ctxFromId.toString())) return
+    if (!melodyScoutConfig.admins.includes(ctxFromId.toString())) return
     const allUsers = await this.msPrismaDbApi.get.allTelegramUsers()
     if (!allUsers.success) {
       await this.ctxFunctions.reply(ctx, 'Infelizmente não foi possível recuperar os usuários do banco de dados, por favor tente novamente mais tarde!')

@@ -1,6 +1,6 @@
 import { CommandContext, Context, InlineKeyboard } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
-import config from '../../../config'
+import { melodyScoutConfig } from '../../../config'
 
 export class PinCommand {
   private readonly ctxFunctions: CtxFunctions
@@ -16,7 +16,7 @@ export class PinCommand {
     }
     const inlineKeyboard = new InlineKeyboard()
     inlineKeyboard.text('Playing Now', 'PLAYINGNOW')
-    const messageToPin = await this.ctxFunctions.reply(ctx, `<a href="${config.melodyScout.logoImgUrl}">️️</a>O que vc está ouvindo agr?`, { reply_markup: inlineKeyboard })
+    const messageToPin = await this.ctxFunctions.reply(ctx, `<a href="${melodyScoutConfig.logoImgUrl}">️️</a>O que vc está ouvindo agr?`, { reply_markup: inlineKeyboard })
     if (messageToPin === undefined) {
       void this.ctxFunctions.reply(ctx, 'Parece que algo deu errado ao enviar a mensagem, por favor tente novamente!')
       return

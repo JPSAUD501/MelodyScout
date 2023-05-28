@@ -1,7 +1,7 @@
 import { CommandContext, Context } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { AdvConsole } from '../../../function/advancedConsole'
-import config from '../../../config'
+import { melodyScoutConfig } from '../../../config'
 
 export class MaintenanceCommand {
   private readonly ctxFunctions: CtxFunctions
@@ -27,7 +27,7 @@ export class MaintenanceCommand {
       await this.ctxFunctions.reply(ctx, 'Infelizmente não foi possível identificar seu id, por favor tente novamente mais tarde!')
       return { success: false }
     }
-    if (!config.melodyScout.admins.includes(ctxFromId.toString())) return { success: false }
+    if (!melodyScoutConfig.admins.includes(ctxFromId.toString())) return { success: false }
     const args = ctx.message?.text?.split(' ')
     if (args === undefined) return { success: false }
     if (args.length < 2) {

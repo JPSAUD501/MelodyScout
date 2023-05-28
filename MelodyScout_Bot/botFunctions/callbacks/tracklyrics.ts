@@ -1,9 +1,9 @@
 import { CallbackQueryContext, Context, InlineKeyboard } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
-import config from '../../../config'
 import { getCallbackKey } from '../../../function/callbackMaker'
 import { getLyricsText } from '../../textFabric/lyrics'
+import { melodyScoutConfig } from '../../../config'
 
 export class TracklyricsCallback {
   private readonly ctxFunctions: CtxFunctions
@@ -26,7 +26,7 @@ export class TracklyricsCallback {
       void this.ctxFunctions.reply(ctx, 'Algo deu errado ao buscar a mensagem que você clicou, por favor tente novamente mais tarde ou entre em contato através do comando /contact.')
       return
     }
-    const dataArray = ctx.callbackQuery.data.split(config.melodyScout.divider)
+    const dataArray = ctx.callbackQuery.data.split(melodyScoutConfig.divider)
     const track = dataArray[1]
     const artist = dataArray[2]
     if (track === undefined || artist === undefined) {
