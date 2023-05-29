@@ -1,15 +1,15 @@
 import { z } from 'zod'
 
 export const zodRaveContent = z.object({
-  artist: z.string(),
+  artist: z.string().optional(),
   createdAt: z.number(),
   dj: z.object({
-    avatar: z.object({ default: z.string() }).optional(),
+    avatar: z.object({ default: z.string().optional() }),
     createdAt: z.number(),
     displayName: z.string(),
     firebaseId: z.string(),
     id: z.string(),
-    metrics: z.object({ totalViews: z.string() }),
+    metrics: z.object({ totalViews: z.string().optional() }),
     permission: z.string(),
     registrationComplete: z.boolean(),
     updatedAt: z.number(),

@@ -1,8 +1,8 @@
 import { z } from 'zod'
 import { zodRaveContent } from './zodRaveContent'
 
-export const zodGetInfo = z.object({
+export const zodGetContent = z.object({
   data: z.array(zodRaveContent)
 })
 
-export type GetInfo = z.infer<typeof zodGetInfo>
+export type GetContent = z.infer<typeof zodGetContent>

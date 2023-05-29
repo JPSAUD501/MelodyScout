@@ -30,6 +30,8 @@ import { MsTextToSpeechApi } from '../../api/msTextToSpeechApi/base'
 import { TrackAudioDownloadCallback } from './callbacks/trackaudiodownload'
 import { TrackDownloadCallback } from './callbacks/trackdonwload'
 import { TrackVideoDownloadCallback } from './callbacks/trackvideodownload'
+import { MsRaveApi } from '../../api/msRaveApi/base'
+import { MashupCommand } from './commands/mashup'
 
 export class BotFunctions {
   startCommand: StartCommand
@@ -47,6 +49,7 @@ export class BotFunctions {
   allusersCommand: AllusersCommand
   maintenanceCommand: MaintenanceCommand
   maintenanceinformCommand: MaintenanceinformCommand
+  mashupCommand: MashupCommand
 
   trackpreviewCallback: TrackpreviewCallback
   playingnowCallback: PlayingnowCallback
@@ -58,7 +61,7 @@ export class BotFunctions {
   trackVideoDownloadCallback: TrackVideoDownloadCallback
   trackDownloadCallback: TrackDownloadCallback
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi) {
+  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi, msRaveApi: MsRaveApi) {
     this.startCommand = new StartCommand(ctxFunctions)
     this.helpCommand = new HelpCommand(ctxFunctions)
     this.contactCommand = new ContactCommand(ctxFunctions)
@@ -74,6 +77,8 @@ export class BotFunctions {
     this.allusersCommand = new AllusersCommand(ctxFunctions, msPrismaDbApi)
     this.maintenanceCommand = new MaintenanceCommand(advConsole, ctxFunctions)
     this.maintenanceinformCommand = new MaintenanceinformCommand(advConsole, ctxFunctions)
+    this.mashupCommand = new MashupCommand(ctxFunctions, msLastfmApi, msPrismaDbApi, msMusicApi, msRaveApi)
+
     this.trackAudioDownloadCallback = new TrackAudioDownloadCallback(advConsole, ctxFunctions, msMusicApi)
     this.trackVideoDownloadCallback = new TrackVideoDownloadCallback(advConsole, ctxFunctions, msMusicApi)
     this.trackDownloadCallback = new TrackDownloadCallback(advConsole, ctxFunctions, msMusicApi)

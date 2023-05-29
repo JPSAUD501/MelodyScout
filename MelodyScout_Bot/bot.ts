@@ -10,6 +10,7 @@ import { MsMusicApi } from '../api/msMusicApi/base'
 import { MsOpenAiApi } from '../api/msOpenAiApi/base'
 import { melodyScoutConfig } from '../config'
 import { MsTextToSpeechApi } from '../api/msTextToSpeechApi/base'
+import { MsRaveApi } from '../api/msRaveApi/base'
 
 export class MelodyScoutBot {
   private readonly advConsole: AdvConsole
@@ -17,9 +18,9 @@ export class MelodyScoutBot {
   private readonly botFunctions: BotFunctions
   private maintenanceMode = false
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi) {
+  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi, msRaveApi: MsRaveApi) {
     this.advConsole = advConsole
-    this.botFunctions = new BotFunctions(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi)
+    this.botFunctions = new BotFunctions(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi, msRaveApi)
     this.bot = new Bot(botConfig.telegram.token)
 
     console.log('MelodyScout_Bot - Loaded')
@@ -43,8 +44,9 @@ export class MelodyScoutBot {
       { command: 'brief', description: 'Show the brief of your Last.fm user' },
       { command: 'playingnow', description: 'Show the currently playing track' },
       { command: 'history', description: 'Show the history of your listened tracks' },
-      { command: 'pin', description: 'Pin a shortcut to the /playingnow command' },
+      // { command: 'mashup', description: 'Create a mashup of your 2 last listened tracks' },
       // { command: 'collage', description: 'Show a collage of your top tracks' },
+      { command: 'pin', description: 'Pin a shortcut to the /playingnow command' },
       { command: 'pntrack', description: 'Show information about the currently playing track' },
       { command: 'pnalbum', description: 'Show information about the album of the currently playing track' },
       { command: 'pnartist', description: 'Show information about the artist of the currently playing track' }
@@ -175,6 +177,15 @@ export class MelodyScoutBot {
     this.bot.command(['allusers'], async (ctx) => {
       this.logNewCommand(ctx)
       void this.botFunctions.allusersCommand.run(ctx)
+    })
+
+    this.bot.command(['mashup'], async (ctx) => {
+      this.logNewCommand(ctx)
+      if (this.maintenanceMode) {
+        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        return
+      }
+      void this.botFunctions.mashupCommand.run(ctx)
     })
 
     // this.bot.command(['collage'], async (ctx) => {

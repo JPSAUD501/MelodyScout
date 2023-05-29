@@ -10,6 +10,7 @@ import { MsOpenAiApi } from './api/msOpenAiApi/base'
 import { MsTextToSpeechApi } from './api/msTextToSpeechApi/base'
 import { geniusConfig, lastfmConfig, openaiConfig, spotifyConfig } from './config'
 import { Server } from './Server/server'
+import { MsRaveApi } from './api/msRaveApi/base'
 
 async function start (): Promise<void> {
   console.log('Starting MelodyScoutLog_Bot and AdvConsole...')
@@ -31,9 +32,10 @@ async function start (): Promise<void> {
   const msOpenAiApi = new MsOpenAiApi(advConsole, openaiConfig.apiKey)
   const msMusicApi = new MsMusicApi(advConsole, spotifyConfig.clientID, spotifyConfig.clientSecret)
   const msTextToSpeechApi = new MsTextToSpeechApi(advConsole)
+  const msRaveApi = new MsRaveApi(advConsole)
   await msMusicApi.start()
   const ctxFunctions = new CtxFunctions(advConsole)
-  const melodyScoutBot = new MelodyScoutBot(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi)
+  const melodyScoutBot = new MelodyScoutBot(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi, msRaveApi)
   melodyScoutBot.start()
   await melodyScoutBot.getBotInfo()
   melodyScoutBot.hear()

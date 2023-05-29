@@ -44,8 +44,8 @@ export class HistoryCommand {
       void this.ctxFunctions.reply(ctx, 'Parece que você me pediu para esquecer seu usuário do Last.fm e não me informou um novo usuário, para registrar o seu usuário do Last.fm envie o comando /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
       return
     }
-    const userInfoRequest = await this.msLastfmApi.user.getInfo(lastfmUser)
-    const userRecentTracksRequest = await this.msLastfmApi.user.getRecentTracks(lastfmUser, 20)
+    const userInfoRequest = this.msLastfmApi.user.getInfo(lastfmUser)
+    const userRecentTracksRequest = this.msLastfmApi.user.getRecentTracks(lastfmUser, 20)
     const [userInfo, userRecentTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest])
     if (!userInfo.success) {
       void this.ctxFunctions.reply(ctx, `Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>${lastfmUser}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.`)

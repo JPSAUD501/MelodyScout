@@ -1,47 +1,48 @@
 import { msApiFetch } from '../functions/msRaveApiFetch'
 import { ApiErrors } from '../types/errors/ApiErrors'
 import { AdvConsole } from '../../../function/advancedConsole'
-import { EasyAuthResponse } from './authentication'
-import { GetInfo, zodGetInfo } from '../types/zodGetInfo'
-import { RaveContent, zodRaveContent } from '../types/zodRaveContent'
+import { CreateContent, zodCreateContent } from '../types/zodCreateContent'
+import { GetContent, zodGetContent } from '../types/zodGetContent'
+import { GoogleApi } from './googleApi'
+import { easyAuth } from '../functions/easyAuth'
 
 type GetInfoResponse = {
   success: true
-  data: GetInfo
+  data: GetContent
 } | ApiErrors
 
 type CreateContentResponse = {
   success: true
-  data: RaveContent
+  data: CreateContent
 } | ApiErrors
 
 export class RaveApi {
   private readonly advConsole: AdvConsole
-  private readonly easyAuth: Promise<EasyAuthResponse>
+  private readonly googleApi: GoogleApi
 
-  constructor (advConsole: AdvConsole, easyAuth: Promise<EasyAuthResponse>) {
+  constructor (advConsole: AdvConsole, googleApi: GoogleApi) {
     this.advConsole = advConsole
-    this.easyAuth = easyAuth
+    this.googleApi = googleApi
   }
 
   async getInfo (id: string): Promise<GetInfoResponse> {
-    const easyAuth = await this.easyAuth
-    if (!easyAuth.success) {
-      return easyAuth
+    const easyAuthResponse = await easyAuth(this.googleApi)
+    if (!easyAuthResponse.success) {
+      return easyAuthResponse
     }
-    const authorizationToken = easyAuth.data.authorizationToken
+    const authorizationToken = easyAuthResponse.data.authorizationToken
     const url = `https://api.red.wemesh.ca/ravedj/content?id=${id}`
     const headers = {
-      'Wemash-Plataform': 'Android',
-      'Wemash-Api-Version': '5.0',
+      'Wemesh-Platform': 'Android',
+      'Wemesh-Api-Version': '5.0',
       'Client-Version': '5.0',
       Authorization: authorizationToken
     }
-    const method = 'POST'
+    const method = 'GET'
     const data = {
       returnSecureToken: true
     }
-    const zodObject = zodGetInfo
+    const zodObject = zodGetContent
     console.log(`RaveApi - getInfo - url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, method, headers, data, zodObject)
     if (!msApiFetchResponse.success) {
@@ -63,21 +64,21 @@ export class RaveApi {
       providerId: string
     }>
   }): Promise<CreateContentResponse> {
-    const easyAuth = await this.easyAuth
-    if (!easyAuth.success) {
-      return easyAuth
+    const easyAuthResponse = await easyAuth(this.googleApi)
+    if (!easyAuthResponse.success) {
+      return easyAuthResponse
     }
-    const authorizationToken = easyAuth.data.authorizationToken
+    const authorizationToken = easyAuthResponse.data.authorizationToken
     const url = 'https://api.red.wemesh.ca/ravedj/dj/self/content'
     const headers = {
-      'Wemash-Plataform': 'Android',
-      'Wemash-Api-Version': '5.0',
+      'Wemesh-Platform': 'Android',
+      'Wemesh-Api-Version': '5.0',
       'Client-Version': '5.0',
       Authorization: authorizationToken
     }
     const method = 'POST'
     const data = contentData
-    const zodObject = zodRaveContent
+    const zodObject = zodCreateContent
     console.log(`RaveApi - createContent - url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, method, headers, data, zodObject)
     if (!msApiFetchResponse.success) {

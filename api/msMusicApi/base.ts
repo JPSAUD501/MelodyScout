@@ -33,6 +33,7 @@ export interface MsMusicApiYoutubeTrackInfo {
   videoWithAudioRawUrl: string
   audioRawUrl: string
   videoUrl: string
+  videoId: string
 }
 
 export interface MsMusicApiYoutubeTrackDownload {
@@ -138,7 +139,8 @@ export class MsMusicApi {
       success: true,
       videoWithAudioRawUrl: videoWithAudioFormat.url,
       audioRawUrl: audioFormat.url,
-      videoUrl: video.link
+      videoUrl: video.link,
+      videoId: video.id
     }
   }
 
