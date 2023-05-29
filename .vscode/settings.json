@@ -33,6 +33,7 @@
     "openai",
     "OPENAI",
     "ORGANIZATIONID",
+    "Plataform",
     "playcount",
     "playingnow",
     "pnalbum",
@@ -78,6 +79,7 @@
     "userplaycount",
     "uuidv",
     "vitalets",
+    "Wemash",
     "youtube",
     "youtubedl"
   ]
