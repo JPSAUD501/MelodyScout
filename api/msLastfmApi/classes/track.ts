@@ -24,7 +24,7 @@ export class Track {
     console.log(`Track getInfo: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.log(`Error while fetching track info! Artist: ${artist}, Track: ${track}, mbid: ${mbid}, username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
+      this.advConsole.error(`Error while fetching track info! Artist: ${artist}, Track: ${track}, mbid: ${mbid}, username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const trackInfo = zodObject.parse(msApiFetchResponse.data)

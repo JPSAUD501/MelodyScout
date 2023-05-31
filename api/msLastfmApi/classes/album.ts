@@ -24,7 +24,7 @@ export class Album {
     console.log(`Album getInfo: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.log(`Error while fetching album info! Artist: ${artist}, Album: ${album}, mbid: ${mbid}, username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
+      this.advConsole.error(`Error while fetching album info! Artist: ${artist}, Album: ${album}, mbid: ${mbid}, username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const userInfo = zodObject.parse(msApiFetchResponse.data)

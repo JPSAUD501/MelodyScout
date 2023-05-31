@@ -28,7 +28,7 @@ export class GoogleApi {
     console.log(`Google newUser: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, method, headers, data, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.log(`Error while fetching Google new user! - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
+      this.advConsole.error(`Error while fetching Google new user! - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const userInfo = zodObject.parse(msApiFetchResponse.data)

@@ -44,7 +44,7 @@ export class MelodyScoutBot {
       { command: 'brief', description: 'Show the brief of your Last.fm user' },
       { command: 'playingnow', description: 'Show the currently playing track' },
       { command: 'history', description: 'Show the history of your listened tracks' },
-      // { command: 'mashup', description: 'Create a mashup of your 2 last listened tracks' },
+      { command: 'mashup', description: 'Create a mashup of your 2 last listened tracks' },
       // { command: 'collage', description: 'Show a collage of your top tracks' },
       { command: 'pin', description: 'Pin a shortcut to the /playingnow command' },
       { command: 'pntrack', description: 'Show information about the currently playing track' },

@@ -77,7 +77,7 @@ export class BotFunctions {
     this.allusersCommand = new AllusersCommand(ctxFunctions, msPrismaDbApi)
     this.maintenanceCommand = new MaintenanceCommand(advConsole, ctxFunctions)
     this.maintenanceinformCommand = new MaintenanceinformCommand(advConsole, ctxFunctions)
-    this.mashupCommand = new MashupCommand(ctxFunctions, msLastfmApi, msPrismaDbApi, msMusicApi, msRaveApi)
+    this.mashupCommand = new MashupCommand(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi, msMusicApi, msRaveApi)
 
     this.trackAudioDownloadCallback = new TrackAudioDownloadCallback(advConsole, ctxFunctions, msMusicApi)
     this.trackVideoDownloadCallback = new TrackVideoDownloadCallback(advConsole, ctxFunctions, msMusicApi)

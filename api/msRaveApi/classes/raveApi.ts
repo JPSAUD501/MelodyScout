@@ -46,7 +46,7 @@ export class RaveApi {
     console.log(`RaveApi - getInfo - url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, method, headers, data, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.log(`RaveApi - getInfo - Error while fetching! url: ${url} - Error: ${JSON.stringify(msApiFetchResponse, null, 2)}`)
+      this.advConsole.error(`RaveApi - getInfo - Error while fetching! url: ${url} - Error: ${JSON.stringify(msApiFetchResponse, null, 2)}`)
       return msApiFetchResponse
     }
     const responseData = zodObject.parse(msApiFetchResponse.data)
@@ -82,7 +82,7 @@ export class RaveApi {
     console.log(`RaveApi - createContent - url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, method, headers, data, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.log(`RaveApi - createContent - Error while fetching! url: ${url} - Error: ${JSON.stringify(msApiFetchResponse, null, 2)}`)
+      this.advConsole.error(`RaveApi - createContent - Error while fetching! url: ${url} - Error: ${JSON.stringify(msApiFetchResponse, null, 2)}`)
       return msApiFetchResponse
     }
     const responseData = zodObject.parse(msApiFetchResponse.data)
