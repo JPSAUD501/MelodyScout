@@ -1,13 +1,13 @@
 import { Bot } from 'grammy'
 import config from './config'
 
+export const messageQueue: string[] = []
+
 export class MelodyScoutLogBot {
   private readonly bot: Bot
-  private readonly messageQueue: string[]
 
   constructor () {
     this.bot = new Bot(config.telegram.token)
-    this.messageQueue = []
 
     console.log('MelodyScoutLog_Bot - Loaded')
   }
@@ -34,23 +34,11 @@ export class MelodyScoutLogBot {
     })
   }
 
-  sendLog (log: any): void {
-    this.messageQueue.push('🔵 - ' + String(log))
-  }
-
-  sendInfo (info: any): void {
-    this.messageQueue.push('🟠 - ' + String(info))
-  }
-
-  sendError (error: any): void {
-    this.messageQueue.push('🔴 - ' + String(error))
-  }
-
   startLogQueue (): void {
     setInterval(() => {
-      if (this.messageQueue.length <= 0) return
+      if (messageQueue.length <= 0) return
       try {
-        const message = this.messageQueue.shift()
+        const message = messageQueue.shift()
         this.bot.api.sendMessage(config.telegram.logChannel, message !== undefined ? message : '⚠').catch((err) => {
           console.error(err)
         })

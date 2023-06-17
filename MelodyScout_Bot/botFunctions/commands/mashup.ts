@@ -6,7 +6,7 @@ import { MsRaveApi } from '../../../api/msRaveApi/base'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { RaveContent } from '../../../api/msRaveApi/types/zodRaveContent'
 import axios from 'axios'
-import { AdvConsole } from '../../../function/advancedConsole'
+import { advError } from '../../../function/advancedConsole'
 
 const loadingMashupMessages = [
   'Estamos trabalhando duro no seu mashup! Logo estará pronto. Por favor, aguarde!',
@@ -32,15 +32,13 @@ const loadingMashupMessages = [
 ]
 
 export class MashupCommand {
-  private readonly advConsole: AdvConsole
   private readonly ctxFunctions: CtxFunctions
   private readonly msLastfmApi: MsLastfmApi
   private readonly msPrismaDbApi: MsPrismaDbApi
   private readonly msRaveApi: MsRaveApi
   private readonly msMusicApi: MsMusicApi
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msMusicApi: MsMusicApi, msRaveApi: MsRaveApi) {
-    this.advConsole = advConsole
+  constructor (ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msMusicApi: MsMusicApi, msRaveApi: MsRaveApi) {
     this.ctxFunctions = ctxFunctions
     this.msLastfmApi = msLastfmApi
     this.msPrismaDbApi = msPrismaDbApi
@@ -213,14 +211,14 @@ export class MashupCommand {
     }
     const thumbResponse = await axios.get(mashupUrlThumb, { responseType: 'arraybuffer' }).catch((err) => { return Error(err) })
     if (thumbResponse instanceof Error) {
-      this.advConsole.error(`Error while getting mashup thumbnail: ${thumbResponse.message}`)
+      advError(`Error while getting mashup thumbnail: ${thumbResponse.message}`)
       void this.ctxFunctions.reply(ctx, 'Não foi possível resgatar a thumbnail do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
       return
     }
     const thumbBuffer = Buffer.from(thumbResponse.data, 'utf-8')
     const videoResponse = await axios.get(mashupUrlVideo, { responseType: 'arraybuffer' }).catch((err) => { return Error(err) })
     if (videoResponse instanceof Error) {
-      this.advConsole.error(`Error while getting mashup video: ${videoResponse.message}`)
+      advError(`Error while getting mashup video: ${videoResponse.message}`)
       void this.ctxFunctions.reply(ctx, 'Não foi possível resgatar o vídeo do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
       return
     }

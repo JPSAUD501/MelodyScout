@@ -1,4 +1,4 @@
-import { AdvConsole } from '../../../function/advancedConsole'
+import { advError } from '../../../function/advancedConsole'
 import { msApiFetch } from '../functions/msApiFetch'
 import { ApiErrors } from '../types/errors/ApiErrors'
 import { TrackInfo, zodTrackInfo } from '../types/zodTrackInfo'
@@ -9,11 +9,9 @@ type GetInfoResponse = {
 } | ApiErrors
 
 export class Track {
-  private readonly advConsole: AdvConsole
   private readonly apiKey: string
 
-  constructor (advConsole: AdvConsole, apiKey: string) {
-    this.advConsole = advConsole
+  constructor (apiKey: string) {
     this.apiKey = apiKey
   }
 
@@ -24,7 +22,7 @@ export class Track {
     console.log(`Track getInfo: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.error(`Error while fetching track info! Artist: ${artist}, Track: ${track}, mbid: ${mbid}, username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
+      advError(`Error while fetching track info! Artist: ${artist}, Track: ${track}, mbid: ${mbid}, username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const trackInfo = zodObject.parse(msApiFetchResponse.data)

@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { AdvConsole } from '../../../function/advancedConsole'
+import { advError } from '../../../function/advancedConsole'
 
 interface GetDefaultResponseError {
   success: false
@@ -7,11 +7,9 @@ interface GetDefaultResponseError {
 }
 
 export class Get {
-  private readonly advConsole: AdvConsole
   private readonly prisma: PrismaClient
 
-  constructor (advConsole: AdvConsole, MsPrismaDbApi: PrismaClient) {
-    this.advConsole = advConsole
+  constructor (MsPrismaDbApi: PrismaClient) {
     this.prisma = MsPrismaDbApi
   }
 
@@ -25,8 +23,8 @@ export class Get {
         lastUpdate: true
       }
     }).catch((err) => {
-      this.advConsole.error('Error while getting telegram user! TelegramId: ' + telegramUserId)
-      this.advConsole.error(err)
+      advError('Error while getting telegram user! TelegramId: ' + telegramUserId)
+      advError(err)
       return new Error(err)
     })
     if (getTelegramUser instanceof Error) return { success: false, error: getTelegramUser.message }
@@ -46,8 +44,8 @@ export class Get {
         lastUpdate: true
       }
     }).catch((err) => {
-      this.advConsole.error('Error while getting all telegram users!')
-      this.advConsole.error(err)
+      advError('Error while getting all telegram users!')
+      advError(err)
       return new Error(err)
     })
     if (getAllTelegramUsers instanceof Error) return { success: false, error: getAllTelegramUsers.message }
@@ -71,8 +69,8 @@ export class Get {
         messageId: true
       }
     }).catch((err) => {
-      this.advConsole.error('Error while getting error log! ErrorId: ' + errorId)
-      this.advConsole.error(err)
+      advError('Error while getting error log! ErrorId: ' + errorId)
+      advError(err)
       return new Error(err)
     })
     if (getErrorLog instanceof Error) return { success: false, error: getErrorLog.message }

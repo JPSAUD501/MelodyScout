@@ -2,11 +2,11 @@ import { Client, Track, Artist, Album } from 'spotify-api.js'
 import { youtube } from 'scrape-youtube'
 import ytStream from 'youtube-stream-url'
 import { zodYtSteamInfo } from './types/zodYtStreamInfo'
-import { AdvConsole } from '../../function/advancedConsole'
 import youtubedl from 'youtube-dl-exec'
 import fs, { ReadStream } from 'fs'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
+import { advError } from '../../function/advancedConsole'
 
 export interface MsMusicApiError {
   success: false
@@ -45,14 +45,12 @@ export interface MsMusicApiYoutubeTrackDownload {
 }
 
 export class MsMusicApi {
-  private readonly advConsole: AdvConsole
   private readonly clientID: string
   private readonly clientSecret: string
   private readonly clientPromise: Promise<Client>
   private client: Client | null = null
 
-  constructor (advConsole: AdvConsole, clientID: string, clientSecret: string) {
-    this.advConsole = advConsole
+  constructor (clientID: string, clientSecret: string) {
     this.clientID = clientID
     this.clientSecret = clientSecret
     this.clientPromise = Client.create({
@@ -73,7 +71,7 @@ export class MsMusicApi {
       return new Error(err)
     })
     if (search instanceof Error) {
-      this.advConsole.error(`Error while getting track info from Spotify! Track: ${track} Artist: ${artist} - Error: ${search.message}`)
+      advError(`Error while getting track info from Spotify! Track: ${track} Artist: ${artist} - Error: ${search.message}`)
       return { success: false, error: search.message }
     }
     if (search.length <= 0) return { success: false, error: 'No tracks found!' }
@@ -89,7 +87,7 @@ export class MsMusicApi {
       return new Error(err)
     })
     if (search instanceof Error) {
-      this.advConsole.error(`Error while getting artist info from Spotify! Artist: ${artist} - Error: ${search.message}`)
+      advError(`Error while getting artist info from Spotify! Artist: ${artist} - Error: ${search.message}`)
       return { success: false, error: search.message }
     }
     if (search.length <= 0) return { success: false, error: 'No artists found!' }
@@ -105,7 +103,7 @@ export class MsMusicApi {
       return new Error(err)
     })
     if (search instanceof Error) {
-      this.advConsole.error(`Error while getting album info from Spotify! Album: ${album} Artist: ${artist} - Error: ${search.message}`)
+      advError(`Error while getting album info from Spotify! Album: ${album} Artist: ${artist} - Error: ${search.message}`)
       return { success: false, error: search.message }
     }
     if (search.length <= 0) return { success: false, error: 'No albums found!' }
@@ -122,7 +120,7 @@ export class MsMusicApi {
     const ytStreamInfoResponse = await ytStream.getInfo({ url: video.link })
     const ytStreamInfo = zodYtSteamInfo.safeParse(ytStreamInfoResponse)
     if (!ytStreamInfo.success) {
-      this.advConsole.error(`Error while getting track info from Youtube! YtStream info is not valid! Track: ${track} Artist: ${artist} - Error: ${JSON.stringify(ytStreamInfo.error, null, 2)}`)
+      advError(`Error while getting track info from Youtube! YtStream info is not valid! Track: ${track} Artist: ${artist} - Error: ${JSON.stringify(ytStreamInfo.error, null, 2)}`)
       return { success: false, error: 'YtStream info is not valid!' }
     }
     const formats = ytStreamInfo.data.formats
@@ -172,16 +170,16 @@ export class MsMusicApi {
       try {
         // fs.rmSync(pathToSave)
       } catch (err) {
-        this.advConsole.error(`Error while deleting file! File: ${id}.* - Error: ${String(err)}`)
+        advError(`Error while deleting file! File: ${id}.* - Error: ${String(err)}`)
       }
     }
     if (output instanceof Error) {
-      this.advConsole.error(`Error while downloading video from Youtube! Url: ${youtubeUrl} - Error: ${output.message}`)
+      advError(`Error while downloading video from Youtube! Url: ${youtubeUrl} - Error: ${output.message}`)
       await deleteFile()
       return { success: false, error: output.message }
     }
     if (!fs.existsSync(pathToSave)) {
-      this.advConsole.error(`Error while downloading video from Youtube! Url: ${youtubeUrl} - Error: File not found!`)
+      advError(`Error while downloading video from Youtube! Url: ${youtubeUrl} - Error: File not found!`)
       await deleteFile()
       return { success: false, error: 'File not found!' }
     }
@@ -203,22 +201,22 @@ export class MsMusicApi {
     //   readFileResult.readStream = new Error(String(err))
     // }
     if (readFileResult.buffer instanceof Error) {
-      this.advConsole.error(`Error while reading file! File: ${id}.* - Error: ${readFileResult.buffer.message}`)
+      advError(`Error while reading file! File: ${id}.* - Error: ${readFileResult.buffer.message}`)
       await deleteFile()
       return { success: false, error: readFileResult.buffer.message }
     }
     if (readFileResult.buffer === undefined) {
-      this.advConsole.error(`Error while reading file! File: ${id}.* - Error: Buffer is undefined!`)
+      advError(`Error while reading file! File: ${id}.* - Error: Buffer is undefined!`)
       await deleteFile()
       return { success: false, error: 'Buffer is undefined!' }
     }
     // if (readFileResult.readStream instanceof Error) {
-    //   this.advConsole.error(`Error while reading file! File: ${id}.* - Error: ${readFileResult.readStream.message}`)
+    //   advError(`Error while reading file! File: ${id}.* - Error: ${readFileResult.readStream.message}`)
     //   await deleteFile()
     //   return { success: false, error: readFileResult.readStream.message }
     // }
     // if (readFileResult.readStream === undefined) {
-    //   this.advConsole.error(`Error while reading file! File: ${id}.* - Error: ReadStream is undefined!`)
+    //   advError(`Error while reading file! File: ${id}.* - Error: ReadStream is undefined!`)
     //   await deleteFile()
     //   return { success: false, error: 'Buffer is undefined!' }
     // }

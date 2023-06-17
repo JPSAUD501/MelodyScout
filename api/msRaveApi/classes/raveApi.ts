@@ -1,10 +1,10 @@
 import { msApiFetch } from '../functions/msRaveApiFetch'
 import { ApiErrors } from '../types/errors/ApiErrors'
-import { AdvConsole } from '../../../function/advancedConsole'
 import { CreateContent, zodCreateContent } from '../types/zodCreateContent'
 import { GetContent, zodGetContent } from '../types/zodGetContent'
 import { GoogleApi } from './googleApi'
 import { easyAuth } from '../functions/easyAuth'
+import { advError } from '../../../function/advancedConsole'
 
 type GetInfoResponse = {
   success: true
@@ -17,11 +17,9 @@ type CreateContentResponse = {
 } | ApiErrors
 
 export class RaveApi {
-  private readonly advConsole: AdvConsole
   private readonly googleApi: GoogleApi
 
-  constructor (advConsole: AdvConsole, googleApi: GoogleApi) {
-    this.advConsole = advConsole
+  constructor (googleApi: GoogleApi) {
     this.googleApi = googleApi
   }
 
@@ -46,7 +44,7 @@ export class RaveApi {
     console.log(`RaveApi - getInfo - url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, method, headers, data, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.error(`RaveApi - getInfo - Error while fetching! url: ${url} - Error: ${JSON.stringify(msApiFetchResponse, null, 2)}`)
+      advError(`RaveApi - getInfo - Error while fetching! url: ${url} - Error: ${JSON.stringify(msApiFetchResponse, null, 2)}`)
       return msApiFetchResponse
     }
     const responseData = zodObject.parse(msApiFetchResponse.data)
@@ -82,7 +80,7 @@ export class RaveApi {
     console.log(`RaveApi - createContent - url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, method, headers, data, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.error(`RaveApi - createContent - Error while fetching! url: ${url} - Error: ${JSON.stringify(msApiFetchResponse, null, 2)}`)
+      advError(`RaveApi - createContent - Error while fetching! url: ${url} - Error: ${JSON.stringify(msApiFetchResponse, null, 2)}`)
       return msApiFetchResponse
     }
     const responseData = zodObject.parse(msApiFetchResponse.data)

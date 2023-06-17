@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { AdvConsole } from '../../../function/advancedConsole'
+import { advError } from '../../../function/advancedConsole'
 
 type CreateDefaultResponse = {
   success: true
@@ -10,11 +10,9 @@ type CreateDefaultResponse = {
 }
 
 export class Create {
-  private readonly advConsole: AdvConsole
   private readonly prisma: PrismaClient
 
-  constructor (advConsole: AdvConsole, MsPrismaDbApi: PrismaClient) {
-    this.advConsole = advConsole
+  constructor (MsPrismaDbApi: PrismaClient) {
     this.prisma = MsPrismaDbApi
   }
 
@@ -25,8 +23,8 @@ export class Create {
         lastUpdate: new Date().getTime().toString()
       }
     }).catch((err) => {
-      this.advConsole.error('Error while creating new telegram user! Telegram User Id: ' + telegramUserId)
-      this.advConsole.error(err)
+      advError('Error while creating new telegram user! Telegram User Id: ' + telegramUserId)
+      advError(err)
       return new Error(err)
     })
     if (createdTelegramUser instanceof Error) return { success: false, error: createdTelegramUser.message }
@@ -43,8 +41,8 @@ export class Create {
         messageId
       }
     }).catch((err) => {
-      this.advConsole.error('Error while creating new error log! Error: ' + error)
-      this.advConsole.error(err)
+      advError('Error while creating new error log! Error: ' + error)
+      advError(err)
       return new Error(err)
     })
     if (createdErrorLog instanceof Error) return { success: false, error: createdErrorLog.message }

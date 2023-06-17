@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
-import { AdvConsole } from '../../../function/advancedConsole'
 import { CheckIfExists } from './checkIfExists'
 import { Create } from './create'
+import { advError } from '../../../function/advancedConsole'
 
 type UpdateDefaultResponse = {
   success: true
@@ -12,13 +12,11 @@ type UpdateDefaultResponse = {
 }
 
 export class Update {
-  private readonly advConsole: AdvConsole
   private readonly prisma: PrismaClient
   private readonly checkIfExists: CheckIfExists
   private readonly create: Create
 
-  constructor (advConsole: AdvConsole, MsPrismaDbApi: PrismaClient, CheckIfExists: CheckIfExists, Create: Create) {
-    this.advConsole = advConsole
+  constructor (MsPrismaDbApi: PrismaClient, CheckIfExists: CheckIfExists, Create: Create) {
     this.prisma = MsPrismaDbApi
     this.checkIfExists = CheckIfExists
     this.create = Create
@@ -40,8 +38,8 @@ export class Update {
         lastUpdate: new Date().getTime().toString()
       }
     }).catch((err) => {
-      this.advConsole.error('Error while setting telegram user! Telegram User Id: ' + telegramUserId)
-      this.advConsole.error(err)
+      advError('Error while setting telegram user! Telegram User Id: ' + telegramUserId)
+      advError(err)
       return new Error(err)
     })
     if (setTelegramUser instanceof Error) return { success: false, error: setTelegramUser.message }
@@ -69,8 +67,8 @@ export class Update {
         messageId
       }
     }).catch((err) => {
-      this.advConsole.error('Error while setting error log! Error: ' + error)
-      this.advConsole.error(err)
+      advError('Error while setting error log! Error: ' + error)
+      advError(err)
       return new Error(err)
     })
     if (setErrorLog instanceof Error) return { success: false, error: setErrorLog.message }

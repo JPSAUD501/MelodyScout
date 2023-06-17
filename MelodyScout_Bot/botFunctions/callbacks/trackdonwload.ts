@@ -1,18 +1,15 @@
 import { CallbackQueryContext, Context, InlineKeyboard } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
-import { AdvConsole } from '../../../function/advancedConsole'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { getCallbackKey } from '../../../function/callbackMaker'
 import { melodyScoutConfig } from '../../../config'
 // import axios from 'axios'
 
 export class TrackDownloadCallback {
-  advConsole: AdvConsole
   ctxFunctions: CtxFunctions
   msMusicApi: MsMusicApi
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msMusicApi: MsMusicApi) {
-    this.advConsole = advConsole
+  constructor (ctxFunctions: CtxFunctions, msMusicApi: MsMusicApi) {
     this.ctxFunctions = ctxFunctions
     this.msMusicApi = msMusicApi
   }

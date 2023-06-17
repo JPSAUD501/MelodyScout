@@ -1,14 +1,12 @@
 import { CommandContext, Context } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
-import { AdvConsole } from '../../../function/advancedConsole'
+import { advLog } from '../../../function/advancedConsole'
 import { melodyScoutConfig } from '../../../config'
 
 export class MaintenanceCommand {
   private readonly ctxFunctions: CtxFunctions
-  private readonly advConsole: AdvConsole
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions) {
-    this.advConsole = advConsole
+  constructor (ctxFunctions: CtxFunctions) {
     this.ctxFunctions = ctxFunctions
   }
 
@@ -37,12 +35,12 @@ export class MaintenanceCommand {
     switch (args[1]) {
       case 'on': {
         await this.ctxFunctions.reply(ctx, 'Modo de manutenção ativado!')
-        this.advConsole.log('Maintenance mode activated!')
+        advLog('Maintenance mode activated!')
         return { success: true, maintenanceMode: true }
       }
       case 'off': {
         await this.ctxFunctions.reply(ctx, 'Modo de manutenção desativado!')
-        this.advConsole.log('Maintenance mode deactivated!')
+        advLog('Maintenance mode deactivated!')
         return { success: true, maintenanceMode: false }
       }
       default: {

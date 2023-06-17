@@ -1,4 +1,4 @@
-import { AdvConsole } from '../../../function/advancedConsole'
+import { advError } from '../../../function/advancedConsole'
 import { msApiFetch } from '../functions/msApiFetch'
 import { ApiErrors } from '../types/errors/ApiErrors'
 import { UserInfo, zodUserInfo } from '../types/zodUserInfo'
@@ -39,11 +39,9 @@ type GetTopTagsResponse = {
 } | ApiErrors
 
 export class User {
-  private readonly advConsole: AdvConsole
   private readonly apiKey: string
 
-  constructor (advConsole: AdvConsole, apiKey: string) {
-    this.advConsole = advConsole
+  constructor (apiKey: string) {
     this.apiKey = apiKey
   }
 
@@ -54,7 +52,7 @@ export class User {
     console.log(`User getInfo: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.error(`Error while fetching user info! Username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
+      advError(`Error while fetching user info! Username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const userInfo = zodObject.parse(msApiFetchResponse.data)
@@ -71,7 +69,7 @@ export class User {
     console.log(`User getRecentTracks: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.error(`Error while fetching user recent tracks! Username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
+      advError(`Error while fetching user recent tracks! Username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const userRecentTracks = zodObject.parse(msApiFetchResponse.data)
@@ -88,7 +86,7 @@ export class User {
     console.log(`User getTopTracks: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.error(`Error while fetching user top tracks! Username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
+      advError(`Error while fetching user top tracks! Username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const userTopTracks = zodObject.parse(msApiFetchResponse.data)
@@ -105,7 +103,7 @@ export class User {
     console.log(`User getTopAlbums: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.error(`Error while fetching user top albums! Username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
+      advError(`Error while fetching user top albums! Username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const userTopAlbums = zodObject.parse(msApiFetchResponse.data)
@@ -122,7 +120,7 @@ export class User {
     console.log(`User getTopArtists: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.error(`Error while fetching user top artists! Username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
+      advError(`Error while fetching user top artists! Username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const userTopArtists = zodObject.parse(msApiFetchResponse.data)
@@ -139,7 +137,7 @@ export class User {
     console.log(`User getTopTags: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.error(`Error while fetching user top tags! Username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
+      advError(`Error while fetching user top tags! Username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const userTopTags = zodObject.parse(msApiFetchResponse.data)

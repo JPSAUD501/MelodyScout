@@ -1,24 +1,16 @@
-import { MelodyScoutLogBot } from '../MelodyScoutLog_Bot/bot'
+import { messageQueue } from '../MelodyScoutLog_Bot/bot'
 
-export class AdvConsole {
-  private readonly bot: MelodyScoutLogBot
+export function advLog (log: any): void {
+  console.log(log)
+  messageQueue.push('🔵 - ' + String(log))
+}
 
-  constructor (bot: MelodyScoutLogBot) {
-    this.bot = bot
-  }
+export function advInfo (info: any): void {
+  console.info(info)
+  messageQueue.push('🟠 - ' + String(info))
+}
 
-  log (log: any): void {
-    console.log(log)
-    this.bot.sendLog(log)
-  }
-
-  info (info: any): void {
-    console.info(info)
-    this.bot.sendInfo(info)
-  }
-
-  error (error: any): void {
-    console.error(error)
-    this.bot.sendError(error)
-  }
+export function advError (error: any): void {
+  console.error(error)
+  messageQueue.push('🔴 - ' + String(error))
 }

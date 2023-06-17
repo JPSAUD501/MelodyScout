@@ -1,6 +1,6 @@
+import { advError } from '../../../function/advancedConsole'
 import { msApiFetch } from '../functions/msRaveApiFetch'
 import { ApiErrors } from '../types/errors/ApiErrors'
-import { AdvConsole } from '../../../function/advancedConsole'
 import { GoogleNewUser, zodGoogleNewUser } from '../types/zodGoogleNewUser'
 
 type NewUserResponse = {
@@ -9,12 +9,6 @@ type NewUserResponse = {
 } | ApiErrors
 
 export class GoogleApi {
-  private readonly advConsole: AdvConsole
-
-  constructor (advConsole: AdvConsole) {
-    this.advConsole = advConsole
-  }
-
   async newUser (): Promise<NewUserResponse> {
     const url = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyCB24TzTgYXl4sXwLyeY8y-XXgm0RX_eRQ'
     const method = 'POST'
@@ -28,7 +22,7 @@ export class GoogleApi {
     console.log(`Google newUser: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, method, headers, data, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.error(`Error while fetching Google new user! - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
+      advError(`Error while fetching Google new user! - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const userInfo = zodObject.parse(msApiFetchResponse.data)

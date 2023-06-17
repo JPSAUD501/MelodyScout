@@ -1,7 +1,7 @@
 import { AlbumInfo, zodAlbumInfo } from '../types/zodAlbumInfo'
 import { msApiFetch } from '../functions/msApiFetch'
 import { ApiErrors } from '../types/errors/ApiErrors'
-import { AdvConsole } from '../../../function/advancedConsole'
+import { advError } from '../../../function/advancedConsole'
 
 type GetInfoResponse = {
   success: true
@@ -9,11 +9,9 @@ type GetInfoResponse = {
 } | ApiErrors
 
 export class Album {
-  private readonly advConsole: AdvConsole
   private readonly apiKey: string
 
-  constructor (advConsole: AdvConsole, apiKey: string) {
-    this.advConsole = advConsole
+  constructor (apiKey: string) {
     this.apiKey = apiKey
   }
 
@@ -24,7 +22,7 @@ export class Album {
     console.log(`Album getInfo: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
-      this.advConsole.error(`Error while fetching album info! Artist: ${artist}, Album: ${album}, mbid: ${mbid}, username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
+      advError(`Error while fetching album info! Artist: ${artist}, Album: ${album}, mbid: ${mbid}, username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const userInfo = zodObject.parse(msApiFetchResponse.data)

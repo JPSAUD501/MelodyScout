@@ -2,16 +2,14 @@ import { CommandContext, Context } from 'grammy'
 import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
-import { AdvConsole } from '../../../function/advancedConsole'
+import { advInfo } from '../../../function/advancedConsole'
 
 export class MyuserCommand {
-  private readonly advConsole: AdvConsole
   private readonly ctxFunctions: CtxFunctions
   private readonly msLastfmApi: MsLastfmApi
   private readonly msPrismaDbApi: MsPrismaDbApi
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi) {
-    this.advConsole = advConsole
+  constructor (ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi) {
     this.ctxFunctions = ctxFunctions
     this.msLastfmApi = msLastfmApi
     this.msPrismaDbApi = msPrismaDbApi
@@ -39,7 +37,7 @@ export class MyuserCommand {
         void this.ctxFunctions.reply(ctx, 'Ops! Parece que eu não consegui salvar suas informações no banco de dados! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
         return
       }
-      this.advConsole.info(`New user "${telegramUserId}" registered!`)
+      advInfo(`New user "${telegramUserId}" registered!`)
     }
     const telegramUserDBResponse = await this.msPrismaDbApi.get.telegramUser(telegramUserId)
     if (!telegramUserDBResponse.success) {
@@ -77,7 +75,7 @@ export class MyuserCommand {
       void this.ctxFunctions.reply(ctx, 'Ops! Parece que eu não consegui registrar o seu nome de usuário do Last.fm! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
       return
     }
-    this.advConsole.info(`The user "${telegramUserId}" registered the Last.fm username "${username}" in MelodyScout!`)
+    advInfo(`The user "${telegramUserId}" registered the Last.fm username "${username}" in MelodyScout!`)
     await this.ctxFunctions.reply(ctx, 'Pronto! Seu nome de usuário do Last.fm foi registrado com sucesso! Agradeço imensamente por isso e espero que você aproveite o bot!')
   }
 }

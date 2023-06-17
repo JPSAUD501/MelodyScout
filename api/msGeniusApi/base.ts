@@ -1,6 +1,6 @@
 import { Client } from 'genius-lyrics/dist/client'
 import { Song } from 'genius-lyrics/dist/songs/song'
-import { AdvConsole } from '../../function/advancedConsole'
+import { advError } from '../../function/advancedConsole'
 
 interface MsGeniusApiError {
   success: false
@@ -18,11 +18,9 @@ type MsGeniusApiGetSongResponse = {
 } | MsGeniusApiError
 
 export class MsGeniusApi {
-  private readonly advConsole: AdvConsole
   private readonly accessToken: string
 
-  constructor (advConsole: AdvConsole, accessToken: string) {
-    this.advConsole = advConsole
+  constructor (accessToken: string) {
     this.accessToken = accessToken
   }
 
@@ -31,14 +29,14 @@ export class MsGeniusApi {
       return new Error(err)
     })
     if (songArray instanceof Error) {
-      this.advConsole.error(`MsGeniusApi - Error while getting song info from Genius! Track: ${track} Artist: ${artist} - Error: ${songArray.message}`)
+      advError(`MsGeniusApi - Error while getting song info from Genius! Track: ${track} Artist: ${artist} - Error: ${songArray.message}`)
       return {
         success: false,
         error: songArray.message
       }
     }
     if (songArray.length <= 0) {
-      this.advConsole.error(`MsGeniusApi - No results! Track: ${track} Artist: ${artist}`)
+      advError(`MsGeniusApi - No results! Track: ${track} Artist: ${artist}`)
       return {
         success: false,
         error: 'No results'
@@ -49,7 +47,7 @@ export class MsGeniusApi {
       return new Error(err)
     })
     if (lyrics instanceof Error) {
-      this.advConsole.error(`MsGeniusApi - Error while getting lyrics from Genius! Track: ${track} Artist: ${artist} - Error: ${lyrics.message}`)
+      advError(`MsGeniusApi - Error while getting lyrics from Genius! Track: ${track} Artist: ${artist} - Error: ${lyrics.message}`)
       return {
         success: false,
         error: lyrics.message

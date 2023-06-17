@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { AdvConsole } from '../../../function/advancedConsole'
+import { advError } from '../../../function/advancedConsole'
 
 type CheckIfExistsDefaultResponse = {
   success: true
@@ -10,11 +10,9 @@ type CheckIfExistsDefaultResponse = {
 }
 
 export class CheckIfExists {
-  private readonly advConsole: AdvConsole
   private readonly prisma: PrismaClient
 
-  constructor (advConsole: AdvConsole, MsPrismaDbApi: PrismaClient) {
-    this.advConsole = advConsole
+  constructor (MsPrismaDbApi: PrismaClient) {
     this.prisma = MsPrismaDbApi
   }
 
@@ -24,8 +22,8 @@ export class CheckIfExists {
         telegramUserId
       }
     }).catch((err) => {
-      this.advConsole.error('Error while checking if user exists in database! Telegram User ID: ' + telegramUserId)
-      this.advConsole.error(err)
+      advError('Error while checking if user exists in database! Telegram User ID: ' + telegramUserId)
+      advError(err)
       return new Error(err)
     })
     if (telegramUserExists instanceof Error) return { success: false, error: telegramUserExists.message }
@@ -47,8 +45,8 @@ export class CheckIfExists {
         id: Number(errorId)
       }
     }).catch((err) => {
-      this.advConsole.error('Error while checking if error log exists in database! Error ID: ' + errorId)
-      this.advConsole.error(err)
+      advError('Error while checking if error log exists in database! Error ID: ' + errorId)
+      advError(err)
       return new Error(err)
     })
     if (errorLogExists instanceof Error) return { success: false, error: errorLogExists.message }

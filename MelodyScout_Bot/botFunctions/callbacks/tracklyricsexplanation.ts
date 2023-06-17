@@ -3,19 +3,17 @@ import { CtxFunctions } from '../../../function/ctxFunctions'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
 import { getTracklyricsexplanationText } from '../../textFabric/tracklyricsexplanation'
 import { MsOpenAiApi } from '../../../api/msOpenAiApi/base'
-import { AdvConsole } from '../../../function/advancedConsole'
 import { MsTextToSpeechApi } from '../../../api/msTextToSpeechApi/base'
 import { melodyScoutConfig } from '../../../config'
+import { advLog } from '../../../function/advancedConsole'
 
 export class TracklyricsexplanationCallback {
-  private readonly advConsole: AdvConsole
   private readonly ctxFunctions: CtxFunctions
   private readonly msGeniusApi: MsGeniusApi
   private readonly msOpenAiApi: MsOpenAiApi
   private readonly msTextToSpeechApi: MsTextToSpeechApi
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msGeniusApi: MsGeniusApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi) {
-    this.advConsole = advConsole
+  constructor (ctxFunctions: CtxFunctions, msGeniusApi: MsGeniusApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi) {
     this.ctxFunctions = ctxFunctions
     this.msGeniusApi = msGeniusApi
     this.msOpenAiApi = msOpenAiApi
@@ -58,7 +56,7 @@ export class TracklyricsexplanationCallback {
       void this.ctxFunctions.reply(ctx, 'Ocorreu um erro ao tentar gerar a explicação da letra dessa música, por favor tente novamente mais tarde.', { reply_to_message_id: messageId })
       return
     }
-    this.advConsole.log(`New track lyrics explanation generated for ${track} by ${artist} by user ${ctx.from.id}: ${lyricsExplanation.explanation} / ${lyricsEmojis.success ? lyricsEmojis.emojis : 'No emojis'}`)
+    advLog(`New track lyrics explanation generated for ${track} by ${artist} by user ${ctx.from.id}: ${lyricsExplanation.explanation} / ${lyricsEmojis.success ? lyricsEmojis.emojis : 'No emojis'}`)
     const TTSAudio = await this.msTextToSpeechApi.getTTS(`Explicação da música "${track}" de "${artist}" pelo MelodyScout.`, `${lyricsExplanation.explanation}`)
     if (!TTSAudio.success) {
       void this.ctxFunctions.reply(ctx, 'Ocorreu um erro ao tentar gerar o áudio da explicação da letra dessa música, por favor tente novamente mais tarde.', { reply_to_message_id: messageId })

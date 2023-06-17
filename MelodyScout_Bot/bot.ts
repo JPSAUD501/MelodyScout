@@ -1,6 +1,5 @@
 import botConfig from './config'
 import { Bot, CallbackQueryContext, CommandContext, Context } from 'grammy'
-import { AdvConsole } from '../function/advancedConsole'
 import { MsPrismaDbApi } from '../api/msPrismaDbApi/base'
 import { MsLastfmApi } from '../api/msLastfmApi/base'
 import { BotFunctions } from './botFunctions/base'
@@ -11,16 +10,15 @@ import { MsOpenAiApi } from '../api/msOpenAiApi/base'
 import { melodyScoutConfig } from '../config'
 import { MsTextToSpeechApi } from '../api/msTextToSpeechApi/base'
 import { MsRaveApi } from '../api/msRaveApi/base'
+import { advError, advLog } from '../function/advancedConsole'
 
 export class MelodyScoutBot {
-  private readonly advConsole: AdvConsole
   private readonly bot: Bot
   private readonly botFunctions: BotFunctions
   private maintenanceMode = false
 
-  constructor (advConsole: AdvConsole, ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi, msRaveApi: MsRaveApi) {
-    this.advConsole = advConsole
-    this.botFunctions = new BotFunctions(advConsole, ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi, msRaveApi)
+  constructor (ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi, msRaveApi: MsRaveApi) {
+    this.botFunctions = new BotFunctions(ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi, msRaveApi)
     this.bot = new Bot(botConfig.telegram.token)
 
     console.log('MelodyScout_Bot - Loaded')
@@ -28,11 +26,11 @@ export class MelodyScoutBot {
 
   start (): void {
     this.bot.start().catch((err) => {
-      this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+      advError(`MelodyScout_Bot - Error: ${String(err)}`)
     })
 
     this.bot.catch((err) => {
-      this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+      advError(`MelodyScout_Bot - Error: ${String(err)}`)
     })
 
     this.bot.api.setMyCommands([
@@ -51,27 +49,27 @@ export class MelodyScoutBot {
       { command: 'pnalbum', description: 'Show information about the album of the currently playing track' },
       { command: 'pnartist', description: 'Show information about the artist of the currently playing track' }
     ]).catch((err) => {
-      this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+      advError(`MelodyScout_Bot - Error: ${String(err)}`)
     })
 
-    this.advConsole.log('MelodyScout_Bot - Started')
+    advLog('MelodyScout_Bot - Started')
   }
 
   async getBotInfo (): Promise<void> {
     await this.bot.api.getMe().catch((err) => {
-      this.advConsole.error(`MelodyScout_Bot - Error: ${String(err)}`)
+      advError(`MelodyScout_Bot - Error: ${String(err)}`)
     })
   }
 
   logNewCommand (ctx: CommandContext<Context>): void {
     if (!((ctx.message?.text?.startsWith('/')) ?? false)) return
     const chatTittle = (ctx.chat.type === 'private') ? 'Private' : ctx.chat.title ?? 'Unknown'
-    this.advConsole.log(`MelodyScout_Bot - New command:\nFrom: (${ctx.message?.from?.id ?? 'No ID'}) ${ctx.message?.from?.first_name ?? 'No name'} ${ctx.message?.from?.last_name ?? ''} - ${ctx.message?.from.username ?? 'No username'}\nIn: (${ctx.chat?.id}) ${chatTittle} - ${ctx.chat.type}\nCommand: ${ctx.message?.text ?? ''}`)
+    advLog(`MelodyScout_Bot - New command:\nFrom: (${ctx.message?.from?.id ?? 'No ID'}) ${ctx.message?.from?.first_name ?? 'No name'} ${ctx.message?.from?.last_name ?? ''} - ${ctx.message?.from.username ?? 'No username'}\nIn: (${ctx.chat?.id}) ${chatTittle} - ${ctx.chat.type}\nCommand: ${ctx.message?.text ?? ''}`)
   }
 
   logNewCallbackQuery (ctx: CallbackQueryContext<Context>): void {
     const chatTittle = (ctx.chat?.type === 'private') ? 'Private' : ctx.chat?.title ?? 'Unknown'
-    this.advConsole.log(`MelodyScout_Bot - New callback_query:\nFrom: (${ctx.from?.id ?? 'No ID'}) ${ctx.from?.first_name ?? 'No name'} ${ctx.from?.last_name ?? ''} - ${ctx.from?.username ?? 'No username'}\nIn: (${ctx.chat?.id ?? 'No ID'}) ${chatTittle} - ${ctx.chat?.type ?? 'No type'}\nData: ${ctx.callbackQuery?.data ?? 'No data'}`)
+    advLog(`MelodyScout_Bot - New callback_query:\nFrom: (${ctx.from?.id ?? 'No ID'}) ${ctx.from?.first_name ?? 'No name'} ${ctx.from?.last_name ?? ''} - ${ctx.from?.username ?? 'No username'}\nIn: (${ctx.chat?.id ?? 'No ID'}) ${chatTittle} - ${ctx.chat?.type ?? 'No type'}\nData: ${ctx.callbackQuery?.data ?? 'No data'}`)
   }
 
   hear (): void {
@@ -200,7 +198,7 @@ export class MelodyScoutBot {
     this.bot.on('message', async (ctx) => {
       if (!((ctx.message?.text?.startsWith('/')) ?? false)) return
       const chatTittle = (ctx.chat.type === 'private') ? 'Private' : ctx.chat.title ?? 'Unknown'
-      this.advConsole.log(`MelodyScout_Bot - New command not handled:\nFrom: (${ctx.message?.from?.id ?? 'No ID'}) ${ctx.message?.from?.first_name ?? 'No name'} ${ctx.message?.from?.last_name ?? ''} - ${ctx.message?.from.username ?? 'No username'}\nIn: (${ctx.chat?.id}) ${chatTittle} - ${ctx.chat.type}\nCommand: ${ctx.message?.text ?? ''}`)
+      advLog(`MelodyScout_Bot - New command not handled:\nFrom: (${ctx.message?.from?.id ?? 'No ID'}) ${ctx.message?.from?.first_name ?? 'No name'} ${ctx.message?.from?.last_name ?? ''} - ${ctx.message?.from.username ?? 'No username'}\nIn: (${ctx.chat?.id}) ${chatTittle} - ${ctx.chat.type}\nCommand: ${ctx.message?.text ?? ''}`)
     })
 
     this.bot.callbackQuery(new RegExp(`^TP${melodyScoutConfig.divider}`), async (ctx) => {
@@ -277,9 +275,9 @@ export class MelodyScoutBot {
 
     this.bot.on('callback_query', async (ctx) => {
       const chatTittle = (ctx.chat?.type === 'private') ? 'Private' : ctx.chat?.title ?? 'Unknown'
-      this.advConsole.log(`MelodyScout_Bot - New callback_query not handled:\nFrom: (${ctx.from?.id ?? 'No ID'}) ${ctx.from?.first_name ?? 'No name'} ${ctx.from?.last_name ?? ''} - ${ctx.from?.username ?? 'No username'}\nIn: (${ctx.chat?.id ?? 'No ID'}) ${chatTittle} - ${ctx.chat?.type ?? 'No type'}\nData: ${ctx.callbackQuery?.data ?? 'No data'}`)
+      advLog(`MelodyScout_Bot - New callback_query not handled:\nFrom: (${ctx.from?.id ?? 'No ID'}) ${ctx.from?.first_name ?? 'No name'} ${ctx.from?.last_name ?? ''} - ${ctx.from?.username ?? 'No username'}\nIn: (${ctx.chat?.id ?? 'No ID'}) ${chatTittle} - ${ctx.chat?.type ?? 'No type'}\nData: ${ctx.callbackQuery?.data ?? 'No data'}`)
     })
 
-    this.advConsole.log('MelodyScout_Bot - Listening')
+    advLog('MelodyScout_Bot - Listening')
   }
 }

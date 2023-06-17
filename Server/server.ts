@@ -1,16 +1,10 @@
 import { DateTime } from 'luxon'
 import fastify from 'fastify'
-import { AdvConsole } from '../function/advancedConsole'
 import { serverConfig } from '../config'
+import { advError, advLog } from '../function/advancedConsole'
 const server = fastify()
 
 export class Server {
-  advConsole: AdvConsole
-
-  constructor (advConsole: AdvConsole) {
-    this.advConsole = advConsole
-  }
-
   async start (): Promise<void> {
     console.log('🟢 - Health Checker On!')
 
@@ -27,10 +21,10 @@ export class Server {
       host: serverConfig.host
     }, (err, address) => {
       if (err instanceof Error) {
-        this.advConsole.error(`Server error: ${err.message}`)
+        advError(`Server error: ${err.message}`)
         process.exit(1)
       }
-      this.advConsole.log(`Server listening at ${address}`)
+      advLog(`Server listening at ${address}`)
     })
   }
 }
