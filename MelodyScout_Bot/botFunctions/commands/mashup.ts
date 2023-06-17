@@ -3,10 +3,11 @@ import { ctxReply, ctxReplyWithVideo, ctxTempReply } from '../../../function/gra
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { MsRaveApi } from '../../../api/msRaveApi/base'
-import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { RaveContent } from '../../../api/msRaveApi/types/zodRaveContent'
 import axios from 'axios'
 import { advError } from '../../../function/advancedConsole'
+import { lastfmConfig } from '../../../config'
+import { MsMusicApi } from '../../../api/msMusicApi/base'
 
 const loadingMashupMessages = [
   'Estamos trabalhando duro no seu mashup! Logo estará pronto. Por favor, aguarde!',
@@ -31,216 +32,205 @@ const loadingMashupMessages = [
   'Seu mashup está sendo preparado com todo cuidado. Fique empolgado, pois em breve ele estará pronto para você aproveitar!'
 ]
 
-export class MashupCommand {
-  private readonly msLastfmApi: MsLastfmApi
-  private readonly msPrismaDbApi: MsPrismaDbApi
-  private readonly msRaveApi: MsRaveApi
-  private readonly msMusicApi: MsMusicApi
-
-  constructor (msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msMusicApi: MsMusicApi, msRaveApi: MsRaveApi) {
-    this.msLastfmApi = msLastfmApi
-    this.msPrismaDbApi = msPrismaDbApi
-    this.msRaveApi = msRaveApi
-    this.msMusicApi = msMusicApi
+export async function runMashupCommand (msMusicApi: MsMusicApi, ctx: CommandContext<Context>): Promise<void> {
+  if (ctx.chat?.type === 'channel') {
+    void ctxReply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
+    return
   }
-
-  async run (ctx: CommandContext<Context>): Promise<void> {
-    if (ctx.chat?.type === 'channel') {
-      void ctxReply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
-      return
+  const telegramUserId = ctx.from?.id
+  if (telegramUserId === undefined) {
+    void ctxReply(ctx, 'Não foi possível identificar seu usuário no telegram, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    return
+  }
+  const msPrismaDbApi = new MsPrismaDbApi()
+  const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
+  if (!checkIfExistsTgUserDBResponse.success) {
+    void ctxReply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    return
+  }
+  if (!checkIfExistsTgUserDBResponse.exists) {
+    void ctxReply(ctx, 'Parece que você ainda não possui um usuário do Last.fm registrado, para registrar um usuário do Last.fm envie o comando /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
+    return
+  }
+  const telegramUserDBResponse = await msPrismaDbApi.get.telegramUser(`${telegramUserId}`)
+  if (!telegramUserDBResponse.success) {
+    void ctxReply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    return
+  }
+  const lastfmUser = telegramUserDBResponse.lastfmUser
+  if (lastfmUser === null) {
+    void ctxReply(ctx, 'Parece que você me pediu para esquecer seu usuário do Last.fm e não me informou um novo usuário, para registrar o seu usuário do Last.fm envie o comando /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
+    return
+  }
+  const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
+  const userInfoRequest = msLastfmApi.user.getInfo(lastfmUser)
+  const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 2)
+  const [userInfo, userRecentTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest])
+  if (!userInfo.success) {
+    void ctxReply(ctx, `Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>${lastfmUser}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.`)
+    return
+  }
+  if (!userRecentTracks.success) {
+    void ctxReply(ctx, 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    return
+  }
+  console.log(userRecentTracks.data)
+  if (userRecentTracks.data.recenttracks.track.length < 2) {
+    void ctxReply(ctx, 'Você precisa ter pelo menos duas músicas no seu histórico para que eu possa fazer um mashup! Tente novamente mais tarde.')
+    return
+  }
+  const mashupTracks = [
+    {
+      artist: userRecentTracks.data.recenttracks.track[0].artist.name,
+      track: userRecentTracks.data.recenttracks.track[0].name
+    },
+    {
+      artist: userRecentTracks.data.recenttracks.track[1].artist.name,
+      track: userRecentTracks.data.recenttracks.track[1].name
     }
-    const telegramUserId = ctx.from?.id
-    if (telegramUserId === undefined) {
-      void ctxReply(ctx, 'Não foi possível identificar seu usuário no telegram, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-      return
-    }
-    const checkIfExistsTgUserDBResponse = await this.msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
-    if (!checkIfExistsTgUserDBResponse.success) {
-      void ctxReply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-      return
-    }
-    if (!checkIfExistsTgUserDBResponse.exists) {
-      void ctxReply(ctx, 'Parece que você ainda não possui um usuário do Last.fm registrado, para registrar um usuário do Last.fm envie o comando /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
-      return
-    }
-    const telegramUserDBResponse = await this.msPrismaDbApi.get.telegramUser(`${telegramUserId}`)
-    if (!telegramUserDBResponse.success) {
-      void ctxReply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-      return
-    }
-    const lastfmUser = telegramUserDBResponse.lastfmUser
-    if (lastfmUser === null) {
-      void ctxReply(ctx, 'Parece que você me pediu para esquecer seu usuário do Last.fm e não me informou um novo usuário, para registrar o seu usuário do Last.fm envie o comando /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
-      return
-    }
-    const userInfoRequest = this.msLastfmApi.user.getInfo(lastfmUser)
-    const userRecentTracksRequest = this.msLastfmApi.user.getRecentTracks(lastfmUser, 2)
-    const [userInfo, userRecentTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest])
-    if (!userInfo.success) {
-      void ctxReply(ctx, `Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>${lastfmUser}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.`)
-      return
-    }
-    if (!userRecentTracks.success) {
-      void ctxReply(ctx, 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-      return
-    }
-    console.log(userRecentTracks.data)
-    if (userRecentTracks.data.recenttracks.track.length < 2) {
-      void ctxReply(ctx, 'Você precisa ter pelo menos duas músicas no seu histórico para que eu possa fazer um mashup! Tente novamente mais tarde.')
-      return
-    }
-    const mashupTracks = [
+  ]
+  const youtubeTrack1InfoRequest = msMusicApi.getYoutubeTrackInfo(mashupTracks[0].track, mashupTracks[0].artist)
+  const youtubeTrack2InfoRequest = msMusicApi.getYoutubeTrackInfo(mashupTracks[1].track, mashupTracks[1].artist)
+  const [youtubeTrack1Info, youtubeTrack2Info] = await Promise.all([youtubeTrack1InfoRequest, youtubeTrack2InfoRequest])
+  if (!youtubeTrack1Info.success) {
+    void ctxReply(ctx, 'Não foi possível resgatar as informações da primeira música do mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    return
+  }
+  if (!youtubeTrack2Info.success) {
+    void ctxReply(ctx, 'Não foi possível resgatar as informações da segunda música do mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    return
+  }
+  const startProcessMessage = await ctxReply(ctx, `Eba! Vamos lá! Estou criando um mashup com as 2 últimas músicas que você ouviu!\n\n- <b><a href="${youtubeTrack1Info.videoUrl}">${mashupTracks[0].track} de ${mashupTracks[0].artist}</a></b>\n- <b><a href="${youtubeTrack2Info.videoUrl}">${mashupTracks[1].track} de ${mashupTracks[1].artist}</a></b>`, {
+    disable_web_page_preview: true
+  })
+  if (startProcessMessage === undefined) {
+    void ctxReply(ctx, 'Não foi possível enviar a mensagem de início do processo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    return
+  }
+  const youtubeTrack1Id = youtubeTrack1Info.videoId
+  const youtubeTrack2Id = youtubeTrack2Info.videoId
+  const msRaveApi = new MsRaveApi()
+  const raveCreateContentRequest = await msRaveApi.raveApi.createContent({
+    style: 'MASHUP',
+    tittle: null,
+    media: [
       {
-        artist: userRecentTracks.data.recenttracks.track[0].artist.name,
-        track: userRecentTracks.data.recenttracks.track[0].name
+        provider: 'YOUTUBE',
+        providerId: youtubeTrack1Id
       },
       {
-        artist: userRecentTracks.data.recenttracks.track[1].artist.name,
-        track: userRecentTracks.data.recenttracks.track[1].name
+        provider: 'YOUTUBE',
+        providerId: youtubeTrack2Id
       }
     ]
-    const youtubeTrack1InfoRequest = this.msMusicApi.getYoutubeTrackInfo(mashupTracks[0].track, mashupTracks[0].artist)
-    const youtubeTrack2InfoRequest = this.msMusicApi.getYoutubeTrackInfo(mashupTracks[1].track, mashupTracks[1].artist)
-    const [youtubeTrack1Info, youtubeTrack2Info] = await Promise.all([youtubeTrack1InfoRequest, youtubeTrack2InfoRequest])
-    if (!youtubeTrack1Info.success) {
-      void ctxReply(ctx, 'Não foi possível resgatar as informações da primeira música do mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-      return
-    }
-    if (!youtubeTrack2Info.success) {
-      void ctxReply(ctx, 'Não foi possível resgatar as informações da segunda música do mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-      return
-    }
-    const startProcessMessage = await ctxReply(ctx, `Eba! Vamos lá! Estou criando um mashup com as 2 últimas músicas que você ouviu!\n\n- <b><a href="${youtubeTrack1Info.videoUrl}">${mashupTracks[0].track} de ${mashupTracks[0].artist}</a></b>\n- <b><a href="${youtubeTrack2Info.videoUrl}">${mashupTracks[1].track} de ${mashupTracks[1].artist}</a></b>`, {
-      disable_web_page_preview: true
-    })
-    if (startProcessMessage === undefined) {
-      void ctxReply(ctx, 'Não foi possível enviar a mensagem de início do processo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-      return
-    }
-    const youtubeTrack1Id = youtubeTrack1Info.videoId
-    const youtubeTrack2Id = youtubeTrack2Info.videoId
-    const raveCreateContentRequest = await this.msRaveApi.raveApi.createContent({
-      style: 'MASHUP',
-      tittle: null,
-      media: [
-        {
-          provider: 'YOUTUBE',
-          providerId: youtubeTrack1Id
-        },
-        {
-          provider: 'YOUTUBE',
-          providerId: youtubeTrack2Id
-        }
-      ]
-    })
-    if (!raveCreateContentRequest.success) {
-      void ctxReply(ctx, 'Não foi possível criar o mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-      return
-    }
-    console.log(raveCreateContentRequest.data)
-    const mashupId = raveCreateContentRequest.data.data.id
-    // await new Promise(resolve => setTimeout(resolve, 5000))
-    const raveGetContentRequest = await this.msRaveApi.raveApi.getInfo(mashupId)
+  })
+  if (!raveCreateContentRequest.success) {
+    void ctxReply(ctx, 'Não foi possível criar o mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    return
+  }
+  console.log(raveCreateContentRequest.data)
+  const mashupId = raveCreateContentRequest.data.data.id
+  // await new Promise(resolve => setTimeout(resolve, 5000))
+  const raveGetContentRequest = await msRaveApi.raveApi.getInfo(mashupId)
+  if (!raveGetContentRequest.success) {
+    void ctxReply(ctx, 'Não foi possível garantir que o mashup foi enviado para criação! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    return
+  }
+  const loadingMessage = await ctxReply(ctx, 'Beleza! Seu mashup já foi enviado para criação! Essa etapa pode demorar um pouco, por favor aguarde...')
+  if (loadingMessage === undefined) {
+    await ctxReply(ctx, 'Não foi possível enviar a mensagem de carregamento! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    return
+  }
+  const maxTries = 100
+  const timeBetweenTries = 15000
+  let tries = 0
+  let mashupReady = false
+  let lastResponse: RaveContent | undefined
+  if (raveGetContentRequest.data.data[0].stage === 'COMPLETE') {
+    lastResponse = raveGetContentRequest.data.data[0]
+    mashupReady = true
+  }
+  while (tries < maxTries) {
+    tries++
+    await new Promise(resolve => setTimeout(resolve, timeBetweenTries))
+    console.log(`Checking if mashup is ready... (try ${tries}/${maxTries}) (id: ${mashupId})`)
+    const raveGetContentRequest = await msRaveApi.raveApi.getInfo(mashupId)
     if (!raveGetContentRequest.success) {
-      void ctxReply(ctx, 'Não foi possível garantir que o mashup foi enviado para criação! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-      return
+      continue
     }
-    const loadingMessage = await ctxReply(ctx, 'Beleza! Seu mashup já foi enviado para criação! Essa etapa pode demorar um pouco, por favor aguarde...')
-    if (loadingMessage === undefined) {
-      await ctxReply(ctx, 'Não foi possível enviar a mensagem de carregamento! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-      return
-    }
-    const maxTries = 100
-    const timeBetweenTries = 15000
-    let tries = 0
-    let mashupReady = false
-    let lastResponse: RaveContent | undefined
+    lastResponse = raveGetContentRequest.data.data[0]
     if (raveGetContentRequest.data.data[0].stage === 'COMPLETE') {
-      lastResponse = raveGetContentRequest.data.data[0]
       mashupReady = true
+      break
     }
-    while (tries < maxTries) {
-      tries++
-      await new Promise(resolve => setTimeout(resolve, timeBetweenTries))
-      console.log(`Checking if mashup is ready... (try ${tries}/${maxTries}) (id: ${mashupId})`)
-      const raveGetContentRequest = await this.msRaveApi.raveApi.getInfo(mashupId)
-      if (!raveGetContentRequest.success) {
-        continue
-      }
-      lastResponse = raveGetContentRequest.data.data[0]
-      if (raveGetContentRequest.data.data[0].stage === 'COMPLETE') {
-        mashupReady = true
-        break
-      }
-      await ctxTempReply(ctx, `<i>${loadingMashupMessages[Math.floor(Math.random() * loadingMashupMessages.length)]}</i>\n\n<b>Etapa:</b> ${raveGetContentRequest.data.data[0].stage ?? 'Desconhecido'}`, timeBetweenTries + 2000, {
-        disable_notification: true
-      })
-    }
-    if (!mashupReady) {
-      void ctxReply(ctx, 'Infelizmente não foi possível criar o mashup ou ele demorou demais para ser criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-      return
-    }
-    if (lastResponse === undefined) {
-      void ctxReply(ctx, 'Não foi possível resgatar as informações do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-      return
-    }
-    const mashupName = lastResponse?.title
-    if (mashupName === undefined) {
-      void ctxReply(ctx, 'Não foi possível resgatar o nome do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-      return
-    }
-    await ctxTempReply(ctx, 'Mashup criado com sucesso! 🎉\nEstou enviando ele para você, por favor aguarde enquanto o Telegram faz o upload do vídeo...', 10000, {
+    await ctxTempReply(ctx, `<i>${loadingMashupMessages[Math.floor(Math.random() * loadingMashupMessages.length)]}</i>\n\n<b>Etapa:</b> ${raveGetContentRequest.data.data[0].stage ?? 'Desconhecido'}`, timeBetweenTries + 2000, {
       disable_notification: true
     })
-    const mashupUrlThumb = lastResponse?.thumbnails.default
-    if (mashupUrlThumb === undefined) {
-      void ctxReply(ctx, 'Não foi possível resgatar a thumbnail do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-      return
-    }
-    const mashupUrlAudio = lastResponse?.urls.audio
-    if (mashupUrlAudio === undefined) {
-      void ctxReply(ctx, 'Não foi possível resgatar o audio do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-      return
-    }
-    const mashupUrlVideo = lastResponse?.urls.default
-    if (mashupUrlVideo === undefined) {
-      void ctxReply(ctx, 'Não foi possível resgatar o vídeo do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-      return
-    }
-    const thumbResponse = await axios.get(mashupUrlThumb, { responseType: 'arraybuffer' }).catch((err) => { return Error(err) })
-    if (thumbResponse instanceof Error) {
-      advError(`Error while getting mashup thumbnail: ${thumbResponse.message}`)
-      void ctxReply(ctx, 'Não foi possível resgatar a thumbnail do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-      return
-    }
-    const thumbBuffer = Buffer.from(thumbResponse.data, 'utf-8')
-    const videoResponse = await axios.get(mashupUrlVideo, { responseType: 'arraybuffer' }).catch((err) => { return Error(err) })
-    if (videoResponse instanceof Error) {
-      advError(`Error while getting mashup video: ${videoResponse.message}`)
-      void ctxReply(ctx, 'Não foi possível resgatar o vídeo do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-      return
-    }
-    const videoBuffer = Buffer.from(videoResponse.data, 'utf-8')
-    const inlineKeyboard = new InlineKeyboard()
-    inlineKeyboard.url('[🎬] - Vídeo', mashupUrlVideo)
-    inlineKeyboard.url('[🎧] - Audio', mashupUrlAudio)
-    // await ctxReplyWithAudio(ctx, new InputFile(audioBuffer, 'mashup.mp3'), {
-    //   title: mashupName,
-    //   performer: 'RaveDJ',
-    //   thumb: new InputFile(thumbBuffer, 'thumb.jpg'),
-    //   caption: 'Espero que goste! 😊\nVocê pode também fazer o download do vídeo ou audio do mashup clicando nos botões abaixo!',
-    //   reply_markup: inlineKeyboard
-    // })
-    await ctxReplyWithVideo(ctx, new InputFile(videoBuffer, 'mashup.mp4'), {
-      width: 1280,
-      height: 720,
-      thumb: new InputFile(thumbBuffer, 'thumb.jpg'),
-      supports_streaming: false,
-      caption: `Espero que goste! 😊\n\n<b><a href="https://rave.dj/embed/${mashupId}">${mashupName} por RaveDJ</a></b>\n\nVocê pode também fazer o download do vídeo ou audio do mashup clicando nos botões abaixo!`,
-      reply_markup: inlineKeyboard,
-      reply_to_message_id: startProcessMessage.message_id
-    })
-
-    // TODO AdvConsole
   }
+  if (!mashupReady) {
+    void ctxReply(ctx, 'Infelizmente não foi possível criar o mashup ou ele demorou demais para ser criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    return
+  }
+  if (lastResponse === undefined) {
+    void ctxReply(ctx, 'Não foi possível resgatar as informações do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    return
+  }
+  const mashupName = lastResponse?.title
+  if (mashupName === undefined) {
+    void ctxReply(ctx, 'Não foi possível resgatar o nome do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    return
+  }
+  await ctxTempReply(ctx, 'Mashup criado com sucesso! 🎉\nEstou enviando ele para você, por favor aguarde enquanto o Telegram faz o upload do vídeo...', 10000, {
+    disable_notification: true
+  })
+  const mashupUrlThumb = lastResponse?.thumbnails.default
+  if (mashupUrlThumb === undefined) {
+    void ctxReply(ctx, 'Não foi possível resgatar a thumbnail do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    return
+  }
+  const mashupUrlAudio = lastResponse?.urls.audio
+  if (mashupUrlAudio === undefined) {
+    void ctxReply(ctx, 'Não foi possível resgatar o audio do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    return
+  }
+  const mashupUrlVideo = lastResponse?.urls.default
+  if (mashupUrlVideo === undefined) {
+    void ctxReply(ctx, 'Não foi possível resgatar o vídeo do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    return
+  }
+  const thumbResponse = await axios.get(mashupUrlThumb, { responseType: 'arraybuffer' }).catch((err) => { return Error(err) })
+  if (thumbResponse instanceof Error) {
+    advError(`Error while getting mashup thumbnail: ${thumbResponse.message}`)
+    void ctxReply(ctx, 'Não foi possível resgatar a thumbnail do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    return
+  }
+  const thumbBuffer = Buffer.from(thumbResponse.data, 'utf-8')
+  const videoResponse = await axios.get(mashupUrlVideo, { responseType: 'arraybuffer' }).catch((err) => { return Error(err) })
+  if (videoResponse instanceof Error) {
+    advError(`Error while getting mashup video: ${videoResponse.message}`)
+    void ctxReply(ctx, 'Não foi possível resgatar o vídeo do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    return
+  }
+  const videoBuffer = Buffer.from(videoResponse.data, 'utf-8')
+  const inlineKeyboard = new InlineKeyboard()
+  inlineKeyboard.url('[🎬] - Vídeo', mashupUrlVideo)
+  inlineKeyboard.url('[🎧] - Audio', mashupUrlAudio)
+  // await ctxReplyWithAudio(ctx, new InputFile(audioBuffer, 'mashup.mp3'), {
+  //   title: mashupName,
+  //   performer: 'RaveDJ',
+  //   thumb: new InputFile(thumbBuffer, 'thumb.jpg'),
+  //   caption: 'Espero que goste! 😊\nVocê pode também fazer o download do vídeo ou audio do mashup clicando nos botões abaixo!',
+  //   reply_markup: inlineKeyboard
+  // })
+  await ctxReplyWithVideo(ctx, new InputFile(videoBuffer, 'mashup.mp4'), {
+    width: 1280,
+    height: 720,
+    thumb: new InputFile(thumbBuffer, 'thumb.jpg'),
+    supports_streaming: false,
+    caption: `Espero que goste! 😊\n\n<b><a href="https://rave.dj/embed/${mashupId}">${mashupName} por RaveDJ</a></b>\n\nVocê pode também fazer o download do vídeo ou audio do mashup clicando nos botões abaixo!`,
+    reply_markup: inlineKeyboard,
+    reply_to_message_id: startProcessMessage.message_id
+  })
+
+  // TODO AdvConsole
 }

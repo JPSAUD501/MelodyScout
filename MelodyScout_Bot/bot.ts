@@ -1,29 +1,49 @@
 import botConfig from './config'
 import { Bot, CallbackQueryContext, CommandContext, Context } from 'grammy'
-import { MsPrismaDbApi } from '../api/msPrismaDbApi/base'
-import { MsLastfmApi } from '../api/msLastfmApi/base'
-import { BotFunctions } from './botFunctions/base'
-import { MsGeniusApi } from '../api/msGeniusApi/base'
-import { MsMusicApi } from '../api/msMusicApi/base'
-import { MsOpenAiApi } from '../api/msOpenAiApi/base'
-import { melodyScoutConfig } from '../config'
-import { MsTextToSpeechApi } from '../api/msTextToSpeechApi/base'
-import { MsRaveApi } from '../api/msRaveApi/base'
+import { melodyScoutConfig, spotifyConfig } from '../config'
 import { advError, advLog } from '../function/advancedConsole'
+import { runMaintenanceinformCallback } from './botFunctions/callbacks/maintenanceinform'
+import { runTrackVideoDownloadCallback } from './botFunctions/callbacks/trackvideodownload'
+import { runContactCommand } from './botFunctions/commands/contact'
+import { runForgetmeCommand } from './botFunctions/commands/forgetme'
+import { runMaintenanceCommand } from './botFunctions/commands/maintenance'
+import { runMaintenanceinformCommand } from './botFunctions/commands/maintenanceinform'
+import { runMyuserCommand } from './botFunctions/commands/myuser'
+import { runStartCommand } from './botFunctions/commands/start'
+import { runHelpCommand } from './botFunctions/commands/help'
+import { runAllusersCommand } from './botFunctions/commands/allusers'
+import { runBriefCommand } from './botFunctions/commands/brief'
+import { runHistoryCommand } from './botFunctions/commands/history'
+import { runMashupCommand } from './botFunctions/commands/mashup'
+import { runPinCommand } from './botFunctions/commands/pin'
+import { runPlayingnowCommand } from './botFunctions/commands/playingnow'
+import { runPnalbumCommand } from './botFunctions/commands/pnalbum'
+import { runPnartistCommand } from './botFunctions/commands/pnartist'
+import { runPntrackCommand } from './botFunctions/commands/pntrack'
+import { runPlayingnowCallback } from './botFunctions/callbacks/playingnow'
+import { runTrackAudioDownloadCallback } from './botFunctions/callbacks/trackaudiodownload'
+import { runTrackDownloadCallback } from './botFunctions/callbacks/trackdonwload'
+import { runTracklyricsCallback } from './botFunctions/callbacks/tracklyrics'
+import { runTracklyricsexplanationCallback } from './botFunctions/callbacks/tracklyricsexplanation'
+import { runTrackpreviewCallback } from './botFunctions/callbacks/trackpreview'
+import { runTranslatedtracklyricsCallback } from './botFunctions/callbacks/translatedtracklyrics'
+import { MsMusicApi } from '../api/msMusicApi/base'
 
 export class MelodyScoutBot {
+  private readonly msMusicApi: MsMusicApi
   private readonly bot: Bot
-  private readonly botFunctions: BotFunctions
   private maintenanceMode = false
 
-  constructor (msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi, msRaveApi: MsRaveApi) {
-    this.botFunctions = new BotFunctions(msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi, msRaveApi)
+  constructor () {
+    this.msMusicApi = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret)
     this.bot = new Bot(botConfig.telegram.token)
 
     console.log('MelodyScout_Bot - Loaded')
   }
 
-  start (): void {
+  async start (): Promise<void> {
+    await this.msMusicApi.start()
+
     this.bot.start().catch((err) => {
       advError(`MelodyScout_Bot - Error: ${String(err)}`)
     })
@@ -74,124 +94,124 @@ export class MelodyScoutBot {
   hear (): void {
     this.bot.command(['maintenance'], async (ctx) => {
       this.logNewCommand(ctx)
-      const maintenanceCommandResponse = await this.botFunctions.maintenanceCommand.run(ctx)
+      const maintenanceCommandResponse = await runMaintenanceCommand(ctx)
       if (!maintenanceCommandResponse.success) return
       this.maintenanceMode = maintenanceCommandResponse.maintenanceMode
     })
 
     this.bot.command(['start'], async (ctx) => {
       this.logNewCommand(ctx)
-      void this.botFunctions.startCommand.run(ctx)
+      void runStartCommand(ctx)
     })
 
     this.bot.command(['help'], async (ctx) => {
       this.logNewCommand(ctx)
-      void this.botFunctions.helpCommand.run(ctx)
+      void runHelpCommand(ctx)
     })
 
     this.bot.command(['contact'], async (ctx) => {
       this.logNewCommand(ctx)
-      void this.botFunctions.contactCommand.run(ctx)
+      void runContactCommand(ctx)
     })
 
     this.bot.command(['myuser', 'setuser', 'reg', 'register'], async (ctx) => {
       this.logNewCommand(ctx)
       if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        void runMaintenanceinformCommand(ctx)
         return
       }
-      void this.botFunctions.myuserCommand.run(ctx)
+      void runMyuserCommand(ctx)
     })
 
     this.bot.command(['forgetme'], async (ctx) => {
       this.logNewCommand(ctx)
       if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        void runMaintenanceinformCommand(ctx)
         return
       }
-      void this.botFunctions.forgetmeCommand.run(ctx)
+      void runForgetmeCommand(ctx)
     })
 
     this.bot.command(['brief'], async (ctx) => {
       this.logNewCommand(ctx)
       if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        void runMaintenanceinformCommand(ctx)
         return
       }
-      void this.botFunctions.briefCommand.run(ctx)
+      void runBriefCommand(ctx)
     })
 
     this.bot.command(['playingnow', 'pn', 'listeningnow'], async (ctx) => {
       this.logNewCommand(ctx)
       if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        void runMaintenanceinformCommand(ctx)
         return
       }
-      void this.botFunctions.playingnowCommand.run(ctx)
+      void runPlayingnowCommand(this.msMusicApi, ctx)
     })
 
     this.bot.command(['history'], async (ctx) => {
       this.logNewCommand(ctx)
       if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        void runMaintenanceinformCommand(ctx)
         return
       }
-      void this.botFunctions.historyCommand.run(ctx)
+      void runHistoryCommand(ctx)
     })
 
     this.bot.command(['pin'], async (ctx) => {
       this.logNewCommand(ctx)
-      void this.botFunctions.pinCommand.run(ctx)
+      void runPinCommand(ctx)
     })
 
     this.bot.command(['pntrack'], async (ctx) => {
       this.logNewCommand(ctx)
       if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        void runMaintenanceinformCommand(ctx)
         return
       }
-      void this.botFunctions.pntrackCommand.run(ctx)
+      void runPntrackCommand(this.msMusicApi, ctx)
     })
 
     this.bot.command(['pnalbum'], async (ctx) => {
       this.logNewCommand(ctx)
       if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        void runMaintenanceinformCommand(ctx)
         return
       }
-      void this.botFunctions.pnalbumCommand.run(ctx)
+      void runPnalbumCommand(this.msMusicApi, ctx)
     })
 
     this.bot.command(['pnartist'], async (ctx) => {
       this.logNewCommand(ctx)
       if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        void runMaintenanceinformCommand(ctx)
         return
       }
-      void this.botFunctions.pnartistCommand.run(ctx)
+      void runPnartistCommand(this.msMusicApi, ctx)
     })
 
     this.bot.command(['allusers'], async (ctx) => {
       this.logNewCommand(ctx)
-      void this.botFunctions.allusersCommand.run(ctx)
+      void runAllusersCommand(ctx)
     })
 
     this.bot.command(['mashup'], async (ctx) => {
       this.logNewCommand(ctx)
       if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCommand.run(ctx)
+        void runMaintenanceinformCommand(ctx)
         return
       }
-      void this.botFunctions.mashupCommand.run(ctx)
+      void runMashupCommand(this.msMusicApi, ctx)
     })
 
     // this.bot.command(['collage'], async (ctx) => {
     // this.logNewCommand(ctx)
     // if (this.maintenanceMode) {
-    //   void this.botFunctions.maintenanceinformCommand.run(ctx)
+    //   void runMaintenanceinformCommand(ctx)
     //   return
     // }
-    // void this.botFunctions.collageCommand.run(ctx)
+    // void collageCommand.run(ctx)
     // })
 
     this.bot.on('message', async (ctx) => {
@@ -203,73 +223,73 @@ export class MelodyScoutBot {
     this.bot.callbackQuery(new RegExp(`^TP${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCallback.run(ctx)
+        void runMaintenanceinformCallback(ctx)
         return
       }
-      void this.botFunctions.trackpreviewCallback.run(ctx)
+      void runTrackpreviewCallback(this.msMusicApi, ctx)
     })
 
     this.bot.callbackQuery(new RegExp(`^TL${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCallback.run(ctx)
+        void runMaintenanceinformCallback(ctx)
         return
       }
-      void this.botFunctions.tracklyricsCallback.run(ctx)
+      void runTracklyricsCallback(ctx)
     })
 
     this.bot.callbackQuery(new RegExp(`^TTL${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCallback.run(ctx)
+        void runMaintenanceinformCallback(ctx)
         return
       }
-      void this.botFunctions.translatedtracklyricsCallback.run(ctx)
+      void runTranslatedtracklyricsCallback(ctx)
     })
 
     this.bot.callbackQuery('PLAYINGNOW', async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCallback.run(ctx)
+        void runMaintenanceinformCallback(ctx)
         return
       }
-      void this.botFunctions.playingnowCallback.run(ctx)
+      void runPlayingnowCallback(this.msMusicApi, ctx)
     })
 
     this.bot.callbackQuery(new RegExp(`^TLE${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCallback.run(ctx)
+        void runMaintenanceinformCallback(ctx)
         return
       }
-      void this.botFunctions.tracklyricsexplanationCallback.run(ctx)
+      void runTracklyricsexplanationCallback(ctx)
     })
 
     this.bot.callbackQuery(new RegExp(`^TD${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCallback.run(ctx)
+        void runMaintenanceinformCallback(ctx)
         return
       }
-      void this.botFunctions.trackDownloadCallback.run(ctx)
+      void runTrackDownloadCallback(ctx)
     })
 
     this.bot.callbackQuery(new RegExp(`^TAD${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCallback.run(ctx)
+        void runMaintenanceinformCallback(ctx)
         return
       }
-      void this.botFunctions.trackAudioDownloadCallback.run(ctx)
+      void runTrackAudioDownloadCallback(this.msMusicApi, ctx)
     })
 
     this.bot.callbackQuery(new RegExp(`^TVD${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
-        void this.botFunctions.maintenanceinformCallback.run(ctx)
+        void runMaintenanceinformCallback(ctx)
         return
       }
-      void this.botFunctions.trackVideoDownloadCallback.run(ctx)
+      void runTrackVideoDownloadCallback(this.msMusicApi, ctx)
     })
 
     this.bot.on('callback_query', async (ctx) => {

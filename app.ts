@@ -1,15 +1,7 @@
 
-import { MsPrismaDbApi } from './api/msPrismaDbApi/base'
 import { MelodyScoutLogBot } from './MelodyScoutLog_Bot/bot'
 import { MelodyScoutBot } from './MelodyScout_Bot/bot'
-import { MsLastfmApi } from './api/msLastfmApi/base'
-import { MsGeniusApi } from './api/msGeniusApi/base'
-import { MsMusicApi } from './api/msMusicApi/base'
-import { MsOpenAiApi } from './api/msOpenAiApi/base'
-import { MsTextToSpeechApi } from './api/msTextToSpeechApi/base'
-import { geniusConfig, lastfmConfig, openaiConfig, spotifyConfig } from './config'
 import { Server } from './Server/server'
-import { MsRaveApi } from './api/msRaveApi/base'
 import { advLog } from './function/advancedConsole'
 
 async function start (): Promise<void> {
@@ -25,16 +17,8 @@ async function start (): Promise<void> {
   advLog('Server started!')
 
   advLog('Running the start sequence...')
-  const msPrismaDbApi = new MsPrismaDbApi()
-  const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
-  const msGeniusApi = new MsGeniusApi(geniusConfig.accessToken)
-  const msOpenAiApi = new MsOpenAiApi(openaiConfig.apiKey)
-  const msMusicApi = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret)
-  const msTextToSpeechApi = new MsTextToSpeechApi()
-  const msRaveApi = new MsRaveApi()
-  await msMusicApi.start()
-  const melodyScoutBot = new MelodyScoutBot(msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi, msRaveApi)
-  melodyScoutBot.start()
+  const melodyScoutBot = new MelodyScoutBot()
+  await melodyScoutBot.start()
   await melodyScoutBot.getBotInfo()
   melodyScoutBot.hear()
   advLog('Start sequence completed')
