@@ -7,7 +7,6 @@ import { HelpCommand } from './commands/help'
 import { MyuserCommand } from './commands/myuser'
 import { PlayingnowCommand } from './commands/playingnow'
 import { StartCommand } from './commands/start'
-import { CtxFunctions } from '../../function/ctxFunctions'
 import { HistoryCommand } from './commands/history'
 import { MsGeniusApi } from '../../api/msGeniusApi/base'
 import { MsMusicApi } from '../../api/msMusicApi/base'
@@ -61,33 +60,33 @@ export class BotFunctions {
   trackVideoDownloadCallback: TrackVideoDownloadCallback
   trackDownloadCallback: TrackDownloadCallback
 
-  constructor (ctxFunctions: CtxFunctions, msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi, msRaveApi: MsRaveApi) {
-    this.startCommand = new StartCommand(ctxFunctions)
-    this.helpCommand = new HelpCommand(ctxFunctions)
-    this.contactCommand = new ContactCommand(ctxFunctions)
-    this.myuserCommand = new MyuserCommand(ctxFunctions, msLastfmApi, msPrismaDbApi)
-    this.forgetmeCommand = new ForgetmeCommand(ctxFunctions, msPrismaDbApi)
-    this.briefCommand = new BriefCommand(ctxFunctions, msLastfmApi, msPrismaDbApi)
-    this.playingnowCommand = new PlayingnowCommand(ctxFunctions, msLastfmApi, msPrismaDbApi, msMusicApi)
-    this.historyCommand = new HistoryCommand(ctxFunctions, msLastfmApi, msPrismaDbApi)
-    this.pinCommand = new PinCommand(ctxFunctions)
-    this.pntrackCommand = new PntrackCommand(ctxFunctions, msLastfmApi, msPrismaDbApi, msMusicApi)
-    this.pnalbumCommand = new PnalbumCommand(ctxFunctions, msLastfmApi, msMusicApi, msPrismaDbApi)
-    this.pnartistCommand = new PnartistCommand(ctxFunctions, msLastfmApi, msMusicApi, msPrismaDbApi)
-    this.allusersCommand = new AllusersCommand(ctxFunctions, msPrismaDbApi)
-    this.maintenanceCommand = new MaintenanceCommand(ctxFunctions)
-    this.maintenanceinformCommand = new MaintenanceinformCommand(ctxFunctions)
-    this.mashupCommand = new MashupCommand(ctxFunctions, msLastfmApi, msPrismaDbApi, msMusicApi, msRaveApi)
+  constructor (msLastfmApi: MsLastfmApi, msPrismaDbApi: MsPrismaDbApi, msGeniusApi: MsGeniusApi, msMusicApi: MsMusicApi, msOpenAiApi: MsOpenAiApi, msTextToSpeechApi: MsTextToSpeechApi, msRaveApi: MsRaveApi) {
+    this.startCommand = new StartCommand()
+    this.helpCommand = new HelpCommand()
+    this.contactCommand = new ContactCommand()
+    this.myuserCommand = new MyuserCommand(msLastfmApi, msPrismaDbApi)
+    this.forgetmeCommand = new ForgetmeCommand(msPrismaDbApi)
+    this.briefCommand = new BriefCommand(msLastfmApi, msPrismaDbApi)
+    this.playingnowCommand = new PlayingnowCommand(msLastfmApi, msPrismaDbApi, msMusicApi)
+    this.historyCommand = new HistoryCommand(msLastfmApi, msPrismaDbApi)
+    this.pinCommand = new PinCommand()
+    this.pntrackCommand = new PntrackCommand(msLastfmApi, msPrismaDbApi, msMusicApi)
+    this.pnalbumCommand = new PnalbumCommand(msLastfmApi, msMusicApi, msPrismaDbApi)
+    this.pnartistCommand = new PnartistCommand(msLastfmApi, msMusicApi, msPrismaDbApi)
+    this.allusersCommand = new AllusersCommand(msPrismaDbApi)
+    this.maintenanceCommand = new MaintenanceCommand()
+    this.maintenanceinformCommand = new MaintenanceinformCommand()
+    this.mashupCommand = new MashupCommand(msLastfmApi, msPrismaDbApi, msMusicApi, msRaveApi)
 
-    this.trackAudioDownloadCallback = new TrackAudioDownloadCallback(ctxFunctions, msMusicApi)
-    this.trackVideoDownloadCallback = new TrackVideoDownloadCallback(ctxFunctions, msMusicApi)
-    this.trackDownloadCallback = new TrackDownloadCallback(ctxFunctions, msMusicApi)
-    this.trackpreviewCallback = new TrackpreviewCallback(ctxFunctions, msMusicApi)
-    this.playingnowCallback = new PlayingnowCallback(ctxFunctions, msLastfmApi, msPrismaDbApi, msMusicApi)
-    this.tracklyricsCallback = new TracklyricsCallback(ctxFunctions, msGeniusApi)
-    this.translatedtracklyricsCallback = new TranslatedtracklyricsCallback(ctxFunctions, msGeniusApi)
-    this.maintenanceinformCallback = new MaintenanceinformCallback(ctxFunctions)
-    this.tracklyricsexplanationCallback = new TracklyricsexplanationCallback(ctxFunctions, msGeniusApi, msOpenAiApi, msTextToSpeechApi)
+    this.trackAudioDownloadCallback = new TrackAudioDownloadCallback(msMusicApi)
+    this.trackVideoDownloadCallback = new TrackVideoDownloadCallback(msMusicApi)
+    this.trackDownloadCallback = new TrackDownloadCallback(msMusicApi)
+    this.trackpreviewCallback = new TrackpreviewCallback(msMusicApi)
+    this.playingnowCallback = new PlayingnowCallback(msLastfmApi, msPrismaDbApi, msMusicApi)
+    this.tracklyricsCallback = new TracklyricsCallback(msGeniusApi)
+    this.translatedtracklyricsCallback = new TranslatedtracklyricsCallback(msGeniusApi)
+    this.maintenanceinformCallback = new MaintenanceinformCallback()
+    this.tracklyricsexplanationCallback = new TracklyricsexplanationCallback(msGeniusApi, msOpenAiApi, msTextToSpeechApi)
 
     advLog('BotFunctions started!')
   }

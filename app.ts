@@ -3,7 +3,6 @@ import { MsPrismaDbApi } from './api/msPrismaDbApi/base'
 import { MelodyScoutLogBot } from './MelodyScoutLog_Bot/bot'
 import { MelodyScoutBot } from './MelodyScout_Bot/bot'
 import { MsLastfmApi } from './api/msLastfmApi/base'
-import { CtxFunctions } from './function/ctxFunctions'
 import { MsGeniusApi } from './api/msGeniusApi/base'
 import { MsMusicApi } from './api/msMusicApi/base'
 import { MsOpenAiApi } from './api/msOpenAiApi/base'
@@ -34,8 +33,7 @@ async function start (): Promise<void> {
   const msTextToSpeechApi = new MsTextToSpeechApi()
   const msRaveApi = new MsRaveApi()
   await msMusicApi.start()
-  const ctxFunctions = new CtxFunctions()
-  const melodyScoutBot = new MelodyScoutBot(ctxFunctions, msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi, msRaveApi)
+  const melodyScoutBot = new MelodyScoutBot(msLastfmApi, msPrismaDbApi, msGeniusApi, msMusicApi, msOpenAiApi, msTextToSpeechApi, msRaveApi)
   melodyScoutBot.start()
   await melodyScoutBot.getBotInfo()
   melodyScoutBot.hear()
