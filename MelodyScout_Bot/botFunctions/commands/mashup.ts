@@ -172,8 +172,7 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, ctx: CommandCont
   await ctxTempReply(ctx, 'Mashup criado com sucesso! 🎉\nEstou enviando ele para você, por favor aguarde enquanto o Telegram faz o upload do vídeo...', 10000, {
     disable_notification: true
   })
-  // const mashupUrlThumb = lastResponse?.thumbnails.default ?? melodyScoutConfig.msAndRaveDj
-  const mashupUrlThumb = melodyScoutConfig.msAndRaveDj
+  const mashupUrlThumb = lastResponse?.thumbnails.default ?? melodyScoutConfig.msAndRaveDj
   const mashupUrlAudio = lastResponse?.urls.audio
   const mashupUrlVideo = lastResponse?.urls.default
   if (mashupUrlAudio === undefined || mashupUrlVideo === undefined) {
