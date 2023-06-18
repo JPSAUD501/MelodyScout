@@ -6,7 +6,7 @@ import { MsRaveApi } from '../../../api/msRaveApi/base'
 import { RaveContent } from '../../../api/msRaveApi/types/zodRaveContent'
 import axios from 'axios'
 import { advError } from '../../../function/advancedConsole'
-import { lastfmConfig } from '../../../config'
+import { lastfmConfig, melodyScoutConfig } from '../../../config'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 
 const loadingMashupMessages = [
@@ -103,10 +103,6 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, ctx: CommandCont
   const startProcessMessage = await ctxReply(ctx, `Eba! Vamos lá! Estou criando um mashup com as 2 últimas músicas que você ouviu!\n\n- <b><a href="${youtubeTrack1Info.videoUrl}">${mashupTracks[0].track} de ${mashupTracks[0].artist}</a></b>\n- <b><a href="${youtubeTrack2Info.videoUrl}">${mashupTracks[1].track} de ${mashupTracks[1].artist}</a></b>`, {
     disable_web_page_preview: true
   })
-  if (startProcessMessage === undefined) {
-    void ctxReply(ctx, 'Não foi possível enviar a mensagem de início do processo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    return
-  }
   const youtubeTrack1Id = youtubeTrack1Info.videoId
   const youtubeTrack2Id = youtubeTrack2Info.videoId
   const msRaveApi = new MsRaveApi()
@@ -128,19 +124,14 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, ctx: CommandCont
     void ctxReply(ctx, 'Não foi possível criar o mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
     return
   }
-  console.log(raveCreateContentRequest.data)
   const mashupId = raveCreateContentRequest.data.data.id
-  // await new Promise(resolve => setTimeout(resolve, 5000))
   const raveGetContentRequest = await msRaveApi.raveApi.getInfo(mashupId)
   if (!raveGetContentRequest.success) {
     void ctxReply(ctx, 'Não foi possível garantir que o mashup foi enviado para criação! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
     return
   }
-  const loadingMessage = await ctxReply(ctx, 'Beleza! Seu mashup já foi enviado para criação! Essa etapa pode demorar um pouco, por favor aguarde...')
-  if (loadingMessage === undefined) {
-    await ctxReply(ctx, 'Não foi possível enviar a mensagem de carregamento! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    return
-  }
+  const startTime = Date.now()
+  await ctxReply(ctx, 'Beleza! Seu mashup já foi enviado para criação! Essa etapa pode demorar um pouco, por favor aguarde...')
   const maxTries = 100
   const timeBetweenTries = 15000
   let tries = 0
@@ -163,44 +154,36 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, ctx: CommandCont
       mashupReady = true
       break
     }
-    await ctxTempReply(ctx, `<i>${loadingMashupMessages[Math.floor(Math.random() * loadingMashupMessages.length)]}</i>\n\n<b>Etapa:</b> ${raveGetContentRequest.data.data[0].stage ?? 'Desconhecido'}`, timeBetweenTries + 2000, {
+    await ctxTempReply(ctx, `<i>${loadingMashupMessages[Math.floor(Math.random() * loadingMashupMessages.length)]}</i>\n\n<b>Etapa:</b> ${raveGetContentRequest.data.data[0].stage ?? 'Desconhecida'}`, timeBetweenTries + 2000, {
       disable_notification: true
     })
   }
+  const endTime = Date.now()
   if (!mashupReady) {
+    advError(`Mashup creation timed out! (id: ${mashupId}) (time: ${(endTime - startTime) / 1000}s) - ${JSON.stringify(lastResponse)} - URL: https://rave.dj/${mashupId}`)
     void ctxReply(ctx, 'Infelizmente não foi possível criar o mashup ou ele demorou demais para ser criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
     return
   }
   if (lastResponse === undefined) {
+    advError(`Mashup last response is undefined! (id: ${mashupId}) (time: ${(endTime - startTime) / 1000}s) - URL: https://rave.dj/${mashupId}`)
     void ctxReply(ctx, 'Não foi possível resgatar as informações do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    return
-  }
-  const mashupName = lastResponse?.title
-  if (mashupName === undefined) {
-    void ctxReply(ctx, 'Não foi possível resgatar o nome do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
     return
   }
   await ctxTempReply(ctx, 'Mashup criado com sucesso! 🎉\nEstou enviando ele para você, por favor aguarde enquanto o Telegram faz o upload do vídeo...', 10000, {
     disable_notification: true
   })
-  const mashupUrlThumb = lastResponse?.thumbnails.default
-  if (mashupUrlThumb === undefined) {
-    void ctxReply(ctx, 'Não foi possível resgatar a thumbnail do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    return
-  }
+  // const mashupUrlThumb = lastResponse?.thumbnails.default ?? melodyScoutConfig.msAndRaveDj
+  const mashupUrlThumb = melodyScoutConfig.msAndRaveDj
   const mashupUrlAudio = lastResponse?.urls.audio
-  if (mashupUrlAudio === undefined) {
-    void ctxReply(ctx, 'Não foi possível resgatar o audio do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    return
-  }
   const mashupUrlVideo = lastResponse?.urls.default
-  if (mashupUrlVideo === undefined) {
-    void ctxReply(ctx, 'Não foi possível resgatar o vídeo do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+  if (mashupUrlAudio === undefined || mashupUrlVideo === undefined) {
+    advError(`Mashup audio or video URL is undefined! (id: ${mashupId}) (time: ${(endTime - startTime) / 1000}s) - ${mashupUrlAudio === undefined ? 'Audio URL is undefined' : 'Video URL is undefined'} - URL: https://rave.dj/${mashupId}`)
+    void ctxReply(ctx, 'Não foi possível resgatar a URL do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
     return
   }
   const thumbResponse = await axios.get(mashupUrlThumb, { responseType: 'arraybuffer' }).catch((err) => { return Error(err) })
   if (thumbResponse instanceof Error) {
-    advError(`Error while getting mashup thumbnail: ${thumbResponse.message}`)
+    advError(`Error while getting mashup thumbnail in mashup (id: ${mashupId}) (time: ${(endTime - startTime) / 1000}s) - ${thumbResponse.message} - URL: ${mashupUrlThumb}`)
     void ctxReply(ctx, 'Não foi possível resgatar a thumbnail do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
     return
   }
@@ -215,22 +198,14 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, ctx: CommandCont
   const inlineKeyboard = new InlineKeyboard()
   inlineKeyboard.url('[🎬] - Vídeo', mashupUrlVideo)
   inlineKeyboard.url('[🎧] - Audio', mashupUrlAudio)
-  // await ctxReplyWithAudio(ctx, new InputFile(audioBuffer, 'mashup.mp3'), {
-  //   title: mashupName,
-  //   performer: 'RaveDJ',
-  //   thumb: new InputFile(thumbBuffer, 'thumb.jpg'),
-  //   caption: 'Espero que goste! 😊\nVocê pode também fazer o download do vídeo ou audio do mashup clicando nos botões abaixo!',
-  //   reply_markup: inlineKeyboard
-  // })
   await ctxReplyWithVideo(ctx, new InputFile(videoBuffer, 'mashup.mp4'), {
     width: 1280,
     height: 720,
-    thumb: new InputFile(thumbBuffer, 'thumb.jpg'),
+    thumb: new InputFile(thumbBuffer, 'mashup.jpg'),
     supports_streaming: false,
-    caption: `Espero que goste! 😊\n\n<b><a href="https://rave.dj/embed/${mashupId}">${mashupName} por RaveDJ</a></b>\n\nVocê pode também fazer o download do vídeo ou audio do mashup clicando nos botões abaixo!`,
+    caption: `Espero que goste! 😊\n\n<b><a href="https://rave.dj/embed/${mashupId}">${lastResponse?.title ?? 'Mashup'} por RaveDJ</a></b>\n\nVocê pode também fazer o download do vídeo ou audio do mashup clicando nos botões abaixo!`,
     reply_markup: inlineKeyboard,
-    reply_to_message_id: startProcessMessage.message_id
+    reply_to_message_id: startProcessMessage?.message_id,
+    allow_sending_without_reply: true
   })
-
-  // TODO AdvConsole
 }

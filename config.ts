@@ -9,7 +9,8 @@ export const melodyScoutConfig = {
   trackImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/track.jpg',
   popularityImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/popularity.jpg',
   aboutMelodyScoutAi: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/aboutMelodyScoutAi.jpg',
-  urltoolong: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/urltoolong.jpg'
+  urltoolong: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/urltoolong.jpg',
+  msAndRaveDj: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/ms-rdj.jpg'
 }
 
 export const lastfmConfig = {
