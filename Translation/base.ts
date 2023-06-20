@@ -9,3 +9,11 @@ export const lang: Record<string, Language> = {
   ptBR,
   jaJP
 }
+
+export function insertParam (text: string, values: Record<string, string>): string {
+  let newText = text
+  for (const key in values) {
+    newText = newText.replace(`{{${key}}}`, values[key])
+  }
+  return newText
+}
