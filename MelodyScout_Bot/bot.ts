@@ -150,11 +150,10 @@ export class MelodyScoutBot {
         await runMaintenanceinformCommand(ctx)
         return
       }
+      await runPlayingnowCommand(this.msMusicApi, this.msPrismaDbApi, ctx)
       if (Math.random() < 0.20) {
         await ctxReply(ctx, 'Ei! Você está gostando do MelodyScout? Estamos realizando uma pesquisa para melhorar o bot, você poderia responder? Seremos muito gratos!\nhttps://forms.gle/WCxZUdW8owwbxxcw8')
-        await new Promise((resolve) => setTimeout(resolve, 1000))
       }
-      await runPlayingnowCommand(this.msMusicApi, this.msPrismaDbApi, ctx)
     })
 
     this.bot.command(['history'], async (ctx) => {
@@ -251,11 +250,10 @@ export class MelodyScoutBot {
         await runMaintenanceinformCallback(ctx)
         return
       }
+      await runPlayingnowCallback(this.msMusicApi, this.msPrismaDbApi, ctx)
       if (Math.random() < 0.20) {
         await ctxReply(ctx, 'Ei! Você está gostando do MelodyScout? Estamos realizando uma pesquisa para melhorar o bot, você poderia responder? Seremos muito gratos!\nhttps://forms.gle/WCxZUdW8owwbxxcw8')
-        await new Promise((resolve) => setTimeout(resolve, 1000))
       }
-      await runPlayingnowCallback(this.msMusicApi, this.msPrismaDbApi, ctx)
     })
 
     this.bot.callbackQuery(new RegExp(`^TLE${melodyScoutConfig.divider}`), async (ctx) => {
