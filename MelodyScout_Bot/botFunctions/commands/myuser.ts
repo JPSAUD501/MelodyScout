@@ -5,7 +5,7 @@ import { advInfo } from '../../../function/advancedConsole'
 import { lastfmConfig } from '../../../config'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 
-export async function runMyuserCommand (ctx: CommandContext<Context>): Promise<void> {
+export async function runMyuserCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
   if (ctx.chat?.type === 'channel') {
     void ctxReply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
     return
@@ -15,7 +15,6 @@ export async function runMyuserCommand (ctx: CommandContext<Context>): Promise<v
     void ctxReply(ctx, 'Estranho! Parece que eu não consegui identificar o seu ID no Telegram! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
     return
   }
-  const msPrismaDbApi = new MsPrismaDbApi()
   const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
   if (!checkIfExistsTgUserDBResponse.success) {
     void ctxReply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')

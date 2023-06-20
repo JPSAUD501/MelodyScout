@@ -32,7 +32,7 @@ const loadingMashupMessages = [
   'Seu mashup está sendo preparado com todo cuidado. Fique empolgado, pois em breve ele estará pronto para você aproveitar!'
 ]
 
-export async function runMashupCommand (msMusicApi: MsMusicApi, ctx: CommandContext<Context>): Promise<void> {
+export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
   if (ctx.chat?.type === 'channel') {
     void ctxReply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
     return
@@ -42,7 +42,6 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, ctx: CommandCont
     void ctxReply(ctx, 'Não foi possível identificar seu usuário no telegram, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
     return
   }
-  const msPrismaDbApi = new MsPrismaDbApi()
   const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
   if (!checkIfExistsTgUserDBResponse.success) {
     void ctxReply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')

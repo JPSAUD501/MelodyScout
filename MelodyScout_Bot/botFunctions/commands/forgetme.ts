@@ -2,7 +2,7 @@ import { CommandContext, Context } from 'grammy'
 import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { ctxReply } from '../../../function/grammyFunctions'
 
-export async function runForgetmeCommand (ctx: CommandContext<Context>): Promise<void> {
+export async function runForgetmeCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
   if (ctx.chat?.type === 'channel') {
     void ctxReply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
     return
@@ -13,7 +13,6 @@ export async function runForgetmeCommand (ctx: CommandContext<Context>): Promise
     return
   }
   await ctxReply(ctx, 'Ok! Deixa eu verificar alguns dados...')
-  const msPrismaDbApi = new MsPrismaDbApi()
   const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
   if (!checkIfExistsTgUserDBResponse.success) {
     void ctxReply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')

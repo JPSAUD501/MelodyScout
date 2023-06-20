@@ -6,7 +6,7 @@ import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 
-export async function runPnartistCommand (msMusicApi: MsMusicApi, ctx: CommandContext<Context> | CallbackQueryContext<Context>): Promise<void> {
+export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context> | CallbackQueryContext<Context>): Promise<void> {
   if (ctx.chat?.type === 'channel') {
     void ctxReply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
     return
@@ -16,7 +16,6 @@ export async function runPnartistCommand (msMusicApi: MsMusicApi, ctx: CommandCo
     void ctxReply(ctx, 'Não foi possível identificar seu usuário no telegram, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
     return
   }
-  const msPrismaDbApi = new MsPrismaDbApi()
   const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
   if (!checkIfExistsTgUserDBResponse.success) {
     void ctxReply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')

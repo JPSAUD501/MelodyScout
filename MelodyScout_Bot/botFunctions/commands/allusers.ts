@@ -3,7 +3,7 @@ import { ctxReply } from '../../../function/grammyFunctions'
 import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { melodyScoutConfig } from '../../../config'
 
-export async function runAllusersCommand (ctx: CommandContext<Context>): Promise<void> {
+export async function runAllusersCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
   if (ctx.chat?.type === 'channel') {
     await ctxReply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
     return
@@ -14,7 +14,6 @@ export async function runAllusersCommand (ctx: CommandContext<Context>): Promise
     return
   }
   if (!melodyScoutConfig.admins.includes(ctxFromId.toString())) return
-  const msPrismaDbApi = new MsPrismaDbApi()
   const allUsers = await msPrismaDbApi.get.allTelegramUsers()
   if (!allUsers.success) {
     await ctxReply(ctx, 'Infelizmente não foi possível recuperar os usuários do banco de dados, por favor tente novamente mais tarde!')

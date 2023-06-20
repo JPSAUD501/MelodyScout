@@ -7,7 +7,7 @@ import { getPlayingnowText } from '../../textFabric/playingnow'
 import { lastfmConfig } from '../../../config'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 
-export async function runPlayingnowCallback (msMusicApi: MsMusicApi, ctx: CallbackQueryContext<Context>): Promise<void> {
+export async function runPlayingnowCallback (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CallbackQueryContext<Context>): Promise<void> {
   if (ctx.chat?.type === 'channel') {
     void ctxReply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
     void ctxAnswerCallbackQuery(ctx, '⚠ - Eu não funciono em canais!')
@@ -15,7 +15,6 @@ export async function runPlayingnowCallback (msMusicApi: MsMusicApi, ctx: Callba
   }
   void ctxAnswerCallbackQuery(ctx, '⏳ - Carregando...')
   const telegramUserId = ctx.from.id
-  const msPrismaDbApi = new MsPrismaDbApi()
   const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
   if (!checkIfExistsTgUserDBResponse.success) {
     void ctxReply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
