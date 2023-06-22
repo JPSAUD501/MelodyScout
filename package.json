@@ -6,7 +6,8 @@
   "scripts": {
     "start": "ts-node --transpile-only ./app.ts",
     "deploy": "yarn prisma migrate deploy",
-    "dev": "ts-node ./app.ts",
+    "dev": "yarn translation && ts-node ./app.ts",
+    "translation": "ts-node ./translation/import.ts",
     "build": "tsc",
     "start-server": "node ./dist/app.js"
   },
