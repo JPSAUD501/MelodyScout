@@ -3,7 +3,6 @@ import { ctxAnswerCallbackQuery, ctxReply, ctxReplyWithAudio, ctxTempReply } fro
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { melodyScoutConfig } from '../../../config'
 import { keyReplace, lang } from '../../../translation/base'
-// import axios from 'axios'
 
 export async function runTrackAudioDownloadCallback (msMusicApi: MsMusicApi, ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
@@ -50,7 +49,6 @@ export async function runTrackAudioDownloadCallback (msMusicApi: MsMusicApi, ctx
   await ctxReplyWithAudio(ctx, inputFile, {
     title: track,
     performer: artist,
-    // caption: `<b>[🎵] Download do áudio de "${track}" por "${artist}"</b>\n\nSolicitado por: <b><a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a></b>`,
     caption: keyReplace(lang(ctxLang, 'trackAudioDownloadCaption'), { track, artist, requesterId: ctx.from.first_name, requesterName: ctx.from.id }),
     reply_to_message_id: messageReplyId
   })
