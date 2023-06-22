@@ -39,10 +39,10 @@ async function importTranslation (): Promise<void> {
       textArray.push('}')
       textArray.push('')
       fs.writeFileSync(`./translation/languages/${lang}.ts`, textArray.join('\n'))
-      console.log(`Arquivo ${lang}.ts criado com sucesso!`)
+      console.log(`File ${lang}.ts was created!`)
     }
   } catch (error) {
-    console.error('Ocorreu um erro:', error)
+    console.error('A error occurred while importing the translation files!', error)
   }
 }
 
