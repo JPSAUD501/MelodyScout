@@ -13,5 +13,16 @@ export const enUS = {
   lastfmArtistDataNotFoundedError: "I don't understand what happened, it was not possible to retrieve the information of the artist you are listening to in Last.fm! If the problem persists contact my developer using the /contact command.",
   lastfmAlbumDataNotFoundedError: "I don't understand what happened, it was not possible to retrieve the information of the album you are listening to in Last.fm! If the problem persists contact my developer using the /contact command.",
   lastfmTrackDataNotFoundedError: "I don't understand what happened, it was not possible to retrieve the information of the song you are listening to in Last.fm! If the problem persists contact my developer using the /contact command.",
-  spotifyTrackDataNotFoundedError: "I don't understand what happened, it was not possible to retrieve the Spotify information of the song you are listening to! If the problem persists contact my developer using the /contact command."
+  spotifyTrackDataNotFoundedError: "I don't understand what happened, it was not possible to retrieve the Spotify information of the song you are listening to! If the problem persists contact my developer using the /contact command.",
+  unableToGetMessageIdFromOriginalMessageOfButtonInformMessage: 'Something went wrong with the message you clicked on, please try again later or contact us with the /contact command.',
+  trackAudioDownloadCaption: '<b>[🎵] Download audio of "{{track}}" by "{{artist}}"</b>\n\nRequested by: <b><a href=\'tg://user?id={{requesterId}}\'>{{requesterName}}</a></b>',
+  lyricsButton: '[🧾] - Lyrics',
+  iaExplanationButton: '[✨] - Explanation',
+  spotifyButton: '[🎧] - Spotify',
+  youtubeButton: '[🎥] - YouTube',
+  trackPreviewButton: '[📥] - Preview',
+  trackDownloadButton: '[📥] - Download',
+  unableToGetMessageIdFromButtonInformMessage: 'Something went wrong when fetching the message you clicked on, please try again later or contact us with the /contact command.',
+  errorOnSendLoadingMessageInformMessage: 'Something went wrong when sending the upload message, please try again later or contact us with the /contact command.',
+  errorOnDownloadTrackInformMessage: 'Something went wrong when downloading the music, please try again later or contact us with the /contact command.'
 }

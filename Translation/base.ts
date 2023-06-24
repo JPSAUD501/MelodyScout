@@ -22,7 +22,7 @@ export function lang (langCode: string | undefined, getParameter: Parameters): s
       priorityLangs.push(ptBR)
       break
   }
-  priorityLangs.push(ptBR, enUS, jaJP)
+  priorityLangs.push(enUS, ptBR, jaJP)
   for (const lang of priorityLangs) {
     if (lang[getParameter] === undefined) continue
     return lang[getParameter]
