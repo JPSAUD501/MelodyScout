@@ -2,7 +2,7 @@ import { CallbackQueryContext, Context, InlineKeyboard } from 'grammy'
 import { ctxAnswerCallbackQuery, ctxReply, ctxTempReply } from '../../../function/grammyFunctions'
 import { getCallbackKey } from '../../../function/callbackMaker'
 import { melodyScoutConfig } from '../../../config'
-import { lang } from '../../../translation/base'
+import { lang } from '../../../translations/base'
 // import axios from 'axios'
 
 export async function runTrackDownloadCallback (ctx: CallbackQueryContext<Context>): Promise<void> {

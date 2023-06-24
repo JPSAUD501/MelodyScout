@@ -2,7 +2,7 @@ import { CallbackQueryContext, Context, InputFile } from 'grammy'
 import { ctxAnswerCallbackQuery, ctxReply, ctxReplyWithVideo, ctxTempReply } from '../../../function/grammyFunctions'
 import { melodyScoutConfig } from '../../../config'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
-import { lang } from '../../../translation/base'
+import { lang } from '../../../translations/base'
 // import axios from 'axios'
 
 export async function runTrackVideoDownloadCallback (msMusicApi: MsMusicApi, ctx: CallbackQueryContext<Context>): Promise<void> {

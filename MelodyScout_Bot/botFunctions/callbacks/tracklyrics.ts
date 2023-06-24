@@ -4,7 +4,7 @@ import { MsGeniusApi } from '../../../api/msGeniusApi/base'
 import { getCallbackKey } from '../../../function/callbackMaker'
 import { getLyricsText } from '../../textFabric/lyrics'
 import { geniusConfig, melodyScoutConfig } from '../../../config'
-import { lang } from '../../../translation/base'
+import { lang } from '../../../translations/base'
 
 export async function runTracklyricsCallback (ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code

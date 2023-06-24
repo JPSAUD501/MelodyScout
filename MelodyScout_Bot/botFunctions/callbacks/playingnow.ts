@@ -6,7 +6,7 @@ import { getCallbackKey } from '../../../function/callbackMaker'
 import { getPlayingnowText } from '../../textFabric/playingnow'
 import { lastfmConfig } from '../../../config'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
-import { lang } from '../../../translation/base'
+import { lang } from '../../../translations/base'
 
 export async function runPlayingnowCallback (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code

@@ -2,7 +2,7 @@ import { CallbackQueryContext, Context } from 'grammy'
 import { advInfo } from '../../../function/advancedConsole'
 import { ctxAnswerCallbackQuery, ctxReply } from '../../../function/grammyFunctions'
 import { getMaintenanceText } from '../../textFabric/maintenance'
-import { lang } from '../../../translation/base'
+import { lang } from '../../../translations/base'
 
 export async function runMaintenanceinformCallback (ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code

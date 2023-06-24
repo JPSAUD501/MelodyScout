@@ -2,7 +2,7 @@ import { CallbackQueryContext, Context, InputFile } from 'grammy'
 import { ctxAnswerCallbackQuery, ctxReply, ctxReplyWithAudio } from '../../../function/grammyFunctions'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { melodyScoutConfig } from '../../../config'
-import { lang } from '../../../translation/base'
+import { lang } from '../../../translations/base'
 
 export async function runTrackpreviewCallback (msMusicApi: MsMusicApi, ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
