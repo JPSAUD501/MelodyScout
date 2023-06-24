@@ -5,8 +5,8 @@ import { getMaintenanceText } from '../../textFabric/maintenance'
 import { lang } from '../../../translation/base'
 
 export async function runMaintenanceinformCallback (ctx: CallbackQueryContext<Context>): Promise<void> {
-  const ctxLang = ctx.from?.language_code
-  const ctxFromId = ctx.from?.id
+  const ctxLang = ctx.from.language_code
+  const ctxFromId = ctx.from.id
   if (ctxFromId !== undefined) {
     advInfo(`User ${ctxFromId} tried to use a command but the bot is in maintenance mode!`)
   }

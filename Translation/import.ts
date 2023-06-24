@@ -38,6 +38,13 @@ async function importTranslation (): Promise<void> {
       }
       textArray.push('}')
       textArray.push('')
+      if (!fs.existsSync('./translation/languages')) {
+        fs.mkdirSync('./translation/languages')
+      }
+      if (fs.existsSync(`./translation/languages/${lang}.ts`)) {
+        fs.unlinkSync(`./translation/languages/${lang}.ts`)
+      }
+      await new Promise((resolve) => setTimeout(resolve, 500))
       fs.writeFileSync(`./translation/languages/${lang}.ts`, textArray.join('\n'))
       console.log(`File ${lang}.ts was created!`)
     }

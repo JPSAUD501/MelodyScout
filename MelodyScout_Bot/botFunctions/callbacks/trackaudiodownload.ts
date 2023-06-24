@@ -26,15 +26,15 @@ export async function runTrackAudioDownloadCallback (msMusicApi: MsMusicApi, ctx
   const track = dataArray[1]
   const artist = dataArray[2]
   if (track === undefined || artist === undefined) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmTrackDataNotFoundedError'))
+    void ctxReply(ctx, lang(ctxLang, 'trackOrArtistNameNotFoundedInCallbackDataErrorMessage'))
     return
   }
   const trackInfo = await msMusicApi.getYoutubeTrackInfo(track, artist)
   if (!trackInfo.success) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmTrackDataNotFoundedError'))
+    void ctxReply(ctx, lang(ctxLang, 'youtubeTrackDataNotFoundedErrorMessage'))
     return
   }
-  const loadingMessage = await ctxTempReply(ctx, '⏳ - Fazendo download da música...', 10000, { reply_to_message_id: messageReplyId, disable_notification: true })
+  const loadingMessage = await ctxTempReply(ctx, lang(ctxLang, 'downloadingTrackInformMessage'), 10000, { reply_to_message_id: messageReplyId, disable_notification: true })
   if (loadingMessage === undefined) {
     void ctxReply(ctx, lang(ctxLang, 'errorOnSendLoadingMessageInformMessage'))
     return
