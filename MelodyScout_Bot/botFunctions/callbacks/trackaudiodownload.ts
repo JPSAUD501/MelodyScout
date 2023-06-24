@@ -2,7 +2,7 @@ import { CallbackQueryContext, Context, InputFile } from 'grammy'
 import { ctxAnswerCallbackQuery, ctxReply, ctxReplyWithAudio, ctxTempReply } from '../../../function/grammyFunctions'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { melodyScoutConfig } from '../../../config'
-import { keyReplace, lang } from '../../../translation/base'
+import { lang } from '../../../translation/base'
 
 export async function runTrackAudioDownloadCallback (msMusicApi: MsMusicApi, ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
@@ -49,7 +49,7 @@ export async function runTrackAudioDownloadCallback (msMusicApi: MsMusicApi, ctx
   await ctxReplyWithAudio(ctx, inputFile, {
     title: track,
     performer: artist,
-    caption: keyReplace(lang(ctxLang, 'trackAudioDownloadCaption'), { track, artist, requesterId: ctx.from.first_name, requesterName: ctx.from.id }),
+    caption: lang(ctxLang, 'trackAudioDownloadCaption', { track, artist, requesterId: ctx.from.first_name, requesterName: ctx.from.id }),
     reply_to_message_id: messageReplyId
   })
 }

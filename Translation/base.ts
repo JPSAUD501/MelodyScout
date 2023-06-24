@@ -6,7 +6,7 @@ import { ptBR } from './languages/ptBR'
 export type Language = typeof ptBR | typeof enUS | typeof jaJP
 export type Parameters = keyof typeof ptBR | keyof typeof enUS | keyof typeof jaJP
 
-export function lang (langCode: string | undefined, getParameter: Parameters): string {
+export function lang (langCode: string | undefined, getParameter: Parameters, values?: Record<string, string | number>): string {
   const priorityLangs: Language[] = []
   switch (langCode) {
     case 'ja':
@@ -25,13 +25,14 @@ export function lang (langCode: string | undefined, getParameter: Parameters): s
   priorityLangs.push(enUS, ptBR, jaJP)
   for (const lang of priorityLangs) {
     if (lang[getParameter] === undefined) continue
+    if (values !== undefined) return keyReplace(lang[getParameter], values)
     return lang[getParameter]
   }
   advError(`The parameter ${getParameter} was not found in any language!`)
   return 'ERROR'
 }
 
-export function keyReplace (text: string, values: Record<string, string | number>): string {
+function keyReplace (text: string, values: Record<string, string | number>): string {
   let newText = text
   for (const key in values) {
     newText = newText.replace(`{{${key}}}`, String(values[key]))

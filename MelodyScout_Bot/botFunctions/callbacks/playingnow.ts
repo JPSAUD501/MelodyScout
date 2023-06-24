@@ -6,7 +6,7 @@ import { getCallbackKey } from '../../../function/callbackMaker'
 import { getPlayingnowText } from '../../textFabric/playingnow'
 import { lastfmConfig } from '../../../config'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
-import { keyReplace, lang } from '../../../translation/base'
+import { lang } from '../../../translation/base'
 
 export async function runPlayingnowCallback (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
@@ -41,7 +41,7 @@ export async function runPlayingnowCallback (msMusicApi: MsMusicApi, msPrismaDbA
   const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 1)
   const [userInfo, userRecentTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest])
   if (!userInfo.success) {
-    void ctxReply(ctx, keyReplace(lang(ctxLang, 'lastfmUserDataNotFoundedError'), { lastfmUser }))
+    void ctxReply(ctx, lang(ctxLang, 'lastfmUserDataNotFoundedError', { lastfmUser }))
     return
   }
   if (!userRecentTracks.success) {
