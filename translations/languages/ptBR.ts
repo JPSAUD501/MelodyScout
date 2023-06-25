@@ -41,5 +41,6 @@ export const ptBR = {
   youtubeTrackDataNotFoundedErrorMessage: 'Algo deu errado ao buscar a música, por favor tente novamente mais tarde ou entre em contato através do comando /contact.',
   downloadingTrackInformMessage: '⏳ - Fazendo download da música…',
   trackOrArtistNameNotFoundedInCallbackDataErrorMessage: 'Algo deu errado ao identificar a música, por favor tente novamente mais tarde ou entre em contato através do comando /contact.',
-  trackVideoDownloadCaption: '<b>[🎬] Download do vídeo de "{{track}}" por "{{artist}}"</b>\n\nSolicitado por: <b><a href=\'tg://user?id={{requesterId}}\'>{{requestedrName}}</a></b>'
+  trackVideoDownloadCaption: '<b>[🎬] Download do vídeo de "{{track}}" por "{{artist}}"</b>\n\nSolicitado por: <b><a href=\'tg://user?id={{requesterId}}\'>{{requestedrName}}</a></b>',
+  unableToTranslateLyricsErrorMessage: 'Não foi possível traduzir a letra dessa música, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.'
 }

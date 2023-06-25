@@ -6,10 +6,12 @@ import { getCallbackKey } from '../../../function/callbackMaker'
 import { getPlayingnowText } from '../../textFabric/playingnow'
 import { lastfmConfig } from '../../../config'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
+import { lang } from '../../../translations/base'
 
 export async function runPlayingnowCommand (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
+  const ctxLang = ctx.from?.language_code
   if (ctx.chat?.type === 'channel') {
-    void ctxReply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
+    void ctxReply(ctx, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
     return
   }
   // TODO New command use case "/playingnow @TelegramUser"

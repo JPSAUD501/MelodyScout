@@ -8,6 +8,7 @@ import axios from 'axios'
 import { advError } from '../../../function/advancedConsole'
 import { lastfmConfig, melodyScoutConfig } from '../../../config'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
+import { lang } from '../../../translations/base'
 
 const loadingMashupMessages = [
   'Estamos trabalhando duro no seu mashup! Logo estará pronto. Por favor, aguarde!',
@@ -33,8 +34,9 @@ const loadingMashupMessages = [
 ]
 
 export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
+  const ctxLang = ctx.from?.language_code
   if (ctx.chat?.type === 'channel') {
-    void ctxReply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
+    void ctxReply(ctx, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
     return
   }
   const telegramUserId = ctx.from?.id

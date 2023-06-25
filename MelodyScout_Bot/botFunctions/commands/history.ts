@@ -4,10 +4,12 @@ import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { getHistoryText } from '../../textFabric/history'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { lastfmConfig } from '../../../config'
+import { lang } from '../../../translations/base'
 
 export async function runHistoryCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
+  const ctxLang = ctx.from?.language_code
   if (ctx.chat?.type === 'channel') {
-    void ctxReply(ctx, 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!')
+    void ctxReply(ctx, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
     return
   }
   const telegramUserId = ctx.from?.id
