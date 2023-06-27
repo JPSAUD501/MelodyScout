@@ -23,7 +23,7 @@ export async function runBriefCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comman
     return
   }
   if (!checkIfExistsTgUserDBResponse.exists) {
-    void ctxReply(ctx, 'Parece que você ainda não possui um usuário do Last.fm registrado, para registrar um usuário do Last.fm envie o comando /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
+    void ctxReply(ctx, lang(ctxLang, 'lastfmUserNotRegistered'))
     return
   }
   const telegramUserDBResponse = await msPrismaDbApi.get.telegramUser(`${telegramUserId}`)
