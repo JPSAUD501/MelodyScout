@@ -14,26 +14,26 @@ export async function runMyuserCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comma
   }
   const telegramUserId = ctx.from?.id.toString()
   if (telegramUserId === undefined) {
-    void ctxReply(ctx, 'Estranho! Parece que eu não consegui identificar o seu ID no Telegram! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
+    await ctxReply(ctx, lang(ctxLang, 'unableToGetUserIdErrorMessage'))
     return
   }
   const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
   if (!checkIfExistsTgUserDBResponse.success) {
-    void ctxReply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserInfoInDb'))
     return
   }
   if (!checkIfExistsTgUserDBResponse.exists) {
     void ctxReply(ctx, 'Verifiquei que é seu primeiro cadastro no MelodyScout! Que bom que você decidiu me conhecer!')
     const createTelegramUserDBResponse = await msPrismaDbApi.create.telegramUser(telegramUserId)
     if (!createTelegramUserDBResponse.success) {
-      void ctxReply(ctx, 'Ops! Parece que eu não consegui salvar suas informações no banco de dados! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
+      void ctxReply(ctx, lang(ctxLang, 'unableToGetUserInfoInDb'))
       return
     }
     advInfo(`New user "${telegramUserId}" registered!`)
   }
   const telegramUserDBResponse = await msPrismaDbApi.get.telegramUser(telegramUserId)
   if (!telegramUserDBResponse.success) {
-    void ctxReply(ctx, 'Ops! Parece que eu não consegui resgatar suas informações do banco de dados! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
+    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserInfoInDb'))
     return
   }
   const message = ((ctx.message?.text?.split(' ')) != null) ? ctx.message?.text?.split(' ') : []

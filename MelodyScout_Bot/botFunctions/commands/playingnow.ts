@@ -17,12 +17,12 @@ export async function runPlayingnowCommand (msMusicApi: MsMusicApi, msPrismaDbAp
   // TODO New command use case "/playingnow @TelegramUser"
   const telegramUserId = ctx.from?.id
   if (telegramUserId === undefined) {
-    void ctxReply(ctx, 'Não foi possível identificar seu usuário no telegram, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    await ctxReply(ctx, lang(ctxLang, 'unableToGetUserIdErrorMessage'))
     return
   }
   const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
   if (!checkIfExistsTgUserDBResponse.success) {
-    void ctxReply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserInfoInDb'))
     return
   }
   if (!checkIfExistsTgUserDBResponse.exists) {
@@ -31,7 +31,7 @@ export async function runPlayingnowCommand (msMusicApi: MsMusicApi, msPrismaDbAp
   }
   const telegramUserDBResponse = await msPrismaDbApi.get.telegramUser(`${telegramUserId}`)
   if (!telegramUserDBResponse.success) {
-    void ctxReply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserInfoInDb'))
     return
   }
   const lastfmUser = telegramUserDBResponse.lastfmUser

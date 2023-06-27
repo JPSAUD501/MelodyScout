@@ -17,7 +17,7 @@ export async function runMaintenanceCommand (ctx: CommandContext<Context>): Prom
   }
   const ctxFromId = ctx.from?.id
   if (ctxFromId === undefined) {
-    await ctxReply(ctx, 'Infelizmente não foi possível identificar seu id, por favor tente novamente mais tarde!')
+    await ctxReply(ctx, lang(ctxLang, 'unableToGetUserIdErrorMessage'))
     return { success: false }
   }
   if (!melodyScoutConfig.admins.includes(ctxFromId.toString())) return { success: false }

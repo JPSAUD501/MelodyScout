@@ -12,18 +12,30 @@ export async function runAllusersCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Com
   }
   const ctxFromId = ctx.from?.id
   if (ctxFromId === undefined) {
-    await ctxReply(ctx, 'Infelizmente não foi possível identificar seu id, por favor tente novamente mais tarde!')
+    await ctxReply(ctx, lang(ctxLang, 'unableToGetUserIdErrorMessage'))
     return
   }
   if (!melodyScoutConfig.admins.includes(ctxFromId.toString())) return
   const allUsers = await msPrismaDbApi.get.allTelegramUsers()
   if (!allUsers.success) {
-    await ctxReply(ctx, 'Infelizmente não foi possível recuperar os usuários do banco de dados, por favor tente novamente mais tarde!')
+    await ctxReply(ctx, lang(ctxLang, 'unableToGetAllUsersFromDatabaseErrorMessage'))
     return
   }
   const personsEmojis = ['🧑', '🧔', '🧓', '🧕', '🧙', '🧚', '🧛', '🧜', '🧝', '🧞', '🧟', '👨', '👩', '👱', '👴', '👵', '👲', '👳', '👮', '👷', '💂', '🕵', '👼', '🎅', '👸', '🤴', '👰', '🤵']
-  const allUsersString = allUsers.telegramUsers.map((user) => {
-    return `<b>[${personsEmojis[parseInt(user.telegramUserId) % personsEmojis.length]}] <code>${user.lastfmUser === null ? 'Descadastrado' : user.lastfmUser}</code>:</b>\n- TelegramID: <code>${user.telegramUserId}</code>\n- LastUpdate: <code>${user.lastUpdate}</code>\n`
-  }).join('\n')
-  await ctxReply(ctx, `<b>[🗃] Lista de usuários:</b>\n- Total de usuários: <code>${allUsers.telegramUsers.length}</code>\n\n${allUsersString}`)
+  const allUsersStringArray: string[] = []
+  for (let i = 0; i < allUsers.telegramUsers.length; i++) {
+    const user = allUsers.telegramUsers[i]
+    allUsersStringArray.push(lang(ctxLang, 'allUsersListUserMessagePart', { userEmoji: personsEmojis[parseInt(user.telegramUserId) % personsEmojis.length], userLastfmName: user.lastfmUser === null ? 'Descadastrado' : user.lastfmUser, userTelegramId: user.telegramUserId, userLastUpdate: user.lastUpdate }))
+    allUsersStringArray.push('\n')
+  }
+  const finalMessage = [lang(ctxLang, 'allUsersListHeaderMessage', { userCount: allUsers.telegramUsers.length }), '\n', ...allUsersStringArray]
+  let partialString = ''
+  for (let i = 0; i < finalMessage.length; i++) {
+    partialString += `${finalMessage[i]}\n`
+    if (partialString.length > 4000) {
+      await ctxReply(ctx, partialString)
+      partialString = ''
+    }
+  }
+  if (partialString.length > 0) await ctxReply(ctx, partialString)
 }

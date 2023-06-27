@@ -11,13 +11,13 @@ export async function runForgetmeCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Com
   }
   const telegramUserId = ctx.from?.id.toString()
   if (telegramUserId === undefined) {
-    void ctxReply(ctx, 'Estranho! Parece que eu não consegui identificar o seu ID no Telegram! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
+    await ctxReply(ctx, lang(ctxLang, 'unableToGetUserIdErrorMessage'))
     return
   }
   await ctxReply(ctx, 'Ok! Deixa eu verificar alguns dados...')
   const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
   if (!checkIfExistsTgUserDBResponse.success) {
-    void ctxReply(ctx, 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserInfoInDb'))
     return
   }
   if (!checkIfExistsTgUserDBResponse.exists) {

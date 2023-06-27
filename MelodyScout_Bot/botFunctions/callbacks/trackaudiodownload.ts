@@ -49,7 +49,7 @@ export async function runTrackAudioDownloadCallback (msMusicApi: MsMusicApi, ctx
   await ctxReplyWithAudio(ctx, inputFile, {
     title: track,
     performer: artist,
-    caption: lang(ctxLang, 'trackAudioDownloadCaption', { track, artist, requesterId: ctx.from.first_name, requesterName: ctx.from.id }),
+    caption: lang(ctxLang, 'trackAudioDownloadCaption', { track, artist, requesterId: ctx.from.id, requesterName: ctx.from.first_name }),
     reply_to_message_id: messageReplyId
   })
 }
