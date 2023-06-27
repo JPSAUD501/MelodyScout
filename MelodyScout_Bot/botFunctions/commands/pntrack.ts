@@ -35,7 +35,7 @@ export async function runPntrackCommand (msMusicApi: MsMusicApi, msPrismaDbApi: 
   }
   const lastfmUser = telegramUserDBResponse.lastfmUser
   if (lastfmUser === null) {
-    void ctxReply(ctx, 'Parece que você me pediu para esquecer seu usuário do Last.fm e não me informou um novo usuário, para registrar o seu usuário do Last.fm envie o comando /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
+    void ctxReply(ctx, lang(ctxLang, 'lastfmUserNoMoreRegisteredError'))
     return
   }
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
