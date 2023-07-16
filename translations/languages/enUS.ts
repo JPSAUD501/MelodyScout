@@ -24,5 +24,7 @@ export const enUS = {
   trackDownloadButton: '[📥] - Download',
   unableToGetMessageIdFromButtonInformMessage: 'Something went wrong when fetching the message you clicked on, please try again later or contact us with the /contact command.',
   errorOnSendLoadingMessageInformMessage: 'Something went wrong when sending the upload message, please try again later or contact us with the /contact command.',
-  errorOnDownloadTrackInformMessage: 'Something went wrong when downloading the music, please try again later or contact us with the /contact command.'
+  errorOnDownloadTrackInformMessage: 'Something went wrong when downloading the music, please try again later or contact us with the /contact command.',
+  trackDownloadAudioButton: '[📥] - Audio',
+  trackDownloadVideoButton: '[📥] - Video'
 }

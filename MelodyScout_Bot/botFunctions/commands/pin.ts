@@ -10,10 +10,10 @@ export async function runPinCommand (ctx: CommandContext<Context>): Promise<void
     return
   }
   const inlineKeyboard = new InlineKeyboard()
-  inlineKeyboard.text('Playing Now', 'PLAYINGNOW')
-  const messageToPin = await ctxReply(ctx, `<a href="${melodyScoutConfig.logoImgUrl}">️️</a>O que vc está ouvindo agr?`, { reply_markup: inlineKeyboard })
+  inlineKeyboard.text(lang(ctxLang, 'playingNowButton'), 'PLAYINGNOW')
+  const messageToPin = await ctxReply(ctx, `<a href="${melodyScoutConfig.logoImgUrl}">️️</a>${lang(ctxLang, 'whatAreYouListeningNowPinMessage')}`, { reply_markup: inlineKeyboard })
   if (messageToPin === undefined) {
-    void ctxReply(ctx, 'Parece que algo deu errado ao enviar a mensagem, por favor tente novamente!')
+    void ctxReply(ctx, lang(ctxLang, 'errorSendingMessage'))
     return
   }
   await ctxPinMessage(ctx, messageToPin)

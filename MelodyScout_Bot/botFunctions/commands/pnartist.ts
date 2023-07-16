@@ -46,11 +46,11 @@ export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi:
     return
   }
   if (!userRecentTracks.success) {
-    void ctxReply(ctx, 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserRecentTracksHistory'))
     return
   }
   if (userRecentTracks.data.recenttracks.track.length <= 0) {
-    void ctxReply(ctx, 'Parece que você nunca ouviu nada no Last.fm, que tal começar a ouvir algo agora? Se isso não for verdade entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'noRecentTracksError'))
     return
   }
   const mainTrack = {
@@ -62,14 +62,14 @@ export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi:
   const spotifyArtistInfoRequest = msMusicApi.getSpotifyArtistInfo(mainTrack.artistName)
   const [artistInfo, spotifyArtistInfo] = await Promise.all([artistInfoRequest, spotifyArtistInfoRequest])
   if (!artistInfo.success) {
-    void ctxReply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'lastfmArtistDataNotFoundedError'))
     return
   }
   if (!spotifyArtistInfo.success) {
-    void ctxReply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do Spotify da música que você está ouvindo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'spotifyArtistDataNotFoundedError'))
     return
   }
   const inlineKeyboard = new InlineKeyboard()
-  inlineKeyboard.url('[🎧] - Spotify', spotifyArtistInfo.data.externalURL.spotify)
+  inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyArtistInfo.data.externalURL.spotify)
   await ctxReply(ctx, getPnartistText(userInfo.data, artistInfo.data, spotifyArtistInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
 }

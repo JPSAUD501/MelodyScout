@@ -23,7 +23,7 @@ export async function runMyuserCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comma
     return
   }
   if (!checkIfExistsTgUserDBResponse.exists) {
-    void ctxReply(ctx, 'Verifiquei que é seu primeiro cadastro no MelodyScout! Que bom que você decidiu me conhecer!')
+    void ctxReply(ctx, lang(ctxLang, 'firstTimeRegisterWelcomeMessage'))
     const createTelegramUserDBResponse = await msPrismaDbApi.create.telegramUser(telegramUserId)
     if (!createTelegramUserDBResponse.success) {
       void ctxReply(ctx, lang(ctxLang, 'unableToGetUserInfoInDb'))
@@ -65,7 +65,7 @@ export async function runMyuserCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comma
   }
   const updateTelegramUserDBResponse = await msPrismaDbApi.update.telegramUser(telegramUserId, username)
   if (!updateTelegramUserDBResponse.success) {
-    void ctxReply(ctx, 'Ops! Parece que eu não consegui registrar o seu nome de usuário do Last.fm! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
+    void ctxReply(ctx, 'Ops! Eu não consegui registrar o seu nome de usuário do Last.fm! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
     return
   }
   advInfo(`The user "${telegramUserId}" registered the Last.fm username "${username}" in MelodyScout!`)

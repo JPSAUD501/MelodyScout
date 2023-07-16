@@ -72,12 +72,12 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: M
     return
   }
   if (!userRecentTracks.success) {
-    void ctxReply(ctx, 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserRecentTracksHistory', { lastfmUser }))
     return
   }
   console.log(userRecentTracks.data)
   if (userRecentTracks.data.recenttracks.track.length < 2) {
-    void ctxReply(ctx, 'Você precisa ter pelo menos duas músicas no seu histórico para que eu possa fazer um mashup! Tente novamente mais tarde.')
+    void ctxReply(ctx, lang(ctxLang, 'mashupNeedTwoTracksError'))
     return
   }
   const mashupTracks = [
@@ -196,8 +196,8 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: M
   }
   const videoBuffer = Buffer.from(videoResponse.data, 'utf-8')
   const inlineKeyboard = new InlineKeyboard()
-  inlineKeyboard.url('[🎬] - Vídeo', mashupUrlVideo)
-  inlineKeyboard.url('[🎧] - Audio', mashupUrlAudio)
+  inlineKeyboard.url(lang(ctxLang, 'videoButton'), mashupUrlVideo)
+  inlineKeyboard.url(lang(ctxLang, 'audioButton'), mashupUrlAudio)
   await ctxReplyWithVideo(ctx, new InputFile(videoBuffer, 'mashup.mp4'), {
     width: 1280,
     height: 720,

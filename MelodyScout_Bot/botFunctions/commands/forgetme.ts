@@ -14,7 +14,7 @@ export async function runForgetmeCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Com
     await ctxReply(ctx, lang(ctxLang, 'unableToGetUserIdErrorMessage'))
     return
   }
-  await ctxReply(ctx, 'Ok! Deixa eu verificar alguns dados...')
+  await ctxReply(ctx, lang(ctxLang, 'lastfmUserForgetmeCheckingDataMessage'))
   const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
   if (!checkIfExistsTgUserDBResponse.success) {
     void ctxReply(ctx, lang(ctxLang, 'unableToGetUserInfoInDb'))
@@ -26,17 +26,17 @@ export async function runForgetmeCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Com
   }
   const telegramUserDBResponse = await msPrismaDbApi.get.telegramUser(telegramUserId)
   if (!telegramUserDBResponse.success) {
-    void ctxReply(ctx, 'Ops! Parece que eu não consegui recuperar o seu nome de usuário do Last.fm! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
+    void ctxReply(ctx, lang(ctxLang, 'unableToGetLastfmUserInDbErrorMessage'))
     return
   }
   if (telegramUserDBResponse.lastfmUser === null) {
-    void ctxReply(ctx, 'Você já não tem seu usuário do Last.fm registrado, para registrar o seu usuário do Last.fm envie o comando /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>')
+    void ctxReply(ctx, lang(ctxLang, 'lastfmUserAlreadyNotRegisteredErrorMessage'))
     return
   }
   const updatedTelegramUserDBResponse = await msPrismaDbApi.update.telegramUser(telegramUserId, null)
   if (!updatedTelegramUserDBResponse.success) {
-    void ctxReply(ctx, 'Ops! Parece que eu não consegui esquecer o seu nome de usuário do Last.fm! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!')
+    void ctxReply(ctx, lang(ctxLang, 'unableToForgetLastfmUserInDbErrorMessage'))
     return
   }
-  await ctxReply(ctx, 'Pronto! Eu esqueci o seu nome de usuário do Last.fm!')
+  await ctxReply(ctx, lang(ctxLang, 'lastfmUserForgottenSuccessMessage'))
 }

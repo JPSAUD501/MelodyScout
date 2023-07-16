@@ -47,15 +47,15 @@ export async function runBriefCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comman
     return
   }
   if (!userTopTracks.success) {
-    void ctxReply(ctx, 'Estranho, não foi possível resgatar as suas músicas mais tocadas do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'getTopTracksErrorMessage'))
     return
   }
   if (!userTopAlbums.success) {
-    void ctxReply(ctx, 'Estranho, não foi possível resgatar os seus álbuns mais tocados do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'getTopAlbumsErrorMessage'))
     return
   }
   if (!userTopArtists.success) {
-    void ctxReply(ctx, 'Estranho, não foi possível resgatar os seus artistas mais tocados do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'getTopArtistsErrorMessage'))
     return
   }
   await ctxReply(ctx, getBriefText(userInfo.data, userTopTracks.data, userTopAlbums.data, userTopArtists.data))

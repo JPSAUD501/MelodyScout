@@ -46,11 +46,11 @@ export async function runPnalbumCommand (msMusicApi: MsMusicApi, msPrismaDbApi: 
     return
   }
   if (!userRecentTracks.success) {
-    void ctxReply(ctx, 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserRecentTracksHistory'))
     return
   }
   if (userRecentTracks.data.recenttracks.track.length <= 0) {
-    void ctxReply(ctx, 'Parece que você nunca ouviu nada no Last.fm, que tal começar a ouvir algo agora? Se isso não for verdade entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'noRecentTracksError'))
     return
   }
   const mainTrack = {
@@ -65,18 +65,18 @@ export async function runPnalbumCommand (msMusicApi: MsMusicApi, msPrismaDbApi: 
   const spotifyAlbumInfoRequest = msMusicApi.getSpotifyAlbumInfo(mainTrack.artistName, mainTrack.albumName)
   const [artistInfo, albumInfo, spotifyAlbumInfo] = await Promise.all([artistInfoRequest, albumInfoRequest, spotifyAlbumInfoRequest])
   if (!artistInfo.success) {
-    void ctxReply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'lastfmArtistDataNotFoundedError'))
     return
   }
   if (!albumInfo.success) {
-    void ctxReply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'lastfmAlbumDataNotFoundedError'))
     return
   }
   if (!spotifyAlbumInfo.success) {
-    void ctxReply(ctx, 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Spotify! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'spotifyAlbumDataNotFoundedError'))
     return
   }
   const inlineKeyboard = new InlineKeyboard()
-  if (spotifyAlbumInfo.success) inlineKeyboard.url('[🎧] - Spotify', spotifyAlbumInfo.data.externalURL.spotify)
+  if (spotifyAlbumInfo.success) inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyAlbumInfo.data.externalURL.spotify)
   await ctxReply(ctx, getPnalbumText(userInfo.data, artistInfo.data, albumInfo.data, spotifyAlbumInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
 }

@@ -45,11 +45,11 @@ export async function runHistoryCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comm
     return
   }
   if (!userRecentTracks.success) {
-    void ctxReply(ctx, 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserRecentTracksHistory'))
     return
   }
   if (userRecentTracks.data.recenttracks.track.length <= 0) {
-    void ctxReply(ctx, 'Parece que você nunca ouviu nada no Last.fm, que tal começar a ouvir algo agora? Se isso não for verdade entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'noRecentTracksError'))
     return
   }
   await ctxReply(ctx, getHistoryText(userInfo.data, userRecentTracks.data))

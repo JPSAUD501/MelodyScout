@@ -24,22 +24,22 @@ export async function runMaintenanceCommand (ctx: CommandContext<Context>): Prom
   const args = ctx.message?.text?.split(' ')
   if (args === undefined) return { success: false }
   if (args.length < 2) {
-    await ctxReply(ctx, 'Por favor, especifique se deseja ativar ou desativar o modo manutenção! Exemplo: <code>/maintenance on</code> ou <code>/maintenance off</code>')
+    await ctxReply(ctx, lang(ctxLang, 'noMaintenanceModeArgumentErrorMessage'))
     return { success: false }
   }
   switch (args[1]) {
     case 'on': {
-      await ctxReply(ctx, 'Modo de manutenção ativado!')
+      await ctxReply(ctx, lang(ctxLang, 'maintenanceModeActivatedInformMessage'))
       advLog('Maintenance mode activated!')
       return { success: true, maintenanceMode: true }
     }
     case 'off': {
-      await ctxReply(ctx, 'Modo de manutenção desativado!')
+      await ctxReply(ctx, lang(ctxLang, 'maintenanceModeDeactivatedInformMessage'))
       advLog('Maintenance mode deactivated!')
       return { success: true, maintenanceMode: false }
     }
     default: {
-      await ctxReply(ctx, 'Utilize apenas <code>on</code> ou <code>off</code> como argumento! Exemplo: <code>/maintenance on</code> ou <code>/maintenance off</code>')
+      await ctxReply(ctx, lang(ctxLang, 'invalidMaintenanceModeArgumentErrorMessage'))
       return { success: false }
     }
   }
