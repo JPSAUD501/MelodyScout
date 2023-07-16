@@ -43,7 +43,7 @@ export async function runBriefCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comman
   const userTopArtistsRequest = msLastfmApi.user.getTopArtists(lastfmUser, 5)
   const [userInfo, userTopTracks, userTopAlbums, userTopArtists] = await Promise.all([userInfoRequest, userTopTracksRequest, userTopAlbumsRequest, userTopArtistsRequest])
   if (!userInfo.success) {
-    void ctxReply(ctx, `Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>${lastfmUser}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.`)
+    void ctxReply(ctx, lang(ctxLang, 'lastfmUserDataNotFoundedError', { lastfmUser }))
     return
   }
   if (!userTopTracks.success) {

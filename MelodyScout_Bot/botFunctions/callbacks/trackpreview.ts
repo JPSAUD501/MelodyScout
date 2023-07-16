@@ -26,7 +26,7 @@ export async function runTrackpreviewCallback (msMusicApi: MsMusicApi, ctx: Call
   await ctxReplyWithAudio(ctx, new InputFile({ url: spotifyTrackInfo.data.previewURL }), {
     title: track,
     performer: artist,
-    caption: lang(ctxLang, 'trackPreviewCaptionMessage', { track, artist, requesterId: ctx.from.first_name, requesterName: ctx.from.id }),
+    caption: lang(ctxLang, 'trackPreviewCaptionMessage', { track, artist, requesterId: ctx.from.id, requesterName: ctx.from.first_name }),
     reply_to_message_id: messageId
   })
 }

@@ -41,7 +41,7 @@ export async function runHistoryCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comm
   const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 20)
   const [userInfo, userRecentTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest])
   if (!userInfo.success) {
-    void ctxReply(ctx, `Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>${lastfmUser}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.`)
+    void ctxReply(ctx, lang(ctxLang, 'lastfmUserDataNotFoundedError', { lastfmUser }))
     return
   }
   if (!userRecentTracks.success) {

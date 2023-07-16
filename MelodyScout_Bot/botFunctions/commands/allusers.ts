@@ -25,7 +25,7 @@ export async function runAllusersCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Com
   const allUsersStringArray: string[] = []
   for (let i = 0; i < allUsers.telegramUsers.length; i++) {
     const user = allUsers.telegramUsers[i]
-    allUsersStringArray.push(lang(ctxLang, 'allUsersListUserMessagePart', { userEmoji: personsEmojis[parseInt(user.telegramUserId) % personsEmojis.length], userLastfmName: user.lastfmUser === null ? 'Descadastrado' : user.lastfmUser, userTelegramId: user.telegramUserId, userLastUpdate: user.lastUpdate }))
+    allUsersStringArray.push(lang(ctxLang, 'allUsersListUserMessagePart', { userEmoji: personsEmojis[parseInt(user.telegramUserId) % personsEmojis.length], userLastfmName: user.lastfmUser === null ? 'Unsubscribed' : user.lastfmUser, userTelegramId: user.telegramUserId, userLastUpdate: user.lastUpdate }))
     allUsersStringArray.push('\n')
   }
   const finalMessage = [lang(ctxLang, 'allUsersListHeaderMessage', { userCount: allUsers.telegramUsers.length }), '\n', ...allUsersStringArray]
