@@ -151,10 +151,10 @@ export class MelodyScoutBot {
         return
       }
       await runPlayingnowCommand(this.msMusicApi, this.msPrismaDbApi, ctx)
-      if (Math.random() < 0.30) {
-        advInfo(`MelodyScout_Bot - Sending survey to ${ctx.from?.first_name ?? 'No name'} ${ctx.from?.last_name ?? ''} - ${ctx.from?.username ?? 'No username'} (${ctx.from?.id ?? 'No ID'})`)
-        await ctxReply(ctx, 'Ei! Você está gostando do MelodyScout? Estamos realizando uma pesquisa para melhorar o bot, você poderia responder? Seremos muito gratos!\nhttps://forms.gle/WCxZUdW8owwbxxcw8')
-      }
+      // if (Math.random() < 0.30) {
+      //   advInfo(`MelodyScout_Bot - Sending survey to ${ctx.from?.first_name ?? 'No name'} ${ctx.from?.last_name ?? ''} - ${ctx.from?.username ?? 'No username'} (${ctx.from?.id ?? 'No ID'})`)
+      //   await ctxReply(ctx, 'Ei! Você está gostando do MelodyScout? Estamos realizando uma pesquisa para melhorar o bot, você poderia responder? Seremos muito gratos!\nhttps://forms.gle/WCxZUdW8owwbxxcw8')
+      // }
     })
 
     this.bot.command(['history'], async (ctx) => {
@@ -251,11 +251,11 @@ export class MelodyScoutBot {
         await runMaintenanceinformCallback(ctx)
         return
       }
-      await runPlayingnowCallback(this.msMusicApi, this.msPrismaDbApi, ctx)
-      if (Math.random() < 0.30) {
-        advInfo(`MelodyScout_Bot - Sending survey to ${ctx.from?.first_name ?? 'No name'} ${ctx.from?.last_name ?? ''} - ${ctx.from?.username ?? 'No username'} (${ctx.from?.id ?? 'No ID'})`)
-        await ctxReply(ctx, 'Ei! Você está gostando do MelodyScout? Estamos realizando uma pesquisa para melhorar o bot, você poderia responder? Seremos muito gratos!\nhttps://forms.gle/WCxZUdW8owwbxxcw8')
-      }
+      // await runPlayingnowCallback(this.msMusicApi, this.msPrismaDbApi, ctx)
+      // if (Math.random() < 0.30) {
+      //   advInfo(`MelodyScout_Bot - Sending survey to ${ctx.from?.first_name ?? 'No name'} ${ctx.from?.last_name ?? ''} - ${ctx.from?.username ?? 'No username'} (${ctx.from?.id ?? 'No ID'})`)
+      //   await ctxReply(ctx, 'Ei! Você está gostando do MelodyScout? Estamos realizando uma pesquisa para melhorar o bot, você poderia responder? Seremos muito gratos!\nhttps://forms.gle/WCxZUdW8owwbxxcw8')
+      // }
     })
 
     this.bot.callbackQuery(new RegExp(`^TLE${melodyScoutConfig.divider}`), async (ctx) => {
