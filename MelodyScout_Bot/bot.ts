@@ -1,7 +1,7 @@
 import botConfig from './config'
 import { Bot, CallbackQueryContext, CommandContext, Context } from 'grammy'
 import { melodyScoutConfig, spotifyConfig } from '../config'
-import { advError, advInfo, advLog } from '../function/advancedConsole'
+import { advError, advLog } from '../function/advancedConsole'
 import { runMaintenanceinformCallback } from './botFunctions/callbacks/maintenanceinform'
 import { runTrackVideoDownloadCallback } from './botFunctions/callbacks/trackvideodownload'
 import { runContactCommand } from './botFunctions/commands/contact'
@@ -20,7 +20,6 @@ import { runPlayingnowCommand } from './botFunctions/commands/playingnow'
 import { runPnalbumCommand } from './botFunctions/commands/pnalbum'
 import { runPnartistCommand } from './botFunctions/commands/pnartist'
 import { runPntrackCommand } from './botFunctions/commands/pntrack'
-import { runPlayingnowCallback } from './botFunctions/callbacks/playingnow'
 import { runTrackAudioDownloadCallback } from './botFunctions/callbacks/trackaudiodownload'
 import { runTrackDownloadCallback } from './botFunctions/callbacks/trackdonwload'
 import { runTracklyricsCallback } from './botFunctions/callbacks/tracklyrics'
@@ -28,8 +27,8 @@ import { runTracklyricsexplanationCallback } from './botFunctions/callbacks/trac
 import { runTrackpreviewCallback } from './botFunctions/callbacks/trackpreview'
 import { runTranslatedtracklyricsCallback } from './botFunctions/callbacks/translatedtracklyrics'
 import { MsMusicApi } from '../api/msMusicApi/base'
-import { ctxReply } from '../function/grammyFunctions'
 import { MsPrismaDbApi } from '../api/msPrismaDbApi/base'
+import { runPlayingnowCallback } from './botFunctions/callbacks/playingnow'
 
 export class MelodyScoutBot {
   private readonly msMusicApi: MsMusicApi
@@ -151,10 +150,6 @@ export class MelodyScoutBot {
         return
       }
       await runPlayingnowCommand(this.msMusicApi, this.msPrismaDbApi, ctx)
-      // if (Math.random() < 0.30) {
-      //   advInfo(`MelodyScout_Bot - Sending survey to ${ctx.from?.first_name ?? 'No name'} ${ctx.from?.last_name ?? ''} - ${ctx.from?.username ?? 'No username'} (${ctx.from?.id ?? 'No ID'})`)
-      //   await ctxReply(ctx, 'Ei! Você está gostando do MelodyScout? Estamos realizando uma pesquisa para melhorar o bot, você poderia responder? Seremos muito gratos!\nhttps://forms.gle/WCxZUdW8owwbxxcw8')
-      // }
     })
 
     this.bot.command(['history'], async (ctx) => {
@@ -251,11 +246,7 @@ export class MelodyScoutBot {
         await runMaintenanceinformCallback(ctx)
         return
       }
-      // await runPlayingnowCallback(this.msMusicApi, this.msPrismaDbApi, ctx)
-      // if (Math.random() < 0.30) {
-      //   advInfo(`MelodyScout_Bot - Sending survey to ${ctx.from?.first_name ?? 'No name'} ${ctx.from?.last_name ?? ''} - ${ctx.from?.username ?? 'No username'} (${ctx.from?.id ?? 'No ID'})`)
-      //   await ctxReply(ctx, 'Ei! Você está gostando do MelodyScout? Estamos realizando uma pesquisa para melhorar o bot, você poderia responder? Seremos muito gratos!\nhttps://forms.gle/WCxZUdW8owwbxxcw8')
-      // }
+      await runPlayingnowCallback(this.msMusicApi, this.msPrismaDbApi, ctx)
     })
 
     this.bot.callbackQuery(new RegExp(`^TLE${melodyScoutConfig.divider}`), async (ctx) => {
