@@ -27,9 +27,7 @@ export async function runTrackDownloadCallback (ctx: CallbackQueryContext<Contex
     return
   }
   const inlineKeyboard = new InlineKeyboard()
-  // inlineKeyboard.text('[📥] - Audio', getCallbackKey(['TAD', track.replace(/  +/g, ' '), artist.replace(/  +/g, ' ')]))
   inlineKeyboard.text(lang(ctxLang, 'trackDownloadAudioButton'), getCallbackKey(['TAD', track.replace(/  +/g, ' '), artist.replace(/  +/g, ' ')]))
-  // inlineKeyboard.text('[📥] - Video', getCallbackKey(['TVD', track.replace(/  +/g, ' '), artist.replace(/  +/g, ' ')]))
   inlineKeyboard.text(lang(ctxLang, 'trackDownloadVideoButton'), getCallbackKey(['TVD', track.replace(/  +/g, ' '), artist.replace(/  +/g, ' ')]))
   await ctxTempReply(ctx, lang(ctxLang, 'chooseTrackDownloadOptionMessage', { track, artist, requesterId: ctx.from.id, requesterName: ctx.from.first_name }), 15000, {
     reply_markup: inlineKeyboard,

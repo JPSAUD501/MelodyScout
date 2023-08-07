@@ -13,16 +13,16 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   const { album } = albumInfo
   const { track } = trackInfo
 
-  const tweetTextArray: string[] = []
-  tweetTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
-  tweetTextArray.push('')
-  tweetTextArray.push(`[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] ${sanitizeText(track.name)}`)
-  tweetTextArray.push(`- Artista: ${sanitizeText(artist.name)}`)
-  tweetTextArray.push('')
-  tweetTextArray.push('[📊] Scrobbles')
-  tweetTextArray.push(`- Música: ${Number(track.userplaycount).toLocaleString('pt-BR')}`)
-  tweetTextArray.push(`- Artista: ${Number(artist.stats.userplaycount).toLocaleString('pt-BR')}`)
-  const tweetInfoArray: string[] = []
+  const postTextArray: string[] = []
+  postTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
+  postTextArray.push('')
+  postTextArray.push(`[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] ${sanitizeText(track.name)}`)
+  postTextArray.push(`- Artista: ${sanitizeText(artist.name)}`)
+  postTextArray.push('')
+  postTextArray.push('[📊] Scrobbles')
+  postTextArray.push(`- Música: ${Number(track.userplaycount).toLocaleString('pt-BR')}`)
+  postTextArray.push(`- Artista: ${Number(artist.stats.userplaycount).toLocaleString('pt-BR')}`)
+  const postInfoArray: string[] = []
   if (
     Number(track.userplaycount) > 0 &&
     (
@@ -30,28 +30,28 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
       Number(spotifyTrackInfo.duration) > 0
     )
   ) {
-    tweetInfoArray.push(`Já ouviu essa música por ${Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)} horas e ${Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)) * 60)} minutos.`)
+    postInfoArray.push(`Já ouviu essa música por ${Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)} horas e ${Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)) * 60)} minutos.`)
   }
-  switch (tweetInfoArray.length) {
+  switch (postInfoArray.length) {
     case 0: {
       break
     }
     case 1: {
-      tweetTextArray.push('')
-      tweetTextArray.push(`[ℹ️] ${tweetInfoArray[0]}`)
+      postTextArray.push('')
+      postTextArray.push(`[ℹ️] ${postInfoArray[0]}`)
       break
     }
     default: {
-      tweetTextArray.push('')
-      tweetTextArray.push('[ℹ️] Informações')
-      tweetInfoArray.forEach((info) => {
-        tweetTextArray.push(`- ${info}`)
+      postTextArray.push('')
+      postTextArray.push('[ℹ️] Informações')
+      postInfoArray.forEach((info) => {
+        postTextArray.push(`- ${info}`)
       })
     }
   }
-  tweetTextArray.push('')
-  tweetTextArray.push(`${spotifyTrackInfo.externalURL.spotify}`)
-  const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+  postTextArray.push('')
+  postTextArray.push(`${spotifyTrackInfo.externalURL.spotify}`)
+  const postUrl = `https://x.com/intent/tweet?text=${postTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
 
   const textArray: string[] = []
   textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.trackImgUrl}">️️</a><a href="${urlLimiter(user.url)}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}</b>`)
@@ -112,7 +112,7 @@ export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, a
   }
   textArray.push('')
   textArray.push('<b>[🔗] Compartilhe</b>')
-  textArray.push(`- <a href="${tweetUrl}">Compartilhar no Twitter!</a>`)
+  textArray.push(`- <a href="${postUrl}">Compartilhar no 𝕏!</a>`)
 
   const text = textArray.join('\n')
   return text

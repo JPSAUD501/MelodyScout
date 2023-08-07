@@ -9,29 +9,7 @@ import { advError } from '../../../function/advancedConsole'
 import { lastfmConfig, melodyScoutConfig } from '../../../config'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { lang } from '../../../translations/base'
-
-const loadingMashupMessages = [
-  'Estamos trabalhando duro no seu mashup! Logo estará pronto. Por favor, aguarde!',
-  'Seu mashup está sendo cuidadosamente criado. Agradecemos a sua paciência!',
-  'Nosso time está ocupado criando seu mashup incrível. Aproveite esse tempo para ficar ainda mais ansioso!',
-  'Seu mashup está em processo de produção. Em breve, você terá algo fantástico em suas mãos!',
-  'Sabemos que você está ansioso pelo seu mashup. Fique tranquilo, estamos cuidando de tudo!',
-  'Sua espera pelo mashup está chegando ao fim. Agradecemos por sua paciência e prometemos que valerá a pena!',
-  'Estamos trabalhando com dedicação no seu mashup. Em breve, você poderá aproveitar o resultado final!',
-  'Ainda estamos desenvolvendo o seu mashup personalizado. Obrigado por aguardar. Será sensacional!',
-  'Seu mashup está em andamento. Aprecie a antecipação, em breve você será surpreendido!',
-  'Estamos investindo tempo e energia para criar o seu mashup perfeito. Agradecemos por sua compreensão!',
-  'Seu mashup está em fase de produção. Continue aguardando, logo você será recompensado!',
-  'Queremos que o seu mashup seja perfeito. A paciência é uma virtude que será recompensada em breve!',
-  'Seu mashup está em processo criativo. Agradeça pelo tempo extra, pois estamos garantindo um resultado excepcional!',
-  'Sua espera pelo mashup está quase no fim. Agradecemos por sua confiança e prometemos superar suas expectativas!',
-  'Estamos fazendo de tudo para entregar um mashup excepcional. Aproveite a ansiedade, pois em breve será recompensado!',
-  'Seu mashup está sendo produzido com carinho e dedicação. Fique tranquilo, você será notificado assim que estiver pronto!',
-  'Continuamos trabalhando arduamente no seu mashup personalizado. Agradecemos por sua paciência e confiança!',
-  'Seu mashup está em andamento. Aproveite essa jornada, em breve você terá algo único nas suas mãos!',
-  'Estamos dando os toques finais no seu mashup incrível. Obrigado por esperar, valerá a pena!',
-  'Seu mashup está sendo preparado com todo cuidado. Fique empolgado, pois em breve ele estará pronto para você aproveitar!'
-]
+import { getMashupText } from '../../textFabric/mashup'
 
 export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
@@ -94,14 +72,23 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: M
   const youtubeTrack2InfoRequest = msMusicApi.getYoutubeTrackInfo(mashupTracks[1].track, mashupTracks[1].artist)
   const [youtubeTrack1Info, youtubeTrack2Info] = await Promise.all([youtubeTrack1InfoRequest, youtubeTrack2InfoRequest])
   if (!youtubeTrack1Info.success) {
-    void ctxReply(ctx, 'Não foi possível resgatar as informações da primeira música do mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    // void ctxReply(ctx, 'Não foi possível resgatar as informações da primeira música do mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'mashupUnableToGetFirstTrackInfoErrorMessage'))
     return
   }
   if (!youtubeTrack2Info.success) {
-    void ctxReply(ctx, 'Não foi possível resgatar as informações da segunda música do mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    // void ctxReply(ctx, 'Não foi possível resgatar as informações da segunda música do mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'mashupUnableToGetSecondTrackInfoErrorMessage'))
     return
   }
-  const startProcessMessage = await ctxReply(ctx, `Eba! Vamos lá! Estou criando um mashup com as 2 últimas músicas que você ouviu!\n\n- <b><a href="${youtubeTrack1Info.videoUrl}">${mashupTracks[0].track} de ${mashupTracks[0].artist}</a></b>\n- <b><a href="${youtubeTrack2Info.videoUrl}">${mashupTracks[1].track} de ${mashupTracks[1].artist}</a></b>`, {
+  const startProcessMessage = await ctxReply(ctx, lang(ctxLang, 'mashupCreatingDataInformMessage', {
+    firstTrackUrl: youtubeTrack1Info.videoUrl,
+    firstTrackName: mashupTracks[0].track,
+    firstTrackArtist: mashupTracks[0].artist,
+    secondTrackUrl: youtubeTrack2Info.videoUrl,
+    secondTrackName: mashupTracks[1].track,
+    secondTrackArtist: mashupTracks[1].artist
+  }), {
     disable_web_page_preview: true
   })
   const youtubeTrack1Id = youtubeTrack1Info.videoId
@@ -122,17 +109,20 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: M
     ]
   })
   if (!raveCreateContentRequest.success) {
-    void ctxReply(ctx, 'Não foi possível criar o mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    // void ctxReply(ctx, 'Não foi possível criar o mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'unableToCreateMashupErrorMessage'))
     return
   }
   const mashupId = raveCreateContentRequest.data.data.id
   const raveGetContentRequest = await msRaveApi.raveApi.getInfo(mashupId)
   if (!raveGetContentRequest.success) {
-    void ctxReply(ctx, 'Não foi possível garantir que o mashup foi enviado para criação! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    // void ctxReply(ctx, 'Não foi possível garantir que o mashup foi enviado para criação! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'unableToGetMashupStartCreationConfirmationErrorMessage'))
     return
   }
   const startTime = Date.now()
-  await ctxReply(ctx, 'Beleza! Seu mashup já foi enviado para criação! Essa etapa pode demorar um pouco, por favor aguarde...')
+  // await ctxReply(ctx, 'Beleza! Seu mashup já foi enviado para criação! Essa etapa costuma demorar bastante mas não se preocupe, estou monitorando o processo e te aviso assim que ele estiver pronto! 😊')
+  await ctxReply(ctx, lang(ctxLang, 'mashupStartCreationInformMessage'))
   const maxTries = 100
   const timeBetweenTries = 15000
   let tries = 0
@@ -155,22 +145,24 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: M
       mashupReady = true
       break
     }
-    await ctxTempReply(ctx, `<i>${loadingMashupMessages[Math.floor(Math.random() * loadingMashupMessages.length)]}</i>\n\n<b>Etapa:</b> ${raveGetContentRequest.data.data[0].stage ?? 'Desconhecida'}`, timeBetweenTries + 2000, {
-      disable_notification: true
-    })
   }
   const endTime = Date.now()
   if (!mashupReady) {
     advError(`Mashup creation timed out! (id: ${mashupId}) (time: ${(endTime - startTime) / 1000}s) - ${JSON.stringify(lastResponse)} - URL: https://rave.dj/${mashupId}`)
-    void ctxReply(ctx, 'Infelizmente não foi possível criar o mashup ou ele demorou demais para ser criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    // void ctxReply(ctx, 'Infelizmente não foi possível criar o mashup ou ele demorou demais para ser criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'mashupCreationTimeoutErrorMessage'))
     return
   }
   if (lastResponse === undefined) {
     advError(`Mashup last response is undefined! (id: ${mashupId}) (time: ${(endTime - startTime) / 1000}s) - URL: https://rave.dj/${mashupId}`)
-    void ctxReply(ctx, 'Não foi possível resgatar as informações do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    // void ctxReply(ctx, 'Não foi possível resgatar as informações do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'unableToGetFinalMashupInfoErrorMessage'))
     return
   }
-  await ctxTempReply(ctx, 'Mashup criado com sucesso! 🎉\nEstou enviando ele para você, por favor aguarde enquanto o Telegram faz o upload do vídeo...', 10000, {
+  // await ctxTempReply(ctx, 'Mashup criado com sucesso! 🎉\nEstou enviando ele para você, por favor aguarde enquanto o Telegram faz o upload do vídeo...', 10000, {
+  //   disable_notification: true
+  // })
+  await ctxTempReply(ctx, lang(ctxLang, 'mashupCreatedInformMessage'), 10000, {
     disable_notification: true
   })
   const mashupUrlThumb = lastResponse?.thumbnails.default ?? melodyScoutConfig.msAndRaveDj
@@ -178,20 +170,23 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: M
   const mashupUrlVideo = lastResponse?.urls.default
   if (mashupUrlAudio === undefined || mashupUrlVideo === undefined) {
     advError(`Mashup audio or video URL is undefined! (id: ${mashupId}) (time: ${(endTime - startTime) / 1000}s) - ${mashupUrlAudio === undefined ? 'Audio URL is undefined' : 'Video URL is undefined'} - URL: https://rave.dj/${mashupId}`)
-    void ctxReply(ctx, 'Não foi possível resgatar a URL do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    // void ctxReply(ctx, 'Não foi possível resgatar a URL do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'unableToGetFinalMashupUrlErrorMessage'))
     return
   }
   const thumbResponse = await axios.get(mashupUrlThumb, { responseType: 'arraybuffer' }).catch((err) => { return Error(err) })
   if (thumbResponse instanceof Error) {
     advError(`Error while getting mashup thumbnail in mashup (id: ${mashupId}) (time: ${(endTime - startTime) / 1000}s) - ${thumbResponse.message} - URL: ${mashupUrlThumb}`)
-    void ctxReply(ctx, 'Não foi possível resgatar a thumbnail do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    // void ctxReply(ctx, 'Não foi possível resgatar a thumbnail do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'unableToGetFinalMashupThumbnailErrorMessage'))
     return
   }
   const thumbBuffer = Buffer.from(thumbResponse.data, 'utf-8')
   const videoResponse = await axios.get(mashupUrlVideo, { responseType: 'arraybuffer' }).catch((err) => { return Error(err) })
   if (videoResponse instanceof Error) {
     advError(`Error while getting mashup video: ${videoResponse.message}`)
-    void ctxReply(ctx, 'Não foi possível resgatar o vídeo do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    // void ctxReply(ctx, 'Não foi possível resgatar o vídeo do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, lang(ctxLang, 'unableToGetFinalMashupVideoErrorMessage'))
     return
   }
   const videoBuffer = Buffer.from(videoResponse.data, 'utf-8')
@@ -203,7 +198,7 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: M
     height: 720,
     thumb: new InputFile(thumbBuffer, 'mashup.jpg'),
     supports_streaming: false,
-    caption: `Espero que goste! 😊\n\n<b><a href="https://rave.dj/embed/${mashupId}">${lastResponse?.title ?? 'Mashup'} por RaveDJ</a></b>\n\nVocê pode também fazer o download do vídeo ou audio do mashup clicando nos botões abaixo!`,
+    caption: getMashupText(`https://rave.dj/embed/${mashupId}`, lastResponse?.title ?? 'Mashup'),
     reply_markup: inlineKeyboard,
     reply_to_message_id: startProcessMessage?.message_id,
     allow_sending_without_reply: true

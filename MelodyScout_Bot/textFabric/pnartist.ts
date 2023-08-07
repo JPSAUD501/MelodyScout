@@ -9,36 +9,36 @@ export function getPnartistText (userInfo: UserInfo, artistInfo: ArtistInfo, spo
   const { user } = userInfo
   const { artist } = artistInfo
 
-  const tweetTextArray: string[] = []
-  tweetTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
-  tweetTextArray.push('')
-  tweetTextArray.push('[🎧] Sobre o artista')
-  tweetTextArray.push(`- Artista: ${sanitizeText(artist.name)}`)
-  tweetTextArray.push('')
-  tweetTextArray.push(`[📊] ${Number(artist.stats.userplaycount).toLocaleString('pt-BR')} Scrobbles`)
-  const tweetInfoArray: string[] = []
-  if (spotifyArtistInfo.popularity !== undefined) tweetInfoArray.push(`A popularidade atual desse artista é: [${spotifyArtistInfo.popularity}][${'★'.repeat(Math.floor(spotifyArtistInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyArtistInfo.popularity / 20))}]`)
-  switch (tweetInfoArray.length) {
+  const postTextArray: string[] = []
+  postTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
+  postTextArray.push('')
+  postTextArray.push('[🎧] Sobre o artista')
+  postTextArray.push(`- Artista: ${sanitizeText(artist.name)}`)
+  postTextArray.push('')
+  postTextArray.push(`[📊] ${Number(artist.stats.userplaycount).toLocaleString('pt-BR')} Scrobbles`)
+  const postInfoArray: string[] = []
+  if (spotifyArtistInfo.popularity !== undefined) postInfoArray.push(`A popularidade atual desse artista é: [${spotifyArtistInfo.popularity}][${'★'.repeat(Math.floor(spotifyArtistInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyArtistInfo.popularity / 20))}]`)
+  switch (postInfoArray.length) {
     case 0: {
       break
     }
     case 1: {
-      tweetTextArray.push('')
-      tweetTextArray.push(`[ℹ️] ${tweetInfoArray[0]}`)
+      postTextArray.push('')
+      postTextArray.push(`[ℹ️] ${postInfoArray[0]}`)
       break
     }
     default: {
-      tweetTextArray.push('')
-      tweetTextArray.push('[ℹ️] Informações')
-      tweetInfoArray.forEach((info) => {
-        tweetTextArray.push(`- ${info}`)
+      postTextArray.push('')
+      postTextArray.push('[ℹ️] Informações')
+      postInfoArray.forEach((info) => {
+        postTextArray.push(`- ${info}`)
       })
       break
     }
   }
-  tweetTextArray.push('')
-  tweetTextArray.push(`${spotifyArtistInfo.externalURL.spotify}`)
-  const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+  postTextArray.push('')
+  postTextArray.push(`${spotifyArtistInfo.externalURL.spotify}`)
+  const postUrl = `https://x.com/intent/tweet?text=${postTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
 
   const textArray: string[] = []
   textArray.push(`<b><a href="${spotifyArtistInfo.images?.[0].url ?? ''}">️️</a><a href="${artist.image[user.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.userImgUrl}">️️</a><a href="${urlLimiter(user.url)}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}</b>`)
@@ -63,7 +63,7 @@ export function getPnartistText (userInfo: UserInfo, artistInfo: ArtistInfo, spo
   textArray.push(`<b>[📊] ${Number(artist.stats.userplaycount).toLocaleString('pt-BR')} Scrobbles</b>`)
   textArray.push('')
   textArray.push('<b>[🔗] Compartilhe</b>')
-  textArray.push(`- <a href="${tweetUrl}">Compartilhar no Twitter!</a>`)
+  textArray.push(`- <a href="${postUrl}">Compartilhar no 𝕏!</a>`)
 
   const text = textArray.join('\n')
   return text

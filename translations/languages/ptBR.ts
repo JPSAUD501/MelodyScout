@@ -76,5 +76,17 @@ export const ptBR = {
   videoButton: '[🎬] - Vídeo',
   errorSendingMessage: 'Parece que algo deu errado ao enviar a mensagem, por favor tente novamente!',
   whatAreYouListeningNowPinMessage: 'O que vc está ouvindo agr?',
-  playingNowButton: 'Tocando Agora'
+  playingNowButton: 'Tocando Agora',
+  mashupUnableToGetFirstTrackInfoErrorMessage: 'Não foi possível resgatar as informações da primeira música do mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.',
+  mashupUnableToGetSecondTrackInfoErrorMessage: 'Não foi possível resgatar as informações da segunda música do mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.',
+  mashupCreatingDataInformMessage: 'Eba! Vamos lá! Estou criando um mashup com as 2 últimas músicas que você ouviu!\n\n- <b><a href="{{firstTrackUrl}}">{{firstTrackName}} de{{firstTrackArtist}}</a></b>\n- <b><a href="{{secondTrackUrl}}">{{secondTrackName}} de {{secondTrackArtist}}</a></b>',
+  unableToCreateMashupErrorMessage: 'Não foi possível criar o mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.',
+  unableToGetMashupStartCreationConfirmationErrorMessage: 'Não foi possível garantir que o mashup foi enviado para criação! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.',
+  mashupStartCreationInformMessage: 'Beleza! Seu mashup já foi enviado para criação! Essa etapa costuma demorar bastante mas não se preocupe, estou monitorando o processo e te aviso assim que ele estiver pronto! 😊',
+  mashupCreationTimeoutErrorMessage: 'Infelizmente não foi possível criar o mashup ou ele demorou demais para ser criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.',
+  unableToGetFinalMashupInfoErrorMessage: 'Não foi possível resgatar as informações do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.',
+  mashupCreatedInformMessage: 'Mashup criado com sucesso! 🎉\nEstou enviando ele para você, por favor aguarde enquanto o Telegram faz o upload do vídeo…',
+  unableToGetFinalMashupUrlErrorMessage: 'Não foi possível resgatar a URL do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.',
+  unableToGetFinalMashupThumbnailErrorMessage: 'Não foi possível resgatar a thumbnail do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.',
+  unableToGetFinalMashupVideoErrorMessage: 'Não foi possível resgatar o vídeo do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.'
 }
