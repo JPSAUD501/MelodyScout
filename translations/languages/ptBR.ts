@@ -55,7 +55,6 @@ export const ptBR = {
   sendingVideoMessage: '<b>[🎥] Enviando vídeo por favor aguarde!</b>',
   allUsersListHeaderMessage: '<b>[🗃] Lista de usuários:</b>\n- Total de usuários: <code>{{userCount}}</code>',
   allUsersListUserMessagePart: '<b>[{{userEmoji}}]<code> {{userLastfmName}</code>:</b>\n- TelegramID: <code>{{userTelegramId}}</code>\n- LastUpdate: <code>{{userLastUpdate}}</code>',
-  contactMessage: 'Para entrar em contato com o desenvolvedor do bot, envie uma mensagem para o @jpsaud!',
   firstTimeRegisterWelcomeMessage: 'Verifiquei que é seu primeiro cadastro no MelodyScout! Que bom que você decidiu me conhecer!',
   getTopAlbumsErrorMessage: 'Estranho, não foi possível resgatar os seus álbuns mais tocados do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.',
   getTopArtistsErrorMessage: 'Estranho, não foi possível resgatar os seus artistas mais tocados do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.',
@@ -88,5 +87,13 @@ export const ptBR = {
   mashupCreatedInformMessage: 'Mashup criado com sucesso! 🎉\nEstou enviando ele para você, por favor aguarde enquanto o Telegram faz o upload do vídeo…',
   unableToGetFinalMashupUrlErrorMessage: 'Não foi possível resgatar a URL do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.',
   unableToGetFinalMashupThumbnailErrorMessage: 'Não foi possível resgatar a thumbnail do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.',
-  unableToGetFinalMashupVideoErrorMessage: 'Não foi possível resgatar o vídeo do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.'
+  unableToGetFinalMashupVideoErrorMessage: 'Não foi possível resgatar o vídeo do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.',
+  myuserMissingLastfmUserErrorMessage: 'Ops! Parece que você não me informou o seu nome de usuário do Last.fm! Por favor, tente novamente informando o seu nome de usuário do Last.fm como no exemplo a seguir: <code>/myuser MelodyScout</code>',
+  myuserAlreadyRegisteredLastfmUserInformMessage: 'Vi aqui que você já tem um nome de usuário do Last.fm cadastrado! Ele é "<code>{{lastfmUser}}</code>"! Se você quiser atualizar ele, por favor, tente novamente informando o seu nome de usuário do Last.fm como no exemplo a seguir: <code>/myuser MelodyScout</code>',
+  myuserAlreadyRegisteredLastfmUserErrorMessage: 'Ops! Parece que você já tem o nome de usuário do Last.fm "<code>{{lastfmUser}}</code>" cadastrado! Se você quiser atualizar ele, por favor, tente novamente informando o seu novo nome de usuário do Last.fm!',
+  myuserAlreadyRegisteredLastfmUserChangingInformMessage: 'Verifiquei que você já tem um nome de usuário do Last.fm cadastrado! Vou atualizar ele para você!',
+  myuserLastfmUserCheckErrorMessage: 'Ops! Eu não consegui verificar se o seu nome de usuário do Last.fm existe! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!',
+  myuserLastfmUserNotExistsInLastfmErrorMessage: 'Ops! Parece que o nome de usuário do Last.fm que você me informou não existe! Por favor, tente novamente informando um nome de usuário do Last.fm válido!',
+  myuserLastfmUserDatabaseUpdateErrorMessage: 'Ops! Eu não consegui registrar o seu nome de usuário do Last.fm! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!',
+  myuserLastfmUserSuccessfullyRegisteredInformMessage: 'Pronto! Seu nome de usuário do Last.fm foi registrado com sucesso! Agradeço imensamente por isso e espero que você aproveite o bot!'
 }
