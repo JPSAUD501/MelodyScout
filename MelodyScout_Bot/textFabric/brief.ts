@@ -112,7 +112,7 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
   textArray.push('')
   switch (true) {
     case (postText.metrics.postUrl().length < 300): {
-      textArray.push(`<b>[📊] Métricas</b> (<i><a href="${postText.metrics.postUrl()}">Tweetar</a></i>)`)
+      textArray.push(`<b>[📊] Métricas</b> (<i><a href="${postText.metrics.postUrl()}">Postar no 𝕏</a></i>)`)
       break
     }
     default: {
@@ -126,14 +126,14 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
   textArray.push(`- Artistas conhecidos: <b>${Number(user.artist_count).toLocaleString('pt-BR')}</b>`)
   textArray.push(`- Álbuns conhecidos: <b>${Number(user.album_count).toLocaleString('pt-BR')}</b>`)
   textArray.push('')
-  textArray.push(`<b>[ℹ️] Informações</b> (<i><a href="${postText.infos.postUrl()}">Tweetar</a></i>)`)
+  textArray.push(`<b>[ℹ️] Informações</b> (<i><a href="${postText.infos.postUrl()}">Postar no 𝕏</a></i>)`)
   textArray.push(`- Dentre as suas músicas ouvidas <b>${Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount) * 100).toFixed(2)).toLocaleString('pt-BR')}%</b> são repetidas e <b>${Number(((Number(user.track_count) / Number(user.playcount)) * 100).toFixed(2)).toLocaleString('pt-BR')}%</b> são novas.`)
   textArray.push(`- Em média você repete <b>${Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.track_count)).toFixed(2)).toLocaleString('pt-BR')}</b> vezes cada música que conhece.`)
   textArray.push('')
   if (toptracks.track.length > 0) {
     switch (true) {
       case (postText.mostPlayedTracks.postUrl().length < 300): {
-        textArray.push(`<b>[🎵] Músicas mais tocadas</b> (<i><a href="${postText.mostPlayedTracks.postUrl()}">Tweetar</a></i>)`)
+        textArray.push(`<b>[🎵] Músicas mais tocadas</b> (<i><a href="${postText.mostPlayedTracks.postUrl()}">Postar no 𝕏</a></i>)`)
         break
       }
       default: {
@@ -150,7 +150,7 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
   if (topalbums.album.length > 0) {
     switch (true) {
       case (postText.mostPlayedAlbums.postUrl().length < 300): {
-        textArray.push(`<b>[💿] Álbuns mais tocados</b> (<i><a href="${postText.mostPlayedAlbums.postUrl()}">Tweetar</a></i>)`)
+        textArray.push(`<b>[💿] Álbuns mais tocados</b> (<i><a href="${postText.mostPlayedAlbums.postUrl()}">Postar no 𝕏</a></i>)`)
         break
       }
       default: {
@@ -167,7 +167,7 @@ export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, 
   if (topartists.artist.length > 0) {
     switch (true) {
       case (postText.mostPlayedArtists.postUrl().length < 300): {
-        textArray.push(`<b>[👨‍🎤] Artistas mais tocados</b> (<i><a href="${postText.mostPlayedArtists.postUrl()}">Tweetar</a></i>)`)
+        textArray.push(`<b>[👨‍🎤] Artistas mais tocados</b> (<i><a href="${postText.mostPlayedArtists.postUrl()}">Postar no 𝕏</a></i>)`)
         break
       }
       default: {
