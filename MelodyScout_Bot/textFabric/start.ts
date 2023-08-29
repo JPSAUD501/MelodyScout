@@ -1,4 +1,4 @@
-export function getStartText (): string {
+export function getStartText (ctxLang: string | undefined): string {
   const textArray: string[] = []
   textArray.push('Oi, eu sou o MelodyScout, e estou aqui rastrear perfis no Last.fm!')
   textArray.push('Que legal fazer parte desse grupo com vocês! Espero que gostem de mim! Bom, vamos lá!')

@@ -3,6 +3,7 @@ import { ctxReply } from '../../../function/grammyFunctions'
 import { advLog } from '../../../function/advancedConsole'
 import { melodyScoutConfig } from '../../../config'
 import { lang } from '../../../translations/base'
+import { getMaintenanceText } from '../../textFabric/maintenance'
 
 export async function runMaintenanceCommand (ctx: CommandContext<Context>): Promise<{
   success: true
@@ -29,12 +30,12 @@ export async function runMaintenanceCommand (ctx: CommandContext<Context>): Prom
   }
   switch (args[1]) {
     case 'on': {
-      await ctxReply(ctx, lang(ctxLang, 'maintenanceModeActivatedInformMessage'))
+      await ctxReply(ctx, getMaintenanceText(ctxLang, true))
       advLog('Maintenance mode activated!')
       return { success: true, maintenanceMode: true }
     }
     case 'off': {
-      await ctxReply(ctx, lang(ctxLang, 'maintenanceModeDeactivatedInformMessage'))
+      await ctxReply(ctx, getMaintenanceText(ctxLang, false))
       advLog('Maintenance mode deactivated!')
       return { success: true, maintenanceMode: false }
     }

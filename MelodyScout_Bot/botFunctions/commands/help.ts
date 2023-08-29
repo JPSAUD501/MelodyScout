@@ -9,5 +9,5 @@ export async function runHelpCommand (ctx: CommandContext<Context>): Promise<voi
     void ctxReply(ctx, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
     return
   }
-  await ctxReply(ctx, getHelpText())
+  await ctxReply(ctx, getHelpText(ctxLang))
 }

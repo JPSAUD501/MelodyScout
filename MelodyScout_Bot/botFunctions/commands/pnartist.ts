@@ -71,5 +71,5 @@ export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi:
   }
   const inlineKeyboard = new InlineKeyboard()
   inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyArtistInfo.data.externalURL.spotify)
-  await ctxReply(ctx, getPnartistText(userInfo.data, artistInfo.data, spotifyArtistInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+  await ctxReply(ctx, getPnartistText(ctxLang, userInfo.data, artistInfo.data, spotifyArtistInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
 }

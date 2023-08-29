@@ -6,7 +6,7 @@ import { melodyScoutConfig } from '../../config'
 import { sanitizeText } from '../../function/sanitizeText'
 import { urlLimiter } from '../../function/urlLimiter'
 
-export function getBriefText (userInfo: UserInfo, userTopTracks: UserTopTracks, userTopAlbums: UserTopAlbums, userTopArtists: UserTopArtists): string {
+export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, userTopTracks: UserTopTracks, userTopAlbums: UserTopAlbums, userTopArtists: UserTopArtists): string {
   const { user } = userInfo
   const { toptracks } = userTopTracks
   const { topalbums } = userTopAlbums

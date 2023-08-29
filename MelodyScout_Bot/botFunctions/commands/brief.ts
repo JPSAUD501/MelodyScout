@@ -58,5 +58,5 @@ export async function runBriefCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comman
     void ctxReply(ctx, lang(ctxLang, 'getTopArtistsErrorMessage'))
     return
   }
-  await ctxReply(ctx, getBriefText(userInfo.data, userTopTracks.data, userTopAlbums.data, userTopArtists.data))
+  await ctxReply(ctx, getBriefText(ctxLang, userInfo.data, userTopTracks.data, userTopAlbums.data, userTopArtists.data))
 }

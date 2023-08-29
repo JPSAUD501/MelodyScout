@@ -7,7 +7,7 @@ import { melodyScoutConfig } from '../../config'
 import { sanitizeText } from '../../function/sanitizeText'
 import { urlLimiter } from '../../function/urlLimiter'
 
-export function getPlayingnowText (userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, nowPlaying: boolean): string {
+export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, nowPlaying: boolean): string {
   const { user } = userInfo
   const { artist } = artistInfo
   const { album } = albumInfo

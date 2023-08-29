@@ -5,7 +5,7 @@ import { melodyScoutConfig } from '../../config'
 import { sanitizeText } from '../../function/sanitizeText'
 import { urlLimiter } from '../../function/urlLimiter'
 
-export function getPnartistText (userInfo: UserInfo, artistInfo: ArtistInfo, spotifyArtistInfo: Artist, nowPlaying: boolean): string {
+export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, spotifyArtistInfo: Artist, nowPlaying: boolean): string {
   const { user } = userInfo
   const { artist } = artistInfo
 

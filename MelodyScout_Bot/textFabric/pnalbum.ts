@@ -6,7 +6,7 @@ import { melodyScoutConfig } from '../../config'
 import { sanitizeText } from '../../function/sanitizeText'
 import { urlLimiter } from '../../function/urlLimiter'
 
-export function getPnalbumText (userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, spotifyAlbumInfo: Album, nowPlaying: boolean): string {
+export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, spotifyAlbumInfo: Album, nowPlaying: boolean): string {
   const { user } = userInfo
   const { artist } = artistInfo
   const { album } = albumInfo

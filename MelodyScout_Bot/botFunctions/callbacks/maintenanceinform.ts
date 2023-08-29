@@ -1,7 +1,7 @@
 import { CallbackQueryContext, Context } from 'grammy'
 import { advInfo } from '../../../function/advancedConsole'
 import { ctxAnswerCallbackQuery, ctxReply } from '../../../function/grammyFunctions'
-import { getMaintenanceText } from '../../textFabric/maintenance'
+import { getMaintenanceText } from '../../textFabric/maintenanceinform'
 import { lang } from '../../../translations/base'
 
 export async function runMaintenanceinformCallback (ctx: CallbackQueryContext<Context>): Promise<void> {

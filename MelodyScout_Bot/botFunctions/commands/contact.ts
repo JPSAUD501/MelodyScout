@@ -4,6 +4,6 @@ import { ctxReply } from '../../../function/grammyFunctions'
 import { getContactText } from '../../textFabric/contact'
 
 export async function runContactCommand (ctx: CommandContext<Context>): Promise<void> {
-  // const ctxLang = ctx.from?.language_code
-  await ctxReply(ctx, getContactText())
+  const ctxLang = ctx.from?.language_code
+  await ctxReply(ctx, getContactText(ctxLang))
 }

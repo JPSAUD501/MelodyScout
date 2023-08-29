@@ -2,6 +2,7 @@ import { CommandContext, Context } from 'grammy'
 import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { ctxReply } from '../../../function/grammyFunctions'
 import { lang } from '../../../translations/base'
+import { getForgetmeText } from '../../textFabric/forgetme'
 
 export async function runForgetmeCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
@@ -38,5 +39,5 @@ export async function runForgetmeCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Com
     void ctxReply(ctx, lang(ctxLang, 'unableToForgetLastfmUserInDbErrorMessage'))
     return
   }
-  await ctxReply(ctx, lang(ctxLang, 'lastfmUserForgottenSuccessMessage'))
+  await ctxReply(ctx, getForgetmeText(ctxLang))
 }

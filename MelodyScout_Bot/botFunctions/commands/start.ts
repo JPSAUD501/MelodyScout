@@ -9,5 +9,5 @@ export async function runStartCommand (ctx: CommandContext<Context>): Promise<vo
     void ctxReply(ctx, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
     return
   }
-  await ctxReply(ctx, getStartText())
+  await ctxReply(ctx, getStartText(ctxLang))
 }

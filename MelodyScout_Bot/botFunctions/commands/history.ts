@@ -52,5 +52,5 @@ export async function runHistoryCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comm
     void ctxReply(ctx, lang(ctxLang, 'noRecentTracksError'))
     return
   }
-  await ctxReply(ctx, getHistoryText(userInfo.data, userRecentTracks.data))
+  await ctxReply(ctx, getHistoryText(ctxLang, userInfo.data, userRecentTracks.data))
 }

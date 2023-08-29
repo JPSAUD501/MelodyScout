@@ -5,6 +5,7 @@ import { advInfo } from '../../../function/advancedConsole'
 import { lastfmConfig } from '../../../config'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { lang } from '../../../translations/base'
+import { getMyuserText } from '../../textFabric/myuser'
 
 export async function runMyuserCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
@@ -69,5 +70,5 @@ export async function runMyuserCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comma
     return
   }
   advInfo(`The user "${telegramUserId}" registered the Last.fm username "${username}" in MelodyScout!`)
-  await ctxReply(ctx, lang(ctxLang, 'myuserLastfmUserSuccessfullyRegisteredInformMessage'))
+  await ctxReply(ctx, getMyuserText(ctxLang))
 }

@@ -4,7 +4,7 @@ import { melodyScoutConfig } from '../../config'
 import { sanitizeText } from '../../function/sanitizeText'
 import { urlLimiter } from '../../function/urlLimiter'
 
-export function getHistoryText (userInfo: UserInfo, userRecentTracks: UserRecentTracks): string {
+export function getHistoryText (ctxLang: string | undefined, userInfo: UserInfo, userRecentTracks: UserRecentTracks): string {
   const { user } = userInfo
   const { recenttracks } = userRecentTracks
   const textArray: string[] = []

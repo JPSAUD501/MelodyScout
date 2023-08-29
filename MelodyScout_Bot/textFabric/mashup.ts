@@ -1,4 +1,4 @@
-export function getMashupText (mashupUrl: string, mashupTitle: string): string {
+export function getMashupText (ctxLang: string | undefined, mashupUrl: string, mashupTitle: string): string {
   const textArray: string[] = []
   textArray.push('Espero que goste! 😊')
   textArray.push('')

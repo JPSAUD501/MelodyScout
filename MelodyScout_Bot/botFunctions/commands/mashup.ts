@@ -198,7 +198,7 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: M
     height: 720,
     thumb: new InputFile(thumbBuffer, 'mashup.jpg'),
     supports_streaming: false,
-    caption: getMashupText(`https://rave.dj/embed/${mashupId}`, lastResponse?.title ?? 'Mashup'),
+    caption: getMashupText(ctxLang, `https://rave.dj/embed/${mashupId}`, lastResponse?.title ?? 'Mashup'),
     reply_markup: inlineKeyboard,
     reply_to_message_id: startProcessMessage?.message_id,
     allow_sending_without_reply: true

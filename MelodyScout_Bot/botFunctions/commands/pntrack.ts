@@ -94,5 +94,5 @@ export async function runPntrackCommand (msMusicApi: MsMusicApi, msPrismaDbApi: 
   inlineKeyboard.row()
   inlineKeyboard.text(lang(ctxLang, 'trackPreviewButton'), getCallbackKey(['TP', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
   inlineKeyboard.text(lang(ctxLang, 'trackDownloadButton'), getCallbackKey(['TD', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
-  await ctxReply(ctx, getPntrackText(userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+  await ctxReply(ctx, getPntrackText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
 }
