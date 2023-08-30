@@ -34,5 +34,5 @@ export async function runTracklyricsCallback (ctx: CallbackQueryContext<Context>
   }
   const inlineKeyboard = new InlineKeyboard()
   inlineKeyboard.text(lang(ctxLang, 'trackLyricsTranslateButton'), getCallbackKey(['TTL', track, artist]))
-  await ctxReply(ctx, getLyricsText(track, artist, geniusSong.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId, reply_markup: inlineKeyboard, disable_web_page_preview: true })
+  await ctxReply(ctx, getLyricsText(ctxLang, track, artist, geniusSong.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId, reply_markup: inlineKeyboard, disable_web_page_preview: true })
 }

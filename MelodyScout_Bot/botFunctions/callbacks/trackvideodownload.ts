@@ -3,6 +3,7 @@ import { ctxAnswerCallbackQuery, ctxReply, ctxReplyWithVideo, ctxTempReply } fro
 import { melodyScoutConfig } from '../../../config'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { lang } from '../../../translations/base'
+import { getTrackvideodownloadText } from '../../textFabric/trackvideodownload'
 // import axios from 'axios'
 
 export async function runTrackVideoDownloadCallback (msMusicApi: MsMusicApi, ctx: CallbackQueryContext<Context>): Promise<void> {
@@ -48,7 +49,7 @@ export async function runTrackVideoDownloadCallback (msMusicApi: MsMusicApi, ctx
   const inputFile = new InputFile(download.file.buffer, `${track}-MelodyScoutAi.mp4`)
 
   await ctxReplyWithVideo(ctx, inputFile, {
-    caption: lang(ctxLang, 'trackVideoDownloadCaption', { track, artist, requesterId: ctx.from.id, requesterName: ctx.from.first_name }),
+    caption: getTrackvideodownloadText(ctxLang, track, artist, ctx.from.id.toString(), ctx.from.first_name),
     reply_to_message_id: messageReplyId
   })
 }

@@ -55,7 +55,7 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
     return
   }
   const TTSAudioInputFile = new InputFile(TTSAudio.data.audio, `${track}-MelodyScoutAi.mp3`)
-  const commandResponse = await ctxReply(ctx, getTracklyricsexplanationText(track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), {
+  const commandResponse = await ctxReply(ctx, getTracklyricsexplanationText(ctxLang, track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), {
     reply_to_message_id: messageId,
     disable_web_page_preview: true
   })

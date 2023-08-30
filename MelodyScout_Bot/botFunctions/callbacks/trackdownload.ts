@@ -3,6 +3,7 @@ import { ctxAnswerCallbackQuery, ctxReply, ctxTempReply } from '../../../functio
 import { getCallbackKey } from '../../../function/callbackMaker'
 import { melodyScoutConfig } from '../../../config'
 import { lang } from '../../../translations/base'
+import { getTrackdownloadText } from '../../textFabric/trackdownload'
 // import axios from 'axios'
 
 export async function runTrackDownloadCallback (ctx: CallbackQueryContext<Context>): Promise<void> {
@@ -29,7 +30,7 @@ export async function runTrackDownloadCallback (ctx: CallbackQueryContext<Contex
   const inlineKeyboard = new InlineKeyboard()
   inlineKeyboard.text(lang(ctxLang, 'trackDownloadAudioButton'), getCallbackKey(['TAD', track.replace(/  +/g, ' '), artist.replace(/  +/g, ' ')]))
   inlineKeyboard.text(lang(ctxLang, 'trackDownloadVideoButton'), getCallbackKey(['TVD', track.replace(/  +/g, ' '), artist.replace(/  +/g, ' ')]))
-  await ctxTempReply(ctx, lang(ctxLang, 'chooseTrackDownloadOptionMessage', { track, artist, requesterId: ctx.from.id, requesterName: ctx.from.first_name }), 15000, {
+  await ctxTempReply(ctx, getTrackdownloadText(ctxLang, track, artist, ctx.from.id.toString(), ctx.from.first_name), 15000, {
     reply_markup: inlineKeyboard,
     reply_to_message_id: messageId,
     disable_notification: true

@@ -3,6 +3,7 @@ import { ctxAnswerCallbackQuery, ctxReply, ctxReplyWithAudio } from '../../../fu
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { melodyScoutConfig } from '../../../config'
 import { lang } from '../../../translations/base'
+import { getTrackpreviewText } from '../../textFabric/trackpreview'
 
 export async function runTrackpreviewCallback (msMusicApi: MsMusicApi, ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
@@ -26,7 +27,7 @@ export async function runTrackpreviewCallback (msMusicApi: MsMusicApi, ctx: Call
   await ctxReplyWithAudio(ctx, new InputFile({ url: spotifyTrackInfo.data.previewURL }), {
     title: track,
     performer: artist,
-    caption: lang(ctxLang, 'trackPreviewCaptionMessage', { track, artist, requesterId: ctx.from.id, requesterName: ctx.from.first_name }),
+    caption: getTrackpreviewText(ctxLang, track, artist, ctx.from.id.toString(), ctx.from.first_name),
     reply_to_message_id: messageId
   })
 }
