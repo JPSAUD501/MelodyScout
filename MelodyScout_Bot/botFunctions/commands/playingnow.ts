@@ -14,7 +14,6 @@ export async function runPlayingnowCommand (msMusicApi: MsMusicApi, msPrismaDbAp
     void ctxReply(ctx, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
     return
   }
-  // TODO New command use case "/playingnow @TelegramUser"
   const telegramUserId = ctx.from?.id
   if (telegramUserId === undefined) {
     await ctxReply(ctx, lang(ctxLang, 'unableToGetUserIdErrorMessage'))

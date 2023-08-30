@@ -58,7 +58,7 @@ export class MsOpenAiApi {
         error: 'No choices generated'
       }
     }
-    let explanationText: string | undefined = explanation.message?.content.replace(/\n{2,}/g, '\n\n').trim()
+    let explanationText: string | undefined = explanation.message?.content?.replace(/\n{2,}/g, '\n\n').trim()
     if (explanationText === undefined) {
       advLog(`MsOpenAiAPi - No explanation text generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
       return {
@@ -119,7 +119,7 @@ export class MsOpenAiApi {
         error: 'No choices generated'
       }
     }
-    const emojisText: string | undefined = explanation.message?.content.replace(/\n{2,}/g, '\n\n').trim()
+    const emojisText: string | undefined = explanation.message?.content?.replace(/\n{2,}/g, '\n\n').trim()
     if (emojisText === undefined) {
       advLog(`MsOpenAiAPi - No emojis text generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
       return {

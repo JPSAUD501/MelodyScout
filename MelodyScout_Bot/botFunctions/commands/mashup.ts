@@ -196,7 +196,7 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: M
   await ctxReplyWithVideo(ctx, new InputFile(videoBuffer, 'mashup.mp4'), {
     width: 1280,
     height: 720,
-    thumb: new InputFile(thumbBuffer, 'mashup.jpg'),
+    thumbnail: new InputFile(thumbBuffer, 'mashup.jpg'),
     supports_streaming: false,
     caption: getMashupText(ctxLang, `https://rave.dj/embed/${mashupId}`, lastResponse?.title ?? 'Mashup'),
     reply_markup: inlineKeyboard,

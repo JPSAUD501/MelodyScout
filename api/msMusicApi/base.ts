@@ -1,7 +1,7 @@
 import { Client, Track, Artist, Album } from 'spotify-api.js'
 import { youtube } from 'scrape-youtube'
-import ytStream from 'youtube-stream-url'
-import { zodYtSteamInfo } from './types/zodYtStreamInfo'
+// import ytStream from 'youtube-stream-url'
+// import { zodYtSteamInfo } from './types/zodYtStreamInfo'
 import youtubedl from 'youtube-dl-exec'
 import fs, { ReadStream } from 'fs'
 import path from 'path'
@@ -30,8 +30,8 @@ export interface MsMusicApiSpotifyArtistInfo {
 
 export interface MsMusicApiYoutubeTrackInfo {
   success: true
-  videoWithAudioRawUrl: string
-  audioRawUrl: string
+  // videoWithAudioRawUrl: string
+  // audioRawUrl: string
   videoUrl: string
   videoId: string
 }
@@ -117,26 +117,26 @@ export class MsMusicApi {
     const ytSearchResult = await youtube.search(`${track} - ${artist}`)
     if (ytSearchResult.videos.length <= 0) return { success: false, error: 'No videos found!' }
     const video = ytSearchResult.videos[0]
-    const ytStreamInfoResponse = await ytStream.getInfo({ url: video.link })
-    const ytStreamInfo = zodYtSteamInfo.safeParse(ytStreamInfoResponse)
-    if (!ytStreamInfo.success) {
-      advError(`Error while getting track info from Youtube! YtStream info is not valid! Track: ${track} Artist: ${artist} - Error: ${JSON.stringify(ytStreamInfo.error, null, 2)}`)
-      return { success: false, error: 'YtStream info is not valid!' }
-    }
-    const formats = ytStreamInfo.data.formats
+    // const ytStreamInfoResponse = await ytStream.getInfo({ url: video.link })
+    // const ytStreamInfo = zodYtSteamInfo.safeParse(ytStreamInfoResponse)
+    // if (!ytStreamInfo.success) {
+    //   advError(`Error while getting track info from Youtube! YtStream info is not valid! Track: ${track} Artist: ${artist} - Error: ${JSON.stringify(ytStreamInfo.error, null, 2)}`)
+    //   return { success: false, error: 'YtStream info is not valid!' }
+    // }
+    // const formats = ytStreamInfo.data.formats
 
-    const audioFormats = formats.filter((format) => format.mimeType.includes('audio/mp4')).sort((a, b) => b.bitrate - a.bitrate)
-    if (audioFormats.length <= 0) return { success: false, error: 'No audio formats found!' }
-    const audioFormat = audioFormats[0]
+    // const audioFormats = formats.filter((format) => format.mimeType.includes('audio/mp4')).sort((a, b) => b.bitrate - a.bitrate)
+    // if (audioFormats.length <= 0) return { success: false, error: 'No audio formats found!' }
+    // const audioFormat = audioFormats[0]
 
-    const videoFormats = formats.filter((format) => format.mimeType.includes('video/mp4')).filter((format) => format.audioQuality !== undefined).sort((a, b) => b.bitrate - a.bitrate)
-    if (videoFormats.length <= 0) return { success: false, error: 'No video formats found!' }
-    const videoWithAudioFormat = videoFormats[0]
+    // const videoFormats = formats.filter((format) => format.mimeType.includes('video/mp4')).filter((format) => format.audioQuality !== undefined).sort((a, b) => b.bitrate - a.bitrate)
+    // if (videoFormats.length <= 0) return { success: false, error: 'No video formats found!' }
+    // const videoWithAudioFormat = videoFormats[0]
 
     return {
       success: true,
-      videoWithAudioRawUrl: videoWithAudioFormat.url,
-      audioRawUrl: audioFormat.url,
+      // videoWithAudioRawUrl: videoWithAudioFormat.url,
+      // audioRawUrl: audioFormat.url,
       videoUrl: video.link,
       videoId: video.id
     }
@@ -168,7 +168,7 @@ export class MsMusicApi {
     })
     const deleteFile = async (): Promise<void> => {
       try {
-        // fs.rmSync(pathToSave)
+        fs.rmSync(pathToSave)
       } catch (err) {
         advError(`Error while deleting file! File: ${id}.* - Error: ${String(err)}`)
       }
@@ -195,11 +195,6 @@ export class MsMusicApi {
     } catch (err) {
       readFileResult.buffer = new Error(String(err))
     }
-    // try {
-    //   readFileResult.readStream = fs.createReadStream(pathToSave)
-    // } catch (err) {
-    //   readFileResult.readStream = new Error(String(err))
-    // }
     if (readFileResult.buffer instanceof Error) {
       advError(`Error while reading file! File: ${id}.* - Error: ${readFileResult.buffer.message}`)
       await deleteFile()
@@ -210,21 +205,10 @@ export class MsMusicApi {
       await deleteFile()
       return { success: false, error: 'Buffer is undefined!' }
     }
-    // if (readFileResult.readStream instanceof Error) {
-    //   advError(`Error while reading file! File: ${id}.* - Error: ${readFileResult.readStream.message}`)
-    //   await deleteFile()
-    //   return { success: false, error: readFileResult.readStream.message }
-    // }
-    // if (readFileResult.readStream === undefined) {
-    //   advError(`Error while reading file! File: ${id}.* - Error: ReadStream is undefined!`)
-    //   await deleteFile()
-    //   return { success: false, error: 'Buffer is undefined!' }
-    // }
     await deleteFile()
     return {
       success: true,
       file: {
-        // readStream: readFileResult.readStream,
         buffer: readFileResult.buffer
       }
     }
