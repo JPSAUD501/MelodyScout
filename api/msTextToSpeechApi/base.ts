@@ -2,7 +2,6 @@ import * as googleTTS from 'google-tts-api'
 import axios from 'axios'
 import { TiktokTTSApi, zodTiktokTTSApi } from './types/zodTiktokTTSApi'
 import { advError } from '../../function/advancedConsole'
-import { Lame } from 'node-lame'
 
 const tiktokApiEndpoint = 'https://tiktok-tts.weilnet.workers.dev'
 const tiktokApiMaxTextLength = 300
@@ -134,50 +133,20 @@ export class MsTextToSpeechApi {
   }
 
   async getTTS (header: string, text: string): Promise<MsTextToSpeechApiGetTTSResponse> {
-    const headerGoogleTTSResponse = await googleTTS.getAllAudioBase64(header, {
-      lang: 'pt',
-      slow: false,
-      splitPunct: ',;.!?:'
-    }).catch((error) => {
-      return new Error(error)
-    })
-    if (headerGoogleTTSResponse instanceof Error) {
-      advError(`MsTextToSpeechApi - Error while generating Google TTS for header: ${header.substring(0, 40)}... - ${headerGoogleTTSResponse.message}`)
-      return {
-        success: false,
-        error: headerGoogleTTSResponse.message
-      }
-    }
-    const headerGoogleTTSBuffer = Buffer.concat(headerGoogleTTSResponse.map(base64 => Buffer.from(base64.base64, 'base64')))
-    const splittedText = text.match(/.{1,200}([,;.!?:]|$|\n)/g) ?? []
+    const fullText = `${header}\n\n${text}`
+    const splittedText = fullText.match(/.{1,200}([,;.!?:]|$|\n)/g) ?? []
     console.log(splittedText)
     const tiktokTTSResponse = await this.getTiktokTTS(splittedText)
     if (tiktokTTSResponse.success) {
-      const encoder = new Lame({
-        bitrate: 32,
-        output: 'buffer'
-      }).setBuffer(tiktokTTSResponse.data.audio)
-      const tiktokTTSaudioEncodedBuffer = await encoder.encode().then(() => {
-        return encoder.getBuffer()
-      }).catch((error) => {
-        return new Error(error)
-      })
-      if (tiktokTTSaudioEncodedBuffer instanceof Error) {
-        advError(`MsTextToSpeechApi - Error while encoding Tiktok TTS audio: ${text.substring(0, 40)}... - ${tiktokTTSaudioEncodedBuffer.message}`)
-        return {
-          success: false,
-          error: tiktokTTSaudioEncodedBuffer.message
-        }
-      }
       return {
         success: true,
         data: {
-          audio: Buffer.concat([headerGoogleTTSBuffer, tiktokTTSaudioEncodedBuffer]),
+          audio: tiktokTTSResponse.data.audio,
           voice: tiktokTTSResponse.data.voice
         }
       }
     }
-    const googleTTSResponse = await googleTTS.getAllAudioBase64(text, {
+    const googleTTSResponse = await googleTTS.getAllAudioBase64(fullText, {
       lang: 'pt',
       slow: false,
       splitPunct: ',;.!?:'
@@ -194,11 +163,11 @@ export class MsTextToSpeechApi {
     const GoogleTTSBase64Array = googleTTSResponse.map((TTSObject) => {
       return TTSObject.base64
     })
-    const concatenatedAudio = Buffer.concat(GoogleTTSBase64Array.map(base64 => Buffer.from(base64, 'base64')))
+    const googleConcatenatedAudio = Buffer.concat(GoogleTTSBase64Array.map(base64 => Buffer.from(base64, 'base64')))
     return {
       success: true,
       data: {
-        audio: Buffer.concat([headerGoogleTTSBuffer, concatenatedAudio]),
+        audio: googleConcatenatedAudio,
         voice: defaultGoogleTTSVoice
       }
     }
