@@ -34,7 +34,7 @@ export class MsOpenAiApi {
     const response = await this.openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: [
-        { role: 'system', content: 'Você é o MelodyScoutAI, uma inteligencia artificial que ajuda os usuários a entenderem a letra das músicas que eles ouvem.' },
+        { role: 'system', content: 'You help users understand the lyrics of the songs they listen to.' },
         { role: 'user', content: prompt }
       ],
       max_tokens: 425,
@@ -92,11 +92,11 @@ export class MsOpenAiApi {
 
   async getLyricsEmojis (lyrics: string): Promise<MsOpenAiApiGetLyricsEmojisResponse> {
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
-    const prompt = `${lyricsParsed}\n\nAté 15 emojis que representam a letra da música:`
+    const prompt = `Lyrics:\n\n${lyricsParsed}`
     const response = await this.openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: [
-        { role: 'system', content: 'Você é o MelodyScoutAI, uma inteligencia artificial que converte letras de músicas em emojis.' },
+        { role: 'system', content: 'Using the lyrics received, create a selection of emojis that best represent the song. The answer must only contain emojis.' },
         { role: 'user', content: prompt }
       ],
       max_tokens: 75,
@@ -119,7 +119,7 @@ export class MsOpenAiApi {
         error: 'No choices generated'
       }
     }
-    const emojisText: string | undefined = explanation.message?.content?.replace(/\n{2,}/g, '\n\n').trim()
+    const emojisText: string | undefined = explanation.message?.content?.replace(/\n/g, '').trim()
     if (emojisText === undefined) {
       advLog(`MsOpenAiAPi - No emojis text generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
       return {

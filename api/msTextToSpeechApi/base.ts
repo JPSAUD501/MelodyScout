@@ -2,6 +2,7 @@ import * as googleTTS from 'google-tts-api'
 import axios from 'axios'
 import { TiktokTTSApi, zodTiktokTTSApi } from './types/zodTiktokTTSApi'
 import { advError } from '../../function/advancedConsole'
+import { Lame } from 'node-lame'
 
 const tiktokApiEndpoint = 'https://tiktok-tts.weilnet.workers.dev'
 const tiktokApiMaxTextLength = 300
@@ -152,10 +153,26 @@ export class MsTextToSpeechApi {
     console.log(splittedText)
     const tiktokTTSResponse = await this.getTiktokTTS(splittedText)
     if (tiktokTTSResponse.success) {
+      const encoder = new Lame({
+        bitrate: 32,
+        output: 'buffer'
+      }).setBuffer(tiktokTTSResponse.data.audio)
+      const tiktokTTSaudioEncodedBuffer = await encoder.encode().then(() => {
+        return encoder.getBuffer()
+      }).catch((error) => {
+        return new Error(error)
+      })
+      if (tiktokTTSaudioEncodedBuffer instanceof Error) {
+        advError(`MsTextToSpeechApi - Error while encoding Tiktok TTS audio: ${text.substring(0, 40)}... - ${tiktokTTSaudioEncodedBuffer.message}`)
+        return {
+          success: false,
+          error: tiktokTTSaudioEncodedBuffer.message
+        }
+      }
       return {
         success: true,
         data: {
-          audio: Buffer.concat([headerGoogleTTSBuffer, tiktokTTSResponse.data.audio]),
+          audio: Buffer.concat([headerGoogleTTSBuffer, tiktokTTSaudioEncodedBuffer]),
           voice: tiktokTTSResponse.data.voice
         }
       }

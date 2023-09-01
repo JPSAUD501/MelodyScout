@@ -1,5 +1,5 @@
 import botConfig from './config'
-import { Bot, CallbackQueryContext, CommandContext, Context } from 'grammy'
+import { Bot, CallbackQueryContext, CommandContext, Composer, Context } from 'grammy'
 import { melodyScoutConfig, spotifyConfig } from '../config'
 import { advError, advLog } from '../function/advancedConsole'
 import { runMaintenanceinformCallback } from './botFunctions/callbacks/maintenanceinform'
@@ -34,18 +34,24 @@ export class MelodyScoutBot {
   private readonly msMusicApi: MsMusicApi
   private readonly msPrismaDbApi: MsPrismaDbApi
   private readonly bot: Bot
+  private readonly composer: Composer<Context>
   private maintenanceMode = false
 
   constructor () {
     this.msMusicApi = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret)
     this.msPrismaDbApi = new MsPrismaDbApi()
     this.bot = new Bot(botConfig.telegram.token)
+    this.composer = new Composer()
 
     console.log('MelodyScout_Bot - Loaded')
   }
 
   async start (): Promise<void> {
     await this.msMusicApi.start()
+
+    this.hear()
+
+    this.bot.use(this.composer.middleware())
 
     this.bot.start().catch((err) => {
       advError(`MelodyScout_Bot - Error: ${String(err)}`)
@@ -93,30 +99,30 @@ export class MelodyScoutBot {
     advLog(`MelodyScout_Bot - New callback_query:\nFrom: (${ctx.from?.id ?? 'No ID'}) ${ctx.from?.first_name ?? 'No name'} ${ctx.from?.last_name ?? ''} - ${ctx.from?.username ?? 'No username'}\nIn: (${ctx.chat?.id ?? 'No ID'}) ${chatTittle} - ${ctx.chat?.type ?? 'No type'}\nData: ${ctx.callbackQuery?.data ?? 'No data'}\nLang: ${ctx.from?.language_code ?? 'No lang'}`)
   }
 
-  hear (): void {
-    this.bot.command(['maintenance'], async (ctx) => {
+  private hear (): void {
+    this.composer.command(['maintenance'], async (ctx) => {
       this.logNewCommand(ctx)
       const maintenanceCommandResponse = await runMaintenanceCommand(ctx)
       if (!maintenanceCommandResponse.success) return
       this.maintenanceMode = maintenanceCommandResponse.maintenanceMode
     })
 
-    this.bot.command(['start'], async (ctx) => {
+    this.composer.command(['start'], async (ctx) => {
       this.logNewCommand(ctx)
       void runStartCommand(ctx)
     })
 
-    this.bot.command(['help'], async (ctx) => {
+    this.composer.command(['help'], async (ctx) => {
       this.logNewCommand(ctx)
       void runHelpCommand(ctx)
     })
 
-    this.bot.command(['contact'], async (ctx) => {
+    this.composer.command(['contact'], async (ctx) => {
       this.logNewCommand(ctx)
       void runContactCommand(ctx)
     })
 
-    this.bot.command(['myuser', 'setuser', 'reg', 'register'], async (ctx) => {
+    this.composer.command(['myuser', 'setuser', 'reg', 'register'], async (ctx) => {
       this.logNewCommand(ctx)
       if (this.maintenanceMode) {
         void runMaintenanceinformCommand(ctx)
@@ -125,7 +131,7 @@ export class MelodyScoutBot {
       void runMyuserCommand(this.msPrismaDbApi, ctx)
     })
 
-    this.bot.command(['forgetme'], async (ctx) => {
+    this.composer.command(['forgetme'], async (ctx) => {
       this.logNewCommand(ctx)
       if (this.maintenanceMode) {
         void runMaintenanceinformCommand(ctx)
@@ -134,7 +140,7 @@ export class MelodyScoutBot {
       void runForgetmeCommand(this.msPrismaDbApi, ctx)
     })
 
-    this.bot.command(['brief'], async (ctx) => {
+    this.composer.command(['brief'], async (ctx) => {
       this.logNewCommand(ctx)
       if (this.maintenanceMode) {
         void runMaintenanceinformCommand(ctx)
@@ -143,7 +149,7 @@ export class MelodyScoutBot {
       void runBriefCommand(this.msPrismaDbApi, ctx)
     })
 
-    this.bot.command(['playingnow', 'pn', 'listeningnow'], async (ctx) => {
+    this.composer.command(['playingnow', 'pn', 'listeningnow'], async (ctx) => {
       this.logNewCommand(ctx)
       if (this.maintenanceMode) {
         void runMaintenanceinformCommand(ctx)
@@ -152,7 +158,7 @@ export class MelodyScoutBot {
       void runPlayingnowCommand(this.msMusicApi, this.msPrismaDbApi, ctx)
     })
 
-    this.bot.command(['history'], async (ctx) => {
+    this.composer.command(['history'], async (ctx) => {
       this.logNewCommand(ctx)
       if (this.maintenanceMode) {
         void runMaintenanceinformCommand(ctx)
@@ -161,12 +167,12 @@ export class MelodyScoutBot {
       void runHistoryCommand(this.msPrismaDbApi, ctx)
     })
 
-    this.bot.command(['pin'], async (ctx) => {
+    this.composer.command(['pin'], async (ctx) => {
       this.logNewCommand(ctx)
       void runPinCommand(ctx)
     })
 
-    this.bot.command(['pntrack'], async (ctx) => {
+    this.composer.command(['pntrack'], async (ctx) => {
       this.logNewCommand(ctx)
       if (this.maintenanceMode) {
         void runMaintenanceinformCommand(ctx)
@@ -175,7 +181,7 @@ export class MelodyScoutBot {
       void runPntrackCommand(this.msMusicApi, this.msPrismaDbApi, ctx)
     })
 
-    this.bot.command(['pnalbum'], async (ctx) => {
+    this.composer.command(['pnalbum'], async (ctx) => {
       this.logNewCommand(ctx)
       if (this.maintenanceMode) {
         void runMaintenanceinformCommand(ctx)
@@ -184,7 +190,7 @@ export class MelodyScoutBot {
       void runPnalbumCommand(this.msMusicApi, this.msPrismaDbApi, ctx)
     })
 
-    this.bot.command(['pnartist'], async (ctx) => {
+    this.composer.command(['pnartist'], async (ctx) => {
       this.logNewCommand(ctx)
       if (this.maintenanceMode) {
         void runMaintenanceinformCommand(ctx)
@@ -193,12 +199,12 @@ export class MelodyScoutBot {
       void runPnartistCommand(this.msMusicApi, this.msPrismaDbApi, ctx)
     })
 
-    this.bot.command(['allusers'], async (ctx) => {
+    this.composer.command(['allusers'], async (ctx) => {
       this.logNewCommand(ctx)
       void runAllusersCommand(this.msPrismaDbApi, ctx)
     })
 
-    this.bot.command(['mashup'], async (ctx) => {
+    this.composer.command(['mashup'], async (ctx) => {
       this.logNewCommand(ctx)
       if (this.maintenanceMode) {
         void runMaintenanceinformCommand(ctx)
@@ -207,13 +213,13 @@ export class MelodyScoutBot {
       void runMashupCommand(this.msMusicApi, this.msPrismaDbApi, ctx)
     })
 
-    this.bot.on('message', async (ctx) => {
+    this.composer.on('message', async (ctx) => {
       if (!((ctx.message?.text?.startsWith('/')) ?? false)) return
       const chatTittle = (ctx.chat.type === 'private') ? 'Private' : ctx.chat.title ?? 'Unknown'
       advLog(`MelodyScout_Bot - New command not handled:\nFrom: (${ctx.message?.from?.id ?? 'No ID'}) ${ctx.message?.from?.first_name ?? 'No name'} ${ctx.message?.from?.last_name ?? ''} - ${ctx.message?.from.username ?? 'No username'}\nIn: (${ctx.chat?.id}) ${chatTittle} - ${ctx.chat.type}\nCommand: ${ctx.message?.text ?? ''}\nLang: ${ctx.from?.language_code ?? 'No lang'}`)
     })
 
-    this.bot.callbackQuery(new RegExp(`^TP${melodyScoutConfig.divider}`), async (ctx) => {
+    this.composer.callbackQuery(new RegExp(`^TP${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void runMaintenanceinformCallback(ctx)
@@ -222,7 +228,7 @@ export class MelodyScoutBot {
       void runTrackpreviewCallback(this.msMusicApi, ctx)
     })
 
-    this.bot.callbackQuery(new RegExp(`^TL${melodyScoutConfig.divider}`), async (ctx) => {
+    this.composer.callbackQuery(new RegExp(`^TL${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void runMaintenanceinformCallback(ctx)
@@ -231,7 +237,7 @@ export class MelodyScoutBot {
       void runTracklyricsCallback(ctx)
     })
 
-    this.bot.callbackQuery(new RegExp(`^TTL${melodyScoutConfig.divider}`), async (ctx) => {
+    this.composer.callbackQuery(new RegExp(`^TTL${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void runMaintenanceinformCallback(ctx)
@@ -240,7 +246,7 @@ export class MelodyScoutBot {
       void runTranslatedtracklyricsCallback(ctx)
     })
 
-    this.bot.callbackQuery('PLAYINGNOW', async (ctx) => {
+    this.composer.callbackQuery('PLAYINGNOW', async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void runMaintenanceinformCallback(ctx)
@@ -249,7 +255,7 @@ export class MelodyScoutBot {
       void runPlayingnowCallback(this.msMusicApi, this.msPrismaDbApi, ctx)
     })
 
-    this.bot.callbackQuery(new RegExp(`^TLE${melodyScoutConfig.divider}`), async (ctx) => {
+    this.composer.callbackQuery(new RegExp(`^TLE${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void runMaintenanceinformCallback(ctx)
@@ -258,7 +264,7 @@ export class MelodyScoutBot {
       void runTracklyricsexplanationCallback(ctx)
     })
 
-    this.bot.callbackQuery(new RegExp(`^TD${melodyScoutConfig.divider}`), async (ctx) => {
+    this.composer.callbackQuery(new RegExp(`^TD${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void runMaintenanceinformCallback(ctx)
@@ -267,7 +273,7 @@ export class MelodyScoutBot {
       void runTrackDownloadCallback(ctx)
     })
 
-    this.bot.callbackQuery(new RegExp(`^TAD${melodyScoutConfig.divider}`), async (ctx) => {
+    this.composer.callbackQuery(new RegExp(`^TAD${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void runMaintenanceinformCallback(ctx)
@@ -276,7 +282,7 @@ export class MelodyScoutBot {
       void runTrackAudioDownloadCallback(this.msMusicApi, ctx)
     })
 
-    this.bot.callbackQuery(new RegExp(`^TVD${melodyScoutConfig.divider}`), async (ctx) => {
+    this.composer.callbackQuery(new RegExp(`^TVD${melodyScoutConfig.divider}`), async (ctx) => {
       this.logNewCallbackQuery(ctx)
       if (this.maintenanceMode) {
         void runMaintenanceinformCallback(ctx)
@@ -285,7 +291,7 @@ export class MelodyScoutBot {
       void runTrackVideoDownloadCallback(this.msMusicApi, ctx)
     })
 
-    this.bot.on('callback_query', async (ctx) => {
+    this.composer.on('callback_query', async (ctx) => {
       const chatTittle = (ctx.chat?.type === 'private') ? 'Private' : ctx.chat?.title ?? 'Unknown'
       advLog(`MelodyScout_Bot - New callback_query not handled:\nFrom: (${ctx.from?.id ?? 'No ID'}) ${ctx.from?.first_name ?? 'No name'} ${ctx.from?.last_name ?? ''} - ${ctx.from?.username ?? 'No username'}\nIn: (${ctx.chat?.id ?? 'No ID'}) ${chatTittle} - ${ctx.chat?.type ?? 'No type'}\nData: ${ctx.callbackQuery?.data ?? 'No data'}\nLang: ${ctx.from?.language_code ?? 'No lang'}`)
     })

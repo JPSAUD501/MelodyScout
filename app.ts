@@ -20,7 +20,6 @@ async function start (): Promise<void> {
   const melodyScoutBot = new MelodyScoutBot()
   await melodyScoutBot.start()
   await melodyScoutBot.getBotInfo()
-  melodyScoutBot.hear()
   advLog('Start sequence completed')
 }
 

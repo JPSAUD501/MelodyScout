@@ -7,8 +7,10 @@ export function getTracklyricsexplanationText (ctxLang: string | undefined, trac
   textArray.push(`<b>[✨] Explicação de "${sanitizeText(track)}" por "${sanitizeText(artist)}" fornecida pelo <a href="${melodyScoutConfig.aboutMelodyScoutAi}">MelodyScoutAi</a> solicitada por ${requestedBy}</b>`)
   textArray.push('')
   textArray.push(`${lyricsExplanation}`)
-  if (lyricsExplanation.includes('\n\n') && (lyricsEmojis !== undefined)) textArray.push('')
-  if (lyricsEmojis !== undefined) textArray.push(`Em emojis: ${lyricsEmojis}`)
+  if (lyricsEmojis !== undefined) {
+    textArray.push('')
+    textArray.push(`Em emojis: ${lyricsEmojis}`)
+  }
 
   const text = textArray.join('\n')
   return text
