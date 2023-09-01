@@ -55,6 +55,11 @@ export class MelodyScoutBot {
 
     this.bot.start().catch((err) => {
       advError(`MelodyScout_Bot - Error: ${String(err)}`)
+      advError('MelodyScout_Bot - Stopped')
+      advError('MelodyScout_Bot - Restarting in 30 seconds')
+      void new Promise((resolve) => setTimeout(resolve, 30000)).then(() => {
+        throw new Error(err)
+      })
     })
 
     this.bot.catch((err) => {
