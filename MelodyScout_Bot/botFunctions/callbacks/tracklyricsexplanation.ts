@@ -36,7 +36,7 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
   const msGeniusApi = new MsGeniusApi(geniusConfig.accessToken)
   const geniusSong = await msGeniusApi.getSong(track, artist)
   if (!geniusSong.success) {
-    void ctxReply(ctx, lang(ctxLang, 'geniusSongLyricsNotFoundedError'), { reply_to_message_id: messageId })
+    void ctxReply(ctx, lang(ctxLang, 'geniusTrackLyricsNotFoundedError'), { reply_to_message_id: messageId })
     return
   }
   const msOpenAiApi = new MsOpenAiApi(openaiConfig.apiKey)

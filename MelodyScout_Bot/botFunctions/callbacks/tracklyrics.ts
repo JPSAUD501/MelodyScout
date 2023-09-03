@@ -29,7 +29,7 @@ export async function runTracklyricsCallback (ctx: CallbackQueryContext<Context>
   const msGeniusApi = new MsGeniusApi(geniusConfig.accessToken)
   const geniusSong = await msGeniusApi.getSong(track, artist)
   if (!geniusSong.success) {
-    void ctxReply(ctx, lang(ctxLang, 'geniusSongLyricsNotFoundedError'), { reply_to_message_id: messageId })
+    void ctxReply(ctx, lang(ctxLang, 'geniusTrackLyricsNotFoundedError'), { reply_to_message_id: messageId })
     return
   }
   const inlineKeyboard = new InlineKeyboard()

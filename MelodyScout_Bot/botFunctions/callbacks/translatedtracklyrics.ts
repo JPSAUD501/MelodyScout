@@ -29,7 +29,7 @@ export async function runTranslatedtracklyricsCallback (ctx: CallbackQueryContex
   const msGeniusApi = new MsGeniusApi(geniusConfig.accessToken)
   const geniusSong = await msGeniusApi.getSong(track, artist)
   if (!geniusSong.success) {
-    void ctxReply(ctx, lang(ctxLang, 'geniusSongLyricsNotFoundedError'))
+    void ctxReply(ctx, lang(ctxLang, 'geniusTrackLyricsNotFoundedError'))
     return
   }
   console.log('Translating lyrics...')
