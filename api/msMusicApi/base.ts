@@ -67,18 +67,32 @@ export class MsMusicApi {
 
   async getSpotifyTrackInfo (track: string, artist: string): Promise<MsMusicApiError | MsMusicApiSpotifyTrackInfo> {
     if (this.client === null) return { success: false, error: 'Spotify client is not ready!' }
-    const search = await this.client.tracks.search(`track:${track} artist:${artist}`, { includeExternalAudio: true, limit: 1 }).catch((err) => {
+    const mainSearch = await this.client.tracks.search(`track:${track} artist:${artist}`, { includeExternalAudio: true, limit: 1 }).catch((err) => {
       return new Error(err)
     })
-    if (search instanceof Error) {
-      advError(`Error while getting track info from Spotify! Track: ${track} Artist: ${artist} - Error: ${search.message}`)
-      return { success: false, error: search.message }
+    const alternativeSearch = await this.client.tracks.search(`${track} ${artist}`, { includeExternalAudio: true, limit: 1 }).catch((err) => {
+      return new Error(err)
+    })
+    const searchResults = [{
+      type: 'mainSearch',
+      searchResultData: mainSearch
+    },
+    {
+      type: 'alternativeSearch',
+      searchResultData: alternativeSearch
+    }]
+    for (const searchResult of searchResults) {
+      if (searchResult.searchResultData instanceof Error) {
+        advError(`Error while getting track info from Spotify in ${searchResult.type}! Track: ${track} Artist: ${artist} - Error: ${searchResult.searchResultData.message}`)
+        continue
+      }
+      if (searchResult.searchResultData.length <= 0) continue
+      return {
+        success: true,
+        data: searchResult.searchResultData[0]
+      }
     }
-    if (search.length <= 0) return { success: false, error: 'No tracks found!' }
-    return {
-      success: true,
-      data: search[0]
-    }
+    return { success: false, error: 'No tracks found!' }
   }
 
   async getSpotifyArtistInfo (artist: string): Promise<MsMusicApiError | MsMusicApiSpotifyArtistInfo> {
