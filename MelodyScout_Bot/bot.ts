@@ -59,6 +59,8 @@ export class MelodyScoutBot {
       advError('MelodyScout_Bot - Restarting in 30 seconds')
       void new Promise((resolve) => setTimeout(resolve, 30000)).then(() => {
         throw new Error(err)
+      }).catch(() => {
+        throw new Error(err)
       })
     })
 
