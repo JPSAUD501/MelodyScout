@@ -87,12 +87,16 @@ export class MsMusicApi {
         advError(`Error while getting track info from Spotify in ${searchResult.type}! Track: ${track} Artist: ${artist} - Error: ${searchResult.searchResultData.message}`)
         continue
       }
-      if (searchResult.searchResultData.length <= 0) continue
+      if (searchResult.searchResultData.length <= 0) {
+        advError(`Error while getting track info from Spotify in ${searchResult.type}! Track: ${track} Artist: ${artist} - Error: No tracks found!`)
+        continue
+      }
       return {
         success: true,
         data: searchResult.searchResultData[0]
       }
     }
+    advError(`Error while getting track info from Spotify! Track: ${track} Artist: ${artist} - Error: No tracks found in both searches!`)
     return { success: false, error: 'No tracks found!' }
   }
 
