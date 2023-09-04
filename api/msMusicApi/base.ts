@@ -67,12 +67,13 @@ export class MsMusicApi {
 
   async getSpotifyTrackInfo (track: string, artist: string): Promise<MsMusicApiError | MsMusicApiSpotifyTrackInfo> {
     if (this.client === null) return { success: false, error: 'Spotify client is not ready!' }
-    const mainSearch = await this.client.tracks.search(`track:${track} artist:${artist}`, { includeExternalAudio: true, limit: 1 }).catch((err) => {
+    const mainSearchPromise = this.client.tracks.search(`track:${track} artist:${artist}`, { includeExternalAudio: true, limit: 1 }).catch((err) => {
       return new Error(err)
     })
-    const alternativeSearch = await this.client.tracks.search(`${track} ${artist}`, { includeExternalAudio: true, limit: 1 }).catch((err) => {
+    const alternativeSearchPromise = this.client.tracks.search(`${track} ${artist}`, { includeExternalAudio: true, limit: 1 }).catch((err) => {
       return new Error(err)
     })
+    const [mainSearch, alternativeSearch] = await Promise.all([mainSearchPromise, alternativeSearchPromise])
     const searchResults = [{
       type: 'mainSearch',
       searchResultData: mainSearch
