@@ -128,5 +128,12 @@ export const ptBR = {
   tfBriefMostPlayedAlbumsListItem: '- ({{albumPlaycount}}x) <a href="{{albumUrl}}"><b>{{albumName}}</b> de <b>{{albumArtistName}}</b></a>',
   tfBriefMostPlayedArtistsTittle: '<b>[👨‍🎤] Artistas mais tocados</b>',
   tfBriefMostPlayedArtistsListItem: '- ({{artistPlaycount}}x) <a href="{{artistUrl}}"><b>{{artistName}}</b></a>',
-  geniusTrackLyricsNotFoundedError: 'Infelizmente não foi possível encontrar a letra dessa música na Genius.'
+  geniusTrackLyricsNotFoundedError: 'Infelizmente não foi possível encontrar a letra dessa música na Genius.',
+  tfContactInform: 'Para entrar em contato com o desenvolvedor do MelodyScout, envie uma mensagem para o @jpsaud!',
+  lyricsExplanationAiPrompt: 'Explicação da letra da música:',
+  tfTracklyricsexplanationHeader: '<b>[✨] Explicação de "{{trackName}}" por "{{artistName}}" fornecida pelo <a href="{{melodyScoutAiAboutUrl}}">MelodyScoutAi</a> solicitada por {{requestedBy}}</b>',
+  tfTracklyricsexplanationInEmojis: 'Em emojis: {{lyricsEmojis}}',
+  tfForgetmeSuccessMessage: 'Pronto! Eu esqueci o seu nome de usuário do Last.fm!',
+  googleTTSVoiceCode: 'pt',
+  tiktokApiVoiceCode: 'br'
 }

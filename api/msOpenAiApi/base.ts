@@ -1,5 +1,6 @@
 import { Configuration, OpenAIApi } from 'openai'
 import { advLog } from '../../function/advancedConsole'
+import { lang } from '../../translations/base'
 
 interface MsOpenAiApiError {
   success: false
@@ -28,13 +29,14 @@ export class MsOpenAiApi {
     advLog('MsOpenAiApi started!')
   }
 
-  async getLyricsExplanation (lyrics: string): Promise<MsOpenAiApiGetLyricsExplanationResponse> {
+  async getLyricsExplanation (ctxLang: string | undefined, lyrics: string): Promise<MsOpenAiApiGetLyricsExplanationResponse> {
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
-    const prompt = `${lyricsParsed}\n\nExplicação da letra da música:`
+    // const prompt = `${lyricsParsed}\n\nExplicação da letra da música:`
+    const prompt = `${lyricsParsed}\n\n${lang(ctxLang, 'lyricsExplanationAiPrompt')}`
     const response = await this.openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: [
-        { role: 'system', content: 'You help users understand the lyrics of the songs they listen to.' },
+        { role: 'system', content: 'You help users understand the lyrics of the tracks they listened.' },
         { role: 'user', content: prompt }
       ],
       max_tokens: 425,

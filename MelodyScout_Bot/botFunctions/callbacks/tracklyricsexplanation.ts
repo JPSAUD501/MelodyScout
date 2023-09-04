@@ -40,7 +40,7 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
     return
   }
   const msOpenAiApi = new MsOpenAiApi(openaiConfig.apiKey)
-  const lyricsExplanationRequest = msOpenAiApi.getLyricsExplanation(geniusSong.data.lyrics)
+  const lyricsExplanationRequest = msOpenAiApi.getLyricsExplanation(ctxLang, geniusSong.data.lyrics)
   const lyricsEmojisRequest = msOpenAiApi.getLyricsEmojis(geniusSong.data.lyrics)
   const [lyricsExplanation, lyricsEmojis] = await Promise.all([lyricsExplanationRequest, lyricsEmojisRequest])
   if (!lyricsExplanation.success) {
@@ -49,7 +49,7 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
   }
   advLog(`New track lyrics explanation generated for ${track} by ${artist} by user ${ctx.from.id}: ${lyricsExplanation.explanation} / ${lyricsEmojis.success ? lyricsEmojis.emojis : 'No emojis'}`)
   const msTextToSpeechApi = new MsTextToSpeechApi()
-  const TTSAudio = await msTextToSpeechApi.getTTS(lang(ctxLang, 'trackLyricsExplanationTTSHeader', { track, artist }), `${lyricsExplanation.explanation}`) // TODO PASS LANG TO TTS
+  const TTSAudio = await msTextToSpeechApi.getTTS(ctxLang, lang(ctxLang, 'trackLyricsExplanationTTSHeader', { track, artist }), `${lyricsExplanation.explanation}`) // TODO PASS LANG TO TTS
   if (!TTSAudio.success) {
     void ctxReply(ctx, lang(ctxLang, 'errorOnCreatingLyricsExplanationTTSInformMessage'), { reply_to_message_id: messageId })
     return
