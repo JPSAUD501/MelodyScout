@@ -101,7 +101,7 @@ export class MsOpenAiApi {
         { role: 'system', content: 'Using the lyrics received, create a selection of emojis that best represent the song. The answer must only contain emojis.' },
         { role: 'user', content: prompt }
       ],
-      max_tokens: 75,
+      max_tokens: 100,
       temperature: 0.7
     }).catch((err) => {
       return new Error(String(err))
