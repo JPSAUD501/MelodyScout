@@ -130,7 +130,7 @@ export const enUS = {
   tfBriefPostInfosAverageRepeatTracks: '- Each known track is repeated {{averageRepeatTracks}} times on average.',
   geniusTrackLyricsNotFoundedError: "Unfortunately we couldn't find the lyrics to this track on Genius.",
   tfContactInform: 'To get in touch with the MelodyScout developer, send a message to @jpsaud!',
-  lyricsExplanationAiPrompt: 'Explanation of the song lyrics:',
+  lyricsExplanationAiPrompt: 'A brief explanation of the lyrics:',
   tfTracklyricsexplanationHeader: '<b>[✨] Explanation of "{{trackName}}" by "{{artistName}}" provided by <a href="{{melodyScoutAiAboutUrl}}">MelodyScoutAi</a> requested by {{requestedBy}}</b>',
   tfTracklyricsexplanationInEmojis: 'In emojis: {{lyricsEmojis}}',
   tfForgetmeSuccessMessage: 'Done! I forgot your Last.fm username!',
