@@ -152,6 +152,11 @@
   resolved "https://registry.npmjs.org/@prisma/engines/-/engines-4.16.2.tgz"
   integrity sha512-vx1nxVvN4QeT/cepQce68deh/Turxy5Mr+4L4zClFuK1GlxN3+ivxfuv+ej/gvidWn1cE1uAhW7ALLNlYbRUAw==
 
+"@supercharge/promise-pool@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@supercharge/promise-pool/-/promise-pool-3.0.0.tgz#11a6a68b41a0f9a917926e007a18cbcc5b50c0d8"
+  integrity sha512-AV9k1G1r73ppq5z08zXvbFF0skvqzgR5ZAVYQy+wDqQgehe7zDLXgeEo4EisKSKS2aK+aoFi27gzYw2Eny+g7g==
+
 "@tsconfig/node10@^1.0.7":
   version "1.0.9"
   resolved "https://registry.npmjs.org/@tsconfig/node10/-/node10-1.0.9.tgz"

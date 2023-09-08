@@ -38,7 +38,7 @@ export async function runBriefCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comman
   }
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
   const userInfoRequest = msLastfmApi.user.getInfo(lastfmUser)
-  const userTopTracksRequest = msLastfmApi.user.getTopTracks(lastfmUser, 5)
+  const userTopTracksRequest = msLastfmApi.user.getTopTracks(lastfmUser, 5, 1)
   const userTopAlbumsRequest = msLastfmApi.user.getTopAlbums(lastfmUser, 5)
   const userTopArtistsRequest = msLastfmApi.user.getTopArtists(lastfmUser, 5)
   const [userInfo, userTopTracks, userTopAlbums, userTopArtists] = await Promise.all([userInfoRequest, userTopTracksRequest, userTopAlbumsRequest, userTopArtistsRequest])

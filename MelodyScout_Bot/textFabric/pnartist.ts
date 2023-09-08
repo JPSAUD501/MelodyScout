@@ -4,8 +4,9 @@ import { UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
 import { melodyScoutConfig } from '../../config'
 import { sanitizeText } from '../../function/sanitizeText'
 import { urlLimiter } from '../../function/urlLimiter'
+import { UserTopTracks } from '../../api/msLastfmApi/types/zodUserTopTracks'
 
-export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, spotifyArtistInfo: Artist, nowPlaying: boolean): string {
+export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, userArtistTopTracks: Array<UserTopTracks['toptracks']['track']['0']>, spotifyArtistInfo: Artist, nowPlaying: boolean): string {
   const { user } = userInfo
   const { artist } = artistInfo
 
@@ -62,6 +63,14 @@ export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo
   textArray.push('')
   textArray.push(`<b>[📊] ${Number(artist.stats.userplaycount).toLocaleString('pt-BR')} Scrobbles</b>`)
   textArray.push('')
+  if (userArtistTopTracks.length > 0) {
+    textArray.push('<b>[🎶] As suas mais ouvidas</b>')
+    for (let i = 0; i < userArtistTopTracks.length && i < 5; i++) {
+      const track = userArtistTopTracks[i]
+      textArray.push(`- (${Number(track.playcount).toLocaleString('pt-BR')}x) <a href="${urlLimiter(track.url)}">${sanitizeText(track.name)}</a>`)
+    }
+    textArray.push('')
+  }
   textArray.push('<b>[🔗] Compartilhe</b>')
   textArray.push(`- <a href="${postUrl}">Compartilhar no 𝕏!</a>`)
 

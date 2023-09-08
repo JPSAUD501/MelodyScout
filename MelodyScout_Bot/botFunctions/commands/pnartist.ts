@@ -1,4 +1,5 @@
 import { CallbackQueryContext, CommandContext, Context, InlineKeyboard } from 'grammy'
+import { PromisePool } from '@supercharge/promise-pool'
 import { getPnartistText } from '../../textFabric/pnartist'
 import { ctxReply } from '../../../function/grammyFunctions'
 import { lastfmConfig } from '../../../config'
@@ -6,6 +7,7 @@ import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { lang } from '../../../translations/base'
+import { UserTopTracks } from '../../../api/msLastfmApi/types/zodUserTopTracks'
 
 export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context> | CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
@@ -40,7 +42,8 @@ export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi:
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
   const userInfoRequest = msLastfmApi.user.getInfo(lastfmUser)
   const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 1)
-  const [userInfo, userRecentTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest])
+  const userTopTracksRequest = msLastfmApi.user.getTopTracks(lastfmUser, 1, 1)
+  const [userInfo, userRecentTracks, userTopTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest, userTopTracksRequest])
   if (!userInfo.success) {
     void ctxReply(ctx, lang(ctxLang, 'lastfmUserDataNotFoundedError', { lastfmUser }))
     return
@@ -51,6 +54,10 @@ export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi:
   }
   if (userRecentTracks.data.recenttracks.track.length <= 0) {
     void ctxReply(ctx, lang(ctxLang, 'noRecentTracksError'))
+    return
+  }
+  if (!userTopTracks.success) {
+    void ctxReply(ctx, lang(ctxLang, 'getTopTracksErrorMessage'))
     return
   }
   const mainTrack = {
@@ -69,7 +76,30 @@ export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi:
     void ctxReply(ctx, lang(ctxLang, 'spotifyArtistDataNotFoundedError'))
     return
   }
+  // DOING
+  const userArtistTopTracks: Array<UserTopTracks['toptracks']['track']['0']> = []
+  const userTopTracksPageLength = Math.ceil(Number(userTopTracks.data.toptracks['@attr'].total) / 1000) + 1
+  const allUserArtistTopTracksResponses = await PromisePool.for(
+    Array.from({ length: userTopTracksPageLength }, (_, index) => index + 1)
+  ).withConcurrency(5).process(async (page) => {
+    const userPartialTopTracksRequest = msLastfmApi.user.getTopTracks(lastfmUser, 1000, page)
+    const userTopTracks = await userPartialTopTracksRequest
+    return userTopTracks
+  })
+  for (const userArtistTopTracksResponse of allUserArtistTopTracksResponses.results) {
+    if (!userArtistTopTracksResponse.success) {
+      void ctxReply(ctx, lang(ctxLang, 'getTopTracksErrorMessage'))
+      return
+    }
+    for (const userArtistTopTrack of userArtistTopTracksResponse.data.toptracks.track) {
+      if (userArtistTopTrack.artist.name === mainTrack.artistName) {
+        userArtistTopTracks.push(userArtistTopTrack)
+      }
+    }
+  }
+  userArtistTopTracks.sort((a, b) => Number(b.playcount) - Number(a.playcount))
+  // DOING
   const inlineKeyboard = new InlineKeyboard()
   inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyArtistInfo.data.externalURL.spotify)
-  await ctxReply(ctx, getPnartistText(ctxLang, userInfo.data, artistInfo.data, spotifyArtistInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+  await ctxReply(ctx, getPnartistText(ctxLang, userInfo.data, artistInfo.data, userArtistTopTracks, spotifyArtistInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
 }

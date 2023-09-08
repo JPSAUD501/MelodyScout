@@ -79,8 +79,8 @@ export class User {
     }
   }
 
-  async getTopTracks (username: string, limit: number): Promise<GetTopTracksResponse> {
-    const url = `http://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${encodeURIComponent(username)}&limit=${limit}&api_key=${this.apiKey}&format=json`
+  async getTopTracks (username: string, limit: number, page: number): Promise<GetTopTracksResponse> {
+    const url = `http://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${encodeURIComponent(username)}&limit=${limit}&page=${page}&api_key=${this.apiKey}&format=json`
     const zodObject = zodUserTopTracks
     console.log(`User getTopTracks: username: ${username}, limit: ${limit}`)
     console.log(`User getTopTracks: url: ${url}`)
