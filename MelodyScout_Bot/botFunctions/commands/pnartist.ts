@@ -76,7 +76,6 @@ export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi:
     void ctxReply(ctx, lang(ctxLang, 'spotifyArtistDataNotFoundedError'))
     return
   }
-  // DOING
   const userArtistTopTracks: Array<UserTopTracks['toptracks']['track']['0']> = []
   const userTopTracksPageLength = Math.ceil(Number(userTopTracks.data.toptracks['@attr'].total) / 1000) + 1
   const allUserArtistTopTracksResponses = await PromisePool.for(
@@ -98,7 +97,6 @@ export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi:
     }
   }
   userArtistTopTracks.sort((a, b) => Number(b.playcount) - Number(a.playcount))
-  // DOING
   const inlineKeyboard = new InlineKeyboard()
   inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyArtistInfo.data.externalURL.spotify)
   await ctxReply(ctx, getPnartistText(ctxLang, userInfo.data, artistInfo.data, userArtistTopTracks, spotifyArtistInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })

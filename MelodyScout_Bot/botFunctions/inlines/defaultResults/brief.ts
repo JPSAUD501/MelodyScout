@@ -11,7 +11,6 @@ export async function briefInlineResult (ctxLang: string | undefined, msPrismaDb
   const resultName = 'Your musical brief!'
   const telegramUserId = ctx.from?.id
   if (telegramUserId === undefined) {
-    // await ctxReply(ctx, lang(ctxLang, 'unableToGetUserIdErrorMessage'))
     return (
       InlineQueryResultBuilder
         .article(resultId, resultName, {
@@ -23,7 +22,6 @@ export async function briefInlineResult (ctxLang: string | undefined, msPrismaDb
   }
   const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
   if (!checkIfExistsTgUserDBResponse.success) {
-    // void ctxReply(ctx, lang(ctxLang, 'unableToGetUserInfoInDb'))
     return (
       InlineQueryResultBuilder
         .article(resultId, resultName, {
@@ -34,7 +32,6 @@ export async function briefInlineResult (ctxLang: string | undefined, msPrismaDb
     )
   }
   if (!checkIfExistsTgUserDBResponse.exists) {
-    // void ctxReply(ctx, lang(ctxLang, 'lastfmUserNotRegistered'))
     return (
       InlineQueryResultBuilder
         .article(resultId, resultName, {
@@ -46,7 +43,6 @@ export async function briefInlineResult (ctxLang: string | undefined, msPrismaDb
   }
   const telegramUserDBResponse = await msPrismaDbApi.get.telegramUser(`${telegramUserId}`)
   if (!telegramUserDBResponse.success) {
-    // void ctxReply(ctx, lang(ctxLang, 'unableToGetUserInfoInDb'))
     return (
       InlineQueryResultBuilder
         .article(resultId, resultName, {
@@ -58,7 +54,6 @@ export async function briefInlineResult (ctxLang: string | undefined, msPrismaDb
   }
   const lastfmUser = telegramUserDBResponse.lastfmUser
   if (lastfmUser === null) {
-    // void ctxReply(ctx, lang(ctxLang, 'lastfmUserNoMoreRegisteredError'))
     return (
       InlineQueryResultBuilder
         .article(resultId, resultName, {
@@ -75,7 +70,6 @@ export async function briefInlineResult (ctxLang: string | undefined, msPrismaDb
   const userTopArtistsRequest = msLastfmApi.user.getTopArtists(lastfmUser, 5)
   const [userInfo, userTopTracks, userTopAlbums, userTopArtists] = await Promise.all([userInfoRequest, userTopTracksRequest, userTopAlbumsRequest, userTopArtistsRequest])
   if (!userInfo.success) {
-    // void ctxReply(ctx, lang(ctxLang, 'lastfmUserDataNotFoundedError', { lastfmUser }))
     return (
       InlineQueryResultBuilder
         .article(resultId, resultName, {
@@ -86,7 +80,6 @@ export async function briefInlineResult (ctxLang: string | undefined, msPrismaDb
     )
   }
   if (!userTopTracks.success) {
-    // void ctxReply(ctx, lang(ctxLang, 'getTopTracksErrorMessage'))
     return (
       InlineQueryResultBuilder
         .article(resultId, resultName, {
@@ -97,7 +90,6 @@ export async function briefInlineResult (ctxLang: string | undefined, msPrismaDb
     )
   }
   if (!userTopAlbums.success) {
-    // void ctxReply(ctx, lang(ctxLang, 'getTopAlbumsErrorMessage'))
     return (
       InlineQueryResultBuilder
         .article(resultId, resultName, {
@@ -108,7 +100,6 @@ export async function briefInlineResult (ctxLang: string | undefined, msPrismaDb
     )
   }
   if (!userTopArtists.success) {
-    // void ctxReply(ctx, lang(ctxLang, 'getTopArtistsErrorMessage'))
     return (
       InlineQueryResultBuilder
         .article(resultId, resultName, {
