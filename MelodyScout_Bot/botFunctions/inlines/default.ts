@@ -1,6 +1,5 @@
 import { Context, InlineKeyboard, InlineQueryContext, InlineQueryResultBuilder } from 'grammy'
 import { lang } from '../../../translations/base'
-import { getCallbackKey } from '../../../function/callbackMaker'
 import { ctxAnswerInlineQuery } from '../../../function/grammyFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { lastfmConfig, melodyScoutConfig } from '../../../config'
@@ -156,12 +155,6 @@ async function playingnowInlineResult (ctxLang: string | undefined, msMusicApi: 
   const inlineKeyboard = new InlineKeyboard()
   inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyTrackInfo.data.externalURL.spotify)
   if (youtubeTrackInfo.success) inlineKeyboard.url(lang(ctxLang, 'youtubeButton'), youtubeTrackInfo.videoUrl)
-  inlineKeyboard.row()
-  inlineKeyboard.text(lang(ctxLang, 'lyricsButton'), getCallbackKey(['TL', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
-  inlineKeyboard.text(lang(ctxLang, 'iaExplanationButton'), getCallbackKey(['TLE', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
-  inlineKeyboard.row()
-  inlineKeyboard.text(lang(ctxLang, 'trackPreviewButton'), getCallbackKey(['TP', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
-  inlineKeyboard.text(lang(ctxLang, 'trackDownloadButton'), getCallbackKey(['TD', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
   return (
     InlineQueryResultBuilder
       .article('PN', 'Playing now!', {
