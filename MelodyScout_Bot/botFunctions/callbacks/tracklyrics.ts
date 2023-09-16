@@ -15,10 +15,6 @@ export async function runTracklyricsCallback (ctx: CallbackQueryContext<Context>
   }
   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'loadingInformCallback'))
   const messageId = ctx.callbackQuery.message?.message_id
-  if (messageId === undefined) {
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetMessageIdFromButtonInformMessage'))
-    return
-  }
   const dataArray = ctx.callbackQuery.data.split(melodyScoutConfig.divider)
   const track = dataArray[1]
   const artist = dataArray[2]
@@ -29,10 +25,10 @@ export async function runTracklyricsCallback (ctx: CallbackQueryContext<Context>
   const msGeniusApi = new MsGeniusApi(geniusConfig.accessToken)
   const geniusSong = await msGeniusApi.getSong(track, artist)
   if (!geniusSong.success) {
-    void ctxReply(ctx, lang(ctxLang, 'geniusTrackLyricsNotFoundedError'), { reply_to_message_id: messageId })
+    void ctxReply(ctx, lang(ctxLang, 'geniusTrackLyricsNotFoundedError'), { reply_to_message_id: messageId, allow_sending_without_reply: true })
     return
   }
   const inlineKeyboard = new InlineKeyboard()
   inlineKeyboard.text(lang(ctxLang, 'trackLyricsTranslateButton'), getCallbackKey(['TTL', track, artist]))
-  await ctxReply(ctx, getLyricsText(ctxLang, track, artist, geniusSong.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId, reply_markup: inlineKeyboard, disable_web_page_preview: true })
+  await ctxReply(ctx, getLyricsText(ctxLang, track, artist, geniusSong.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId, allow_sending_without_reply: true, reply_markup: inlineKeyboard, disable_web_page_preview: true })
 }

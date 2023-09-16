@@ -44,7 +44,7 @@
     "dotenv": "^16.0.1",
     "fastify": "^4.4.0",
     "fs": "^0.0.1-security",
-    "genius-lyrics": "^4.4.2",
+    "genius-lyrics": "^4.4.6",
     "google-tts-api": "^2.0.2",
     "grammy": "^1.12.0",
     "luxon": "^3.0.1",

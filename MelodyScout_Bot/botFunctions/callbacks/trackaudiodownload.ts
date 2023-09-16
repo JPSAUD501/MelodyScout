@@ -13,16 +13,7 @@ export async function runTrackAudioDownloadCallback (msMusicApi: MsMusicApi, ctx
     return
   }
   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'loadingInformCallback'))
-  const messageId = ctx.callbackQuery.message?.message_id
-  if (messageId === undefined) {
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetMessageIdFromButtonInformMessage'))
-    return
-  }
   const messageReplyId = ctx.callbackQuery.message?.reply_to_message?.message_id
-  if (messageReplyId === undefined) {
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetMessageIdFromOriginalMessageOfButtonInformMessage'))
-    return
-  }
   const dataArray = ctx.callbackQuery.data.split(melodyScoutConfig.divider)
   const track = dataArray[1]
   const artist = dataArray[2]
@@ -35,7 +26,7 @@ export async function runTrackAudioDownloadCallback (msMusicApi: MsMusicApi, ctx
     void ctxReply(ctx, lang(ctxLang, 'youtubeTrackDataNotFoundedErrorMessage'))
     return
   }
-  const loadingMessage = await ctxTempReply(ctx, lang(ctxLang, 'downloadingTrackInformMessage'), 10000, { reply_to_message_id: messageReplyId, disable_notification: true })
+  const loadingMessage = await ctxTempReply(ctx, lang(ctxLang, 'downloadingTrackInformMessage'), 10000, { reply_to_message_id: messageReplyId, allow_sending_without_reply: true, disable_notification: true })
   if (loadingMessage === undefined) {
     void ctxReply(ctx, lang(ctxLang, 'errorOnSendLoadingMessageInformMessage'))
     return
@@ -51,6 +42,7 @@ export async function runTrackAudioDownloadCallback (msMusicApi: MsMusicApi, ctx
     title: track,
     performer: artist,
     caption: getTrackaudiodownloadText(ctxLang, track, artist, ctx.from.id.toString(), ctx.from.first_name),
-    reply_to_message_id: messageReplyId
+    reply_to_message_id: messageReplyId,
+    allow_sending_without_reply: true
   })
 }
