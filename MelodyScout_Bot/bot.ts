@@ -32,6 +32,7 @@ import { runPlayingnowCallback } from './botFunctions/callbacks/playingnow'
 import { runDefaultInline } from './botFunctions/inlines/default'
 import { runTracksearchInline } from './botFunctions/inlines/tracksearch'
 import { exit } from 'process'
+import { UserFromGetMe } from 'grammy/types'
 
 export class MelodyScoutBot {
   private readonly msMusicApi: MsMusicApi
@@ -90,10 +91,27 @@ export class MelodyScoutBot {
     advLog('MelodyScout_Bot - Started')
   }
 
-  async getBotInfo (): Promise<void> {
-    await this.bot.api.getMe().catch((err) => {
-      advError(`MelodyScout_Bot - Error: ${String(err)}`)
+  async getBotInfo (): Promise<{
+    success: false
+    error: string
+  } | {
+    success: true
+    botInfo: UserFromGetMe
+  }> {
+    const botInfo = await this.bot.api.getMe().catch((err) => {
+      return Error(`Error getting MelodyScoutLog_Bot info: ${String(err)}`)
     })
+    if (botInfo instanceof Error) {
+      advError(`MelodyScout_Bot - Error: ${String(botInfo.message)}`)
+      return {
+        success: false,
+        error: botInfo.message
+      }
+    }
+    return {
+      success: true,
+      botInfo
+    }
   }
 
   logNewCommand (ctx: CommandContext<Context>): void {

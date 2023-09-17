@@ -11,16 +11,16 @@ async function start (): Promise<void> {
   await melodyScoutLogBot.getBotInfo()
   advLog('MelodyScoutLog_Bot and AdvConsole started!')
 
-  advLog('Starting Server...')
-  const server = new Server()
-  await server.start()
-  advLog('Server started!')
-
   advLog('Running the start sequence...')
   const melodyScoutBot = new MelodyScoutBot()
   await melodyScoutBot.start()
   await melodyScoutBot.getBotInfo()
   advLog('Start sequence completed')
+
+  advLog('Starting Server...')
+  const server = new Server()
+  await server.start(melodyScoutLogBot, melodyScoutBot)
+  advLog('Server started!')
 }
 
 start().catch((err) => {

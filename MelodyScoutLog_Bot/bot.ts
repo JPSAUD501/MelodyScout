@@ -1,5 +1,6 @@
 import { Bot } from 'grammy'
 import config from './config'
+import { UserFromGetMe } from 'grammy/types'
 
 export const messageQueue: string[] = []
 
@@ -28,10 +29,27 @@ export class MelodyScoutLogBot {
     console.log('MelodyScoutLog_Bot - Started')
   }
 
-  async getBotInfo (): Promise<void> {
-    await this.bot.api.getMe().catch((err) => {
-      console.error(`MelodyScout_Bot - Error: ${String(err)}`)
+  async getBotInfo (): Promise<{
+    success: false
+    error: string
+  } | {
+    success: true
+    botInfo: UserFromGetMe
+  }> {
+    const botInfo = await this.bot.api.getMe().catch((err) => {
+      return Error(`Error getting MelodyScoutLog_Bot info: ${String(err)}`)
     })
+    if (botInfo instanceof Error) {
+      console.error(`MelodyScoutLog_Bot - Error: ${String(botInfo.message)}`)
+      return {
+        success: false,
+        error: botInfo.message
+      }
+    }
+    return {
+      success: true,
+      botInfo
+    }
   }
 
   startLogQueue (): void {
