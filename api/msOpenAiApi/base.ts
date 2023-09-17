@@ -1,5 +1,5 @@
 import { Configuration, OpenAIApi } from 'openai'
-import { advLog } from '../../function/advancedConsole'
+import { advError, advLog } from '../../function/advancedConsole'
 import { lang } from '../../translations/base'
 
 interface MsOpenAiApiError {
@@ -45,7 +45,7 @@ export class MsOpenAiApi {
       return new Error(String(err))
     })
     if (response instanceof Error) {
-      advLog(`MsOpenAiAPi - Error while generating explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - ${response.message} - ${response.stack ?? 'No STACK'} - ${response.name}`)
+      advError(`MsOpenAiAPi - Error while generating explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - ${response.message} - ${response.stack ?? 'No STACK'} - ${response.name}`)
       return {
         success: false,
         error: response.message
@@ -54,7 +54,7 @@ export class MsOpenAiApi {
     const explanation = response.data.choices[0]
     // console.log(explanation)
     if (explanation === undefined) {
-      advLog(`MsOpenAiAPi - No choices explanation generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
+      advError(`MsOpenAiAPi - No choices explanation generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
       return {
         success: false,
         error: 'No choices generated'
@@ -62,7 +62,7 @@ export class MsOpenAiApi {
     }
     let explanationText: string | undefined = explanation.message?.content?.replace(/\n{2,}/g, '\n\n').trim()
     if (explanationText === undefined) {
-      advLog(`MsOpenAiAPi - No explanation text generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
+      advError(`MsOpenAiAPi - No explanation text generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
       return {
         success: false,
         error: 'No explanation text generated'
@@ -71,7 +71,7 @@ export class MsOpenAiApi {
     if (explanation.finish_reason !== 'stop') {
       switch (explanation.finish_reason) {
         case undefined: {
-          advLog(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: undefined`)
+          advError(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: undefined`)
           explanationText += '...\n(A explicação foi interrompida por um erro desconhecido)'
           break
         }
@@ -79,7 +79,7 @@ export class MsOpenAiApi {
           break
         }
         default: {
-          advLog(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: ${JSON.stringify(explanation.finish_reason, null, 2)}`)
+          advError(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: ${JSON.stringify(explanation.finish_reason, null, 2)}`)
           explanationText += '...\n(A explicação excedeu o limite de caracteres)'
           break
         }
@@ -107,7 +107,7 @@ export class MsOpenAiApi {
       return new Error(String(err))
     })
     if (response instanceof Error) {
-      advLog(`MsOpenAiAPi - Error while generating emojis for lyrics: ${lyricsParsed.substring(0, 40)}... - ${response.message} - ${response.stack ?? 'No STACK'} - ${response.name}`)
+      advError(`MsOpenAiAPi - Error while generating emojis for lyrics: ${lyricsParsed.substring(0, 40)}... - ${response.message} - ${response.stack ?? 'No STACK'} - ${response.name}`)
       return {
         success: false,
         error: response.message
@@ -115,7 +115,7 @@ export class MsOpenAiApi {
     }
     const explanation = response.data.choices[0]
     if (explanation === undefined) {
-      advLog(`MsOpenAiAPi - No choices emojis generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
+      advError(`MsOpenAiAPi - No choices emojis generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
       return {
         success: false,
         error: 'No choices generated'
@@ -123,7 +123,7 @@ export class MsOpenAiApi {
     }
     const emojisText: string | undefined = explanation.message?.content?.replace(/\n/g, '').trim()
     if (emojisText === undefined) {
-      advLog(`MsOpenAiAPi - No emojis text generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
+      advError(`MsOpenAiAPi - No emojis text generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
       return {
         success: false,
         error: 'No emojis text generated'
@@ -132,15 +132,15 @@ export class MsOpenAiApi {
     if (explanation.finish_reason !== 'stop') {
       switch (explanation.finish_reason) {
         case undefined: {
-          advLog(`MsOpenAiAPi - Emojis for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: undefined`)
+          advError(`MsOpenAiAPi - Emojis for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: undefined`)
           break
         }
         case null: {
-          advLog(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: null`)
+          advError(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: null`)
           break
         }
         default: {
-          advLog(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: ${JSON.stringify(explanation.finish_reason, null, 2)}`)
+          advError(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: ${JSON.stringify(explanation.finish_reason, null, 2)}`)
           break
         }
       }

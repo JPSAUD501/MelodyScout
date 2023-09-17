@@ -139,7 +139,6 @@ export class MsMusicApi {
       format: 'best',
       skipDownload: true,
       getUrl: true,
-      geoBypass: true,
       noWarnings: true,
       callHome: false,
       noCheckCertificates: true,
@@ -153,7 +152,6 @@ export class MsMusicApi {
       format: 'ba',
       skipDownload: true,
       getUrl: true,
-      geoBypass: true,
       noWarnings: true,
       callHome: false,
       noCheckCertificates: true,
@@ -204,8 +202,6 @@ export class MsMusicApi {
     }
     const output = await youtubedl.exec(youtubeUrl, {
       format: 'best',
-      getUrl: true,
-      geoBypass: true,
       noWarnings: true,
       callHome: false,
       noCheckCertificates: true,
@@ -278,8 +274,6 @@ export class MsMusicApi {
     }
     const output = await youtubedl.exec(youtubeUrl, {
       format: 'ba',
-      getUrl: true,
-      geoBypass: true,
       noWarnings: true,
       callHome: false,
       noCheckCertificates: true,
