@@ -31,6 +31,7 @@ import { MsPrismaDbApi } from '../api/msPrismaDbApi/base'
 import { runPlayingnowCallback } from './botFunctions/callbacks/playingnow'
 import { runDefaultInline } from './botFunctions/inlines/default'
 import { runTracksearchInline } from './botFunctions/inlines/tracksearch'
+import { exit } from 'process'
 
 export class MelodyScoutBot {
   private readonly msMusicApi: MsMusicApi
@@ -60,9 +61,7 @@ export class MelodyScoutBot {
       advError('MelodyScout_Bot - Stopped')
       advError('MelodyScout_Bot - Restarting in 30 seconds')
       void new Promise((resolve) => setTimeout(resolve, 30000)).then(() => {
-        throw new Error(err)
-      }).catch(() => {
-        throw new Error(err)
+        exit(1)
       })
     })
 
