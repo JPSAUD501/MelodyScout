@@ -35,5 +35,5 @@ jobs:
         uses: denoland/deployctl@v1
         with:
           project: "noisy-bat-81"
-          entrypoint: "index.js" # 📝 Update the entrypoint if necessary
+          entrypoint: "app.ts" # 📝 Update the entrypoint if necessary
           root: "." # 📝 Update the root if necessary
