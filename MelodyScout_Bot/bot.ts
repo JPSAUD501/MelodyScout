@@ -309,7 +309,6 @@ export class MelodyScoutBot {
       advLog(`MelodyScout_Bot - New callback_query not handled:\nFrom: (${ctx.from?.id ?? 'No ID'}) ${ctx.from?.first_name ?? 'No name'} ${ctx.from?.last_name ?? ''} - ${ctx.from?.username ?? 'No username'}\nIn: (${ctx.chat?.id ?? 'No ID'}) ${chatTittle} - ${ctx.chat?.type ?? 'No type'}\nData: ${ctx.callbackQuery?.data ?? 'No data'}\nLang: ${ctx.from?.language_code ?? 'No lang'}`)
     })
 
-    // More than 1 char
     this.composer.inlineQuery(/.{1,}/, async (ctx) => {
       this.logNewInlineQuery(ctx)
       void runTracksearchInline(this.msMusicApi, ctx)
