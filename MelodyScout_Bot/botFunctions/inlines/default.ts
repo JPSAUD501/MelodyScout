@@ -34,7 +34,7 @@ export async function runDefaultInline (msMusicApi: MsMusicApi, msPrismaDbApi: M
         reply_markup: defaultErrorInlineKeyboard
       })
       .text(lang(ctxLang, 'unableToGetUserInfoInDb'), { parse_mode: 'HTML' })
-    void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 5 })
+    void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
     return
   }
   if (!checkIfExistsTgUserDBResponse.exists) {
@@ -45,7 +45,7 @@ export async function runDefaultInline (msMusicApi: MsMusicApi, msPrismaDbApi: M
         reply_markup: defaultErrorInlineKeyboard
       })
       .text(lang(ctxLang, 'lastfmUserNotRegistered'), { parse_mode: 'HTML' })
-    void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 5 })
+    void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
     return
   }
   const telegramUserDBResponse = await msPrismaDbApi.get.telegramUser(`${telegramUserId}`)
@@ -57,7 +57,7 @@ export async function runDefaultInline (msMusicApi: MsMusicApi, msPrismaDbApi: M
         reply_markup: defaultErrorInlineKeyboard
       })
       .text(lang(ctxLang, 'unableToGetUserInfoInDb'), { parse_mode: 'HTML' })
-    void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 5 })
+    void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
     return
   }
   const lastfmUser = telegramUserDBResponse.lastfmUser
@@ -69,7 +69,7 @@ export async function runDefaultInline (msMusicApi: MsMusicApi, msPrismaDbApi: M
         reply_markup: defaultErrorInlineKeyboard
       })
       .text(lang(ctxLang, 'lastfmUserNoMoreRegisteredError'), { parse_mode: 'HTML' })
-    void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 5 })
+    void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
     return
   }
   const inlineQueryResults: InlineQueryResult[] = []
@@ -77,7 +77,9 @@ export async function runDefaultInline (msMusicApi: MsMusicApi, msPrismaDbApi: M
   const inlineBriefResultPromise = briefInlineResult(ctxLang, lastfmUser, msPrismaDbApi, ctx)
   const inlinePnartistResultPromise = pnartistInlineResult(ctxLang, lastfmUser, msMusicApi, msPrismaDbApi, ctx)
   const inlineResults = await Promise.all([inlinePlayingnowResultPromise, inlineBriefResultPromise, inlinePnartistResultPromise])
-  inlineQueryResults.push(...inlineResults)
+  for (const inlineResult of inlineResults) {
+    inlineQueryResults.push(inlineResult.result)
+  }
 
   await ctxAnswerInlineQuery(ctx, inlineQueryResults, { cache_time: 5 })
 }

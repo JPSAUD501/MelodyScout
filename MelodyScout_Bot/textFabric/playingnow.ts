@@ -6,7 +6,6 @@ import { UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
 import { melodyScoutConfig } from '../../config'
 import { sanitizeText } from '../../function/sanitizeText'
 import { urlLimiter } from '../../function/urlLimiter'
-import { advLog } from '../../function/advancedConsole'
 
 export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, nowPlaying: boolean): string {
   const { user } = userInfo
@@ -116,7 +115,5 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
   textArray.push(`- <a href="${postUrl}">Compartilhar no 𝕏!</a>`)
 
   const text = textArray.join('\n')
-
-  advLog(`TextFabric: playingnow - length: ${Buffer.byteLength(text, 'utf8')} - ${text.length}`)
   return text
 }

@@ -2,10 +2,16 @@ import { advError } from '../../../function/advancedConsole'
 import { msApiFetch } from '../functions/msApiFetch'
 import { ApiErrors } from '../types/errors/ApiErrors'
 import { TrackInfo, zodTrackInfo } from '../types/zodTrackInfo'
+import { TrackSearch, zodTrackSearch } from '../types/zodTrackSearch'
 
 type GetInfoResponse = {
   success: true
   data: TrackInfo
+} | ApiErrors
+
+type TrackSearchResponse = {
+  success: true
+  data: TrackSearch
 } | ApiErrors
 
 export class Track {
@@ -29,6 +35,23 @@ export class Track {
     return {
       success: true,
       data: trackInfo
+    }
+  }
+
+  async search (track: string, artist: string, limit: number): Promise<TrackSearchResponse> {
+    const url = `https://ws.audioscrobbler.com/2.0/?method=track.search&track=${encodeURIComponent(track)}&artist=${encodeURIComponent(artist)}&limit=${limit}&api_key=&api_key=${this.apiKey}&format=json`
+    const zodObject = zodTrackSearch
+    console.log(`Track search: track: ${track}, artist: ${artist}, limit: ${limit}`)
+    console.log(`Track search: url: ${url}`)
+    const msApiFetchResponse = await msApiFetch(url, zodObject)
+    if (!msApiFetchResponse.success) {
+      advError(`Error while fetching track search! Track: ${track}, Artist: ${artist}, Limit: ${limit} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
+      return msApiFetchResponse
+    }
+    const trackSearch = zodObject.parse(msApiFetchResponse.data)
+    return {
+      success: true,
+      data: trackSearch
     }
   }
 }

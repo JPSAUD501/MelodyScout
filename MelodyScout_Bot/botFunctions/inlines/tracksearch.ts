@@ -2,9 +2,11 @@ import { Context, InlineQueryContext, InlineQueryResultBuilder } from 'grammy'
 import { ctxAnswerInlineQuery } from '../../../function/grammyFunctions'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { InlineQueryResult } from 'grammy/types'
-import { trackpreviewInlineResult } from './tracksearchResults/trackpreview'
-import { melodyScoutConfig } from '../../../config'
+import { PromisePool } from '@supercharge/promise-pool'
+import { lastfmConfig, melodyScoutConfig } from '../../../config'
 import { lang } from '../../../translations/base'
+import { MsLastfmApi } from '../../../api/msLastfmApi/base'
+import { trackpreviewInlineResult } from './tracksearchResults/trackpreview'
 
 export async function runTracksearchInline (msMusicApi: MsMusicApi, ctx: InlineQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
@@ -18,26 +20,61 @@ export async function runTracksearchInline (msMusicApi: MsMusicApi, ctx: InlineQ
         thumbnail_url: melodyScoutConfig.logoImgUrl
       })
       .text(lang(ctxLang, 'trackOrArtistNameNotFoundedInCallbackDataErrorMessage'), { parse_mode: 'HTML' })
-    void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 5 })
+    void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
     return
   }
-  const spotifyTrackInfo = await msMusicApi.getSpotifyTrackInfo(searchTrackName, '')
-  if (!spotifyTrackInfo.success) {
+  const lastfmSearchTrack = await new MsLastfmApi(lastfmConfig.apiKey).track.search(searchTrackName, '', 5)
+  if (!lastfmSearchTrack.success) {
     const inlineQueryResultError = InlineQueryResultBuilder
       .article('ERROR', 'An error occurred!', {
-        description: lang(ctxLang, 'spotifyTrackDataNotFoundedError'),
+        description: lang(ctxLang, 'lastfmTrackDataNotFoundedError'),
         thumbnail_url: melodyScoutConfig.logoImgUrl
       })
-      .text(lang(ctxLang, 'spotifyTrackDataNotFoundedError'), { parse_mode: 'HTML' })
-    void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 5 })
+      .text(lang(ctxLang, 'lastfmTrackDataNotFoundedError'), { parse_mode: 'HTML' })
+    void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
     return
   }
-  const trackpreviewInlineResultPromises: Array<Promise<InlineQueryResult>> = []
-  for (let i = 1; i < spotifyTrackInfo.data.length && i <= 10; i++) {
-    trackpreviewInlineResultPromises.push(trackpreviewInlineResult(ctxLang, spotifyTrackInfo.data[i].name, spotifyTrackInfo.data[i].artists[0].name, spotifyTrackInfo.data[i], ctx))
+  const lastfmSearchTrackResults = lastfmSearchTrack.data.results.trackmatches.track
+  if (lastfmSearchTrackResults.length <= 0) {
+    const inlineQueryResultError = InlineQueryResultBuilder
+      .article('ERROR', 'An error occurred!', {
+        description: lang(ctxLang, 'lastfmTrackDataNotFoundedError'),
+        thumbnail_url: melodyScoutConfig.logoImgUrl
+      })
+      .text(lang(ctxLang, 'lastfmTrackDataNotFoundedError'), { parse_mode: 'HTML' })
+    void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
+    return
   }
-  const inlineResults = await Promise.all(trackpreviewInlineResultPromises)
-  inlineQueryResults.push(...inlineResults)
+  const inlineQueryResultsPromisePool = await PromisePool
+    .for(lastfmSearchTrackResults)
+    .withConcurrency(lastfmSearchTrackResults.length)
+    .useCorrespondingResults()
+    .process(async (track) => {
+      const spotifyTrackInfo = await msMusicApi.getSpotifyTrackInfo(track.name, track.artist)
+      if (!spotifyTrackInfo.success) {
+        return
+      }
+      const trackpreviewInlineResultResponse = await trackpreviewInlineResult(ctxLang, spotifyTrackInfo.data[0].name, spotifyTrackInfo.data[0].artists[0].name, spotifyTrackInfo.data[0], ctx)
+      if (!trackpreviewInlineResultResponse.success) {
+        return
+      }
+      return trackpreviewInlineResultResponse.result
+    })
+  for (const inlineQueryResult of inlineQueryResultsPromisePool.results) {
+    if (inlineQueryResult === undefined) continue
+    if (typeof inlineQueryResult === 'symbol') continue
+    inlineQueryResults.push(inlineQueryResult)
+  }
+  if (inlineQueryResults.length <= 0) {
+    const inlineQueryResultError = InlineQueryResultBuilder
+      .article('ERROR', 'An error occurred!', {
+        description: lang(ctxLang, 'trackOrArtistNameNotFoundedInCallbackDataErrorMessage'),
+        thumbnail_url: melodyScoutConfig.logoImgUrl
+      })
+      .text(lang(ctxLang, 'trackOrArtistNameNotFoundedInCallbackDataErrorMessage'), { parse_mode: 'HTML' })
+    void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
+    return
+  }
 
-  await ctxAnswerInlineQuery(ctx, inlineQueryResults, { cache_time: 10 })
+  await ctxAnswerInlineQuery(ctx, inlineQueryResults, { cache_time: 60 })
 }
