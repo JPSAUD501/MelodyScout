@@ -9,63 +9,9 @@ import { MsMusicApi } from '../../../../api/msMusicApi/base'
 import PromisePool from '@supercharge/promise-pool'
 import { getPnartistText } from '../../../textFabric/pnartist'
 
-export async function pnartistInlineResult (ctxLang: string | undefined, msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: InlineQueryContext<Context>): Promise<InlineQueryResultArticle> {
+export async function pnartistInlineResult (ctxLang: string | undefined, lastfmUser: string, msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: InlineQueryContext<Context>): Promise<InlineQueryResultArticle> {
   const resultId = 'PNARTIST'
   const resultName = 'Playing now artist!'
-  const telegramUserId = ctx.from?.id
-  if (telegramUserId === undefined) {
-    return (
-      InlineQueryResultBuilder
-        .article(resultId, resultName, {
-          description: lang(ctxLang, 'unableToGetUserIdErrorMessage'),
-          thumbnail_url: melodyScoutConfig.userImgUrl
-        })
-        .text(lang(ctxLang, 'unableToGetUserIdErrorMessage'), { parse_mode: 'HTML' })
-    )
-  }
-  const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
-  if (!checkIfExistsTgUserDBResponse.success) {
-    return (
-      InlineQueryResultBuilder
-        .article(resultId, resultName, {
-          description: lang(ctxLang, 'unableToGetUserInfoInDb'),
-          thumbnail_url: melodyScoutConfig.userImgUrl
-        })
-        .text(lang(ctxLang, 'unableToGetUserInfoInDb'), { parse_mode: 'HTML' })
-    )
-  }
-  if (!checkIfExistsTgUserDBResponse.exists) {
-    return (
-      InlineQueryResultBuilder
-        .article(resultId, resultName, {
-          description: lang(ctxLang, 'lastfmUserNotRegistered'),
-          thumbnail_url: melodyScoutConfig.userImgUrl
-        })
-        .text(lang(ctxLang, 'lastfmUserNotRegistered'), { parse_mode: 'HTML' })
-    )
-  }
-  const telegramUserDBResponse = await msPrismaDbApi.get.telegramUser(`${telegramUserId}`)
-  if (!telegramUserDBResponse.success) {
-    return (
-      InlineQueryResultBuilder
-        .article(resultId, resultName, {
-          description: lang(ctxLang, 'unableToGetUserInfoInDb'),
-          thumbnail_url: melodyScoutConfig.userImgUrl
-        })
-        .text(lang(ctxLang, 'unableToGetUserInfoInDb'), { parse_mode: 'HTML' })
-    )
-  }
-  const lastfmUser = telegramUserDBResponse.lastfmUser
-  if (lastfmUser === null) {
-    return (
-      InlineQueryResultBuilder
-        .article(resultId, resultName, {
-          description: lang(ctxLang, 'lastfmUserNoMoreRegisteredError'),
-          thumbnail_url: melodyScoutConfig.userImgUrl
-        })
-        .text(lang(ctxLang, 'lastfmUserNoMoreRegisteredError'), { parse_mode: 'HTML' })
-    )
-  }
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
   const userInfoRequest = msLastfmApi.user.getInfo(lastfmUser)
   const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 1)
@@ -167,13 +113,14 @@ export async function pnartistInlineResult (ctxLang: string | undefined, msMusic
   }
   userArtistTopTracks.sort((a, b) => Number(b.playcount) - Number(a.playcount))
   const inlineKeyboard = new InlineKeyboard()
-  inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyArtistInfo.data.externalURL.spotify)
+  inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyArtistInfo.data[0].externalURL.spotify)
   return (
     InlineQueryResultBuilder
       .article(resultId, resultName, {
         description: `${artistInfo.data.artist.name}`,
-        thumbnail_url: spotifyArtistInfo.data.images?.[0]?.url ?? artistInfo.data.artist.image[artistInfo.data.artist.image.length - 1]['#text'] ?? melodyScoutConfig.userImgUrl
+        thumbnail_url: spotifyArtistInfo.data[0].images?.[0]?.url ?? artistInfo.data.artist.image[artistInfo.data.artist.image.length - 1]['#text'] ?? melodyScoutConfig.userImgUrl,
+        reply_markup: inlineKeyboard
       })
-      .text(getPnartistText(ctxLang, userInfo.data, artistInfo.data, userArtistTopTracks, spotifyArtistInfo.data, mainTrack.nowPlaying), { parse_mode: 'HTML' })
+      .text(getPnartistText(ctxLang, userInfo.data, artistInfo.data, userArtistTopTracks, spotifyArtistInfo.data[0], mainTrack.nowPlaying), { parse_mode: 'HTML' })
   )
 }

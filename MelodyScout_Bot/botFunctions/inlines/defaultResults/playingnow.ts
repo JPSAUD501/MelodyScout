@@ -2,68 +2,13 @@ import { InlineQueryContext, Context, InlineQueryResultBuilder, InlineKeyboard }
 import { InlineQueryResultArticle } from 'grammy/types'
 import { MsLastfmApi } from '../../../../api/msLastfmApi/base'
 import { MsMusicApi } from '../../../../api/msMusicApi/base'
-import { MsPrismaDbApi } from '../../../../api/msPrismaDbApi/base'
 import { melodyScoutConfig, lastfmConfig } from '../../../../config'
 import { lang } from '../../../../translations/base'
 import { getPlayingnowText } from '../../../textFabric/playingnow'
 
-export async function playingnowInlineResult (ctxLang: string | undefined, msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: InlineQueryContext<Context>): Promise<InlineQueryResultArticle> {
-  const telegramUserId = ctx.from?.id
+export async function playingnowInlineResult (ctxLang: string | undefined, lastfmUser: string, msMusicApi: MsMusicApi, ctx: InlineQueryContext<Context>): Promise<InlineQueryResultArticle> {
   const resultId = 'PN'
   const resultName = 'Playing now!'
-  if (telegramUserId === undefined) {
-    return (
-      InlineQueryResultBuilder
-        .article(resultId, resultName, {
-          description: lang(ctxLang, 'unableToGetUserIdErrorMessage'),
-          thumbnail_url: melodyScoutConfig.trackImgUrl
-        })
-        .text(lang(ctxLang, 'unableToGetUserIdErrorMessage'), { parse_mode: 'HTML' })
-    )
-  }
-  const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
-  if (!checkIfExistsTgUserDBResponse.success) {
-    return (
-      InlineQueryResultBuilder
-        .article(resultId, resultName, {
-          description: lang(ctxLang, 'unableToGetUserInfoInDb'),
-          thumbnail_url: melodyScoutConfig.trackImgUrl
-        })
-        .text(lang(ctxLang, 'unableToGetUserInfoInDb'), { parse_mode: 'HTML' })
-    )
-  }
-  if (!checkIfExistsTgUserDBResponse.exists) {
-    return (
-      InlineQueryResultBuilder
-        .article(resultId, resultName, {
-          description: lang(ctxLang, 'lastfmUserNotRegistered'),
-          thumbnail_url: melodyScoutConfig.trackImgUrl
-        })
-        .text(lang(ctxLang, 'lastfmUserNotRegistered'), { parse_mode: 'HTML' })
-    )
-  }
-  const telegramUserDBResponse = await msPrismaDbApi.get.telegramUser(`${telegramUserId}`)
-  if (!telegramUserDBResponse.success) {
-    return (
-      InlineQueryResultBuilder
-        .article(resultId, resultName, {
-          description: lang(ctxLang, 'unableToGetUserInfoInDb'),
-          thumbnail_url: melodyScoutConfig.trackImgUrl
-        })
-        .text(lang(ctxLang, 'unableToGetUserInfoInDb'), { parse_mode: 'HTML' })
-    )
-  }
-  const lastfmUser = telegramUserDBResponse.lastfmUser
-  if (lastfmUser === null) {
-    return (
-      InlineQueryResultBuilder
-        .article(resultId, resultName, {
-          description: lang(ctxLang, 'lastfmUserNoMoreRegisteredError'),
-          thumbnail_url: melodyScoutConfig.trackImgUrl
-        })
-        .text(lang(ctxLang, 'lastfmUserNoMoreRegisteredError'), { parse_mode: 'HTML' })
-    )
-  }
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
   const userInfoRequest = msLastfmApi.user.getInfo(lastfmUser)
   const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 1)
@@ -154,7 +99,7 @@ export async function playingnowInlineResult (ctxLang: string | undefined, msMus
     )
   }
   const inlineKeyboard = new InlineKeyboard()
-  inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyTrackInfo.data.externalURL.spotify)
+  inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyTrackInfo.data[0].externalURL.spotify)
   if (youtubeTrackInfo.success) inlineKeyboard.url(lang(ctxLang, 'youtubeButton'), youtubeTrackInfo.videoUrl)
   inlineKeyboard.row()
   inlineKeyboard.url('Para mais funções conheça o MelodyScout!', `https://t.me/${ctx.me.username}`)
@@ -165,6 +110,6 @@ export async function playingnowInlineResult (ctxLang: string | undefined, msMus
         thumbnail_url: albumInfo.data.album.image[albumInfo.data.album.image.length - 1]['#text'] ?? melodyScoutConfig.trackImgUrl,
         reply_markup: inlineKeyboard
       })
-      .text(getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data, mainTrack.nowPlaying), { parse_mode: 'HTML' })
+      .text(getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], mainTrack.nowPlaying), { parse_mode: 'HTML' })
   )
 }

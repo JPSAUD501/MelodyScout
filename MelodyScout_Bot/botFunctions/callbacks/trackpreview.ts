@@ -13,22 +13,19 @@ export async function runTrackpreviewCallback (msMusicApi: MsMusicApi, ctx: Call
     return
   }
   const messageId = ctx.callbackQuery.message?.message_id
-  // if (messageId === undefined) {
-  //   void ctxReply(ctx, lang(ctxLang, 'unableToGetMessageIdFromButtonInformMessage'))
-  //   return
-  // }
   const dataArray = ctx.callbackQuery.data.split(melodyScoutConfig.divider)
   const track = dataArray[1]
   const artist = dataArray[2]
   if (track === undefined || artist === undefined) return await ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'lastfmTrackOrArtistDataNotFoundedErrorCallback'))
   const spotifyTrackInfo = await msMusicApi.getSpotifyTrackInfo(track, artist)
   if (!spotifyTrackInfo.success) return await ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'spotifyTrackPreviewUrlNotFoundedErrorCallback'))
-  if (spotifyTrackInfo.data.previewURL === null) return await ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'spotifyTrackPreviewUrlNotFoundedErrorCallback'))
+  if (spotifyTrackInfo.data[0].previewURL === null) return await ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'spotifyTrackPreviewUrlNotFoundedErrorCallback'))
   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'sendingTrackPreviewInformCallback'))
-  await ctxReplyWithAudio(ctx, new InputFile({ url: spotifyTrackInfo.data.previewURL }), {
+  await ctxReplyWithAudio(ctx, new InputFile({ url: spotifyTrackInfo.data[0].previewURL }), {
     title: track,
     performer: artist,
     caption: getTrackpreviewText(ctxLang, track, artist, ctx.from.id.toString(), ctx.from.first_name),
-    reply_to_message_id: messageId
+    reply_to_message_id: messageId,
+    allow_sending_without_reply: true
   })
 }

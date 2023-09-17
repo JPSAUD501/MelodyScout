@@ -6,63 +6,9 @@ import { lastfmConfig, melodyScoutConfig } from '../../../../config'
 import { lang } from '../../../../translations/base'
 import { getBriefText } from '../../../textFabric/brief'
 
-export async function briefInlineResult (ctxLang: string | undefined, msPrismaDbApi: MsPrismaDbApi, ctx: InlineQueryContext<Context>): Promise<InlineQueryResultArticle> {
+export async function briefInlineResult (ctxLang: string | undefined, lastfmUser: string, msPrismaDbApi: MsPrismaDbApi, ctx: InlineQueryContext<Context>): Promise<InlineQueryResultArticle> {
   const resultId = 'BRIEF'
   const resultName = 'Your musical brief!'
-  const telegramUserId = ctx.from?.id
-  if (telegramUserId === undefined) {
-    return (
-      InlineQueryResultBuilder
-        .article(resultId, resultName, {
-          description: lang(ctxLang, 'unableToGetUserIdErrorMessage'),
-          thumbnail_url: melodyScoutConfig.userImgUrl
-        })
-        .text(lang(ctxLang, 'unableToGetUserIdErrorMessage'), { parse_mode: 'HTML' })
-    )
-  }
-  const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
-  if (!checkIfExistsTgUserDBResponse.success) {
-    return (
-      InlineQueryResultBuilder
-        .article(resultId, resultName, {
-          description: lang(ctxLang, 'unableToGetUserInfoInDb'),
-          thumbnail_url: melodyScoutConfig.userImgUrl
-        })
-        .text(lang(ctxLang, 'unableToGetUserInfoInDb'), { parse_mode: 'HTML' })
-    )
-  }
-  if (!checkIfExistsTgUserDBResponse.exists) {
-    return (
-      InlineQueryResultBuilder
-        .article(resultId, resultName, {
-          description: lang(ctxLang, 'lastfmUserNotRegistered'),
-          thumbnail_url: melodyScoutConfig.userImgUrl
-        })
-        .text(lang(ctxLang, 'lastfmUserNotRegistered'), { parse_mode: 'HTML' })
-    )
-  }
-  const telegramUserDBResponse = await msPrismaDbApi.get.telegramUser(`${telegramUserId}`)
-  if (!telegramUserDBResponse.success) {
-    return (
-      InlineQueryResultBuilder
-        .article(resultId, resultName, {
-          description: lang(ctxLang, 'unableToGetUserInfoInDb'),
-          thumbnail_url: melodyScoutConfig.userImgUrl
-        })
-        .text(lang(ctxLang, 'unableToGetUserInfoInDb'), { parse_mode: 'HTML' })
-    )
-  }
-  const lastfmUser = telegramUserDBResponse.lastfmUser
-  if (lastfmUser === null) {
-    return (
-      InlineQueryResultBuilder
-        .article(resultId, resultName, {
-          description: lang(ctxLang, 'lastfmUserNoMoreRegisteredError'),
-          thumbnail_url: melodyScoutConfig.userImgUrl
-        })
-        .text(lang(ctxLang, 'lastfmUserNoMoreRegisteredError'), { parse_mode: 'HTML' })
-    )
-  }
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
   const userInfoRequest = msLastfmApi.user.getInfo(lastfmUser)
   const userTopTracksRequest = msLastfmApi.user.getTopTracks(lastfmUser, 5, 1)

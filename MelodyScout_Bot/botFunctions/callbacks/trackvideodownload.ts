@@ -32,7 +32,7 @@ export async function runTrackVideoDownloadCallback (msMusicApi: MsMusicApi, ctx
     void ctxReply(ctx, lang(ctxLang, 'errorOnSendLoadingMessageInformMessage'))
     return
   }
-  const download = await msMusicApi.youtubeTrackDownload(trackInfo.videoUrl)
+  const download = await msMusicApi.youtubeTrackVideoDownload(trackInfo.videoUrl)
   if (!download.success) {
     void ctxReply(ctx, lang(ctxLang, 'errorOnDownloadTrackInformMessage'))
     return

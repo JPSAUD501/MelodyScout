@@ -30,6 +30,7 @@ import { MsMusicApi } from '../api/msMusicApi/base'
 import { MsPrismaDbApi } from '../api/msPrismaDbApi/base'
 import { runPlayingnowCallback } from './botFunctions/callbacks/playingnow'
 import { runDefaultInline } from './botFunctions/inlines/default'
+import { runTracksearchInline } from './botFunctions/inlines/tracksearch'
 
 export class MelodyScoutBot {
   private readonly msMusicApi: MsMusicApi
@@ -309,8 +310,13 @@ export class MelodyScoutBot {
       advLog(`MelodyScout_Bot - New callback_query not handled:\nFrom: (${ctx.from?.id ?? 'No ID'}) ${ctx.from?.first_name ?? 'No name'} ${ctx.from?.last_name ?? ''} - ${ctx.from?.username ?? 'No username'}\nIn: (${ctx.chat?.id ?? 'No ID'}) ${chatTittle} - ${ctx.chat?.type ?? 'No type'}\nData: ${ctx.callbackQuery?.data ?? 'No data'}\nLang: ${ctx.from?.language_code ?? 'No lang'}`)
     })
 
+    // More than 1 char
+    this.composer.inlineQuery(/.{1,}/, async (ctx) => {
+      this.logNewInlineQuery(ctx)
+      void runTracksearchInline(this.msMusicApi, ctx)
+    })
+
     this.composer.on('inline_query', async (ctx) => {
-      console.log(JSON.stringify(ctx, null, 2))
       this.logNewInlineQuery(ctx)
       void runDefaultInline(this.msMusicApi, this.msPrismaDbApi, ctx)
     })

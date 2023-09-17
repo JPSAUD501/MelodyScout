@@ -98,6 +98,6 @@ export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi:
   }
   userArtistTopTracks.sort((a, b) => Number(b.playcount) - Number(a.playcount))
   const inlineKeyboard = new InlineKeyboard()
-  inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyArtistInfo.data.externalURL.spotify)
-  await ctxReply(ctx, getPnartistText(ctxLang, userInfo.data, artistInfo.data, userArtistTopTracks, spotifyArtistInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+  inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyArtistInfo.data[0].externalURL.spotify)
+  await ctxReply(ctx, getPnartistText(ctxLang, userInfo.data, artistInfo.data, userArtistTopTracks, spotifyArtistInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
 }

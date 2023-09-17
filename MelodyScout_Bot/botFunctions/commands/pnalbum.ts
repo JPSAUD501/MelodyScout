@@ -77,6 +77,6 @@ export async function runPnalbumCommand (msMusicApi: MsMusicApi, msPrismaDbApi: 
     return
   }
   const inlineKeyboard = new InlineKeyboard()
-  if (spotifyAlbumInfo.success) inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyAlbumInfo.data.externalURL.spotify)
-  await ctxReply(ctx, getPnalbumText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, spotifyAlbumInfo.data, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+  if (spotifyAlbumInfo.success) inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyAlbumInfo.data[0].externalURL.spotify)
+  await ctxReply(ctx, getPnalbumText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, spotifyAlbumInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
 }
