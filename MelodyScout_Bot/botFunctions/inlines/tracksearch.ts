@@ -85,13 +85,13 @@ export async function runTracksearchInline (msMusicApi: MsMusicApi, ctx: InlineQ
         deezer: undefined,
         youtube: undefined
       }
-      if (deezerSearchTrack.success) {
-        if (deezerSearchTrack.data.data[0].preview !== null) previewUrls.push(deezerTrack.preview)
-        trackUrl.deezer = deezerTrack.link
-      }
       if (spotifyTrackInfo.success) {
         if (spotifyTrackInfo.data[0].previewURL !== null) previewUrls.push(spotifyTrackInfo.data[0].previewURL)
         trackUrl.spotify = spotifyTrackInfo.data[0].externalURL.spotify
+      }
+      if (deezerSearchTrack.success) {
+        if (deezerSearchTrack.data.data[0].preview !== null) previewUrls.push(deezerTrack.preview)
+        trackUrl.deezer = deezerTrack.link
       }
       if (youtubeTrackInfo.success) {
         trackUrl.youtube = youtubeTrackInfo.videoUrl
