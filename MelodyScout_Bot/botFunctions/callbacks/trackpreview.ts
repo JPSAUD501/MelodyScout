@@ -4,6 +4,7 @@ import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { melodyScoutConfig } from '../../../config'
 import { lang } from '../../../translations/base'
 import { getTrackpreviewText } from '../../textFabric/trackpreview'
+import { MsDeezerApi } from '../../../api/msDeezerApi/base'
 
 export async function runTrackpreviewCallback (msMusicApi: MsMusicApi, ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
@@ -17,11 +18,21 @@ export async function runTrackpreviewCallback (msMusicApi: MsMusicApi, ctx: Call
   const track = dataArray[1]
   const artist = dataArray[2]
   if (track === undefined || artist === undefined) return await ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'lastfmTrackOrArtistDataNotFoundedErrorCallback'))
-  const spotifyTrackInfo = await msMusicApi.getSpotifyTrackInfo(track, artist)
-  if (!spotifyTrackInfo.success) return await ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'spotifyTrackPreviewUrlNotFoundedErrorCallback'))
-  if (spotifyTrackInfo.data[0].previewURL === null) return await ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'spotifyTrackPreviewUrlNotFoundedErrorCallback'))
+  const spotifyTrackInfoPromise = msMusicApi.getSpotifyTrackInfo(track, artist)
+  const deezerSearchTrackPromise = new MsDeezerApi().search.track(track, artist, 1)
+  const [spotifyTrackInfo, deezerSearchTrack] = await Promise.all([spotifyTrackInfoPromise, deezerSearchTrackPromise])
+  const previewUrls: string[] = []
+  if (spotifyTrackInfo.success) {
+    if (spotifyTrackInfo.data[0].previewURL !== null) previewUrls.push(spotifyTrackInfo.data[0].previewURL)
+  }
+  if (deezerSearchTrack.success) {
+    if (deezerSearchTrack.data.data[0].preview !== null) previewUrls.push(deezerSearchTrack.data.data[0].preview)
+  }
+  if (previewUrls.length <= 0) {
+    return await ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'spotifyTrackPreviewUrlNotFoundedErrorCallback'))
+  }
   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'sendingTrackPreviewInformCallback'))
-  await ctxReplyWithAudio(ctx, new InputFile({ url: spotifyTrackInfo.data[0].previewURL }), {
+  await ctxReplyWithAudio(ctx, new InputFile({ url: previewUrls[0] }), {
     title: track,
     performer: artist,
     caption: getTrackpreviewText(ctxLang, track, artist, ctx.from.id.toString(), ctx.from.first_name),
