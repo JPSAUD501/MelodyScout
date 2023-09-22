@@ -38,7 +38,7 @@ export async function runHistoryCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comm
   }
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
   const userInfoRequest = msLastfmApi.user.getInfo(lastfmUser)
-  const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 20)
+  const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 20, 1)
   const [userInfo, userRecentTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest])
   if (!userInfo.success) {
     void ctxReply(ctx, lang(ctxLang, 'lastfmUserDataNotFoundedError', { lastfmUser }))

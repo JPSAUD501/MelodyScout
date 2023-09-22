@@ -39,5 +39,5 @@ export async function runTranslatedtracklyricsCallback (ctx: CallbackQueryContex
     void ctxReply(ctx, lang(ctxLang, 'unableToTranslateLyricsErrorMessage'))
     return
   }
-  await ctxEditMessage(ctx, getLyricsText(ctxLang, track, artist, geniusSong.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, translatedTrackLyrics.text), { disable_web_page_preview: true })
+  await ctxEditMessage(ctx, undefined, getLyricsText(ctxLang, track, artist, geniusSong.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, translatedTrackLyrics.text), { disable_web_page_preview: true })
 }

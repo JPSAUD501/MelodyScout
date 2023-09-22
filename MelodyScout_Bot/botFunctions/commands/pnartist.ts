@@ -41,7 +41,7 @@ export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi:
   }
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
   const userInfoRequest = msLastfmApi.user.getInfo(lastfmUser)
-  const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 1)
+  const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 1, 1)
   const userTopTracksRequest = msLastfmApi.user.getTopTracks(lastfmUser, 1, 1)
   const [userInfo, userRecentTracks, userTopTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest, userTopTracksRequest])
   if (!userInfo.success) {
@@ -77,7 +77,7 @@ export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi:
     return
   }
   const userArtistTopTracks: Array<UserTopTracks['toptracks']['track']['0']> = []
-  const userTopTracksPageLength = Math.ceil(Number(userTopTracks.data.toptracks['@attr'].total) / 1000) + 1
+  const userTopTracksPageLength = Math.ceil(Number(userTopTracks.data.toptracks['@attr'].total) / 1000)
   const allUserArtistTopTracksResponses = await PromisePool.for(
     Array.from({ length: userTopTracksPageLength }, (_, index) => index + 1)
   ).withConcurrency(5).process(async (page) => {

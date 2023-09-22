@@ -10,6 +10,7 @@ export const zodUserRecentTracks = z.object({
           image: z.array(z.object({ size: z.string(), '#text': z.string() })),
           mbid: z.string()
         }),
+        date: z.object({ uts: z.string(), '#text': z.string() }).optional(),
         mbid: z.string(),
         name: z.string(),
         image: z.array(z.object({ size: z.string(), '#text': z.string() })),

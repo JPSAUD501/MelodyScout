@@ -6,8 +6,12 @@ import { UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
 import { melodyScoutConfig } from '../../config'
 import { sanitizeText } from '../../function/sanitizeText'
 import { urlLimiter } from '../../function/urlLimiter'
+import { lang } from '../../translations/base'
 
-export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, nowPlaying: boolean): string {
+export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, nowPlaying: boolean, firstScrobble: {
+  loadingStatus: 'loading' | 'loaded' | 'error'
+  unix: number
+} | undefined): string {
   const { user } = userInfo
   const { artist } = artistInfo
   const { album } = albumInfo
@@ -105,6 +109,22 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
     Number(artist.stats.userplaycount) > 0 &&
     Number(((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)) >= 10
   ) infoArray.push(`- Esse artista representa <b>${Number(((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)).toLocaleString('pt-BR')}%</b> de todas suas reproduções.`)
+  if (firstScrobble !== undefined) {
+    switch (firstScrobble.loadingStatus) {
+      case 'loading': {
+        infoArray.push('- Carregando quando você ouviu essa música pela primeira vez...')
+        break
+      }
+      case 'loaded': {
+        infoArray.push(`- Sua primeira reprodução dessa música foi em <b>${new Date(firstScrobble.unix * 1000).toLocaleString(lang(ctxLang, 'localeLangCode'))} (UTC)</b>.`)
+        break
+      }
+      case 'error': {
+        infoArray.push('- Não foi possível carregar quando você ouviu essa música pela primeira vez.')
+        break
+      }
+    }
+  }
   if (infoArray.length > 0) {
     textArray.push('')
     textArray.push('<b>[ℹ️] Informações</b>')

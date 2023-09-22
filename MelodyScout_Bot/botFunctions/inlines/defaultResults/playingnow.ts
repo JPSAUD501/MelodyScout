@@ -14,7 +14,7 @@ export async function playingnowInlineResult (ctxLang: string | undefined, lastf
   const resultName = 'Playing now!'
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
   const userInfoRequest = msLastfmApi.user.getInfo(lastfmUser)
-  const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 1)
+  const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 1, 1)
   const [userInfo, userRecentTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest])
   if (!userInfo.success) {
     return {
@@ -121,6 +121,6 @@ export async function playingnowInlineResult (ctxLang: string | undefined, lastf
         thumbnail_url: albumInfo.data.album.image[albumInfo.data.album.image.length - 1]['#text'] ?? melodyScoutConfig.trackImgUrl,
         reply_markup: inlineKeyboard
       })
-      .text(getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], mainTrack.nowPlaying), { parse_mode: 'HTML' })
+      .text(getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], mainTrack.nowPlaying, undefined), { parse_mode: 'HTML' })
   }
 }

@@ -43,7 +43,7 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: M
   }
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
   const userInfoRequest = msLastfmApi.user.getInfo(lastfmUser)
-  const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 2)
+  const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 2, 1)
   const [userInfo, userRecentTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest])
   if (!userInfo.success) {
     void ctxReply(ctx, lang(ctxLang, 'lastfmUserDataNotFoundedError', { lastfmUser }))

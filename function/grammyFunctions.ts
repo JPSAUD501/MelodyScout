@@ -79,9 +79,9 @@ export async function ctxPinMessage (ctx: Context, message: Message): Promise<vo
   }
 }
 
-export async function ctxEditMessage (ctx: Context, text: string, options?: Other<RawApi, 'editMessageText', 'text' | 'chat_id' | 'message_id'>): Promise<Message.TextMessage | undefined> {
+export async function ctxEditMessage (ctx: Context, messageToEdit: { chatId: number, messageId: number } | undefined, text: string, options?: Other<RawApi, 'editMessageText', 'text' | 'chat_id' | 'message_id'>): Promise<Message.TextMessage | undefined> {
   const ctxLang = ctx.from?.language_code
-  const ctxChatId = ctx.chat?.id ?? ctx.from?.id
+  const ctxChatId = messageToEdit?.chatId ?? ctx.chat?.id ?? ctx.from?.id
   if (ctxChatId === undefined) {
     advError('MelodyScout_Bot - Error: ctxChatId is undefined')
     return undefined
@@ -91,7 +91,7 @@ export async function ctxEditMessage (ctx: Context, text: string, options?: Othe
     await ctxReply(ctx, lang(ctxLang, 'messageLengthGreater4096ErrorMessage'))
     return undefined
   }
-  const editMessageId = ctx.message?.message_id ?? ctx.update.callback_query?.message?.message_id
+  const editMessageId = messageToEdit?.messageId ?? ctx.message?.message_id ?? ctx.update.callback_query?.message?.message_id
   if (editMessageId === undefined) {
     advError('MelodyScout_Bot - Error: editMessageId is undefined')
     return undefined

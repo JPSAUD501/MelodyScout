@@ -17,7 +17,7 @@ export async function pnartistInlineResult (ctxLang: string | undefined, lastfmU
   const resultName = 'Playing now artist!'
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
   const userInfoRequest = msLastfmApi.user.getInfo(lastfmUser)
-  const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 1)
+  const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 1, 1)
   const userTopTracksRequest = msLastfmApi.user.getTopTracks(lastfmUser, 1, 1)
   const [userInfo, userRecentTracks, userTopTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest, userTopTracksRequest])
   if (!userInfo.success) {
