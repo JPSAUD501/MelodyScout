@@ -116,7 +116,7 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
         break
       }
       case 'loaded': {
-        infoArray.push(`- Sua primeira reprodução dessa música foi em <b>${new Date(firstScrobble.unix * 1000).toLocaleString(lang(ctxLang, 'localeLangCode'))} (UTC)</b>.`)
+        infoArray.push(`- Sua primeira reprodução dessa música foi em <b>${new Date(firstScrobble.unix).toLocaleString(lang(ctxLang, 'localeLangCode'))} (UTC)</b>.`)
         break
       }
       case 'error': {

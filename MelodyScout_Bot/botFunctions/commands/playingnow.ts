@@ -56,7 +56,7 @@ export async function runPlayingnowCommand (msMusicApi: MsMusicApi, msPrismaDbAp
     void ctxReply(ctx, lang(ctxLang, 'noRecentTracksError'))
     return
   }
-  const dateNow = new Date().getTime()
+  const dateNow = new Date().getTime() / 1000
   const mainTrack: {
     trackName: string
     trackMbid: string
@@ -150,7 +150,7 @@ export async function runPlayingnowCommand (msMusicApi: MsMusicApi, msPrismaDbAp
       mainTrack.firstScrobble.loadingStatus = 'error'
       return
     }
-    mainTrack.firstScrobble.unix = Number(userFirstScrobbles[0].date?.uts ?? dateNow)
+    mainTrack.firstScrobble.unix = Number(userFirstScrobbles[0].date?.uts ?? dateNow) * 1000
     mainTrack.firstScrobble.loadingStatus = 'loaded'
   })()
   const partialReply = await partialReplyPromise
