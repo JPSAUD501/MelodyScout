@@ -79,7 +79,7 @@ export async function runPlayingnowCommand (msMusicApi: MsMusicApi, msPrismaDbAp
     nowPlaying: userRecentTracks.data.recenttracks.track[0]['@attr']?.nowplaying === 'true',
     firstScrobble: {
       loadingStatus: 'loading',
-      unix: 0
+      unix: dateNow
     }
   }
   const artistInfoRequest = msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
