@@ -128,7 +128,11 @@ export async function runPlayingnowCommand (msMusicApi: MsMusicApi, msPrismaDbAp
         return userPartialRecentTracksRequest
       }
       for (const userRecentTrack of userPartialRecentTracksRequest.data.recenttracks.track) {
-        if (userRecentTrack.name === mainTrack.trackName && userRecentTrack.artist.name === mainTrack.artistName) {
+        if (
+          userRecentTrack.name === mainTrack.trackName &&
+          userRecentTrack.artist.name === mainTrack.artistName &&
+          userRecentTrack['@attr']?.nowplaying !== 'true'
+        ) {
           stopPool = true
         }
       }
