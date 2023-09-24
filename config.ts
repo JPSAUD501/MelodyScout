@@ -4,13 +4,13 @@ dotenv.config()
 export const melodyScoutConfig = {
   divider: '️️',
   admins: process.env.ADMINS !== undefined ? process.env.ADMINS.split(',') : [],
-  logoImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/newlogo.jpg',
-  userImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/user.jpg',
-  trackImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/track.jpg',
-  popularityImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/popularity.jpg',
-  aboutMelodyScoutAi: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/aboutMelodyScoutAi.jpg',
-  urltoolong: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/urltoolong.jpg',
-  msAndRaveDj: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/ms-rdj.png'
+  logoImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/logo.png',
+  userImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/user.png',
+  trackImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/track.png',
+  popularityImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/popularity.png',
+  aboutMelodyScoutAi: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/ms-ai.png',
+  urltoolong: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/url_long.png',
+  msAndRaveDj: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/ms-rdj.png'
 }
 
 export const lastfmConfig = {

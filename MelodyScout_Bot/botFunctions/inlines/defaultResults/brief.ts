@@ -1,12 +1,11 @@
-import { InlineQueryContext, Context, InlineQueryResultBuilder } from 'grammy'
+import { InlineQueryResultBuilder } from 'grammy'
 import { InlineQueryResult } from 'grammy/types'
 import { MsLastfmApi } from '../../../../api/msLastfmApi/base'
-import { MsPrismaDbApi } from '../../../../api/msPrismaDbApi/base'
 import { lastfmConfig, melodyScoutConfig } from '../../../../config'
 import { lang } from '../../../../translations/base'
 import { getBriefText } from '../../../textFabric/brief'
 
-export async function briefInlineResult (ctxLang: string | undefined, lastfmUser: string, msPrismaDbApi: MsPrismaDbApi, ctx: InlineQueryContext<Context>): Promise<{
+export async function briefInlineResult (ctxLang: string | undefined, lastfmUser: string): Promise<{
   success: boolean
   result: InlineQueryResult
 }> {

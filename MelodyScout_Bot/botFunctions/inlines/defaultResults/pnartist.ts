@@ -1,7 +1,6 @@
-import { InlineQueryContext, Context, InlineQueryResultBuilder, InlineKeyboard } from 'grammy'
+import { InlineQueryResultBuilder, InlineKeyboard } from 'grammy'
 import { InlineQueryResult } from 'grammy/types'
 import { MsLastfmApi } from '../../../../api/msLastfmApi/base'
-import { MsPrismaDbApi } from '../../../../api/msPrismaDbApi/base'
 import { lastfmConfig, melodyScoutConfig } from '../../../../config'
 import { lang } from '../../../../translations/base'
 import { UserTopTracks } from '../../../../api/msLastfmApi/types/zodUserTopTracks'
@@ -9,7 +8,7 @@ import { MsMusicApi } from '../../../../api/msMusicApi/base'
 import PromisePool from '@supercharge/promise-pool'
 import { getPnartistText } from '../../../textFabric/pnartist'
 
-export async function pnartistInlineResult (ctxLang: string | undefined, lastfmUser: string, msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: InlineQueryContext<Context>): Promise<{
+export async function pnartistInlineResult (ctxLang: string | undefined, lastfmUser: string, msMusicApi: MsMusicApi): Promise<{
   success: boolean
   result: InlineQueryResult
 }> {

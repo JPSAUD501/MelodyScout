@@ -73,7 +73,7 @@ export async function runDefaultInline (msMusicApi: MsMusicApi, msPrismaDbApi: M
   }
   const inlineQueryResults: InlineQueryResult[] = []
   const inlinePlayingnowResultPromise = playingnowInlineResult(ctxLang, lastfmUser, msMusicApi, ctx)
-  const inlineBriefResultPromise = briefInlineResult(ctxLang, lastfmUser, msPrismaDbApi, ctx)
+  const inlineBriefResultPromise = briefInlineResult(ctxLang, lastfmUser)
   // const inlinePnartistResultPromise = pnartistInlineResult(ctxLang, lastfmUser, msMusicApi, msPrismaDbApi, ctx)
   const inlineResults = await Promise.all([inlinePlayingnowResultPromise, inlineBriefResultPromise])
   for (const inlineResult of inlineResults) {
