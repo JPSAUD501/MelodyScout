@@ -118,7 +118,7 @@ export async function runPlayingnowCallback (msMusicApi: MsMusicApi, msPrismaDbA
     let stopPool = false
     const userAllRecentTracksPartialResponses = await PromisePool.for(
       Array.from({ length: userAllRecentTracksPageLength }, (_, index) => index + 1).reverse()
-    ).withConcurrency(15).process(async (page, _index, pool) => {
+    ).withConcurrency(20).process(async (page, _index, pool) => {
       if (stopPool) pool.stop()
       const userPartialRecentTracksRequest = await msLastfmApi.user.getRecentTracks(lastfmUser, 1000, page)
       if (!userPartialRecentTracksRequest.success) {
