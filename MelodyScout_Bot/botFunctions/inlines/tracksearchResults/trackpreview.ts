@@ -11,7 +11,7 @@ export async function trackpreviewInlineResult (ctxLang: string | undefined, tra
   const resultId = `TP:${uuidv4()}`
   const inlineKeyboard = new InlineKeyboard()
   if (spotifyTrackUrl !== undefined) inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyTrackUrl)
-  if (deezerTrackUrl !== undefined) inlineKeyboard.url('[🎧] - Deezer', deezerTrackUrl)
+  if (deezerTrackUrl !== undefined) inlineKeyboard.url(lang(ctxLang, 'deezerButton'), deezerTrackUrl)
   inlineKeyboard.row()
   if (youtubeTrackUrl !== undefined) inlineKeyboard.url(lang(ctxLang, 'youtubeButton'), youtubeTrackUrl)
   return {

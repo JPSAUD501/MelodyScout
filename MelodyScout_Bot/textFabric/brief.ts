@@ -67,7 +67,7 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
     }
   }
 
-  postText.metrics.textArray.push(lang(ctxLang, 'tfBriefPostUserAtMelodyScoutBot', { username: user.realname.length > 0 ? user.realname : user.name }))
+  postText.metrics.textArray.push(lang(ctxLang, 'tfBriefPostUserAtMelodyScoutBot', { username: sanitizeText(user.realname.length > 0 ? user.realname : user.name) }))
   postText.metrics.textArray.push('')
   // postText.metrics.textArray.push('[📊] Métricas')
   postText.metrics.textArray.push(lang(ctxLang, 'tfBriefPostMetricsTittle'))
@@ -93,7 +93,7 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
   postText.infos.textArray.push(lang(ctxLang, 'tfBriefPostInfosAverageRepeatTracks', { averageRepeatTracks: Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.track_count)).toFixed(2)).toLocaleString(lang(ctxLang, 'localeLangCode')) }))
 
   // postText.mostPlayedTracks.textArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
-  postText.mostPlayedTracks.textArray.push(lang(ctxLang, 'tfBriefPostUserAtMelodyScoutBot', { username: user.realname.length > 0 ? user.realname : user.name }))
+  postText.mostPlayedTracks.textArray.push(lang(ctxLang, 'tfBriefPostUserAtMelodyScoutBot', { username: sanitizeText(user.realname.length > 0 ? user.realname : user.name) }))
   postText.mostPlayedTracks.textArray.push('')
   // postText.mostPlayedTracks.textArray.push('[🎵] Músicas mais ouvidas')
   postText.mostPlayedTracks.textArray.push(lang(ctxLang, 'tfBriefPostMostPlayedTracksTittle'))
@@ -104,7 +104,7 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
   }
 
   // postText.mostPlayedAlbums.textArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
-  postText.mostPlayedAlbums.textArray.push(lang(ctxLang, 'tfBriefPostUserAtMelodyScoutBot', { username: user.realname.length > 0 ? user.realname : user.name }))
+  postText.mostPlayedAlbums.textArray.push(lang(ctxLang, 'tfBriefPostUserAtMelodyScoutBot', { username: sanitizeText(user.realname.length > 0 ? user.realname : user.name) }))
   postText.mostPlayedAlbums.textArray.push('')
   // postText.mostPlayedAlbums.textArray.push('[💿] Álbuns mais ouvidos')
   postText.mostPlayedAlbums.textArray.push(lang(ctxLang, 'tfBriefPostMostPlayedAlbumsTittle'))
@@ -115,7 +115,7 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
   }
 
   // postText.mostPlayedArtists.textArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
-  postText.mostPlayedArtists.textArray.push(lang(ctxLang, 'tfBriefPostUserAtMelodyScoutBot', { username: user.realname.length > 0 ? user.realname : user.name }))
+  postText.mostPlayedArtists.textArray.push(lang(ctxLang, 'tfBriefPostUserAtMelodyScoutBot', { username: sanitizeText(user.realname.length > 0 ? user.realname : user.name) }))
   postText.mostPlayedArtists.textArray.push('')
   // postText.mostPlayedArtists.textArray.push('[👨‍🎤] Artistas mais ouvidos')
   postText.mostPlayedArtists.textArray.push(lang(ctxLang, 'tfBriefPostMostPlayedArtistsTittle'))
@@ -127,7 +127,7 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
 
   const textArray: string[] = []
   // textArray.push(`<a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.userImgUrl}">️️</a><b>Resumo musical de <a href="${urlLimiter(user.url)}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a></b>`)
-  textArray.push(`<a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.userImgUrl}">️️</a>${lang(ctxLang, 'tfBriefUserMusicSummaryTittle', { userUrl: urlLimiter(user.url), username: user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name) })}`)
+  textArray.push(`<a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.userImgUrl}">️️</a>${lang(ctxLang, 'tfBriefUserMusicSummaryTittle', { userUrl: urlLimiter(user.url), username: sanitizeText(user.realname.length > 0 ? user.realname : user.name) })}`)
   textArray.push('')
   switch (true) {
     case (postText.metrics.postUrl().length < 300): {
