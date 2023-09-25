@@ -56,7 +56,7 @@ export async function playingnowInlineResult (ctxLang: string | undefined, lastf
     albumMbid: userRecentTracks.data.recenttracks.track[0].album.mbid,
     artistName: userRecentTracks.data.recenttracks.track[0].artist.name,
     artistMbid: userRecentTracks.data.recenttracks.track[0].artist.mbid,
-    nowPlaying: userRecentTracks.data.recenttracks.track[0]['@attr']?.nowplaying === 'false'
+    nowPlaying: userRecentTracks.data.recenttracks.track[0]['@attr']?.nowplaying === 'true'
   }
   const artistInfoRequest = msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
   const albumInfoRequest = msLastfmApi.album.getInfo(mainTrack.artistName, mainTrack.albumName, mainTrack.albumMbid, lastfmUser)
