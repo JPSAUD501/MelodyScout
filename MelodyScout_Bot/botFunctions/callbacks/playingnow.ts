@@ -157,6 +157,7 @@ export async function runPlayingnowCallback (msMusicApi: MsMusicApi, msPrismaDbA
   })()
   const partialReply = await partialReplyPromise
   if (partialReply === undefined) return
-  await ctxEditMessage(ctx, { chatId: partialReply.chat.id, messageId: partialReply.message_id }, getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], mainTrack.nowPlaying, mainTrack.firstScrobble), { reply_markup: inlineKeyboard })
-  await ctxReply(ctx, { chatId: melodyScoutConfig.blogChannelChatId }, getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], mainTrack.nowPlaying, mainTrack.firstScrobble), { reply_markup: inlineKeyboard })
+  const tfFinalText = getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], mainTrack.nowPlaying, mainTrack.firstScrobble)
+  await ctxEditMessage(ctx, { chatId: partialReply.chat.id, messageId: partialReply.message_id }, tfFinalText, { reply_markup: inlineKeyboard })
+  await ctxReply(ctx, { chatId: melodyScoutConfig.blogChannelChatId }, tfFinalText, { reply_markup: inlineKeyboard })
 }
