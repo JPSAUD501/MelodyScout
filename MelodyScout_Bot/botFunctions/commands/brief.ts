@@ -3,7 +3,7 @@ import { ctxReply } from '../../../function/grammyFunctions'
 import { getBriefText } from '../../textFabric/brief'
 import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
-import { lastfmConfig } from '../../../config'
+import { lastfmConfig, melodyScoutConfig } from '../../../config'
 import { lang } from '../../../translations/base'
 
 export async function runBriefCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
@@ -58,5 +58,7 @@ export async function runBriefCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comman
     void ctxReply(ctx, undefined, lang(ctxLang, 'getTopArtistsErrorMessage'))
     return
   }
-  await ctxReply(ctx, undefined, getBriefText(ctxLang, userInfo.data, userTopTracks.data, userTopAlbums.data, userTopArtists.data))
+  const tfFinalText = getBriefText(ctxLang, userInfo.data, userTopTracks.data, userTopAlbums.data, userTopArtists.data)
+  await ctxReply(ctx, undefined, tfFinalText)
+  await ctxReply(ctx, { chatId: melodyScoutConfig.blogChannelChatId }, tfFinalText)
 }
