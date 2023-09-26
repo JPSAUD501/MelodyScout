@@ -11,7 +11,8 @@ export const melodyScoutConfig = {
   popularityImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/popularity.png',
   aboutMelodyScoutAi: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/ms-ai.png',
   urltoolong: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/url_long.png',
-  msAndRaveDj: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/ms-rdj.png'
+  msAndRaveDj: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/ms-rdj.png',
+  blogChannelChatId: Number(process.env.MSBC_TELEGRAM_CHAT_ID !== undefined ? process.env.MSBC_TELEGRAM_CHAT_ID : '')
 }
 
 export const lastfmConfig = {

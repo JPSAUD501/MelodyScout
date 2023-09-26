@@ -11,5 +11,5 @@ export async function runMaintenanceinformCallback (ctx: CallbackQueryContext<Co
     advInfo(`User ${ctxFromId} tried to use a command but the bot is in maintenance mode!`)
   }
   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'maintenanceInformMessage'))
-  await ctxReply(ctx, getMaintenanceinformText(ctxLang))
+  await ctxReply(ctx, undefined, getMaintenanceinformText(ctxLang))
 }

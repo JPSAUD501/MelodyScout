@@ -10,31 +10,31 @@ import { lang } from '../../../translations/base'
 export async function runPnalbumCommand (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context> | CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
   if (ctx.chat?.type === 'channel') {
-    void ctxReply(ctx, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
     return
   }
   const telegramUserId = ctx.from?.id
   if (telegramUserId === undefined) {
-    await ctxReply(ctx, lang(ctxLang, 'unableToGetUserIdErrorMessage'))
+    await ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetUserIdErrorMessage'))
     return
   }
   const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
   if (!checkIfExistsTgUserDBResponse.success) {
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserInfoInDb'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetUserInfoInDb'))
     return
   }
   if (!checkIfExistsTgUserDBResponse.exists) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmUserNotRegistered'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmUserNotRegistered'))
     return
   }
   const telegramUserDBResponse = await msPrismaDbApi.get.telegramUser(`${telegramUserId}`)
   if (!telegramUserDBResponse.success) {
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserInfoInDb'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetUserInfoInDb'))
     return
   }
   const lastfmUser = telegramUserDBResponse.lastfmUser
   if (lastfmUser === null) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmUserNoMoreRegisteredError'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmUserNoMoreRegisteredError'))
     return
   }
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
@@ -42,15 +42,15 @@ export async function runPnalbumCommand (msMusicApi: MsMusicApi, msPrismaDbApi: 
   const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 1, 1)
   const [userInfo, userRecentTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest])
   if (!userInfo.success) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmUserDataNotFoundedError', { lastfmUser }))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmUserDataNotFoundedError', { lastfmUser }))
     return
   }
   if (!userRecentTracks.success) {
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserRecentTracksHistory'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetUserRecentTracksHistory'))
     return
   }
   if (userRecentTracks.data.recenttracks.track.length <= 0) {
-    void ctxReply(ctx, lang(ctxLang, 'noRecentTracksError'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'noRecentTracksError'))
     return
   }
   const mainTrack = {
@@ -65,18 +65,18 @@ export async function runPnalbumCommand (msMusicApi: MsMusicApi, msPrismaDbApi: 
   const spotifyAlbumInfoRequest = msMusicApi.getSpotifyAlbumInfo(mainTrack.artistName, mainTrack.albumName)
   const [artistInfo, albumInfo, spotifyAlbumInfo] = await Promise.all([artistInfoRequest, albumInfoRequest, spotifyAlbumInfoRequest])
   if (!artistInfo.success) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmArtistDataNotFoundedError'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmArtistDataNotFoundedError'))
     return
   }
   if (!albumInfo.success) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmAlbumDataNotFoundedError'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmAlbumDataNotFoundedError'))
     return
   }
   if (!spotifyAlbumInfo.success) {
-    void ctxReply(ctx, lang(ctxLang, 'spotifyAlbumDataNotFoundedError'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'spotifyAlbumDataNotFoundedError'))
     return
   }
   const inlineKeyboard = new InlineKeyboard()
   if (spotifyAlbumInfo.success) inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyAlbumInfo.data[0].externalURL.spotify)
-  await ctxReply(ctx, getPnalbumText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, spotifyAlbumInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+  await ctxReply(ctx, undefined, getPnalbumText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, spotifyAlbumInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
 }

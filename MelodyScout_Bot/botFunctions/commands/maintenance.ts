@@ -13,34 +13,34 @@ export async function runMaintenanceCommand (ctx: CommandContext<Context>): Prom
 }> {
   const ctxLang = ctx.from?.language_code
   if (ctx.chat?.type === 'channel') {
-    void ctxReply(ctx, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
     return { success: false }
   }
   const ctxFromId = ctx.from?.id
   if (ctxFromId === undefined) {
-    await ctxReply(ctx, lang(ctxLang, 'unableToGetUserIdErrorMessage'))
+    await ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetUserIdErrorMessage'))
     return { success: false }
   }
   if (!melodyScoutConfig.admins.includes(ctxFromId.toString())) return { success: false }
   const args = ctx.message?.text?.split(' ')
   if (args === undefined) return { success: false }
   if (args.length < 2) {
-    await ctxReply(ctx, lang(ctxLang, 'noMaintenanceModeArgumentErrorMessage'))
+    await ctxReply(ctx, undefined, lang(ctxLang, 'noMaintenanceModeArgumentErrorMessage'))
     return { success: false }
   }
   switch (args[1]) {
     case 'on': {
-      await ctxReply(ctx, getMaintenanceText(ctxLang, true))
+      await ctxReply(ctx, undefined, getMaintenanceText(ctxLang, true))
       advLog('Maintenance mode activated!')
       return { success: true, maintenanceMode: true }
     }
     case 'off': {
-      await ctxReply(ctx, getMaintenanceText(ctxLang, false))
+      await ctxReply(ctx, undefined, getMaintenanceText(ctxLang, false))
       advLog('Maintenance mode deactivated!')
       return { success: true, maintenanceMode: false }
     }
     default: {
-      await ctxReply(ctx, lang(ctxLang, 'invalidMaintenanceModeArgumentErrorMessage'))
+      await ctxReply(ctx, undefined, lang(ctxLang, 'invalidMaintenanceModeArgumentErrorMessage'))
       return { success: false }
     }
   }

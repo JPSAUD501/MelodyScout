@@ -4,7 +4,7 @@ import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { getCallbackKey } from '../../../function/callbackMaker'
 import { getPlayingnowText } from '../../textFabric/playingnow'
-import { lastfmConfig } from '../../../config'
+import { lastfmConfig, melodyScoutConfig } from '../../../config'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { lang } from '../../../translations/base'
 import PromisePool from '@supercharge/promise-pool'
@@ -12,30 +12,30 @@ import { UserRecentTracks } from '../../../api/msLastfmApi/types/zodUserRecentTr
 
 export async function runPlayingnowCallback (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
-  if (ctx.chat?.type === 'channel') {
-    void ctxReply(ctx, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
-    void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'dontWorkOnChannelsInformCallback'))
-    return
-  }
+  // if (ctx.chat?.type === 'channel') {
+  //   void ctxReply(ctx, undefined, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
+  //   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'dontWorkOnChannelsInformCallback'))
+  //   return
+  // }
   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'loadingInformCallback'))
   const telegramUserId = ctx.from.id
   const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
   if (!checkIfExistsTgUserDBResponse.success) {
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserInfoInDb'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetUserInfoInDb'))
     return
   }
   if (!checkIfExistsTgUserDBResponse.exists) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmUserNotRegistered'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmUserNotRegistered'))
     return
   }
   const telegramUserDBResponse = await msPrismaDbApi.get.telegramUser(`${telegramUserId}`)
   if (!telegramUserDBResponse.success) {
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserInfoInDb'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetUserInfoInDb'))
     return
   }
   const lastfmUser = telegramUserDBResponse.lastfmUser
   if (lastfmUser === null) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmUserNoMoreRegisteredError'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmUserNoMoreRegisteredError'))
     return
   }
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
@@ -43,15 +43,15 @@ export async function runPlayingnowCallback (msMusicApi: MsMusicApi, msPrismaDbA
   const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 1, 1)
   const [userInfo, userRecentTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest])
   if (!userInfo.success) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmUserDataNotFoundedError', { lastfmUser }))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmUserDataNotFoundedError', { lastfmUser }))
     return
   }
   if (!userRecentTracks.success) {
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserRecentTracksHistory'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetUserRecentTracksHistory'))
     return
   }
   if (userRecentTracks.data.recenttracks.track.length <= 0) {
-    void ctxReply(ctx, lang(ctxLang, 'noRecentTracksError'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'noRecentTracksError'))
     return
   }
   const dateNow = new Date().getTime() / 1000
@@ -87,19 +87,19 @@ export async function runPlayingnowCallback (msMusicApi: MsMusicApi, msPrismaDbA
   const youtubeTrackInfoRequest = msMusicApi.getYoutubeTrackInfo(mainTrack.trackName, mainTrack.artistName)
   const [artistInfo, albumInfo, trackInfo, spotifyTrackInfo, youtubeTrackInfo] = await Promise.all([artistInfoRequest, albumInfoRequest, trackInfoRequest, spotifyTrackInfoRequest, youtubeTrackInfoRequest])
   if (!artistInfo.success) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmArtistDataNotFoundedError'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmArtistDataNotFoundedError'))
     return
   }
   if (!albumInfo.success) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmAlbumDataNotFoundedError'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmAlbumDataNotFoundedError'))
     return
   }
   if (!trackInfo.success) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmTrackDataNotFoundedError'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmTrackDataNotFoundedError'))
     return
   }
   if (!spotifyTrackInfo.success) {
-    void ctxReply(ctx, lang(ctxLang, 'spotifyTrackDataNotFoundedError'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'spotifyTrackDataNotFoundedError'))
     return
   }
   const inlineKeyboard = new InlineKeyboard()
@@ -111,7 +111,7 @@ export async function runPlayingnowCallback (msMusicApi: MsMusicApi, msPrismaDbA
   inlineKeyboard.row()
   inlineKeyboard.text(lang(ctxLang, 'trackPreviewButton'), getCallbackKey(['TP', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
   inlineKeyboard.text(lang(ctxLang, 'trackDownloadButton'), getCallbackKey(['TD', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
-  const partialReplyPromise = ctxReply(ctx, getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], mainTrack.nowPlaying, mainTrack.firstScrobble), { reply_markup: inlineKeyboard })
+  const partialReplyPromise = ctxReply(ctx, undefined, getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], mainTrack.nowPlaying, mainTrack.firstScrobble), { reply_markup: inlineKeyboard })
   await (async (): Promise<void> => {
     const userFirstScrobbles: Array<UserRecentTracks['recenttracks']['track'][0]> = []
     const userAllRecentTracksPageLength = Math.ceil(Number(userRecentTracks.data.recenttracks['@attr'].total) / 1000)
@@ -158,4 +158,5 @@ export async function runPlayingnowCallback (msMusicApi: MsMusicApi, msPrismaDbA
   const partialReply = await partialReplyPromise
   if (partialReply === undefined) return
   await ctxEditMessage(ctx, { chatId: partialReply.chat.id, messageId: partialReply.message_id }, getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], mainTrack.nowPlaying, mainTrack.firstScrobble), { reply_markup: inlineKeyboard })
+  await ctxReply(ctx, { chatId: melodyScoutConfig.blogChannelChatId }, getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], mainTrack.nowPlaying, mainTrack.firstScrobble), { reply_markup: inlineKeyboard })
 }

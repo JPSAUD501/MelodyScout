@@ -7,18 +7,18 @@ import { lang } from '../../../translations/base'
 export async function runAllusersCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
   if (ctx.chat?.type === 'channel') {
-    void ctxReply(ctx, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
     return
   }
   const ctxFromId = ctx.from?.id
   if (ctxFromId === undefined) {
-    await ctxReply(ctx, lang(ctxLang, 'unableToGetUserIdErrorMessage'))
+    await ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetUserIdErrorMessage'))
     return
   }
   if (!melodyScoutConfig.admins.includes(ctxFromId.toString())) return
   const allUsers = await msPrismaDbApi.get.allTelegramUsers()
   if (!allUsers.success) {
-    await ctxReply(ctx, lang(ctxLang, 'unableToGetAllUsersFromDatabaseErrorMessage'))
+    await ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetAllUsersFromDatabaseErrorMessage'))
     return
   }
   const personsEmojis = ['🧑', '🧔', '🧓', '🧕', '🧙', '🧚', '🧛', '🧜', '🧝', '🧞', '🧟', '👨', '👩', '👱', '👴', '👵', '👲', '👳', '👮', '👷', '💂', '🕵', '👼', '🎅', '👸', '🤴', '👰', '🤵']
@@ -33,9 +33,9 @@ export async function runAllusersCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Com
   for (let i = 0; i < finalMessage.length; i++) {
     partialString += `${finalMessage[i]}\n`
     if (partialString.length > 4000) {
-      await ctxReply(ctx, partialString)
+      await ctxReply(ctx, undefined, partialString)
       partialString = ''
     }
   }
-  if (partialString.length > 0) await ctxReply(ctx, partialString)
+  if (partialString.length > 0) await ctxReply(ctx, undefined, partialString)
 }

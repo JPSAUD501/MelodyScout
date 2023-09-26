@@ -5,16 +5,16 @@ import { Other } from 'grammy/out/core/api'
 import { lang } from '../translations/base'
 import { InlineQueryResult } from 'grammy/types'
 
-export async function ctxReply (ctx: Context, message: string, options?: Other<RawApi, 'sendMessage', 'text' | 'chat_id'>): Promise<Message.TextMessage | undefined> {
+export async function ctxReply (ctx: Context, messageToSend: { chatId: number } | undefined, message: string, options?: Other<RawApi, 'sendMessage', 'text' | 'chat_id'>): Promise<Message.TextMessage | undefined> {
   const ctxLang = ctx.from?.language_code
-  const ctxChatId = ctx.chat?.id ?? ctx.from?.id
+  const ctxChatId = messageToSend?.chatId ?? ctx.chat?.id ?? ctx.from?.id
   if (ctxChatId === undefined) {
     advError('MelodyScout_Bot - Error: ctxChatId is undefined')
     return undefined
   }
   if (message.length > 4096) {
     advError('MelodyScout_Bot - Error: message length is greater than 4096')
-    await ctxReply(ctx, lang(ctxLang, 'messageLengthGreater4096ErrorMessage'))
+    await ctxReply(ctx, { chatId: ctxChatId }, lang(ctxLang, 'messageLengthGreater4096ErrorMessage'))
     return
   }
   const sendedMessage = await ctx.api.sendMessage(ctxChatId, message, {
@@ -62,7 +62,7 @@ export async function ctxPinMessage (ctx: Context, message: Message): Promise<vo
   }
   if (pinedMessage === undefined) {
     if (message.chat === undefined) return
-    const alertMessage = await ctxReply(ctx, lang(ctxLang, 'cantPinMessageErrorMessage'))
+    const alertMessage = await ctxReply(ctx, undefined, lang(ctxLang, 'cantPinMessageErrorMessage'))
     if (alertMessage === undefined) {
       advError('MelodyScout_Bot - Error: alertMessage is undefined')
       return
@@ -88,7 +88,7 @@ export async function ctxEditMessage (ctx: Context, messageToEdit: { chatId: num
   }
   if (text.length > 4096) {
     advError('MelodyScout_Bot - Error: text length is greater than 4096')
-    await ctxReply(ctx, lang(ctxLang, 'messageLengthGreater4096ErrorMessage'))
+    await ctxReply(ctx, undefined, lang(ctxLang, 'messageLengthGreater4096ErrorMessage'))
     return undefined
   }
   const editMessageId = messageToEdit?.messageId ?? ctx.message?.message_id ?? ctx.update.callback_query?.message?.message_id
@@ -160,10 +160,10 @@ export async function ctxReplyWithVoice (ctx: Context, audio: string | InputFile
   }
   if ((options?.caption?.length ?? 0) > 1024) {
     advError('MelodyScout_Bot - Error: options.caption.length > 1024')
-    void ctxReply(ctx, lang(ctxLang, 'messageLengthGreater1024ErrorMessage'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'messageLengthGreater1024ErrorMessage'))
     return
   }
-  const loadingMessage = await ctxReply(ctx, lang(ctxLang, 'sendingVoiceMessage'), {
+  const loadingMessage = await ctxReply(ctx, undefined, lang(ctxLang, 'sendingVoiceMessage'), {
     parse_mode: 'HTML',
     disable_notification: true
   })
@@ -196,10 +196,10 @@ export async function ctxReplyWithAudio (ctx: Context, audio: string | InputFile
   }
   if ((options?.caption?.length ?? 0) > 1024) {
     advError('MelodyScout_Bot - Error: options.caption.length > 1024')
-    void ctxReply(ctx, lang(ctxLang, 'messageLengthGreater1024ErrorMessage'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'messageLengthGreater1024ErrorMessage'))
     return
   }
-  const loadingMessage = await ctxReply(ctx, lang(ctxLang, 'sendingAudioMessage'), {
+  const loadingMessage = await ctxReply(ctx, undefined, lang(ctxLang, 'sendingAudioMessage'), {
     parse_mode: 'HTML',
     disable_notification: true
   })
@@ -232,10 +232,10 @@ export async function ctxReplyWithVideo (ctx: Context, video: string | InputFile
   }
   if ((options?.caption?.length ?? 0) > 1024) {
     advError('MelodyScout_Bot - Error: options.caption.length > 1024')
-    void ctxReply(ctx, lang(ctxLang, 'messageLengthGreater1024ErrorMessage'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'messageLengthGreater1024ErrorMessage'))
     return
   }
-  const loadingMessage = await ctxReply(ctx, lang(ctxLang, 'sendingVideoMessage'), {
+  const loadingMessage = await ctxReply(ctx, undefined, lang(ctxLang, 'sendingVideoMessage'), {
     parse_mode: 'HTML',
     disable_notification: true
   })
@@ -268,10 +268,10 @@ export async function ctxReplyWithDocument (ctx: Context, file: string | InputFi
   }
   if ((options?.caption?.length ?? 0) > 1024) {
     advError('MelodyScout_Bot - Error: options.caption.length > 1024')
-    void ctxReply(ctx, lang(ctxLang, 'messageLengthGreater1024ErrorMessage'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'messageLengthGreater1024ErrorMessage'))
     return
   }
-  const loadingMessage = await ctxReply(ctx, lang(ctxLang, 'sendingDocumentMessage'), {
+  const loadingMessage = await ctxReply(ctx, undefined, lang(ctxLang, 'sendingDocumentMessage'), {
     parse_mode: 'HTML',
     disable_notification: true
   })
@@ -304,10 +304,10 @@ export async function ctxReplyWithPhoto (ctx: Context, photo: string | InputFile
   }
   if ((options?.caption?.length ?? 0) > 1024) {
     advError('MelodyScout_Bot - Error: options.caption.length > 1024')
-    void ctxReply(ctx, lang(ctxLang, 'messageLengthGreater1024ErrorMessage'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'messageLengthGreater1024ErrorMessage'))
     return
   }
-  const loadingMessage = await ctxReply(ctx, lang(ctxLang, 'sendingPhotoMessage'), {
+  const loadingMessage = await ctxReply(ctx, undefined, lang(ctxLang, 'sendingPhotoMessage'), {
     parse_mode: 'HTML',
     disable_notification: true
   })

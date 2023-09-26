@@ -14,31 +14,31 @@ import { getMashupText } from '../../textFabric/mashup'
 export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
   if (ctx.chat?.type === 'channel') {
-    void ctxReply(ctx, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
     return
   }
   const telegramUserId = ctx.from?.id
   if (telegramUserId === undefined) {
-    await ctxReply(ctx, lang(ctxLang, 'unableToGetUserIdErrorMessage'))
+    await ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetUserIdErrorMessage'))
     return
   }
   const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
   if (!checkIfExistsTgUserDBResponse.success) {
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserInfoInDb'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetUserInfoInDb'))
     return
   }
   if (!checkIfExistsTgUserDBResponse.exists) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmUserNotRegistered'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmUserNotRegistered'))
     return
   }
   const telegramUserDBResponse = await msPrismaDbApi.get.telegramUser(`${telegramUserId}`)
   if (!telegramUserDBResponse.success) {
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserInfoInDb'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetUserInfoInDb'))
     return
   }
   const lastfmUser = telegramUserDBResponse.lastfmUser
   if (lastfmUser === null) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmUserNoMoreRegisteredError'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmUserNoMoreRegisteredError'))
     return
   }
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
@@ -46,16 +46,16 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: M
   const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 2, 1)
   const [userInfo, userRecentTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest])
   if (!userInfo.success) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmUserDataNotFoundedError', { lastfmUser }))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmUserDataNotFoundedError', { lastfmUser }))
     return
   }
   if (!userRecentTracks.success) {
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserRecentTracksHistory', { lastfmUser }))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetUserRecentTracksHistory', { lastfmUser }))
     return
   }
   console.log(userRecentTracks.data)
   if (userRecentTracks.data.recenttracks.track.length < 2) {
-    void ctxReply(ctx, lang(ctxLang, 'mashupNeedTwoTracksError'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'mashupNeedTwoTracksError'))
     return
   }
   const mashupTracks = [
@@ -72,16 +72,16 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: M
   const youtubeTrack2InfoRequest = msMusicApi.getYoutubeTrackInfo(mashupTracks[1].track, mashupTracks[1].artist)
   const [youtubeTrack1Info, youtubeTrack2Info] = await Promise.all([youtubeTrack1InfoRequest, youtubeTrack2InfoRequest])
   if (!youtubeTrack1Info.success) {
-    // void ctxReply(ctx, 'Não foi possível resgatar as informações da primeira música do mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    void ctxReply(ctx, lang(ctxLang, 'mashupUnableToGetFirstTrackInfoErrorMessage'))
+    // void ctxReply(ctx, undefined, 'Não foi possível resgatar as informações da primeira música do mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, undefined, lang(ctxLang, 'mashupUnableToGetFirstTrackInfoErrorMessage'))
     return
   }
   if (!youtubeTrack2Info.success) {
-    // void ctxReply(ctx, 'Não foi possível resgatar as informações da segunda música do mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    void ctxReply(ctx, lang(ctxLang, 'mashupUnableToGetSecondTrackInfoErrorMessage'))
+    // void ctxReply(ctx, undefined, 'Não foi possível resgatar as informações da segunda música do mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, undefined, lang(ctxLang, 'mashupUnableToGetSecondTrackInfoErrorMessage'))
     return
   }
-  const startProcessMessage = await ctxReply(ctx, lang(ctxLang, 'mashupCreatingDataInformMessage', {
+  const startProcessMessage = await ctxReply(ctx, undefined, lang(ctxLang, 'mashupCreatingDataInformMessage', {
     firstTrackUrl: youtubeTrack1Info.videoUrl,
     firstTrackName: mashupTracks[0].track,
     firstTrackArtist: mashupTracks[0].artist,
@@ -109,20 +109,20 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: M
     ]
   })
   if (!raveCreateContentRequest.success) {
-    // void ctxReply(ctx, 'Não foi possível criar o mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    void ctxReply(ctx, lang(ctxLang, 'unableToCreateMashupErrorMessage'))
+    // void ctxReply(ctx, undefined, 'Não foi possível criar o mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, undefined, lang(ctxLang, 'unableToCreateMashupErrorMessage'))
     return
   }
   const mashupId = raveCreateContentRequest.data.data.id
   const raveGetContentRequest = await msRaveApi.raveApi.getInfo(mashupId)
   if (!raveGetContentRequest.success) {
-    // void ctxReply(ctx, 'Não foi possível garantir que o mashup foi enviado para criação! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetMashupStartCreationConfirmationErrorMessage'))
+    // void ctxReply(ctx, undefined, 'Não foi possível garantir que o mashup foi enviado para criação! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetMashupStartCreationConfirmationErrorMessage'))
     return
   }
   const startTime = Date.now()
-  // await ctxReply(ctx, 'Beleza! Seu mashup já foi enviado para criação! Essa etapa costuma demorar bastante mas não se preocupe, estou monitorando o processo e te aviso assim que ele estiver pronto! 😊')
-  await ctxReply(ctx, lang(ctxLang, 'mashupStartCreationInformMessage'))
+  // await ctxReply(ctx, undefined, 'Beleza! Seu mashup já foi enviado para criação! Essa etapa costuma demorar bastante mas não se preocupe, estou monitorando o processo e te aviso assim que ele estiver pronto! 😊')
+  await ctxReply(ctx, undefined, lang(ctxLang, 'mashupStartCreationInformMessage'))
   const maxTries = 100
   const timeBetweenTries = 15000
   let tries = 0
@@ -149,14 +149,14 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: M
   const endTime = Date.now()
   if (!mashupReady) {
     advError(`Mashup creation timed out! (id: ${mashupId}) (time: ${(endTime - startTime) / 1000}s) - ${JSON.stringify(lastResponse)} - URL: https://rave.dj/${mashupId}`)
-    // void ctxReply(ctx, 'Infelizmente não foi possível criar o mashup ou ele demorou demais para ser criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    void ctxReply(ctx, lang(ctxLang, 'mashupCreationTimeoutErrorMessage'))
+    // void ctxReply(ctx, undefined, 'Infelizmente não foi possível criar o mashup ou ele demorou demais para ser criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, undefined, lang(ctxLang, 'mashupCreationTimeoutErrorMessage'))
     return
   }
   if (lastResponse === undefined) {
     advError(`Mashup last response is undefined! (id: ${mashupId}) (time: ${(endTime - startTime) / 1000}s) - URL: https://rave.dj/${mashupId}`)
-    // void ctxReply(ctx, 'Não foi possível resgatar as informações do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetFinalMashupInfoErrorMessage'))
+    // void ctxReply(ctx, undefined, 'Não foi possível resgatar as informações do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetFinalMashupInfoErrorMessage'))
     return
   }
   // await ctxTempReply(ctx, 'Mashup criado com sucesso! 🎉\nEstou enviando ele para você, por favor aguarde enquanto o Telegram faz o upload do vídeo...', 10000, {
@@ -170,23 +170,23 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: M
   const mashupUrlVideo = lastResponse?.urls.default
   if (mashupUrlAudio === undefined || mashupUrlVideo === undefined) {
     advError(`Mashup audio or video URL is undefined! (id: ${mashupId}) (time: ${(endTime - startTime) / 1000}s) - ${mashupUrlAudio === undefined ? 'Audio URL is undefined' : 'Video URL is undefined'} - URL: https://rave.dj/${mashupId}`)
-    // void ctxReply(ctx, 'Não foi possível resgatar a URL do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetFinalMashupUrlErrorMessage'))
+    // void ctxReply(ctx, undefined, 'Não foi possível resgatar a URL do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetFinalMashupUrlErrorMessage'))
     return
   }
   const thumbResponse = await axios.get(mashupUrlThumb, { responseType: 'arraybuffer' }).catch((err) => { return Error(err) })
   if (thumbResponse instanceof Error) {
     advError(`Error while getting mashup thumbnail in mashup (id: ${mashupId}) (time: ${(endTime - startTime) / 1000}s) - ${thumbResponse.message} - URL: ${mashupUrlThumb}`)
-    // void ctxReply(ctx, 'Não foi possível resgatar a thumbnail do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetFinalMashupThumbnailErrorMessage'))
+    // void ctxReply(ctx, undefined, 'Não foi possível resgatar a thumbnail do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetFinalMashupThumbnailErrorMessage'))
     return
   }
   const thumbBuffer = Buffer.from(thumbResponse.data, 'utf-8')
   const videoResponse = await axios.get(mashupUrlVideo, { responseType: 'arraybuffer' }).catch((err) => { return Error(err) })
   if (videoResponse instanceof Error) {
     advError(`Error while getting mashup video: ${videoResponse.message}`)
-    // void ctxReply(ctx, 'Não foi possível resgatar o vídeo do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetFinalMashupVideoErrorMessage'))
+    // void ctxReply(ctx, undefined, 'Não foi possível resgatar o vídeo do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
+    void ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetFinalMashupVideoErrorMessage'))
     return
   }
   const videoBuffer = Buffer.from(videoResponse.data, 'utf-8')

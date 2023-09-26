@@ -7,37 +7,37 @@ import { getForgetmeText } from '../../textFabric/forgetme'
 export async function runForgetmeCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
   if (ctx.chat?.type === 'channel') {
-    void ctxReply(ctx, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
     return
   }
   const telegramUserId = ctx.from?.id.toString()
   if (telegramUserId === undefined) {
-    await ctxReply(ctx, lang(ctxLang, 'unableToGetUserIdErrorMessage'))
+    await ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetUserIdErrorMessage'))
     return
   }
-  await ctxReply(ctx, lang(ctxLang, 'lastfmUserForgetmeCheckingDataMessage'))
+  await ctxReply(ctx, undefined, lang(ctxLang, 'lastfmUserForgetmeCheckingDataMessage'))
   const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
   if (!checkIfExistsTgUserDBResponse.success) {
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetUserInfoInDb'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetUserInfoInDb'))
     return
   }
   if (!checkIfExistsTgUserDBResponse.exists) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmUserNotRegistered'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmUserNotRegistered'))
     return
   }
   const telegramUserDBResponse = await msPrismaDbApi.get.telegramUser(telegramUserId)
   if (!telegramUserDBResponse.success) {
-    void ctxReply(ctx, lang(ctxLang, 'unableToGetLastfmUserInDbErrorMessage'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetLastfmUserInDbErrorMessage'))
     return
   }
   if (telegramUserDBResponse.lastfmUser === null) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmUserAlreadyNotRegisteredErrorMessage'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmUserAlreadyNotRegisteredErrorMessage'))
     return
   }
   const updatedTelegramUserDBResponse = await msPrismaDbApi.update.telegramUser(telegramUserId, null)
   if (!updatedTelegramUserDBResponse.success) {
-    void ctxReply(ctx, lang(ctxLang, 'unableToForgetLastfmUserInDbErrorMessage'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'unableToForgetLastfmUserInDbErrorMessage'))
     return
   }
-  await ctxReply(ctx, getForgetmeText(ctxLang))
+  await ctxReply(ctx, undefined, getForgetmeText(ctxLang))
 }

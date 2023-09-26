@@ -29,7 +29,7 @@ export class Search {
     console.log(`Search track: url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, zodObject)
     if (!msApiFetchResponse.success) {
-      advError(`Error while fetching search track! Query: ${query} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
+      advError(`(MsDeezerApi) Error while fetching search track! Query: ${query} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
     const trackSearch = zodObject.parse(msApiFetchResponse.data)

@@ -5,5 +5,5 @@ import { getContactText } from '../../textFabric/contact'
 
 export async function runContactCommand (ctx: CommandContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
-  await ctxReply(ctx, getContactText(ctxLang))
+  await ctxReply(ctx, undefined, getContactText(ctxLang))
 }

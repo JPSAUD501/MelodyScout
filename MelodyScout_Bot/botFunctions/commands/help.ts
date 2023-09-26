@@ -6,8 +6,8 @@ import { lang } from '../../../translations/base'
 export async function runHelpCommand (ctx: CommandContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
   if (ctx.chat?.type === 'channel') {
-    void ctxReply(ctx, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
     return
   }
-  await ctxReply(ctx, getHelpText(ctxLang))
+  await ctxReply(ctx, undefined, getHelpText(ctxLang))
 }

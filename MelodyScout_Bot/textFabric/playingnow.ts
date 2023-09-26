@@ -28,10 +28,10 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
   postTextArray.push('')
   // postTextArray.push('[📊] Scrobbles')
   postTextArray.push(lang(ctxLang, 'tfPlayingnowPostScrobblesTitle'))
-  // postTextArray.push(`- Música: ${Number(track.userplaycount).toLocaleString('pt-BR')}`)
-  postTextArray.push(lang(ctxLang, 'tfPlayingnowPostTrackScrobbles', { trackPlaycount: Number(track.userplaycount).toLocaleString('pt-BR') }))
-  // postTextArray.push(`- Artista: ${Number(artist.stats.userplaycount).toLocaleString('pt-BR')}`)
-  postTextArray.push(lang(ctxLang, 'tfPlayingnowPostArtistScrobbles', { artistPlaycount: Number(artist.stats.userplaycount).toLocaleString('pt-BR') }))
+  // postTextArray.push(`- Música: ${Number(track.userplaycount).toLocaleString(lang(ctxLang, 'localeLangCode'))}`)
+  postTextArray.push(lang(ctxLang, 'tfPlayingnowPostTrackScrobbles', { trackPlaycount: Number(track.userplaycount).toLocaleString(lang(ctxLang, 'localeLangCode')) }))
+  // postTextArray.push(`- Artista: ${Number(artist.stats.userplaycount).toLocaleString(lang(ctxLang, 'localeLangCode'))}`)
+  postTextArray.push(lang(ctxLang, 'tfPlayingnowPostArtistScrobbles', { artistPlaycount: Number(artist.stats.userplaycount).toLocaleString(lang(ctxLang, 'localeLangCode')) }))
   const postInfoArray: string[] = []
   if (
     Number(track.userplaycount) > 0 &&
@@ -115,12 +115,12 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
   textArray.push('')
   // textArray.push('<b>[📊] Scrobbles</b>')
   textArray.push(lang(ctxLang, 'tfPlayingnowScrobblesTitle'))
-  // textArray.push(`- Música: <b>${Number(track.userplaycount).toLocaleString('pt-BR')}</b>`)
-  textArray.push(lang(ctxLang, 'tfPlayingnowTrackScrobbles', { trackPlaycount: Number(track.userplaycount).toLocaleString('pt-BR') }))
-  // if (album.userplaycount !== undefined) textArray.push(`- Álbum: <b>${Number(album.userplaycount).toLocaleString('pt-BR')}</b>`)
-  if (album.userplaycount !== undefined) textArray.push(lang(ctxLang, 'tfPlayingnowAlbumScrobbles', { albumPlaycount: Number(album.userplaycount).toLocaleString('pt-BR') }))
-  // textArray.push(`- Artista: <b>${Number(artist.stats.userplaycount).toLocaleString('pt-BR')}</b>`)
-  textArray.push(lang(ctxLang, 'tfPlayingnowArtistScrobbles', { artistPlaycount: Number(artist.stats.userplaycount).toLocaleString('pt-BR') }))
+  // textArray.push(`- Música: <b>${Number(track.userplaycount).toLocaleString(lang(ctxLang, 'localeLangCode'))}</b>`)
+  textArray.push(lang(ctxLang, 'tfPlayingnowTrackScrobbles', { trackPlaycount: Number(track.userplaycount).toLocaleString(lang(ctxLang, 'localeLangCode')) }))
+  // if (album.userplaycount !== undefined) textArray.push(`- Álbum: <b>${Number(album.userplaycount).toLocaleString(lang(ctxLang, 'localeLangCode'))}</b>`)
+  if (album.userplaycount !== undefined) textArray.push(lang(ctxLang, 'tfPlayingnowAlbumScrobbles', { albumPlaycount: Number(album.userplaycount).toLocaleString(lang(ctxLang, 'localeLangCode')) }))
+  // textArray.push(`- Artista: <b>${Number(artist.stats.userplaycount).toLocaleString(lang(ctxLang, 'localeLangCode'))}</b>`)
+  textArray.push(lang(ctxLang, 'tfPlayingnowArtistScrobbles', { artistPlaycount: Number(artist.stats.userplaycount).toLocaleString(lang(ctxLang, 'localeLangCode')) }))
   const infoArray: string[] = []
   if (
     Number(track.userplaycount) > 0 &&
@@ -148,29 +148,29 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
     Number(album.userplaycount) > 0 &&
     Number(track.userplaycount) > 0 &&
     Number(((Number(track.userplaycount) / Number(album.userplaycount)) * 100).toFixed(0)) !== 100
-  // ) infoArray.push(`- Essa música representa <b>${Number(((Number(track.userplaycount) / Number(album.userplaycount)) * 100).toFixed(0)).toLocaleString('pt-BR')}%</b> de todas suas reproduções desse álbum.`)
-  ) infoArray.push(lang(ctxLang, 'tfPlayingnowInfoTrackAlbumPercentage', { percentage: Number(((Number(track.userplaycount) / Number(album.userplaycount)) * 100).toFixed(0)).toLocaleString('pt-BR') }))
+  // ) infoArray.push(`- Essa música representa <b>${Number(((Number(track.userplaycount) / Number(album.userplaycount)) * 100).toFixed(0)).toLocaleString(lang(ctxLang, 'localeLangCode'))}%</b> de todas suas reproduções desse álbum.`)
+  ) infoArray.push(lang(ctxLang, 'tfPlayingnowInfoTrackAlbumPercentage', { percentage: Number(((Number(track.userplaycount) / Number(album.userplaycount)) * 100).toFixed(0)).toLocaleString(lang(ctxLang, 'localeLangCode')) }))
   if (
     Number(artist.stats.userplaycount) >= Number(track.userplaycount) &&
     Number(artist.stats.userplaycount) > 0 &&
     Number(track.userplaycount) > 0 &&
     Number(((Number(track.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)) >= 5
-  // ) infoArray.push(`- Essa música representa <b>${Number(((Number(track.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)).toLocaleString('pt-BR')}%</b> de todas suas reproduções desse artista.`)
-  ) infoArray.push(lang(ctxLang, 'tfPlayingnowInfoTrackArtistPercentage', { percentage: Number(((Number(track.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)).toLocaleString('pt-BR') }))
+  // ) infoArray.push(`- Essa música representa <b>${Number(((Number(track.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)).toLocaleString(lang(ctxLang, 'localeLangCode'))}%</b> de todas suas reproduções desse artista.`)
+  ) infoArray.push(lang(ctxLang, 'tfPlayingnowInfoTrackArtistPercentage', { percentage: Number(((Number(track.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)).toLocaleString(lang(ctxLang, 'localeLangCode')) }))
   if (
     Number(artist.stats.userplaycount) >= Number(album.userplaycount) &&
     Number(artist.stats.userplaycount) > 0 &&
     Number(album.userplaycount) > 0 &&
     Number(((Number(album.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)) >= 5
-  // ) infoArray.push(`- Esse álbum representa <b>${Number(((Number(album.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)).toLocaleString('pt-BR')}%</b> de todas suas reproduções desse artista.`)
-  ) infoArray.push(lang(ctxLang, 'tfPlayingnowInfoAlbumArtistPercentage', { percentage: Number(((Number(album.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)).toLocaleString('pt-BR') }))
+  // ) infoArray.push(`- Esse álbum representa <b>${Number(((Number(album.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)).toLocaleString(lang(ctxLang, 'localeLangCode'))}%</b> de todas suas reproduções desse artista.`)
+  ) infoArray.push(lang(ctxLang, 'tfPlayingnowInfoAlbumArtistPercentage', { percentage: Number(((Number(album.userplaycount) / Number(artist.stats.userplaycount)) * 100).toFixed(0)).toLocaleString(lang(ctxLang, 'localeLangCode')) }))
   if (
     Number(user.playcount) >= Number(artist.stats.userplaycount) &&
     Number(user.playcount) > 0 &&
     Number(artist.stats.userplaycount) > 0 &&
     Number(((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)) >= 10
-  // ) infoArray.push(`- Esse artista representa <b>${Number(((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)).toLocaleString('pt-BR')}%</b> de todas suas reproduções.`)
-  ) infoArray.push(lang(ctxLang, 'tfPlayingnowInfoArtistUserPercentage', { percentage: Number(((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)).toLocaleString('pt-BR') }))
+  // ) infoArray.push(`- Esse artista representa <b>${Number(((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)).toLocaleString(lang(ctxLang, 'localeLangCode'))}%</b> de todas suas reproduções.`)
+  ) infoArray.push(lang(ctxLang, 'tfPlayingnowInfoArtistUserPercentage', { percentage: Number(((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)).toLocaleString(lang(ctxLang, 'localeLangCode')) }))
   if (firstScrobble !== undefined) {
     switch (firstScrobble.loadingStatus) {
       case 'loading': {

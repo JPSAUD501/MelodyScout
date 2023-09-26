@@ -44,7 +44,7 @@ export const zodSearchTrack = z.object({
     })
   ),
   total: z.number(),
-  next: z.string()
+  next: z.string().optional()
 })
 
 export type SearchTrack = z.infer<typeof zodSearchTrack>

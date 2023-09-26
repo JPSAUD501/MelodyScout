@@ -9,5 +9,5 @@ export async function runMaintenanceinformCommand (ctx: CommandContext<Context>)
   if (ctxFromId !== undefined) {
     advInfo(`User ${ctxFromId} tried to use a command but the bot is in maintenance mode!`)
   }
-  await ctxReply(ctx, getMaintenanceinformText(ctxLang))
+  await ctxReply(ctx, undefined, getMaintenanceinformText(ctxLang))
 }

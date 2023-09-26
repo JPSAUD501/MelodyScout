@@ -10,29 +10,29 @@ import { lang } from '../../../translations/base'
 
 export async function runTracklyricsexplanationCallback (ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
-  if (ctx.chat?.type === 'channel') {
-    void ctxReply(ctx, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
-    void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'dontWorkOnChannelsInformCallback'))
-    return
-  }
+  // if (ctx.chat?.type === 'channel') {
+  //   void ctxReply(ctx, undefined, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
+  //   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'dontWorkOnChannelsInformCallback'))
+  //   return
+  // }
   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'loadingInformCallback'))
   const messageId = ctx.callbackQuery.message?.message_id
   const dataArray = ctx.callbackQuery.data.split(melodyScoutConfig.divider)
   const track = dataArray[1]
   const artist = dataArray[2]
   if (track === undefined || artist === undefined) {
-    void ctxReply(ctx, lang(ctxLang, 'lastfmTrackDataNotFoundedError'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmTrackDataNotFoundedError'))
     return
   }
   const loadingMessage = await ctxTempReply(ctx, lang(ctxLang, 'creatingLyricsExplanationWithAiInformMessage'), 15000, { reply_to_message_id: messageId, allow_sending_without_reply: true, disable_notification: true })
   if (loadingMessage === undefined) {
-    void ctxReply(ctx, lang(ctxLang, 'errorOnSendLoadingMessageInformMessage'))
+    void ctxReply(ctx, undefined, lang(ctxLang, 'errorOnSendLoadingMessageInformMessage'))
     return
   }
   const msGeniusApi = new MsGeniusApi(geniusConfig.accessToken)
   const geniusSong = await msGeniusApi.getSong(track, artist)
   if (!geniusSong.success) {
-    void ctxReply(ctx, lang(ctxLang, 'geniusTrackLyricsNotFoundedError'), { reply_to_message_id: messageId, allow_sending_without_reply: true })
+    void ctxReply(ctx, undefined, lang(ctxLang, 'geniusTrackLyricsNotFoundedError'), { reply_to_message_id: messageId, allow_sending_without_reply: true })
     return
   }
   const msOpenAiApi = new MsOpenAiApi(openaiConfig.apiKey)
@@ -40,18 +40,18 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
   const lyricsEmojisRequest = msOpenAiApi.getLyricsEmojis(geniusSong.data.lyrics)
   const [lyricsExplanation, lyricsEmojis] = await Promise.all([lyricsExplanationRequest, lyricsEmojisRequest])
   if (!lyricsExplanation.success) {
-    void ctxReply(ctx, lang(ctxLang, 'errorOnCreatingLyricsExplanationInformMessage'), { reply_to_message_id: messageId, allow_sending_without_reply: true })
+    void ctxReply(ctx, undefined, lang(ctxLang, 'errorOnCreatingLyricsExplanationInformMessage'), { reply_to_message_id: messageId, allow_sending_without_reply: true })
     return
   }
   advLog(`New track lyrics explanation generated for ${track} by ${artist} by user ${ctx.from.id}: ${lyricsExplanation.explanation} / ${lyricsEmojis.success ? lyricsEmojis.emojis : 'No emojis'}`)
   const msTextToSpeechApi = new MsTextToSpeechApi()
   const TTSAudio = await msTextToSpeechApi.getTTS(ctxLang, lang(ctxLang, 'trackLyricsExplanationTTSHeader', { track, artist }), `${lyricsExplanation.explanation}`)
   if (!TTSAudio.success) {
-    void ctxReply(ctx, lang(ctxLang, 'errorOnCreatingLyricsExplanationTTSInformMessage'), { reply_to_message_id: messageId, allow_sending_without_reply: true })
+    void ctxReply(ctx, undefined, lang(ctxLang, 'errorOnCreatingLyricsExplanationTTSInformMessage'), { reply_to_message_id: messageId, allow_sending_without_reply: true })
     return
   }
   const TTSAudioInputFile = new InputFile(TTSAudio.data.audio, `${track}-MelodyScoutAi.mp3`)
-  const commandResponse = await ctxReply(ctx, getTracklyricsexplanationText(ctxLang, track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), {
+  const commandResponse = await ctxReply(ctx, undefined, getTracklyricsexplanationText(ctxLang, track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), {
     reply_to_message_id: messageId,
     allow_sending_without_reply: true,
     disable_web_page_preview: true
