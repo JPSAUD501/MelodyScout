@@ -96,7 +96,7 @@ export class MsOpenAiApi {
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
     const prompt = `Lyrics:\n\n${lyricsParsed}`
     const response = await this.openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4',
       messages: [
         { role: 'system', content: 'Using the lyrics received, create a selection of emojis that best represent the song. The answer must only contain emojis.' },
         { role: 'user', content: prompt }
