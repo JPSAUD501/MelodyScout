@@ -34,7 +34,7 @@ export class MsOpenAiApi {
     // const prompt = `${lyricsParsed}\n\nExplicação da letra da música:`
     const prompt = `${lyricsParsed}\n\n${lang(ctxLang, 'lyricsExplanationAiPrompt')}`
     const response = await this.openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4',
       messages: [
         { role: 'system', content: 'You help users understand the lyrics of the tracks they listened.' },
         { role: 'user', content: prompt }
