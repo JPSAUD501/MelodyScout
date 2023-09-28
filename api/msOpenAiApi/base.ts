@@ -34,7 +34,7 @@ export class MsOpenAiApi {
     // const prompt = `${lyricsParsed}\n\nExplicação da letra da música:`
     const prompt = `${lyricsParsed}\n\n${lang(ctxLang, 'lyricsExplanationAiPrompt')}`
     const response = await this.openai.createChatCompletion({
-      model: 'gpt-4',
+      model: 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: 'You help users understand the lyrics of the tracks they listened.' },
         { role: 'user', content: prompt }
@@ -98,7 +98,7 @@ export class MsOpenAiApi {
     const response = await this.openai.createChatCompletion({
       model: 'gpt-4',
       messages: [
-        { role: 'system', content: 'Using the lyrics received, create a selection of emojis that best represent the song. The answer must only contain emojis.' },
+        { role: 'system', content: 'Using the lyrics received, create a selection of emojis that best represent the song. The answer must only contain emojis. The answer must have up to 40 emojis.' },
         { role: 'user', content: prompt }
       ],
       max_tokens: 100,
