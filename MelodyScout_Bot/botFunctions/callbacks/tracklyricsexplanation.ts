@@ -2,7 +2,7 @@ import { CallbackQueryContext, Context, InputFile } from 'grammy'
 import { ctxAnswerCallbackQuery, ctxEditMessage, ctxReply, ctxReplyWithVoice, ctxTempReply } from '../../../function/grammyFunctions'
 import { getTracklyricsexplanationText } from '../../textFabric/tracklyricsexplanation'
 import { clickupConfig, geniusConfig, melodyScoutConfig, openaiConfig, replicateConfig } from '../../../config'
-import { advLog } from '../../../function/advancedConsole'
+import { advError, advLog } from '../../../function/advancedConsole'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
 import { MsOpenAiApi } from '../../../api/msOpenAiApi/base'
 import { MsTextToSpeechApi } from '../../../api/msTextToSpeechApi/base'
@@ -73,7 +73,13 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
       .resize(1000, 1000)
       .composite([{
         input: fs.readFileSync('./public/v2/imageFrame.png')
-      }]).png().toBuffer()
+      }]).png().toBuffer().catch((error) => {
+        return new Error(error)
+      })
+    if (finalImage instanceof Error) {
+      advError(`Error on creating image for ${track} by ${artist} by user ${ctx.from.id}: ${finalImage.message}`)
+      return
+    }
     const clickUpApi = new ClickUpApi(clickupConfig.token)
     const uploadToClickUp = await clickUpApi.attachments.createTaskAttachment(clickupConfig.defaultUploadTaskId, finalImage, `${track}-${artist}-MelodyScoutAi.png`)
     if (!uploadToClickUp.success) {
