@@ -73,14 +73,14 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
   // textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.trackImgUrl}">️️</a><a href="${urlLimiter(user.url)}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}</b>`)
   switch (nowPlaying) {
     case (true): {
-      textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.trackImgUrl}">️️</a>${lang(ctxLang, 'tfPlayingnowHeaderNowPlaying', {
+      textArray.push(`<a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.trackImgUrl}">️️</a>${lang(ctxLang, 'tfPlayingnowHeaderNowPlaying', {
         userUrl: urlLimiter(user.url),
         username: sanitizeText(user.realname.length > 0 ? user.realname : user.name)
       })}`)
       break
     }
     case (false): {
-      textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.trackImgUrl}">️️</a>${lang(ctxLang, 'tfPlayingnowHeaderLastTrack', {
+      textArray.push(`<a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.trackImgUrl}">️️</a>${lang(ctxLang, 'tfPlayingnowHeaderLastTrack', {
         userUrl: urlLimiter(user.url),
         username: sanitizeText(user.realname.length > 0 ? user.realname : user.name)
       })}`)

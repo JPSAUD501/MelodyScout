@@ -8,11 +8,6 @@ import { getTrackdownloadText } from '../../textFabric/trackdownload'
 
 export async function runTrackDownloadCallback (ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
-  // if (ctx.chat?.type === 'channel') {
-  //   void ctxReply(ctx, undefined, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
-  //   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'dontWorkOnChannelsInformCallback'))
-  //   return
-  // }
   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'loadingInformCallback'))
   const messageId = ctx.callbackQuery.message?.message_id
   const dataArray = ctx.callbackQuery.data.split(melodyScoutConfig.divider)

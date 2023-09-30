@@ -8,11 +8,6 @@ import { MsDeezerApi } from '../../../api/msDeezerApi/base'
 
 export async function runTrackpreviewCallback (msMusicApi: MsMusicApi, ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
-  // if (ctx.chat?.type === 'channel') {
-  //   void ctxReply(ctx, undefined, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
-  //   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'dontWorkOnChannelsInformCallback'))
-  //   return
-  // }
   const messageId = ctx.callbackQuery.message?.message_id
   const dataArray = ctx.callbackQuery.data.split(melodyScoutConfig.divider)
   const track = dataArray[1]

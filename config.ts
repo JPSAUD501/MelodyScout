@@ -8,6 +8,7 @@ export const melodyScoutConfig = {
   userImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/user.png',
   trackImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/track.png',
   albumImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/album.png',
+  artificialIntelligenceImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/ai.png',
   popularityImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/popularity.png',
   aboutMelodyScoutAi: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/ms-ai.png',
   urltoolong: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/url_long.png',
@@ -30,6 +31,15 @@ export const spotifyConfig = {
 
 export const openaiConfig = {
   apiKey: process.env.OPENAI_API_KEY !== undefined ? process.env.OPENAI_API_KEY : ''
+}
+
+export const clickupConfig = {
+  defaultUploadTaskId: '8685udey7',
+  token: process.env.CLICKUP_TOKEN !== undefined ? process.env.CLICKUP_TOKEN : ''
+}
+
+export const replicateConfig = {
+  token: process.env.REPLICATE_TOKEN !== undefined ? process.env.REPLICATE_TOKEN : ''
 }
 
 export const serverConfig = {

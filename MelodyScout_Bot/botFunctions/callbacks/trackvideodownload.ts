@@ -8,11 +8,6 @@ import { getTrackvideodownloadText } from '../../textFabric/trackvideodownload'
 
 export async function runTrackVideoDownloadCallback (msMusicApi: MsMusicApi, ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
-  // if (ctx.chat?.type === 'channel') {
-  //   void ctxReply(ctx, undefined, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
-  //   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'dontWorkOnChannelsInformCallback'))
-  //   return
-  // }
   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'loadingInformCallback'))
   const messageReplyId = ctx.callbackQuery.message?.reply_to_message?.message_id
   const dataArray = ctx.callbackQuery.data.split(melodyScoutConfig.divider)

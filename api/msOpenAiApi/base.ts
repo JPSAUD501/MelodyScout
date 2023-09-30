@@ -12,6 +12,11 @@ type MsOpenAiApiGetLyricsExplanationResponse = {
   explanation: string
 } | MsOpenAiApiError
 
+type MsOpenAiApiGetLyricsImageDescriptionResponse = {
+  success: true
+  description: string
+} | MsOpenAiApiError
+
 type MsOpenAiApiGetLyricsEmojisResponse = {
   success: true
   emojis: string
@@ -92,11 +97,72 @@ export class MsOpenAiApi {
     }
   }
 
-  async getLyricsEmojis (lyrics: string): Promise<MsOpenAiApiGetLyricsEmojisResponse> {
+  async getLyricsImageDescription (lyrics: string): Promise<MsOpenAiApiGetLyricsImageDescriptionResponse> {
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
     const prompt = `Lyrics:\n\n${lyricsParsed}`
     const response = await this.openai.createChatCompletion({
       model: 'gpt-4',
+      // model: 'gpt-3.5-turbo',
+      messages: [
+        { role: 'system', content: 'Describe an simple image that best represents the song. Your description must have up to 60 words.' },
+        { role: 'user', content: prompt }
+      ],
+      max_tokens: 100,
+      temperature: 0.7
+    }).catch((err) => {
+      return new Error(String(err))
+    })
+    if (response instanceof Error) {
+      advError(`MsOpenAiAPi - Error while generating image description for lyrics: ${lyricsParsed.substring(0, 40)}... - ${response.message} - ${response.stack ?? 'No STACK'} - ${response.name}`)
+      return {
+        success: false,
+        error: response.message
+      }
+    }
+    const explanation = response.data.choices[0]
+    if (explanation === undefined) {
+      advError(`MsOpenAiAPi - No choices image description generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
+      return {
+        success: false,
+        error: 'No choices generated'
+      }
+    }
+    const imageDescription: string | undefined = explanation.message?.content?.replace(/\n/g, '').trim()
+    if (imageDescription === undefined) {
+      advError(`MsOpenAiAPi - No image description text generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
+      return {
+        success: false,
+        error: 'No image description text generated'
+      }
+    }
+    if (explanation.finish_reason !== 'stop') {
+      switch (explanation.finish_reason) {
+        case undefined: {
+          advError(`MsOpenAiAPi - Image description for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: undefined`)
+          break
+        }
+        case null: {
+          advError(`MsOpenAiAPi - Image description for for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: null`)
+          break
+        }
+        default: {
+          advError(`MsOpenAiAPi - Image description for for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: ${JSON.stringify(explanation.finish_reason, null, 2)}`)
+          break
+        }
+      }
+    }
+
+    return {
+      success: true,
+      description: imageDescription
+    }
+  }
+
+  async getLyricsEmojis (lyrics: string): Promise<MsOpenAiApiGetLyricsEmojisResponse> {
+    const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
+    const prompt = `Lyrics:\n\n${lyricsParsed}`
+    const response = await this.openai.createChatCompletion({
+      model: 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: 'Using the lyrics received, create a selection of emojis that best represent the song. The answer must only contain emojis. The answer must have up to 40 emojis.' },
         { role: 'user', content: prompt }
@@ -136,11 +202,11 @@ export class MsOpenAiApi {
           break
         }
         case null: {
-          advError(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: null`)
+          advError(`MsOpenAiAPi - Emojis for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: null`)
           break
         }
         default: {
-          advError(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: ${JSON.stringify(explanation.finish_reason, null, 2)}`)
+          advError(`MsOpenAiAPi - Emojis for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: ${JSON.stringify(explanation.finish_reason, null, 2)}`)
           break
         }
       }

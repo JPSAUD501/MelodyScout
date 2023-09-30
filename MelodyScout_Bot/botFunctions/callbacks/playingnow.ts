@@ -12,11 +12,6 @@ import { UserRecentTracks } from '../../../api/msLastfmApi/types/zodUserRecentTr
 
 export async function runPlayingnowCallback (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
-  // if (ctx.chat?.type === 'channel') {
-  //   void ctxReply(ctx, undefined, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
-  //   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'dontWorkOnChannelsInformCallback'))
-  //   return
-  // }
   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'loadingInformCallback'))
   const telegramUserId = ctx.from.id
   const checkIfExistsTgUserDBResponse = await msPrismaDbApi.checkIfExists.telegramUser(`${telegramUserId}`)
