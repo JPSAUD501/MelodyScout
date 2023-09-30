@@ -72,7 +72,7 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
     const finalImage = await sharp(imageByDescription.image)
       .resize(1000, 1000)
       .composite([{
-        input: fs.readFileSync('./public/v2/imageFrame.webp')
+        input: fs.readFileSync('./public/v2/imageFrame.png')
       }]).png().toBuffer()
     const clickUpApi = new ClickUpApi(clickupConfig.token)
     const uploadToClickUp = await clickUpApi.attachments.createTaskAttachment(clickupConfig.defaultUploadTaskId, finalImage, `${track}-${artist}-MelodyScoutAi.png`)
