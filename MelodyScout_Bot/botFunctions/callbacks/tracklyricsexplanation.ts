@@ -56,6 +56,7 @@ async function getAiImageByLyrics (lyrics: string, trackName: string, artistName
       error: `Error on uploading image to ClickUp: ${uploadToClickUp.errorData.err}`
     }
   }
+  advLog(`New image generated for ${trackName} by ${artistName}: ${uploadToClickUp.data.url}`)
   return {
     success: true,
     imageUrl: uploadToClickUp.data.url
