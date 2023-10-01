@@ -131,7 +131,7 @@ export const enUS = {
   geniusTrackLyricsNotFoundedError: "Unfortunately we couldn't find the lyrics to this track on Genius.",
   tfContactInform: 'To get in touch with the MelodyScout developer, send a message to @jpsaud!',
   lyricsExplanationAiPrompt: 'A brief explanation of the lyrics:',
-  tfTracklyricsexplanationHeader: '<b>[✨] Explanation of "{{trackName}}" by "{{artistName}}" provided by <a href="{{melodyScoutAiAboutUrl}}">MelodyScoutAi</a> requested by {{requestedBy}}</b>',
+  tfTracklyricsexplanationHeader: '<b>[✨] Explanation of "{{trackName}}" by "{{artistName}}" provided by MelodyScoutAi requested by {{requestedBy}}</b>',
   tfTracklyricsexplanationInEmojis: 'In emojis: {{lyricsEmojis}}',
   tfForgetmeSuccessMessage: 'Done! I forgot your Last.fm username!',
   googleTTSVoiceCode: 'en',

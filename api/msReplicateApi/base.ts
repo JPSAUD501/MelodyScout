@@ -1,5 +1,4 @@
 import Replicate from 'replicate'
-import { advLog } from '../../function/advancedConsole'
 import z from 'zod'
 import axios from 'axios'
 
@@ -21,8 +20,6 @@ export class MsReplicateApi {
     this.replicate = new Replicate({
       auth: replicateApiToken
     })
-
-    advLog('MsReplicateApi started!')
   }
 
   async getSdxlImage (imageDescription: string): Promise<MsReplicateGetSdxlImageResponse> {

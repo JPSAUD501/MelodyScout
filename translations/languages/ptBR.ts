@@ -131,7 +131,7 @@ export const ptBR = {
   geniusTrackLyricsNotFoundedError: 'Infelizmente não foi possível encontrar a letra dessa música na Genius.',
   tfContactInform: 'Para entrar em contato com o desenvolvedor do MelodyScout, envie uma mensagem para o @jpsaud!',
   lyricsExplanationAiPrompt: 'Explicação resumida da letra da música:',
-  tfTracklyricsexplanationHeader: '<b>[✨] Explicação de "{{trackName}}" por "{{artistName}}" fornecida pelo <a href="{{melodyScoutAiAboutUrl}}">MelodyScoutAi</a> solicitada por {{requestedBy}}</b>',
+  tfTracklyricsexplanationHeader: '<b>[✨] Explicação de "{{trackName}}" por "{{artistName}}" fornecida pelo MelodyScoutAi solicitada por {{requestedBy}}</b>',
   tfTracklyricsexplanationInEmojis: 'Em emojis: {{lyricsEmojis}}',
   tfForgetmeSuccessMessage: 'Pronto! Eu esqueci o seu nome de usuário do Last.fm!',
   googleTTSVoiceCode: 'pt',

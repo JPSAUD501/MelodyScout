@@ -8,10 +8,11 @@ export const melodyScoutConfig = {
   userImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/user.png',
   trackImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/track.png',
   albumImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/album.png',
-  artificialIntelligenceImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/ai.png',
+  artificialIntelligenceImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/ai.gif',
+  artificialIntelligenceImgErrorUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/aiError.png',
   popularityImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/popularity.png',
   aboutMelodyScoutAi: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/ms-ai.png',
-  urltoolong: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/url_long.png',
+  urltoolong: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/urlLong.png',
   msAndRaveDj: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/ms-rdj.png',
   blogChannelChatId: Number(process.env.MSBC_TELEGRAM_CHAT_ID !== undefined ? process.env.MSBC_TELEGRAM_CHAT_ID : '')
 }
