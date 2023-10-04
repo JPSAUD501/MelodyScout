@@ -8,7 +8,6 @@ import { MsOpenAiApi } from '../../../api/msOpenAiApi/base'
 import { MsTextToSpeechApi } from '../../../api/msTextToSpeechApi/base'
 import { lang } from '../../../translations/base'
 import { MsReplicateApi } from '../../../api/msReplicateApi/base'
-import { ClickUpApi } from '../../../api/ClickUpApi/base'
 import sharp from 'sharp'
 import fs from 'fs'
 
