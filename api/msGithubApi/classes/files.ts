@@ -18,10 +18,17 @@ export class Files {
   async putFile (fileName: string, fileData: string): Promise<PutFileResponse> {
     const url = `https://api.github.com/repos/JPSAUD501/MelodyScout-Files/contents/Images/${fileName}`
     const method = 'PUT'
+    const headers = {
+      Authorization: `Bearer ${this.apiKey}`
+    }
+    const data = {
+      message: `${fileName}`,
+      content: fileData
+    }
     const zodObject = zodPutFile
     console.log(`PutFile - ${fileName}`)
     console.log(`PutFile - url: ${url}`)
-    const msApiFetchResponse = await msApiFetch(url, method, zodObject)
+    const msApiFetchResponse = await msApiFetch(url, method, headers, data, zodObject)
     if (!msApiFetchResponse.success) {
       advError(`PutFile - Error while uploading file ${fileName}: ${msApiFetchResponse.errorData.message}`)
       return msApiFetchResponse

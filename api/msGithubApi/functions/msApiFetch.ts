@@ -8,9 +8,11 @@ type MsApiFetchResponse = {
   data: any
 } | ApiErrors
 
-export const msApiFetch = async (url: string, method: string, expectedZodObject: ZodObject<any>): Promise<MsApiFetchResponse> => {
+export const msApiFetch = async (url: string, method: string, headers: object, data: object, expectedZodObject: ZodObject<any>): Promise<MsApiFetchResponse> => {
   const response = await axios({
     method,
+    headers,
+    data,
     url
   }).catch((err: any) => {
     if (err.response.status === 404) {
