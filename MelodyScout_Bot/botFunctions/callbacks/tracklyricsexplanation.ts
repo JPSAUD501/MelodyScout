@@ -39,7 +39,7 @@ async function getAiImageByLyrics (lyrics: string, trackName: string, artistName
     .resize(1000, 1000)
     .composite([{
       input: fs.readFileSync('./public/v2/imageFrame.png')
-    }]).webp().jpeg({
+    }]).jpeg({
       mozjpeg: true
     }).toBuffer().catch((error) => {
       return new Error(error)

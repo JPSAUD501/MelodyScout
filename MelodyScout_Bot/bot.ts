@@ -31,7 +31,6 @@ import { MsPrismaDbApi } from '../api/msPrismaDbApi/base'
 import { runPlayingnowCallback } from './botFunctions/callbacks/playingnow'
 import { runDefaultInline } from './botFunctions/inlines/default'
 import { runTracksearchInline } from './botFunctions/inlines/tracksearch'
-import { exit } from 'process'
 import { UserFromGetMe } from 'grammy/types'
 
 export class MelodyScoutBot {
@@ -61,7 +60,7 @@ export class MelodyScoutBot {
       advError(`MelodyScout_Bot - Error: ${String(err)}`)
       advError('MelodyScout_Bot - Restarting in 20 seconds')
       void new Promise((resolve) => setTimeout(resolve, 20000)).then(() => {
-        exit(1)
+        process.exit(1)
       })
     })
 

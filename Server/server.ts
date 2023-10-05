@@ -42,7 +42,7 @@ export class Server {
     }, (err, address) => {
       if (err instanceof Error) {
         advError(`Server error: ${err.message}`)
-        process.exit(1)
+        process.exit(2)
       }
       advLog(`Server listening at ${address}`)
     })
