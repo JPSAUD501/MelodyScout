@@ -1,4 +1,4 @@
-import { ZodObject } from 'zod'
+import { ZodAny, ZodObject, ZodString } from 'zod'
 import { ApiErrors } from '../types/errors/ApiErrors'
 import axios from 'axios'
 import { zodGithubApiError } from '../types/errors/zodGithubApiError'
@@ -8,7 +8,7 @@ type MsApiFetchResponse = {
   data: any
 } | ApiErrors
 
-export const msApiFetch = async (url: string, method: string, headers: object, data: object, expectedZodObject: ZodObject<any>): Promise<MsApiFetchResponse> => {
+export const msApiFetch = async (url: string, method: string | undefined, headers: object | undefined, data: object | undefined, expectedZod: ZodObject<any> | ZodAny | ZodString): Promise<MsApiFetchResponse> => {
   const response = await axios({
     method,
     headers,
@@ -45,18 +45,14 @@ export const msApiFetch = async (url: string, method: string, headers: object, d
   }
   const githubApiError = zodGithubApiError.safeParse(jsonResponse)
   if (githubApiError.success) {
-    console.error(githubApiError.data)
-    console.error(JSON.stringify(githubApiError.data, null, 2))
     return {
       success: false,
       errorType: 'githubApiError',
       errorData: githubApiError.data
     }
   }
-  const expectedData = expectedZodObject.safeParse(jsonResponse)
+  const expectedData = expectedZod.safeParse(jsonResponse)
   if (!expectedData.success) {
-    console.error(expectedData.error.issues)
-    console.error(JSON.stringify(expectedData.error.issues, null, 2))
     return {
       success: false,
       errorType: 'msApiError',

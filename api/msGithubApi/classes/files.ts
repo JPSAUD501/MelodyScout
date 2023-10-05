@@ -1,7 +1,12 @@
+import { z } from 'zod'
 import { advError } from '../../../function/advancedConsole'
 import { msApiFetch } from '../functions/msApiFetch'
 import { ApiErrors } from '../types/errors/ApiErrors'
 import { PutFile, zodPutFile } from '../types/zodPutFile'
+
+type GetFileResponse = {
+  success: true
+} | ApiErrors
 
 type PutFileResponse = {
   success: true
@@ -15,8 +20,25 @@ export class Files {
     this.apiKey = apiKey
   }
 
+  private async getFilePreview (fileUrl: string): Promise<GetFileResponse> {
+    const url = fileUrl
+    const method = 'GET'
+    const headers = undefined
+    const data = undefined
+    const expectedZod = z.string()
+    console.log(`GetFile - url: ${url}`)
+    const msApiFetchResponse = await msApiFetch(url, method, headers, data, expectedZod)
+    if (!msApiFetchResponse.success) {
+      advError(`GetFile - Error while getting file: ${msApiFetchResponse.errorData.message}`)
+      return msApiFetchResponse
+    }
+    return {
+      success: true
+    }
+  }
+
   async putFile (fileName: string, fileData: string): Promise<PutFileResponse> {
-    const url = `https://api.github.com/repos/JPSAUD501/MelodyScout-Files/contents/Images/${fileName}`
+    const url = `https://api.github.com/repos/JPSAUD501/MelodyScout-Files/contents/Images/${encodeURI(fileName)}`
     const method = 'PUT'
     const headers = {
       Authorization: `Bearer ${this.apiKey}`
@@ -25,18 +47,28 @@ export class Files {
       message: `${fileName}`,
       content: fileData
     }
-    const zodObject = zodPutFile
+    const expectedZod = zodPutFile
     console.log(`PutFile - ${fileName}`)
     console.log(`PutFile - url: ${url}`)
-    const msApiFetchResponse = await msApiFetch(url, method, headers, data, zodObject)
+    const msApiFetchResponse = await msApiFetch(url, method, headers, data, expectedZod)
     if (!msApiFetchResponse.success) {
       advError(`PutFile - Error while uploading file ${fileName}: ${msApiFetchResponse.errorData.message}`)
       return msApiFetchResponse
     }
     const response = msApiFetchResponse.data
-    return {
-      success: true,
-      data: response
-    }
+    const maxTimeAfterUpload = 120000
+    const uploadTime = new Date().getTime()
+    let getFilePreviewResponse: GetFileResponse
+    do {
+      getFilePreviewResponse = await this.getFilePreview(response.content.download_url)
+      if (getFilePreviewResponse.success) {
+        return {
+          success: true,
+          data: response
+        }
+      }
+    } while (!getFilePreviewResponse.success && new Date().getTime() - uploadTime < maxTimeAfterUpload)
+    advError(`PutFile - Error while getting file preview ${fileName}: ${getFilePreviewResponse.errorData.message}`)
+    return getFilePreviewResponse
   }
 }
