@@ -29,7 +29,6 @@ export class Files {
     console.log(`GetFile - url: ${url}`)
     const msApiFetchResponse = await msApiFetch(url, method, headers, data, expectedZod)
     if (!msApiFetchResponse.success) {
-      advError(`GetFile - Error while getting file: ${msApiFetchResponse.errorData.message}`)
       return msApiFetchResponse
     }
     return {
