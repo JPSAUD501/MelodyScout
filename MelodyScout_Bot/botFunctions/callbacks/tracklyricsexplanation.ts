@@ -51,7 +51,7 @@ async function getAiImageByLyrics (lyrics: string, trackName: string, artistName
     }
   }
   const githubApi = new MsGithubApi(githubConfig.token)
-  const uploadToGithub = await githubApi.files.putFile(encodeURI((`(${trackName}):(${artistName}).jpg`).replaceAll(' ', '_')), finalImage.toString('base64'))
+  const uploadToGithub = await githubApi.files.putFile(encodeURI((`[${trackName}]-[${artistName}].jpg`).replaceAll(' ', '_')), finalImage.toString('base64'))
   if (!uploadToGithub.success) {
     return {
       success: false,
