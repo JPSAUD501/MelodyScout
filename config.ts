@@ -44,7 +44,7 @@ export const replicateConfig = {
 }
 
 export const githubConfig = {
-  token: process.env.GH_TOKEN !== undefined ? process.env.GITHUB_TOKEN : ''
+  token: process.env.GH_TOKEN !== undefined ? process.env.GH_TOKEN : ''
 }
 
 export const serverConfig = {
