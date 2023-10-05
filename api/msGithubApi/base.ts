@@ -1,6 +1,6 @@
 import { Files } from './classes/files'
 
-export class MsLastfmApi {
+export class MsGithubApi {
   private readonly apiKey: string
 
   public files: Files

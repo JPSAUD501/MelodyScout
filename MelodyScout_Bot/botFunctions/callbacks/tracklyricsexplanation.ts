@@ -1,7 +1,7 @@
 import { CallbackQueryContext, Context, InputFile } from 'grammy'
 import { ctxAnswerCallbackQuery, ctxEditMessage, ctxReply, ctxReplyWithVoice, ctxTempReply } from '../../../function/grammyFunctions'
 import { getTracklyricsexplanationText } from '../../textFabric/tracklyricsexplanation'
-import { clickupConfig, geniusConfig, melodyScoutConfig, openaiConfig, replicateConfig } from '../../../config'
+import { geniusConfig, githubConfig, melodyScoutConfig, openaiConfig, replicateConfig } from '../../../config'
 import { advLog } from '../../../function/advancedConsole'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
 import { MsOpenAiApi } from '../../../api/msOpenAiApi/base'
@@ -10,6 +10,7 @@ import { lang } from '../../../translations/base'
 import { MsReplicateApi } from '../../../api/msReplicateApi/base'
 import sharp from 'sharp'
 import fs from 'fs'
+import { MsGithubApi } from '../../../api/msGithubApi/base'
 
 async function getAiImageByLyrics (lyrics: string, trackName: string, artistName: string): Promise<{
   success: true
@@ -47,18 +48,18 @@ async function getAiImageByLyrics (lyrics: string, trackName: string, artistName
       error: `Error on creating final image: ${finalImage.message}`
     }
   }
-  const clickUpApi = new ClickUpApi(clickupConfig.token)
-  const uploadToClickUp = await clickUpApi.attachments.createTaskAttachment(clickupConfig.defaultUploadTaskId, finalImage, `${trackName}-${artistName}-MelodyScoutAi.png`)
-  if (!uploadToClickUp.success) {
+  const githubApi = new MsGithubApi(githubConfig.token)
+  const uploadToGithub = await githubApi.files.putFile(`${trackName}-${artistName}-MelodyScoutAi.png`, finalImage.toString('base64'))
+  if (!uploadToGithub.success) {
     return {
       success: false,
-      error: `Error on uploading image to ClickUp: ${uploadToClickUp.errorData.err}`
+      error: `Error on uploading image to GitHub: ${uploadToGithub.errorData.message}`
     }
   }
-  advLog(`New image generated for ${trackName} by ${artistName}: ${uploadToClickUp.data.url}`)
+  advLog(`New image generated for ${trackName} by ${artistName}: ${uploadToGithub.data.content.download_url}`)
   return {
     success: true,
-    imageUrl: uploadToClickUp.data.url
+    imageUrl: uploadToGithub.data.content.download_url
   }
 }
 

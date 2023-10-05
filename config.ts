@@ -43,6 +43,10 @@ export const replicateConfig = {
   token: process.env.REPLICATE_TOKEN !== undefined ? process.env.REPLICATE_TOKEN : ''
 }
 
+export const githubConfig = {
+  token: process.env.GITHUB_TOKEN !== undefined ? process.env.GITHUB_TOKEN : ''
+}
+
 export const serverConfig = {
   port: process.env.PORT !== undefined ? Number(process.env.PORT) : 3000,
   host: process.env.HOST !== undefined ? process.env.HOST : '0.0.0.0'
