@@ -39,7 +39,9 @@ async function getAiImageByLyrics (lyrics: string, trackName: string, artistName
     .resize(1000, 1000)
     .composite([{
       input: fs.readFileSync('./public/v2/imageFrame.png')
-    }]).png().toBuffer().catch((error) => {
+    }]).jpeg({
+      mozjpeg: true
+    }).toBuffer().catch((error) => {
       return new Error(error)
     })
   if (finalImage instanceof Error) {
@@ -49,7 +51,7 @@ async function getAiImageByLyrics (lyrics: string, trackName: string, artistName
     }
   }
   const githubApi = new MsGithubApi(githubConfig.token)
-  const uploadToGithub = await githubApi.files.putFile(encodeURI((`(${trackName}):(${artistName}).png`).replaceAll(' ', '_')), finalImage.toString('base64'))
+  const uploadToGithub = await githubApi.files.putFile(encodeURI((`(${trackName}):(${artistName}).jpg`).replaceAll(' ', '_')), finalImage.toString('base64'))
   if (!uploadToGithub.success) {
     return {
       success: false,
