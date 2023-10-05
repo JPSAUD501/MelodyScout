@@ -66,6 +66,7 @@ export class MelodyScoutBot {
 
     this.bot.catch((err) => {
       advError(`MelodyScout_Bot - Error: ${String(err)}`)
+      process.exit(5)
     })
 
     this.bot.api.setMyCommands([

@@ -17,11 +17,13 @@ export class MelodyScoutLogBot {
     this.bot.start().catch((err) => {
       console.error(err)
       console.error('MelodyScoutLog_Bot - Error')
+      process.exit(3)
     })
 
     this.bot.catch((err) => {
       console.error(err)
       console.error('MelodyScoutLog_Bot - Error')
+      process.exit(4)
     })
 
     this.startLogQueue()
