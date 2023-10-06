@@ -55,8 +55,8 @@ async function getAiImageByLyrics (lyrics: string, trackName: string, artistName
   const uploadToGithub = await githubApi.files.putFile(`${randomUUID()}.jpg`, finalImage.toString('base64'))
   if (!uploadToGithub.success) {
     return {
-      success: false,
-      error: `Error on uploading image to GitHub: ${uploadToGithub.errorData.message}`
+      success: true,
+      imageUrl: imageByDescription.imageUrl
     }
   }
   advLog(`New image generated for ${trackName} by ${artistName}: ${uploadToGithub.data.content.download_url}`)
