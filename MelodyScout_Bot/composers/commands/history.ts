@@ -14,3 +14,7 @@ historyCommand.command(['history'], async (ctx) => {
   }
   void runHistoryCommand(msPrismaDbApi, ctx)
 })
+
+historyCommand.errorBoundary((err) => {
+  console.error(`Error occurred in historyCommand: ${String(err)}`)
+})

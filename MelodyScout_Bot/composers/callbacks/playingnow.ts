@@ -14,3 +14,7 @@ playingnowCallback.callbackQuery('PLAYINGNOW', async (ctx) => {
   }
   void runPlayingnowCallback(msMusicApi, msPrismaDbApi, ctx)
 })
+
+playingnowCallback.errorBoundary((err) => {
+  console.error(`Error occurred in playingnowCallback: ${String(err)}`)
+})

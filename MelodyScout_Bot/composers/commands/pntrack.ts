@@ -14,3 +14,7 @@ pntrackCommand.command(['pntrack'], async (ctx) => {
   }
   void runPntrackCommand(msMusicApi, msPrismaDbApi, ctx)
 })
+
+pntrackCommand.errorBoundary((err) => {
+  console.error(`Error occurred in pntrackCommand: ${String(err)}`)
+})

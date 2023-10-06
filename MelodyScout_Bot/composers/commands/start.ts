@@ -8,3 +8,7 @@ startCommand.command(['start'], async (ctx) => {
   logNewCommand(ctx)
   void runStartCommand(ctx)
 })
+
+startCommand.errorBoundary((err) => {
+  console.error(`Error occurred in startCommand: ${String(err)}`)
+})

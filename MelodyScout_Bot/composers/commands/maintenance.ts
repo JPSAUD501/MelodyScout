@@ -11,3 +11,7 @@ maintenanceCommand.command(['maintenance'], async (ctx) => {
   if (!maintenanceCommandResponse.success) return
   maintenanceMode.active = maintenanceCommandResponse.maintenanceMode
 })
+
+maintenanceCommand.errorBoundary((err) => {
+  console.error(`Error occurred in maintenanceCommand: ${String(err)}`)
+})

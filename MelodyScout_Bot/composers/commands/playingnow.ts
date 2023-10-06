@@ -14,3 +14,7 @@ playingnowCommand.command(['playingnow', 'pn', 'listeningnow'], async (ctx) => {
   }
   void runPlayingnowCommand(msMusicApi, msPrismaDbApi, ctx)
 })
+
+playingnowCommand.errorBoundary((err) => {
+  console.error(`Error occurred in playingnowCommand: ${String(err)}`)
+})

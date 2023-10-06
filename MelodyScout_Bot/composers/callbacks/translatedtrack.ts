@@ -15,3 +15,7 @@ translatedtrackCallback.callbackQuery(new RegExp(`^TTL${melodyScoutConfig.divide
   }
   void runTranslatedtracklyricsCallback(ctx)
 })
+
+translatedtrackCallback.errorBoundary((err) => {
+  console.error(`Error occurred in translatedtrackCallback: ${String(err)}`)
+})

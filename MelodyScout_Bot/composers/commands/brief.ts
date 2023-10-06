@@ -14,3 +14,7 @@ briefCommand.command(['brief'], async (ctx) => {
   }
   void runBriefCommand(msPrismaDbApi, ctx)
 })
+
+briefCommand.errorBoundary((err) => {
+  console.error(`Error occurred in briefCommand: ${String(err)}`)
+})

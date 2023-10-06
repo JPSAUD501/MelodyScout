@@ -15,3 +15,7 @@ trackaudiodownloadCallback.callbackQuery(new RegExp(`^TAD${melodyScoutConfig.div
   }
   void runTrackAudioDownloadCallback(msMusicApi, ctx)
 })
+
+trackaudiodownloadCallback.errorBoundary((err) => {
+  console.error(`Error occurred in trackaudiodownloadCallback: ${String(err)}`)
+})

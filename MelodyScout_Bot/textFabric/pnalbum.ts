@@ -1,4 +1,4 @@
-import { type Album } from 'spotify-api.js'
+import { type AlbumSimplified } from '@soundify/web-api'
 import { type AlbumInfo } from '../../api/msLastfmApi/types/zodAlbumInfo'
 import { type ArtistInfo } from '../../api/msLastfmApi/types/zodArtistInfo'
 import { type UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
@@ -6,7 +6,7 @@ import { melodyScoutConfig } from '../../config'
 import { sanitizeText } from '../../function/sanitizeText'
 import { urlLimiter } from '../../function/urlLimiter'
 
-export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, spotifyAlbumInfo: Album, nowPlaying: boolean): string {
+export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, spotifyAlbumInfo: AlbumSimplified, nowPlaying: boolean): string {
   const { user } = userInfo
   const { artist } = artistInfo
   const { album } = albumInfo
@@ -40,7 +40,7 @@ export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo,
     }
   }
   postTextArray.push('')
-  postTextArray.push(`${spotifyAlbumInfo.externalURL.spotify}`)
+  postTextArray.push(`${spotifyAlbumInfo.external_urls.spotify}`)
   const postUrl = `https://x.com/intent/tweet?text=${postTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
 
   const textArray: string[] = []

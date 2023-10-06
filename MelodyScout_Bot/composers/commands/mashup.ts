@@ -14,3 +14,7 @@ mashupCommand.command(['mashup'], async (ctx) => {
   }
   void runMashupCommand(msMusicApi, msPrismaDbApi, ctx)
 })
+
+mashupCommand.errorBoundary((err) => {
+  console.error(`Error occurred in mashupCommand: ${String(err)}`)
+})

@@ -122,7 +122,7 @@ export async function pnartistInlineResult (ctxLang: string | undefined, lastfmU
   }
   userArtistTopTracks.sort((a, b) => Number(b.playcount) - Number(a.playcount))
   const inlineKeyboard = new InlineKeyboard()
-  inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyArtistInfo.data[0].externalURL.spotify)
+  inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyArtistInfo.data[0].external_urls.spotify)
   return {
     success: true,
     result: InlineQueryResultBuilder

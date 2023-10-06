@@ -15,3 +15,7 @@ tracklyricsCallback.callbackQuery(new RegExp(`^TL${melodyScoutConfig.divider}`),
   }
   void runTracklyricsCallback(ctx)
 })
+
+tracklyricsCallback.errorBoundary((err) => {
+  console.error(`Error occurred in tracklyricsCallback: ${String(err)}`)
+})

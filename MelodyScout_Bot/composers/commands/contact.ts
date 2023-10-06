@@ -8,3 +8,7 @@ contactCommand.command(['contact'], async (ctx) => {
   logNewCommand(ctx)
   void runContactCommand(ctx)
 })
+
+contactCommand.errorBoundary((err) => {
+  console.error(`Error occurred in contactCommand: ${String(err)}`)
+})

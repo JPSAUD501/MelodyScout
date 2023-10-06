@@ -14,3 +14,7 @@ forgetmeCommand.command(['forgetme'], async (ctx) => {
   }
   void runForgetmeCommand(msPrismaDbApi, ctx)
 })
+
+forgetmeCommand.errorBoundary((err) => {
+  console.error(`Error occurred in forgetmeCommand: ${String(err)}`)
+})

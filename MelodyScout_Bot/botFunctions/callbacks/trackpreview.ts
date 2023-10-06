@@ -21,7 +21,7 @@ export async function runTrackpreviewCallback (msMusicApi: MsMusicApi, ctx: Call
   const [spotifyTrackInfo, deezerSearchTrack] = await Promise.all([spotifyTrackInfoPromise, deezerSearchTrackPromise])
   const previewUrls: string[] = []
   if (spotifyTrackInfo.success) {
-    if (spotifyTrackInfo.data[0].previewURL !== null) previewUrls.push(spotifyTrackInfo.data[0].previewURL)
+    if (spotifyTrackInfo.data[0].preview_url !== null) previewUrls.push(spotifyTrackInfo.data[0].preview_url)
   }
   if (deezerSearchTrack.success) {
     if (deezerSearchTrack.data.data[0].preview !== null) previewUrls.push(deezerSearchTrack.data.data[0].preview)

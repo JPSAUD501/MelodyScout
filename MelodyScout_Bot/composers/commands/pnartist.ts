@@ -14,3 +14,7 @@ pnartistCommand.command(['pnartist'], async (ctx) => {
   }
   void runPnartistCommand(msMusicApi, msPrismaDbApi, ctx)
 })
+
+pnartistCommand.errorBoundary((err) => {
+  console.error(`Error occurred in pnartistCommand: ${String(err)}`)
+})

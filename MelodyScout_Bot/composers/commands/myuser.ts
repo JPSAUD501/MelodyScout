@@ -14,3 +14,7 @@ myuserCommand.command(['myuser', 'setuser', 'reg', 'register'], async (ctx) => {
   }
   void runMyuserCommand(msPrismaDbApi, ctx)
 })
+
+myuserCommand.errorBoundary((err) => {
+  console.error(`Error occurred in myuserCommand: ${String(err)}`)
+})

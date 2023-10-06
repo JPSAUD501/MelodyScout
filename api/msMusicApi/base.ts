@@ -1,10 +1,11 @@
-import { Client, type Track, type Artist, type Album } from 'spotify-api.js'
 import { youtube } from 'scrape-youtube'
 import youtubedl from 'youtube-dl-exec'
 import fs, { type ReadStream } from 'fs'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
 import { advError, advLog } from '../../function/advancedConsole'
+import * as Soundify from '@soundify/web-api'
+import { type SearchEndpoint } from '@soundify/web-api/types/api/search/search.endpoints'
 
 export interface MsMusicApiError {
   success: false
@@ -13,17 +14,17 @@ export interface MsMusicApiError {
 
 export interface MsMusicApiSpotifyTrackInfo {
   success: true
-  data: Track[]
+  data: Soundify.Track[]
 }
 
 export interface MsMusicApiSpotifyAlbumInfo {
   success: true
-  data: Album[]
+  data: Soundify.AlbumSimplified[]
 }
 
 export interface MsMusicApiSpotifyArtistInfo {
   success: true
-  data: Artist[]
+  data: Soundify.Artist[]
 }
 
 export interface MsMusicApiYoutubeTrackInfo {
@@ -42,33 +43,40 @@ export interface MsMusicApiYoutubeTrackDownload {
 }
 
 export class MsMusicApi {
-  private readonly clientID: string
-  private readonly clientSecret: string
-  private readonly clientPromise: Promise<Client>
-  private client: Client | null = null
+  private readonly credentialsFlow: Soundify.ClientCredentialsFlow
+  private client: (Soundify.SpotifyClient<string> & SearchEndpoint) | null = null
 
   constructor (clientID: string, clientSecret: string) {
-    this.clientID = clientID
-    this.clientSecret = clientSecret
-    this.clientPromise = Client.create({
-      token: {
-        clientID: this.clientID,
-        clientSecret: this.clientSecret
-      }
+    this.credentialsFlow = new Soundify.ClientCredentialsFlow({
+      client_id: clientID,
+      client_secret: clientSecret
     })
   }
 
-  async start (): Promise<void> {
-    this.client = await this.clientPromise
-    advLog('MsMusicApi started!')
+  async start (): Promise<{
+    success: true
+  } | {
+    success: false
+    error: string
+  }> {
+    const accessResponse = await this.credentialsFlow.getAccessToken().catch((err) => {
+      return new Error(err)
+    })
+    if (accessResponse instanceof Error) {
+      advError(`Error while getting Spotify access token! Error: ${accessResponse.message}`)
+      return { success: false, error: accessResponse.message }
+    }
+    this.client = Soundify.createSpotifyAPI(accessResponse.access_token)
+    advLog(`MsMusicApi - Spotify client ready! - Expires in: ${accessResponse.expires_in} seconds`)
+    return { success: true }
   }
 
   async getSpotifyTrackInfo (track: string, artist: string): Promise<MsMusicApiError | MsMusicApiSpotifyTrackInfo> {
     if (this.client === null) return { success: false, error: 'Spotify client is not ready!' }
-    const mainSearchPromise = this.client.tracks.search(`track:${track} artist:${artist}`.trim(), { includeExternalAudio: true, limit: 5 }).catch((err) => {
+    const mainSearchPromise = this.client.search((`${track} ${artist}`).trim(), 'track', { include_external: 'audio', limit: 5 }).catch((err) => {
       return new Error(err)
     })
-    const alternativeSearchPromise = this.client.tracks.search(`${track} ${artist}`.trim(), { includeExternalAudio: true, limit: 5 }).catch((err) => {
+    const alternativeSearchPromise = this.client.search((`${track} ${artist}`).trim(), 'track', { include_external: 'audio', limit: 5 }).catch((err) => {
       return new Error(err)
     })
     const [mainSearch, alternativeSearch] = await Promise.all([mainSearchPromise, alternativeSearchPromise])
@@ -85,13 +93,13 @@ export class MsMusicApi {
         advError(`Error while getting track info from Spotify! Track: ${track} Artist: ${artist ?? ''} - Error: ${searchResult.searchResultData.message} in ${searchResult.type}!`)
         continue
       }
-      if (searchResult.searchResultData.length <= 0) {
+      if (searchResult.searchResultData.tracks.items.length <= 0) {
         advError(` Error while getting track info from Spotify! Track: ${track} Artist: ${artist ?? ''} - Error: No tracks found in ${searchResult.type}!`)
         continue
       }
       return {
         success: true,
-        data: searchResult.searchResultData
+        data: searchResult.searchResultData.tracks.items
       }
     }
     advError(`Error while getting track info from Spotify! Track: ${track} Artist: ${artist ?? ''} - Error: No tracks found in both searches!`)
@@ -100,33 +108,33 @@ export class MsMusicApi {
 
   async getSpotifyArtistInfo (artist: string): Promise<MsMusicApiError | MsMusicApiSpotifyArtistInfo> {
     if (this.client === null) return { success: false, error: 'Spotify client is not ready!' }
-    const search = await this.client.artists.search(`${artist}`, { includeExternalAudio: true }).catch((err) => {
+    const search = await this.client.search(artist, 'artist', { include_external: 'audio' }).catch((err) => {
       return new Error(err)
     })
     if (search instanceof Error) {
       advError(`Error while getting artist info from Spotify! Artist: ${artist} - Error: ${search.message}`)
       return { success: false, error: search.message }
     }
-    if (search.length <= 0) return { success: false, error: 'No artists found!' }
+    if (search.artists.items.length <= 0) return { success: false, error: 'No artists found!' }
     return {
       success: true,
-      data: search
+      data: search.artists.items
     }
   }
 
   async getSpotifyAlbumInfo (album: string, artist: string): Promise<MsMusicApiError | MsMusicApiSpotifyAlbumInfo> {
     if (this.client === null) return { success: false, error: 'Spotify client is not ready!' }
-    const search = await this.client.albums.search(`${album} ${artist}`, { includeExternalAudio: true }).catch((err) => {
+    const search = await this.client.search(`${album} ${artist}`, 'album', { include_external: 'audio' }).catch((err) => {
       return new Error(err)
     })
     if (search instanceof Error) {
       advError(`Error while getting album info from Spotify! Album: ${album} Artist: ${artist} - Error: ${search.message}`)
       return { success: false, error: search.message }
     }
-    if (search.length <= 0) return { success: false, error: 'No albums found!' }
+    if (search.albums.items.length <= 0) return { success: false, error: 'No albums found!' }
     return {
       success: true,
-      data: search
+      data: search.albums.items
     }
   }
 

@@ -1,4 +1,4 @@
-import { type Artist } from 'spotify-api.js'
+import { type Artist } from '@soundify/web-api'
 import { type ArtistInfo } from '../../api/msLastfmApi/types/zodArtistInfo'
 import { type UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
 import { melodyScoutConfig } from '../../config'
@@ -38,7 +38,7 @@ export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo
     }
   }
   postTextArray.push('')
-  postTextArray.push(`${spotifyArtistInfo.externalURL.spotify}`)
+  postTextArray.push(`${spotifyArtistInfo.external_urls.spotify}`)
   const postUrl = `https://x.com/intent/tweet?text=${postTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
 
   const textArray: string[] = []

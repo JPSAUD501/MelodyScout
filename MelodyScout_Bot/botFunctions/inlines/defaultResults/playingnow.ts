@@ -109,7 +109,7 @@ export async function playingnowInlineResult (ctxLang: string | undefined, lastf
     }
   }
   const inlineKeyboard = new InlineKeyboard()
-  inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyTrackInfo.data[0].externalURL.spotify)
+  inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyTrackInfo.data[0].external_urls.spotify)
   if (youtubeTrackInfo.success) inlineKeyboard.url(lang(ctxLang, 'youtubeButton'), youtubeTrackInfo.videoUrl)
   inlineKeyboard.row()
   inlineKeyboard.url('Para mais funções conheça o MelodyScout!', `https://t.me/${ctx.me.username}`)

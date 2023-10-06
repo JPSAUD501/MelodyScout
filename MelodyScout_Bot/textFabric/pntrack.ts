@@ -1,4 +1,4 @@
-import { type Track } from 'spotify-api.js'
+import { type Track } from '@soundify/web-api'
 import { type AlbumInfo } from '../../api/msLastfmApi/types/zodAlbumInfo'
 import { type ArtistInfo } from '../../api/msLastfmApi/types/zodArtistInfo'
 import { type TrackInfo } from '../../api/msLastfmApi/types/zodTrackInfo'
@@ -41,7 +41,7 @@ export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo,
     }
   }
   postTextArray.push('')
-  postTextArray.push(`${spotifyTrackInfo.externalURL.spotify}`)
+  postTextArray.push(`${spotifyTrackInfo.external_urls.spotify}`)
   const postUrl = `https://x.com/intent/tweet?text=${postTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
 
   const textArray: string[] = []

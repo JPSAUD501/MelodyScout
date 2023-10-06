@@ -15,3 +15,7 @@ trackpreviewCallback.callbackQuery(new RegExp(`^TP${melodyScoutConfig.divider}`)
   }
   void runTrackpreviewCallback(msMusicApi, ctx)
 })
+
+trackpreviewCallback.errorBoundary((err) => {
+  console.error(`Error occurred in trackpreviewCallback: ${String(err)}`)
+})

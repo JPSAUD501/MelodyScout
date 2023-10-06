@@ -15,3 +15,7 @@ tracklyricsexplanationCallback.callbackQuery(new RegExp(`^TLE${melodyScoutConfig
   }
   void runTracklyricsexplanationCallback(ctx)
 })
+
+tracklyricsexplanationCallback.errorBoundary((err) => {
+  console.error(`Error occurred in tracklyricsexplanationCallback: ${String(err)}`)
+})

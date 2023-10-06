@@ -15,3 +15,7 @@ trackdownloadCallback.callbackQuery(new RegExp(`^TD${melodyScoutConfig.divider}`
   }
   void runTrackDownloadCallback(ctx)
 })
+
+trackdownloadCallback.errorBoundary((err) => {
+  console.error(`Error occurred in trackdownloadCallback: ${String(err)}`)
+})

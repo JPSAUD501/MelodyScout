@@ -9,3 +9,7 @@ tracksearchInline.inlineQuery(/.{1,}/, async (ctx) => {
   logNewInlineQuery(ctx)
   void runTracksearchInline(msMusicApi, ctx)
 })
+
+tracksearchInline.errorBoundary((err) => {
+  console.error(`Error occurred in tracksearchInline: ${String(err)}`)
+})

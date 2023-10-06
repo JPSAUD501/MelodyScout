@@ -14,3 +14,7 @@ pnalbumCommand.command(['pnalbum'], async (ctx) => {
   }
   void runPnalbumCommand(msMusicApi, msPrismaDbApi, ctx)
 })
+
+pnalbumCommand.errorBoundary((err) => {
+  console.error(`Error occurred in pnalbumCommand: ${String(err)}`)
+})

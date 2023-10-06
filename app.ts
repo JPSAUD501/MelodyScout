@@ -6,9 +6,7 @@ import { advLog } from './function/advancedConsole'
 async function start (): Promise<void> {
   advLog('Running the start sequence...')
   const melodyScoutLogBot = await startMelodyScoutLogBot()
-  await melodyScoutLogBot.getBotInfo()
   const melodyScoutBot = await startMelodyScoutBot()
-  await melodyScoutBot.getBotInfo()
   const server = new Server()
   await server.start(melodyScoutLogBot.getBotInfo, melodyScoutBot.getBotInfo)
   advLog('Start sequence completed')

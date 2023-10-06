@@ -8,3 +8,7 @@ helpCommand.command(['help'], async (ctx) => {
   logNewCommand(ctx)
   void runHelpCommand(ctx)
 })
+
+helpCommand.errorBoundary((err) => {
+  console.error(`Error occurred in helpCommand: ${String(err)}`)
+})

@@ -15,3 +15,7 @@ trackvideodownloadCallback.callbackQuery(new RegExp(`^TVD${melodyScoutConfig.div
   }
   void runTrackVideoDownloadCallback(msMusicApi, ctx)
 })
+
+trackvideodownloadCallback.errorBoundary((err) => {
+  console.error(`Error occurred in trackvideodownloadCallback: ${String(err)}`)
+})
