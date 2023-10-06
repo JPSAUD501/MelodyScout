@@ -3,7 +3,7 @@ import youtubedl from 'youtube-dl-exec'
 import fs, { type ReadStream } from 'fs'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
-import { advError, advLog } from '../../function/advancedConsole'
+import { advError } from '../../function/advancedConsole'
 import * as Soundify from '@soundify/web-api'
 import { type SearchEndpoint } from '@soundify/web-api/types/api/search/search.endpoints'
 
@@ -44,7 +44,6 @@ export interface MsMusicApiYoutubeTrackDownload {
 
 export class MsMusicApi {
   private readonly credentialsFlow: Soundify.ClientCredentialsFlow
-  private client: (Soundify.SpotifyClient<string> & SearchEndpoint) | null = null
 
   constructor (clientID: string, clientSecret: string) {
     this.credentialsFlow = new Soundify.ClientCredentialsFlow({
@@ -53,8 +52,9 @@ export class MsMusicApi {
     })
   }
 
-  async start (): Promise<{
+  private async getClient (): Promise<{
     success: true
+    client: (Soundify.SpotifyClient<string> & SearchEndpoint)
   } | {
     success: false
     error: string
@@ -66,17 +66,20 @@ export class MsMusicApi {
       advError(`Error while getting Spotify access token! Error: ${accessResponse.message}`)
       return { success: false, error: accessResponse.message }
     }
-    this.client = Soundify.createSpotifyAPI(accessResponse.access_token)
-    advLog(`MsMusicApi - Spotify client ready! - Expires in: ${accessResponse.expires_in} seconds`)
-    return { success: true }
+    const client = Soundify.createSpotifyAPI(accessResponse.access_token)
+    return {
+      success: true,
+      client
+    }
   }
 
   async getSpotifyTrackInfo (track: string, artist: string): Promise<MsMusicApiError | MsMusicApiSpotifyTrackInfo> {
-    if (this.client === null) return { success: false, error: 'Spotify client is not ready!' }
-    const mainSearchPromise = this.client.search((`${track} ${artist}`).trim(), 'track', { include_external: 'audio', limit: 5 }).catch((err) => {
+    const clientResponse = await this.getClient()
+    if (!clientResponse.success) return { success: false, error: clientResponse.error }
+    const mainSearchPromise = clientResponse.client.search((`${track} ${artist}`).trim(), 'track', { include_external: 'audio', limit: 5 }).catch((err) => {
       return new Error(err)
     })
-    const alternativeSearchPromise = this.client.search((`${track} ${artist}`).trim(), 'track', { include_external: 'audio', limit: 5 }).catch((err) => {
+    const alternativeSearchPromise = clientResponse.client.search((`${track} ${artist}`).trim(), 'track', { include_external: 'audio', limit: 5 }).catch((err) => {
       return new Error(err)
     })
     const [mainSearch, alternativeSearch] = await Promise.all([mainSearchPromise, alternativeSearchPromise])
@@ -107,8 +110,9 @@ export class MsMusicApi {
   }
 
   async getSpotifyArtistInfo (artist: string): Promise<MsMusicApiError | MsMusicApiSpotifyArtistInfo> {
-    if (this.client === null) return { success: false, error: 'Spotify client is not ready!' }
-    const search = await this.client.search(artist, 'artist', { include_external: 'audio' }).catch((err) => {
+    const clientResponse = await this.getClient()
+    if (!clientResponse.success) return { success: false, error: clientResponse.error }
+    const search = await clientResponse.client.search(artist, 'artist', { include_external: 'audio' }).catch((err) => {
       return new Error(err)
     })
     if (search instanceof Error) {
@@ -123,8 +127,9 @@ export class MsMusicApi {
   }
 
   async getSpotifyAlbumInfo (album: string, artist: string): Promise<MsMusicApiError | MsMusicApiSpotifyAlbumInfo> {
-    if (this.client === null) return { success: false, error: 'Spotify client is not ready!' }
-    const search = await this.client.search(`${album} ${artist}`, 'album', { include_external: 'audio' }).catch((err) => {
+    const clientResponse = await this.getClient()
+    if (!clientResponse.success) return { success: false, error: clientResponse.error }
+    const search = await clientResponse.client.search(`${album} ${artist}`, 'album', { include_external: 'audio' }).catch((err) => {
       return new Error(err)
     })
     if (search instanceof Error) {

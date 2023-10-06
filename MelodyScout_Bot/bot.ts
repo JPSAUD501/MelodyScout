@@ -42,7 +42,6 @@ export const msMusicApi = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.c
 export async function startMelodyScoutBot (): Promise<{
   getBotInfo: () => Promise<GetBotInfoResponse>
 }> {
-  await msMusicApi.start()
   const bot = new Bot(botConfig.telegram.token)
   bot.use(maintenanceCommand)
   bot.use(startCommand)
