@@ -24,72 +24,80 @@ export class MsReplicateApi {
   }
 
   async getSdxlImage (imageDescription: string): Promise<MsReplicateGetSdxlImageResponse> {
-    advLog(`MsReplicateApi - getSdxlImage - imageDescription: ${imageDescription}`)
-    const model = 'stability-ai/sdxl:af1a68a271597604546c09c64aabcd7782c114a63539a4a8d14d1eeda5630c33'
-    const output = await this.replicate.run(
-      model,
-      {
-        input: {
-          prompt: imageDescription,
-          apply_watermark: false
+    try {
+      advLog(`MsReplicateApi - getSdxlImage - imageDescription: ${imageDescription}`)
+      const model = 'stability-ai/sdxl:af1a68a271597604546c09c64aabcd7782c114a63539a4a8d14d1eeda5630c33'
+      const output = await this.replicate.run(
+        model,
+        {
+          input: {
+            prompt: imageDescription,
+            apply_watermark: false
+          }
+        }
+      ).catch((err) => {
+        return new Error(String(err))
+      })
+      if (output instanceof Error) {
+        advError(`MsReplicateApi - getSdxlImage - Error on running model: ${output.message}`)
+        return {
+          success: false,
+          error: output.message
         }
       }
-    ).catch((err) => {
-      return new Error(String(err))
-    })
-    if (output instanceof Error) {
-      advError(`MsReplicateApi - getSdxlImage - Error on running model: ${output.message}`)
+      const safeParseOutput = z.array(z.string()).safeParse(output)
+      if (!safeParseOutput.success) {
+        advError(`MsReplicateApi - getSdxlImage - Error on parsing output: ${JSON.stringify(safeParseOutput.error)}`)
+        return {
+          success: false,
+          error: 'Error on parsing output'
+        }
+      }
+      if (safeParseOutput.data.length <= 0) {
+        advError('MsReplicateApi - getSdxlImage - Output URL not found, length <= 0')
+        return {
+          success: false,
+          error: 'Output URL not found'
+        }
+      }
+      const outputUrl = safeParseOutput.data[0]
+      if (outputUrl.length <= 0) {
+        advError('MsReplicateApi - getSdxlImage - Output URL not found, length <= 0')
+        return {
+          success: false,
+          error: 'Output URL not found, length <= 0'
+        }
+      }
+      const image = await axios.get(outputUrl, { responseType: 'arraybuffer' }).catch((err) => {
+        return new Error(String(err))
+      })
+      if (image instanceof Error) {
+        advError(`MsReplicateApi - getSdxlImage - Error on getting image: ${image.message}`)
+        return {
+          success: false,
+          error: image.message
+        }
+      }
+      const imageBufferSafeParse = z.instanceof(Buffer).safeParse(image.data)
+      if (!imageBufferSafeParse.success) {
+        advError(`MsReplicateApi - getSdxlImage - Error on parsing image buffer: ${JSON.stringify(imageBufferSafeParse.error)}`)
+        return {
+          success: false,
+          error: 'Error on parsing image buffer'
+        }
+      }
+      advLog(`MsReplicateApi - getSdxlImage - Success! Image URL: ${outputUrl}`)
+      return {
+        success: true,
+        imageUrl: outputUrl,
+        image: imageBufferSafeParse.data
+      }
+    } catch (err) {
+      advError(`MsReplicateApi - getSdxlImage - Error Try Catch: ${String(err)}`)
       return {
         success: false,
-        error: output.message
+        error: `Error Try Catch: ${String(err)}`
       }
-    }
-    const safeParseOutput = z.array(z.string()).safeParse(output)
-    if (!safeParseOutput.success) {
-      advError(`MsReplicateApi - getSdxlImage - Error on parsing output: ${JSON.stringify(safeParseOutput.error)}`)
-      return {
-        success: false,
-        error: 'Error on parsing output'
-      }
-    }
-    if (safeParseOutput.data.length <= 0) {
-      advError('MsReplicateApi - getSdxlImage - Output URL not found, length <= 0')
-      return {
-        success: false,
-        error: 'Output URL not found'
-      }
-    }
-    const outputUrl = safeParseOutput.data[0]
-    if (outputUrl.length <= 0) {
-      advError('MsReplicateApi - getSdxlImage - Output URL not found, length <= 0')
-      return {
-        success: false,
-        error: 'Output URL not found, length <= 0'
-      }
-    }
-    const image = await axios.get(outputUrl, { responseType: 'arraybuffer' }).catch((err) => {
-      return new Error(String(err))
-    })
-    if (image instanceof Error) {
-      advError(`MsReplicateApi - getSdxlImage - Error on getting image: ${image.message}`)
-      return {
-        success: false,
-        error: image.message
-      }
-    }
-    const imageBufferSafeParse = z.instanceof(Buffer).safeParse(image.data)
-    if (!imageBufferSafeParse.success) {
-      advError(`MsReplicateApi - getSdxlImage - Error on parsing image buffer: ${JSON.stringify(imageBufferSafeParse.error)}`)
-      return {
-        success: false,
-        error: 'Error on parsing image buffer'
-      }
-    }
-    advLog(`MsReplicateApi - getSdxlImage - Success! Image URL: ${outputUrl}`)
-    return {
-      success: true,
-      imageUrl: outputUrl,
-      image: imageBufferSafeParse.data
     }
   }
 }
