@@ -10,7 +10,7 @@ export function getLyricsText (ctxLang: string | undefined, track: string, artis
 
   textArray.push(`<b>[📝] Letra de "${sanitizeText(track)}" por "${sanitizeText(artist)}" fornecida pela <a href="${geniusSong.song.url}">Genius</a>${translatedLyrics !== undefined ? ' traduzida para o português' : ''} solicitada por ${requestedBy}</b>`)
   textArray.push('')
-  textArray.push(lyrics.length > maxLyricsLength ? lyrics.slice(0, maxLyricsLength) + '...' : lyrics)
+  textArray.push(sanitizeText(lyrics.length > maxLyricsLength ? lyrics.slice(0, maxLyricsLength) + '...' : lyrics))
   if (lyrics.length > maxLyricsLength) {
     textArray.push('')
     textArray.push(`<a href="${geniusSong.song.url}">(Para ver a letra completa, clique aqui)</a>`)
