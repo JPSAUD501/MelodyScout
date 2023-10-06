@@ -67,7 +67,8 @@ export class Files {
           data: response
         }
       }
-    } while (!getFilePreviewResponse.success && new Date().getTime() - uploadTime < maxTimeAfterUpload)
+      await new Promise(resolve => setTimeout(resolve, 1000))
+    } while (!getFilePreviewResponse.success && new Date().getTime() - uploadTime <= maxTimeAfterUpload)
     advError(`PutFile - Error while getting file preview ${fileName}: ${getFilePreviewResponse.errorData.message}`)
     return getFilePreviewResponse
   }
