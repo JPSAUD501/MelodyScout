@@ -2,7 +2,7 @@ import { type Api, Bot, type Context, type RawApi } from 'grammy'
 import config from './config'
 import { type GetBotInfoResponse } from '../types'
 
-export const messageQueue: string[] = []
+export const messageQueue: string[] = ['⚡ - MelodyScoutLog_Bot - Started (First message)']
 
 export async function startMelodyScoutLogBot (): Promise<{
   getBotInfo: () => Promise<GetBotInfoResponse>
@@ -32,11 +32,20 @@ export async function startMelodyScoutLogBot (): Promise<{
 }
 
 function startLogQueue (bot: Bot<Context, Api<RawApi>>): void {
+  const queueLength = {
+    old: messageQueue.length,
+    new: messageQueue.length,
+    diference: messageQueue.length - messageQueue.length
+  }
   setInterval(() => {
     if (messageQueue.length <= 0) return
     try {
       const message = messageQueue.shift()
-      bot.api.sendMessage(config.telegram.logChannel, message ?? '⚠').catch((err) => {
+      queueLength.old = queueLength.new
+      queueLength.new = messageQueue.length
+      queueLength.diference = queueLength.new - queueLength.old + 1
+      const prefix = queueLength.new > 0 ? `(${queueLength.old}${queueLength.diference === 0 ? '' : queueLength.diference > 0 ? `+${queueLength.diference}` : `${queueLength.diference}`})` : '(NQ)'
+      bot.api.sendMessage(config.telegram.logChannel, `${prefix} | ${message ?? '⚠'}`).catch((err) => {
         console.error(err)
       })
     } catch (error) {

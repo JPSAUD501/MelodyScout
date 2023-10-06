@@ -4,7 +4,7 @@ import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { getCallbackKey } from '../../../function/callbackMaker'
 import { getPlayingnowText } from '../../textFabric/playingnow'
-import { lastfmConfig, melodyScoutConfig } from '../../../config'
+import { lastfmConfig } from '../../../config'
 import { type MsMusicApi } from '../../../api/msMusicApi/base'
 import { lang } from '../../../translations/base'
 import PromisePool from '@supercharge/promise-pool'
@@ -113,7 +113,7 @@ export async function runPlayingnowCallback (msMusicApi: MsMusicApi, msPrismaDbA
     let stopPool = false
     const userAllRecentTracksPartialResponses = await PromisePool.for(
       Array.from({ length: userAllRecentTracksPageLength }, (_, index) => index + 1).reverse()
-    ).withConcurrency(20).process(async (page, _index, pool) => {
+    ).withConcurrency(5).process(async (page, _index, pool) => {
       if (stopPool) pool.stop()
       const userPartialRecentTracksRequest = await msLastfmApi.user.getRecentTracks(lastfmUser, 1000, page)
       if (!userPartialRecentTracksRequest.success) {
@@ -154,5 +154,4 @@ export async function runPlayingnowCallback (msMusicApi: MsMusicApi, msPrismaDbA
   if (partialReply === undefined) return
   const tfFinalText = getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], mainTrack.nowPlaying, mainTrack.firstScrobble)
   await ctxEditMessage(ctx, { chatId: partialReply.chat.id, messageId: partialReply.message_id }, tfFinalText, { reply_markup: inlineKeyboard })
-  await ctxReply(ctx, { chatId: melodyScoutConfig.blogChannelChatId }, tfFinalText, { reply_markup: inlineKeyboard })
 }

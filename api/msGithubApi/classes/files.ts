@@ -55,7 +55,7 @@ export class Files {
       return msApiFetchResponse
     }
     const response = msApiFetchResponse.data
-    const maxTimeAfterUpload = 120000
+    const maxTimeAfterUpload = 70000
     const uploadTime = new Date().getTime()
     let getFilePreviewResponse: GetFileResponse
     do {
