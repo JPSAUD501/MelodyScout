@@ -97,7 +97,7 @@ export async function pnartistInlineResult (ctxLang: string | undefined, lastfmU
   const userTopTracksPageLength = Math.ceil(Number(userTopTracks.data.toptracks['@attr'].total) / 1000) + 1
   const allUserArtistTopTracksResponses = await PromisePool.for(
     Array.from({ length: userTopTracksPageLength }, (_, index) => index + 1)
-  ).withConcurrency(5).process(async (page) => {
+  ).withConcurrency(1).process(async (page) => {
     const userPartialTopTracksRequest = msLastfmApi.user.getTopTracks(lastfmUser, 1000, page)
     const userTopTracks = await userPartialTopTracksRequest
     return userTopTracks

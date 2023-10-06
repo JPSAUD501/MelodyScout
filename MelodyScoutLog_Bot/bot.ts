@@ -51,7 +51,7 @@ function startLogQueue (bot: Bot<Context, Api<RawApi>>): void {
     } catch (error) {
       console.log(error)
     }
-  }, 3000)
+  }, 4000)
 }
 
 async function getBotInfo (bot: Bot<Context, Api<RawApi>>): Promise<GetBotInfoResponse> {
