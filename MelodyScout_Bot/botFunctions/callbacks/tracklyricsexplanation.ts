@@ -1,4 +1,4 @@
-import { CallbackQueryContext, Context, InputFile } from 'grammy'
+import { type CallbackQueryContext, type Context, InputFile } from 'grammy'
 import { ctxAnswerCallbackQuery, ctxEditMessage, ctxReply, ctxReplyWithVoice, ctxTempReply } from '../../../function/grammyFunctions'
 import { getTracklyricsexplanationText } from '../../textFabric/tracklyricsexplanation'
 import { geniusConfig, githubConfig, melodyScoutConfig, openaiConfig, replicateConfig } from '../../../config'
@@ -52,7 +52,7 @@ async function getAiImageByLyrics (lyrics: string, trackName: string, artistName
     }
   }
   const githubApi = new MsGithubApi(githubConfig.token)
-  const uploadToGithub = await githubApi.files.putFile(randomUUID(), finalImage.toString('base64'))
+  const uploadToGithub = await githubApi.files.putFile(`${randomUUID()}.jpg`, finalImage.toString('base64'))
   if (!uploadToGithub.success) {
     return {
       success: false,
