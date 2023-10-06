@@ -1,5 +1,5 @@
-import { ApiErrors } from '../types/errors/ApiErrors'
-import { GoogleApi } from '../classes/googleApi'
+import { type ApiErrors } from '../types/errors/ApiErrors'
+import { type GoogleApi } from '../classes/googleApi'
 
 export type EasyAuthResponse = {
   success: true

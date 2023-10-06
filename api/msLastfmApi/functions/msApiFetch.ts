@@ -1,6 +1,6 @@
-import { ZodObject } from 'zod'
+import { type ZodObject } from 'zod'
 import { zodLfmApiError } from '../types/errors/zodLfmApiError'
-import { ApiErrors } from '../types/errors/ApiErrors'
+import { type ApiErrors } from '../types/errors/ApiErrors'
 import axios from 'axios'
 
 type MsApiFetchResponse = {

@@ -3,7 +3,7 @@ import { Album } from './classes/album'
 import { Artist } from './classes/artist'
 import { Track } from './classes/track'
 import { User } from './classes/user'
-import { ApiErrors } from './types/errors/ApiErrors'
+import { type ApiErrors } from './types/errors/ApiErrors'
 import { advError } from '../../function/advancedConsole'
 
 export class MsLastfmApi {

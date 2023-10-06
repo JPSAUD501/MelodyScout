@@ -1,8 +1,8 @@
 import { z } from 'zod'
-import { advError } from '../../../function/advancedConsole'
+import { advError, advLog } from '../../../function/advancedConsole'
 import { msApiFetch } from '../functions/msApiFetch'
-import { ApiErrors } from '../types/errors/ApiErrors'
-import { PutFile, zodPutFile } from '../types/zodPutFile'
+import { type ApiErrors } from '../types/errors/ApiErrors'
+import { type PutFile, zodPutFile } from '../types/zodPutFile'
 
 type GetFileResponse = {
   success: true
@@ -61,6 +61,7 @@ export class Files {
     do {
       getFilePreviewResponse = await this.getFilePreview(response.content.download_url)
       if (getFilePreviewResponse.success) {
+        advLog(`PutFile - Uploaded file time: ${new Date().getTime() - uploadTime}ms / ${(new Date().getTime() - uploadTime) / 1000}s`)
         return {
           success: true,
           data: response

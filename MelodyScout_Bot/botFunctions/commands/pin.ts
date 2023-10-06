@@ -1,4 +1,4 @@
-import { CommandContext, Context, InlineKeyboard } from 'grammy'
+import { type CommandContext, type Context, InlineKeyboard } from 'grammy'
 import { ctxPinMessage, ctxReply } from '../../../function/grammyFunctions'
 import { melodyScoutConfig } from '../../../config'
 import { lang } from '../../../translations/base'

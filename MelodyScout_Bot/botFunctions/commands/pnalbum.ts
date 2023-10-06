@@ -1,10 +1,10 @@
-import { CallbackQueryContext, CommandContext, Context, InlineKeyboard } from 'grammy'
+import { type CallbackQueryContext, type CommandContext, type Context, InlineKeyboard } from 'grammy'
 import { ctxReply } from '../../../function/grammyFunctions'
 import { getPnalbumText } from '../../textFabric/pnalbum'
-import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
+import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { lastfmConfig } from '../../../config'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
-import { MsMusicApi } from '../../../api/msMusicApi/base'
+import { type MsMusicApi } from '../../../api/msMusicApi/base'
 import { lang } from '../../../translations/base'
 
 export async function runPnalbumCommand (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context> | CallbackQueryContext<Context>): Promise<void> {

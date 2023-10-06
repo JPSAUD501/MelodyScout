@@ -1,5 +1,5 @@
-import { ZodAny, ZodObject, ZodString } from 'zod'
-import { ApiErrors } from '../types/errors/ApiErrors'
+import { type ZodAny, type ZodObject, type ZodString } from 'zod'
+import { type ApiErrors } from '../types/errors/ApiErrors'
 import axios from 'axios'
 import { zodGithubApiError } from '../types/errors/zodGithubApiError'
 

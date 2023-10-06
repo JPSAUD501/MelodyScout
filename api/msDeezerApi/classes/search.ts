@@ -1,7 +1,7 @@
 import { advError } from '../../../function/advancedConsole'
 import { msApiFetch } from '../functions/msApiFetch'
-import { ApiErrors } from '../types/errors/ApiErrors'
-import { SearchTrack, zodSearchTrack } from '../types/zodSearchTrack'
+import { type ApiErrors } from '../types/errors/ApiErrors'
+import { type SearchTrack, zodSearchTrack } from '../types/zodSearchTrack'
 
 type SearchTrackResponse = {
   success: true

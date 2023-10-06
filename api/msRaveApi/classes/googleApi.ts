@@ -1,7 +1,7 @@
 import { advError } from '../../../function/advancedConsole'
 import { msApiFetch } from '../functions/msRaveApiFetch'
-import { ApiErrors } from '../types/errors/ApiErrors'
-import { GoogleNewUser, zodGoogleNewUser } from '../types/zodGoogleNewUser'
+import { type ApiErrors } from '../types/errors/ApiErrors'
+import { type GoogleNewUser, zodGoogleNewUser } from '../types/zodGoogleNewUser'
 
 type NewUserResponse = {
   success: true

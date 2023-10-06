@@ -1,5 +1,5 @@
-import { UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
-import { UserRecentTracks } from '../../api/msLastfmApi/types/zodUserRecentTracks'
+import { type UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
+import { type UserRecentTracks } from '../../api/msLastfmApi/types/zodUserRecentTracks'
 import { melodyScoutConfig } from '../../config'
 import { sanitizeText } from '../../function/sanitizeText'
 import { urlLimiter } from '../../function/urlLimiter'

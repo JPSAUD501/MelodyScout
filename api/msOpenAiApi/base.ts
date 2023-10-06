@@ -1,4 +1,4 @@
-import { Configuration, OpenAIApi } from 'openai'
+import OpenAI from 'openai'
 import { advError } from '../../function/advancedConsole'
 import { lang } from '../../translations/base'
 
@@ -23,20 +23,19 @@ type MsOpenAiApiGetLyricsEmojisResponse = {
 } | MsOpenAiApiError
 
 export class MsOpenAiApi {
-  private readonly openai: OpenAIApi
+  private readonly openai: OpenAI
 
   constructor (openAiApiKey: string) {
-    const configuration = new Configuration({
+    this.openai = new OpenAI({
       apiKey: openAiApiKey
     })
-    this.openai = new OpenAIApi(configuration)
   }
 
   async getLyricsExplanation (ctxLang: string | undefined, lyrics: string): Promise<MsOpenAiApiGetLyricsExplanationResponse> {
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
     // const prompt = `${lyricsParsed}\n\nExplicação da letra da música:`
     const prompt = `${lyricsParsed}\n\n${lang(ctxLang, 'lyricsExplanationAiPrompt')}`
-    const response = await this.openai.createChatCompletion({
+    const response = await this.openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: 'You help users understand the lyrics of the tracks they listened.' },
@@ -54,7 +53,7 @@ export class MsOpenAiApi {
         error: response.message
       }
     }
-    const explanation = response.data.choices[0]
+    const explanation = response.choices[0]
     // console.log(explanation)
     if (explanation === undefined) {
       advError(`MsOpenAiAPi - No choices explanation generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
@@ -98,7 +97,7 @@ export class MsOpenAiApi {
   async getLyricsImageDescription (lyrics: string): Promise<MsOpenAiApiGetLyricsImageDescriptionResponse> {
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
     const prompt = `Lyrics:\n\n${lyricsParsed}`
-    const response = await this.openai.createChatCompletion({
+    const response = await this.openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: 'Describe an simple image that best represents the song. Your description must have up to 60 words.' },
@@ -116,7 +115,7 @@ export class MsOpenAiApi {
         error: response.message
       }
     }
-    const explanation = response.data.choices[0]
+    const explanation = response.choices[0]
     if (explanation === undefined) {
       advError(`MsOpenAiAPi - No choices image description generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
       return {
@@ -158,7 +157,7 @@ export class MsOpenAiApi {
   async getLyricsEmojis (lyrics: string): Promise<MsOpenAiApiGetLyricsEmojisResponse> {
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
     const prompt = `Lyrics:\n\n${lyricsParsed}`
-    const response = await this.openai.createChatCompletion({
+    const response = await this.openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: 'Using the lyrics received, create a selection of emojis that best represent the song. The answer must only contain emojis. The answer must have up to 40 emojis.' },
@@ -176,7 +175,7 @@ export class MsOpenAiApi {
         error: response.message
       }
     }
-    const explanation = response.data.choices[0]
+    const explanation = response.choices[0]
     if (explanation === undefined) {
       advError(`MsOpenAiAPi - No choices emojis generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
       return {

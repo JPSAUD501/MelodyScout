@@ -1,5 +1,5 @@
 import { InlineQueryResultBuilder } from 'grammy'
-import { InlineQueryResult } from 'grammy/types'
+import { type InlineQueryResult } from 'grammy/types'
 import { MsLastfmApi } from '../../../../api/msLastfmApi/base'
 import { lastfmConfig, melodyScoutConfig } from '../../../../config'
 import { lang } from '../../../../translations/base'

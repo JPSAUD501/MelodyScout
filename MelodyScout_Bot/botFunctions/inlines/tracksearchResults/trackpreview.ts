@@ -1,5 +1,5 @@
-import { InlineQueryContext, Context, InlineQueryResultBuilder, InlineKeyboard } from 'grammy'
-import { InlineQueryResult } from 'grammy/types'
+import { type InlineQueryContext, type Context, InlineQueryResultBuilder, InlineKeyboard } from 'grammy'
+import { type InlineQueryResult } from 'grammy/types'
 import { lang } from '../../../../translations/base'
 import { getTrackpreviewText } from '../../../textFabric/trackpreview'
 import { v4 as uuidv4 } from 'uuid'

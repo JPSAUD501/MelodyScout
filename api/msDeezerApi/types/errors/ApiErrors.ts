@@ -1,5 +1,5 @@
-import { DeezerApiError } from './zodDeezerApiError'
-import { MsApiError } from './zodMsApiError'
+import { type DeezerApiError } from './zodDeezerApiError'
+import { type MsApiError } from './zodMsApiError'
 
 export type ApiErrors = {
   success: false

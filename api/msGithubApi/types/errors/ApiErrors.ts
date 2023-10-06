@@ -1,5 +1,5 @@
-import { GithubApiError } from './zodGithubApiError'
-import { MsApiError } from './zodMsApiError'
+import { type GithubApiError } from './zodGithubApiError'
+import { type MsApiError } from './zodMsApiError'
 
 export type ApiErrors = {
   success: false

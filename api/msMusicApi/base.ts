@@ -1,10 +1,10 @@
-import { Client, Track, Artist, Album } from 'spotify-api.js'
+import { Client, type Track, type Artist, type Album } from 'spotify-api.js'
 import { youtube } from 'scrape-youtube'
 import youtubedl from 'youtube-dl-exec'
-import fs, { ReadStream } from 'fs'
+import fs, { type ReadStream } from 'fs'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
-import { advError } from '../../function/advancedConsole'
+import { advError, advLog } from '../../function/advancedConsole'
 
 export interface MsMusicApiError {
   success: false
@@ -60,6 +60,7 @@ export class MsMusicApi {
 
   async start (): Promise<void> {
     this.client = await this.clientPromise
+    advLog('MsMusicApi started!')
   }
 
   async getSpotifyTrackInfo (track: string, artist: string): Promise<MsMusicApiError | MsMusicApiSpotifyTrackInfo> {

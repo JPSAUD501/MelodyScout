@@ -1,13 +1,13 @@
-import { CommandContext, Context, InlineKeyboard } from 'grammy'
+import { type CommandContext, type Context, InlineKeyboard } from 'grammy'
 import { ctxEditMessage, ctxReply } from '../../../function/grammyFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
-import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
+import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { getCallbackKey } from '../../../function/callbackMaker'
 import { getPlayingnowText } from '../../textFabric/playingnow'
 import { lastfmConfig, melodyScoutConfig } from '../../../config'
-import { MsMusicApi } from '../../../api/msMusicApi/base'
+import { type MsMusicApi } from '../../../api/msMusicApi/base'
 import { lang } from '../../../translations/base'
-import { UserRecentTracks } from '../../../api/msLastfmApi/types/zodUserRecentTracks'
+import { type UserRecentTracks } from '../../../api/msLastfmApi/types/zodUserRecentTracks'
 import PromisePool from '@supercharge/promise-pool'
 
 export async function runPlayingnowCommand (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {

@@ -1,4 +1,4 @@
-import { CommandContext, Context } from 'grammy'
+import { type CommandContext, type Context } from 'grammy'
 import { ctxReply } from '../../../function/grammyFunctions'
 import { advInfo } from '../../../function/advancedConsole'
 import { getMaintenanceinformText } from '../../textFabric/maintenanceinform'

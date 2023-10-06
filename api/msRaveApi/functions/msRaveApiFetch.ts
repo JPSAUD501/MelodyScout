@@ -1,6 +1,6 @@
-import { ZodObject } from 'zod'
+import { type ZodObject } from 'zod'
 import axios from 'axios'
-import { ApiErrors } from '../types/errors/ApiErrors'
+import { type ApiErrors } from '../types/errors/ApiErrors'
 import { zodRaveApiError } from '../types/errors/zodRaveApiError'
 import { zodGoogleApiError } from '../types/errors/zodGoogleApiError'
 

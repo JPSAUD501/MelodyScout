@@ -1,6 +1,6 @@
-import { CommandContext, Context } from 'grammy'
+import { type CommandContext, type Context } from 'grammy'
 import { ctxReply } from '../../../function/grammyFunctions'
-import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
+import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { advInfo } from '../../../function/advancedConsole'
 import { lastfmConfig } from '../../../config'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'

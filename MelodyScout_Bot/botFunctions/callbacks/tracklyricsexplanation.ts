@@ -11,6 +11,7 @@ import { MsReplicateApi } from '../../../api/msReplicateApi/base'
 import sharp from 'sharp'
 import fs from 'fs'
 import { MsGithubApi } from '../../../api/msGithubApi/base'
+import { randomUUID } from 'crypto'
 
 async function getAiImageByLyrics (lyrics: string, trackName: string, artistName: string): Promise<{
   success: true
@@ -51,7 +52,7 @@ async function getAiImageByLyrics (lyrics: string, trackName: string, artistName
     }
   }
   const githubApi = new MsGithubApi(githubConfig.token)
-  const uploadToGithub = await githubApi.files.putFile((`[${trackName}]-[${artistName}].jpg`).replaceAll(' ', '_'), finalImage.toString('base64'))
+  const uploadToGithub = await githubApi.files.putFile(randomUUID(), finalImage.toString('base64'))
   if (!uploadToGithub.success) {
     return {
       success: false,

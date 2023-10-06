@@ -1,13 +1,13 @@
-import { CallbackQueryContext, CommandContext, Context, InlineKeyboard } from 'grammy'
+import { type CallbackQueryContext, type CommandContext, type Context, InlineKeyboard } from 'grammy'
 import { PromisePool } from '@supercharge/promise-pool'
 import { getPnartistText } from '../../textFabric/pnartist'
 import { ctxReply } from '../../../function/grammyFunctions'
 import { lastfmConfig } from '../../../config'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
-import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
-import { MsMusicApi } from '../../../api/msMusicApi/base'
+import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
+import { type MsMusicApi } from '../../../api/msMusicApi/base'
 import { lang } from '../../../translations/base'
-import { UserTopTracks } from '../../../api/msLastfmApi/types/zodUserTopTracks'
+import { type UserTopTracks } from '../../../api/msLastfmApi/types/zodUserTopTracks'
 
 export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context> | CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code

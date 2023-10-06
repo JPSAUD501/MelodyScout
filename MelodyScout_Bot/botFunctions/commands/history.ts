@@ -1,6 +1,6 @@
-import { CommandContext, Context } from 'grammy'
+import { type CommandContext, type Context } from 'grammy'
 import { ctxReply } from '../../../function/grammyFunctions'
-import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
+import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { getHistoryText } from '../../textFabric/history'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { lastfmConfig } from '../../../config'
@@ -31,7 +31,7 @@ export async function runHistoryCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comm
     void ctxReply(ctx, undefined, lang(ctxLang, 'unableToGetUserInfoInDb'))
     return
   }
-  const lastfmUser = await telegramUserDBResponse.lastfmUser
+  const lastfmUser = telegramUserDBResponse.lastfmUser
   if (lastfmUser === null) {
     void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmUserNoMoreRegisteredError'))
     return

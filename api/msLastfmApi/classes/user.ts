@@ -1,12 +1,12 @@
 import { advError } from '../../../function/advancedConsole'
 import { msApiFetch } from '../functions/msApiFetch'
-import { ApiErrors } from '../types/errors/ApiErrors'
-import { UserInfo, zodUserInfo } from '../types/zodUserInfo'
-import { UserRecentTracks, zodUserRecentTracks } from '../types/zodUserRecentTracks'
-import { UserTopAlbums, zodUserTopAlbums } from '../types/zodUserTopAlbums'
-import { UserTopArtists, zodUserTopArtists } from '../types/zodUserTopArtists'
-import { UserTopTags, zodUserTopTags } from '../types/zodUserTopTags'
-import { UserTopTracks, zodUserTopTracks } from '../types/zodUserTopTracks'
+import { type ApiErrors } from '../types/errors/ApiErrors'
+import { type UserInfo, zodUserInfo } from '../types/zodUserInfo'
+import { type UserRecentTracks, zodUserRecentTracks } from '../types/zodUserRecentTracks'
+import { type UserTopAlbums, zodUserTopAlbums } from '../types/zodUserTopAlbums'
+import { type UserTopArtists, zodUserTopArtists } from '../types/zodUserTopArtists'
+import { type UserTopTags, zodUserTopTags } from '../types/zodUserTopTags'
+import { type UserTopTracks, zodUserTopTracks } from '../types/zodUserTopTracks'
 
 type GetInfoResponse = {
   success: true

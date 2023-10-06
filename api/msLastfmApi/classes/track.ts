@@ -1,8 +1,8 @@
 import { advError } from '../../../function/advancedConsole'
 import { msApiFetch } from '../functions/msApiFetch'
-import { ApiErrors } from '../types/errors/ApiErrors'
-import { TrackInfo, zodTrackInfo } from '../types/zodTrackInfo'
-import { TrackSearch, zodTrackSearch } from '../types/zodTrackSearch'
+import { type ApiErrors } from '../types/errors/ApiErrors'
+import { type TrackInfo, zodTrackInfo } from '../types/zodTrackInfo'
+import { type TrackSearch, zodTrackSearch } from '../types/zodTrackSearch'
 
 type GetInfoResponse = {
   success: true

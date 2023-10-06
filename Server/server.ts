@@ -2,12 +2,11 @@ import { DateTime } from 'luxon'
 import fastify from 'fastify'
 import { serverConfig } from '../config'
 import { advError, advLog } from '../function/advancedConsole'
-import { MelodyScoutLogBot } from '../MelodyScoutLog_Bot/bot'
-import { MelodyScoutBot } from '../MelodyScout_Bot/bot'
+import { type GetBotInfoResponse } from '../types'
 const server = fastify()
 
 export class Server {
-  async start (melodyScoutLogBot: MelodyScoutLogBot, melodyScoutBot: MelodyScoutBot): Promise<void> {
+  async start (getMelodyScoutLogBotInfo: () => Promise<GetBotInfoResponse>, getMelodyScoutBotInfo: () => Promise<GetBotInfoResponse>): Promise<void> {
     console.log('🟡 - Starting Server...')
 
     server.get('/', async (_request, reply) => {
@@ -19,7 +18,7 @@ export class Server {
     })
 
     server.get('/health/MelodyScoutBot', async (_request, reply) => {
-      const botInfo = await melodyScoutBot.getBotInfo()
+      const botInfo = await getMelodyScoutBotInfo()
       if (!botInfo.success) {
         await reply.status(500).send(`[${DateTime.now().setZone('America/Sao_Paulo').toFormat('dd/MM/yyyy - HH:mm:ss')}] MelodyScoutBot - Error: ${botInfo.error}`)
         return
@@ -28,7 +27,7 @@ export class Server {
     })
 
     server.get('/health/MelodyScoutLogBot', async (_request, reply) => {
-      const botInfo = await melodyScoutLogBot.getBotInfo()
+      const botInfo = await getMelodyScoutLogBotInfo()
       if (!botInfo.success) {
         await reply.status(500).send(`[${DateTime.now().setZone('America/Sao_Paulo').toFormat('dd/MM/yyyy - HH:mm:ss')}] MelodyScoutLogBot - Error: ${botInfo.error}`)
         return
@@ -37,7 +36,7 @@ export class Server {
     })
 
     server.listen({
-      port: serverConfig.port,
+      port: Number(serverConfig.port),
       host: serverConfig.host
     }, (err, address) => {
       if (err instanceof Error) {

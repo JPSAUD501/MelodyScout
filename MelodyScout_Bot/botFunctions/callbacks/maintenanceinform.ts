@@ -1,4 +1,4 @@
-import { CallbackQueryContext, Context } from 'grammy'
+import { type CallbackQueryContext, type Context } from 'grammy'
 import { advInfo } from '../../../function/advancedConsole'
 import { ctxAnswerCallbackQuery, ctxReply } from '../../../function/grammyFunctions'
 import { getMaintenanceinformText } from '../../textFabric/maintenanceinform'

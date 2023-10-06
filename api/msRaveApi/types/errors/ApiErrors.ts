@@ -1,7 +1,6 @@
-
-import { GoogleApiError } from './zodGoogleApiError'
-import { MsApiError } from './zodMsApiError'
-import { RaveApiError } from './zodRaveApiError'
+import { type GoogleApiError } from './zodGoogleApiError'
+import { type MsApiError } from './zodMsApiError'
+import { type RaveApiError } from './zodRaveApiError'
 
 export type ApiErrors = {
   success: false

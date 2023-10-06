@@ -1,5 +1,5 @@
-import { CommandContext, Context } from 'grammy'
-import { MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
+import { type CommandContext, type Context } from 'grammy'
+import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { ctxReply } from '../../../function/grammyFunctions'
 import { lang } from '../../../translations/base'
 import { getForgetmeText } from '../../textFabric/forgetme'

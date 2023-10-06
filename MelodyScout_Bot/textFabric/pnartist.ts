@@ -1,10 +1,10 @@
-import { Artist } from 'spotify-api.js'
-import { ArtistInfo } from '../../api/msLastfmApi/types/zodArtistInfo'
-import { UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
+import { type Artist } from 'spotify-api.js'
+import { type ArtistInfo } from '../../api/msLastfmApi/types/zodArtistInfo'
+import { type UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
 import { melodyScoutConfig } from '../../config'
 import { sanitizeText } from '../../function/sanitizeText'
 import { urlLimiter } from '../../function/urlLimiter'
-import { UserTopTracks } from '../../api/msLastfmApi/types/zodUserTopTracks'
+import { type UserTopTracks } from '../../api/msLastfmApi/types/zodUserTopTracks'
 
 export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, userArtistTopTracks: Array<UserTopTracks['toptracks']['track']['0']>, spotifyArtistInfo: Artist, nowPlaying: boolean): string {
   const { user } = userInfo

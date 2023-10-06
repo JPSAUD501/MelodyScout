@@ -1,9 +1,9 @@
-import { CallbackQueryContext, Context, InputFile, RawApi } from 'grammy'
+import { type CallbackQueryContext, type Context, type InputFile, type RawApi } from 'grammy'
 import { advError } from './advancedConsole'
-import { Message } from '@grammyjs/types'
-import { Other } from 'grammy/out/core/api'
+import { type Message } from '@grammyjs/types'
+import { type Other } from 'grammy/out/core/api'
 import { lang } from '../translations/base'
-import { InlineQueryResult } from 'grammy/types'
+import { type InlineQueryResult } from 'grammy/types'
 
 export async function ctxReply (ctx: Context, messageToSend: { chatId: number } | undefined, message: string, options?: Other<RawApi, 'sendMessage', 'text' | 'chat_id'>): Promise<Message.TextMessage | undefined> {
   const ctxLang = ctx.from?.language_code

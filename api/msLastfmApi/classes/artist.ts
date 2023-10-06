@@ -1,7 +1,7 @@
 import { advError } from '../../../function/advancedConsole'
 import { msApiFetch } from '../functions/msApiFetch'
-import { ApiErrors } from '../types/errors/ApiErrors'
-import { ArtistInfo, zodArtistInfo } from '../types/zodArtistInfo'
+import { type ApiErrors } from '../types/errors/ApiErrors'
+import { type ArtistInfo, zodArtistInfo } from '../types/zodArtistInfo'
 
 type GetInfoResponse = {
   success: true

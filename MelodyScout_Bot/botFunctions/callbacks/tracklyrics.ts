@@ -1,4 +1,4 @@
-import { CallbackQueryContext, Context, InlineKeyboard } from 'grammy'
+import { type CallbackQueryContext, type Context, InlineKeyboard } from 'grammy'
 import { ctxAnswerCallbackQuery, ctxReply } from '../../../function/grammyFunctions'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
 import { getCallbackKey } from '../../../function/callbackMaker'

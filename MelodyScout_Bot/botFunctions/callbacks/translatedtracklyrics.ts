@@ -1,4 +1,4 @@
-import { CallbackQueryContext, Context } from 'grammy'
+import { type CallbackQueryContext, type Context } from 'grammy'
 import { ctxAnswerCallbackQuery, ctxEditMessage, ctxReply } from '../../../function/grammyFunctions'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
 import { geniusConfig, melodyScoutConfig } from '../../../config'

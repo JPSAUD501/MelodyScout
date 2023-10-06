@@ -1,7 +1,7 @@
-import { Album } from 'spotify-api.js'
-import { AlbumInfo } from '../../api/msLastfmApi/types/zodAlbumInfo'
-import { ArtistInfo } from '../../api/msLastfmApi/types/zodArtistInfo'
-import { UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
+import { type Album } from 'spotify-api.js'
+import { type AlbumInfo } from '../../api/msLastfmApi/types/zodAlbumInfo'
+import { type ArtistInfo } from '../../api/msLastfmApi/types/zodArtistInfo'
+import { type UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
 import { melodyScoutConfig } from '../../config'
 import { sanitizeText } from '../../function/sanitizeText'
 import { urlLimiter } from '../../function/urlLimiter'
@@ -18,7 +18,7 @@ export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo,
   postTextArray.push(`- Álbum: ${sanitizeText(album.name)}`)
   postTextArray.push(`- Artista: ${sanitizeText(artist.name)}`)
   postTextArray.push('')
-  postTextArray.push(`[📊] ${(album.userplaycount !== undefined ? album.userplaycount : 0).toLocaleString('pt-BR')} Scrobbles`)
+  postTextArray.push(`[📊] ${(album.userplaycount ?? 0).toLocaleString('pt-BR')} Scrobbles`)
   const postInfoArray: string[] = []
   if (spotifyAlbumInfo.popularity !== undefined) postInfoArray.push(`A popularidade atual desse album é: [${spotifyAlbumInfo.popularity}][${'★'.repeat(Math.floor(spotifyAlbumInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyAlbumInfo.popularity / 20))}]`)
   switch (postInfoArray.length) {
@@ -64,7 +64,7 @@ export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo,
     textArray.push(...infoArray)
   }
   textArray.push('')
-  textArray.push(`<b>[📊] ${(album.userplaycount !== undefined ? album.userplaycount : 0).toLocaleString('pt-BR')} Scrobbles</b>`)
+  textArray.push(`<b>[📊] ${(album.userplaycount ?? 0).toLocaleString('pt-BR')} Scrobbles</b>`)
   textArray.push('')
   textArray.push('<b>[🔗] Compartilhe</b>')
   textArray.push(`- <a href="${postUrl}">Compartilhar no 𝕏!</a>`)

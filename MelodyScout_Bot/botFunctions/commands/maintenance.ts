@@ -1,4 +1,4 @@
-import { CommandContext, Context } from 'grammy'
+import { type CommandContext, type Context } from 'grammy'
 import { ctxReply } from '../../../function/grammyFunctions'
 import { advLog } from '../../../function/advancedConsole'
 import { melodyScoutConfig } from '../../../config'

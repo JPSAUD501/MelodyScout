@@ -1,8 +1,8 @@
 import { msApiFetch } from '../functions/msRaveApiFetch'
-import { ApiErrors } from '../types/errors/ApiErrors'
-import { CreateContent, zodCreateContent } from '../types/zodCreateContent'
-import { GetContent, zodGetContent } from '../types/zodGetContent'
-import { GoogleApi } from './googleApi'
+import { type ApiErrors } from '../types/errors/ApiErrors'
+import { type CreateContent, zodCreateContent } from '../types/zodCreateContent'
+import { type GetContent, zodGetContent } from '../types/zodGetContent'
+import { type GoogleApi } from './googleApi'
 import { easyAuth } from '../functions/easyAuth'
 import { advError } from '../../../function/advancedConsole'
 

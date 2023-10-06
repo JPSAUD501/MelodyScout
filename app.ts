@@ -1,19 +1,16 @@
-
-import { MelodyScoutLogBot } from './MelodyScoutLog_Bot/bot'
-import { MelodyScoutBot } from './MelodyScout_Bot/bot'
+import { startMelodyScoutLogBot } from './MelodyScoutLog_Bot/bot'
+import { startMelodyScoutBot } from './MelodyScout_Bot/bot'
 import { Server } from './Server/server'
 import { advLog } from './function/advancedConsole'
 
 async function start (): Promise<void> {
   advLog('Running the start sequence...')
-  const melodyScoutLogBot = new MelodyScoutLogBot()
-  melodyScoutLogBot.start()
+  const melodyScoutLogBot = await startMelodyScoutLogBot()
   await melodyScoutLogBot.getBotInfo()
-  const melodyScoutBot = new MelodyScoutBot()
-  await melodyScoutBot.start()
+  const melodyScoutBot = await startMelodyScoutBot()
   await melodyScoutBot.getBotInfo()
   const server = new Server()
-  await server.start(melodyScoutLogBot, melodyScoutBot)
+  await server.start(melodyScoutLogBot.getBotInfo, melodyScoutBot.getBotInfo)
   advLog('Start sequence completed')
 }
 

@@ -1,8 +1,8 @@
-import { MsGeniusApiGetSongData } from '../../api/msGeniusApi/base'
+import { type MsGeniusApiGetSongData } from '../../api/msGeniusApi/base'
 import { sanitizeText } from '../../function/sanitizeText'
 
 export function getLyricsText (ctxLang: string | undefined, track: string, artist: string, geniusSong: MsGeniusApiGetSongData, requestedBy: string, translatedLyrics?: string): string {
-  const lyrics = translatedLyrics === undefined ? geniusSong.lyrics : translatedLyrics
+  const lyrics = translatedLyrics ?? geniusSong.lyrics
   const textArray: string[] = []
 
   const defaultMessageLength = 400

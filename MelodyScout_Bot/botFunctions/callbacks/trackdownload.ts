@@ -1,4 +1,4 @@
-import { CallbackQueryContext, Context, InlineKeyboard } from 'grammy'
+import { type CallbackQueryContext, type Context, InlineKeyboard } from 'grammy'
 import { ctxAnswerCallbackQuery, ctxReply } from '../../../function/grammyFunctions'
 import { getCallbackKey } from '../../../function/callbackMaker'
 import { melodyScoutConfig } from '../../../config'

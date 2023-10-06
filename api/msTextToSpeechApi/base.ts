@@ -1,6 +1,6 @@
 import * as googleTTS from 'google-tts-api'
 import axios from 'axios'
-import { TiktokTTSApi, zodTiktokTTSApi } from './types/zodTiktokTTSApi'
+import { type TiktokTTSApi, zodTiktokTTSApi } from './types/zodTiktokTTSApi'
 import { advError } from '../../function/advancedConsole'
 import { lang } from '../../translations/base'
 import { z } from 'zod'

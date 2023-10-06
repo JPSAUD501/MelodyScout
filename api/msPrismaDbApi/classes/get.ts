@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { type PrismaClient } from '@prisma/client'
 import { advError } from '../../../function/advancedConsole'
 
 interface GetDefaultResponseError {

@@ -1,5 +1,5 @@
-import { LfmApiError } from './zodLfmApiError'
-import { MsApiError } from './zodMsApiError'
+import { type LfmApiError } from './zodLfmApiError'
+import { type MsApiError } from './zodMsApiError'
 
 export type ApiErrors = {
   success: false

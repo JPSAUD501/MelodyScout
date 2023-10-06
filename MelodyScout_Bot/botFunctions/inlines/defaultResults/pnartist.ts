@@ -1,10 +1,10 @@
 import { InlineQueryResultBuilder, InlineKeyboard } from 'grammy'
-import { InlineQueryResult } from 'grammy/types'
+import { type InlineQueryResult } from 'grammy/types'
 import { MsLastfmApi } from '../../../../api/msLastfmApi/base'
 import { lastfmConfig, melodyScoutConfig } from '../../../../config'
 import { lang } from '../../../../translations/base'
-import { UserTopTracks } from '../../../../api/msLastfmApi/types/zodUserTopTracks'
-import { MsMusicApi } from '../../../../api/msMusicApi/base'
+import { type UserTopTracks } from '../../../../api/msLastfmApi/types/zodUserTopTracks'
+import { type MsMusicApi } from '../../../../api/msMusicApi/base'
 import PromisePool from '@supercharge/promise-pool'
 import { getPnartistText } from '../../../textFabric/pnartist'
 

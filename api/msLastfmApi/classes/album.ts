@@ -1,6 +1,6 @@
-import { AlbumInfo, zodAlbumInfo } from '../types/zodAlbumInfo'
+import { type AlbumInfo, zodAlbumInfo } from '../types/zodAlbumInfo'
 import { msApiFetch } from '../functions/msApiFetch'
-import { ApiErrors } from '../types/errors/ApiErrors'
+import { type ApiErrors } from '../types/errors/ApiErrors'
 import { advError } from '../../../function/advancedConsole'
 
 type GetInfoResponse = {
