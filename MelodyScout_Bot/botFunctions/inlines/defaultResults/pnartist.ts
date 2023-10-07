@@ -97,12 +97,21 @@ export async function pnartistInlineResult (ctxLang: string | undefined, lastfmU
   const userTopTracksPageLength = Math.ceil(Number(userTopTracks.data.toptracks['@attr'].total) / 1000) + 1
   const allUserArtistTopTracksResponses = await PromisePool.for(
     Array.from({ length: userTopTracksPageLength }, (_, index) => index + 1)
-  ).withConcurrency(1).process(async (page) => {
+  ).withConcurrency(5).process(async (page, _index, pool) => {
     const userPartialTopTracksRequest = msLastfmApi.user.getTopTracks(lastfmUser, 1000, page)
     const userTopTracks = await userPartialTopTracksRequest
-    return userTopTracks
+    if (!userTopTracks.success) {
+      pool.stop()
+      return userTopTracks
+    }
+    for (const userArtistTopTrack of userTopTracks.data.toptracks.track) {
+      if (userArtistTopTrack.artist.name === mainTrack.artistName) {
+        userArtistTopTracks.push(userArtistTopTrack)
+      }
+    }
   })
   for (const userArtistTopTracksResponse of allUserArtistTopTracksResponses.results) {
+    if (userArtistTopTracksResponse === undefined) continue
     if (!userArtistTopTracksResponse.success) {
       return {
         success: false,
@@ -112,11 +121,6 @@ export async function pnartistInlineResult (ctxLang: string | undefined, lastfmU
             thumbnail_url: melodyScoutConfig.userImgUrl
           })
           .text(lang(ctxLang, 'getTopTracksErrorMessage'), { parse_mode: 'HTML' })
-      }
-    }
-    for (const userArtistTopTrack of userArtistTopTracksResponse.data.toptracks.track) {
-      if (userArtistTopTrack.artist.name === mainTrack.artistName) {
-        userArtistTopTracks.push(userArtistTopTrack)
       }
     }
   }
