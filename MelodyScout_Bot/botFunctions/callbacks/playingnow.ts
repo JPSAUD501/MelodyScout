@@ -1,5 +1,5 @@
 import { type CallbackQueryContext, type Context, InlineKeyboard } from 'grammy'
-import { ctxAnswerCallbackQuery, ctxEditMessage, ctxReply } from '../../../function/grammyFunctions'
+import { ctxAnswerCallbackQuery, ctxReply } from '../../../function/grammyFunctions'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { getCallbackKey } from '../../../function/callbackMaker'
@@ -7,8 +7,6 @@ import { getPlayingnowText } from '../../textFabric/playingnow'
 import { lastfmConfig } from '../../../config'
 import { type MsMusicApi } from '../../../api/msMusicApi/base'
 import { lang } from '../../../translations/base'
-import PromisePool from '@supercharge/promise-pool'
-import { type UserRecentTracks } from '../../../api/msLastfmApi/types/zodUserRecentTracks'
 
 export async function runPlayingnowCallback (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code

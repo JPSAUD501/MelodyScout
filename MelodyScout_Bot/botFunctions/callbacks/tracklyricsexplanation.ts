@@ -12,6 +12,74 @@ import sharp from 'sharp'
 import fs from 'fs'
 import { MsGithubApi } from '../../../api/msGithubApi/base'
 import { randomUUID } from 'crypto'
+import path from 'path'
+
+export async function composeImage (image: Buffer, trackName: string, artistName: string): Promise<{
+  success: true
+  image: Buffer
+} | {
+  success: false
+  error: string
+}> {
+  const fontFilePath = path.join(__dirname, '../../../public/fonts/Poppins/Poppins-Medium.ttf')
+  const imageFramePath = path.join(__dirname, '../../../public/v2/imageFrame.png')
+  const textOverlay = await sharp({
+    text: {
+      text: `${trackName} by ${artistName}`,
+      fontfile: fontFilePath,
+      font: 'Poppins Medium',
+      height: 27,
+      width: 906,
+      rgba: true,
+      wrap: 'none'
+    }
+  }).resize({
+    height: 27,
+    width: 906,
+    fit: 'contain',
+    background: {
+      r: 0,
+      g: 0,
+      b: 0,
+      alpha: 0
+    }
+  }).webp().toBuffer().catch((error) => {
+    return new Error(error)
+  })
+  if (textOverlay instanceof Error) {
+    return {
+      success: false,
+      error: `Error on creating text overlay: ${textOverlay.message}`
+    }
+  }
+  const finalImage = await sharp(image)
+    .resize(1000, 1000)
+    .composite([
+      { input: fs.readFileSync(imageFramePath) },
+      {
+        input: textOverlay,
+        top: 45,
+        left: (1000 - 906) / 2
+      }
+    ])
+    .jpeg({
+      mozjpeg: true
+    })
+    .toBuffer()
+    .catch((error) => {
+      return new Error(error)
+    })
+  if (finalImage instanceof Error) {
+    return {
+      success: false,
+      error: `Error on creating final image: ${finalImage.message}`
+    }
+  }
+  return {
+    success: true,
+    image: finalImage
+  }
+}
 
 async function getAiImageByLyrics (lyrics: string, trackName: string, artistName: string): Promise<{
   success: true
@@ -36,23 +104,15 @@ async function getAiImageByLyrics (lyrics: string, trackName: string, artistName
       error: `Error on getting image by description: ${imageByDescription.error}`
     }
   }
-  const finalImage = await sharp(imageByDescription.image)
-    .resize(1000, 1000)
-    .composite([{
-      input: fs.readFileSync('./public/v2/imageFrame.png')
-    }]).jpeg({
-      mozjpeg: true
-    }).toBuffer().catch((error) => {
-      return new Error(error)
-    })
-  if (finalImage instanceof Error) {
+  const finalImage = await composeImage(imageByDescription.image, trackName, artistName)
+  if (!finalImage.success) {
     return {
       success: false,
-      error: `Error on creating final image: ${finalImage.message}`
+      error: `Error on creating final image: ${finalImage.error}`
     }
   }
   const githubApi = new MsGithubApi(githubConfig.token)
-  const uploadToGithub = await githubApi.files.putFile(`${randomUUID()}.jpg`, finalImage.toString('base64'))
+  const uploadToGithub = await githubApi.files.putFile(`${randomUUID()}.jpg`, finalImage.image.toString('base64'))
   if (!uploadToGithub.success) {
     return {
       success: true,

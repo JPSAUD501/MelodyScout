@@ -11,6 +11,7 @@
     "dont",
     "fastify",
     "Filesize",
+    "fontfile",
     "forgetme",
     "fulltrack",
     "gettopartists",
@@ -101,5 +102,6 @@
     "Wemesh",
     "youtube",
     "youtubedl"
-  ]
+  ],
+  "todo-tree.tree.disableCompactFolders": false
 }

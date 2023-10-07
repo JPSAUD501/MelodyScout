@@ -183,7 +183,8 @@ export class MsOpenAiApi {
         error: 'No choices generated'
       }
     }
-    const emojisText: string | undefined = explanation.message?.content?.replace(/\n/g, '').trim()
+    // Remove new line, letters and numbers
+    const emojisText: string | undefined = explanation.message?.content?.replace(/\n/g, '').replace(/[a-zA-Z0-9]/g, '').trim()
     if (emojisText === undefined) {
       advError(`MsOpenAiAPi - No emojis text generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
       return {

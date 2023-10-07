@@ -121,6 +121,6 @@ export async function playingnowInlineResult (ctxLang: string | undefined, lastf
         thumbnail_url: albumInfo.data.album.image[albumInfo.data.album.image.length - 1]['#text'] ?? melodyScoutConfig.trackImgUrl,
         reply_markup: inlineKeyboard
       })
-      .text(getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], mainTrack.nowPlaying, undefined), { parse_mode: 'HTML' })
+      .text(getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], mainTrack.nowPlaying), { parse_mode: 'HTML' })
   }
 }
