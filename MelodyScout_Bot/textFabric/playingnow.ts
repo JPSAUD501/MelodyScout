@@ -8,10 +8,7 @@ import { sanitizeText } from '../../function/sanitizeText'
 import { urlLimiter } from '../../function/urlLimiter'
 import { lang } from '../../translations/base'
 
-export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, nowPlaying: boolean, firstScrobble: {
-  loadingStatus: 'loading' | 'loaded' | 'error'
-  unix: number
-} | undefined): string {
+export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, nowPlaying: boolean): string {
   const { user } = userInfo
   const { artist } = artistInfo
   const { album } = albumInfo
@@ -171,25 +168,6 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
     Number(((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)) >= 10
   // ) infoArray.push(`- Esse artista representa <b>${Number(((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)).toLocaleString(lang(ctxLang, 'localeLangCode'))}%</b> de todas suas reproduções.`)
   ) infoArray.push(lang(ctxLang, 'tfPlayingnowInfoArtistUserPercentage', { percentage: Number(((Number(artist.stats.userplaycount) / Number(user.playcount)) * 100).toFixed(0)).toLocaleString(lang(ctxLang, 'localeLangCode')) }))
-  if (firstScrobble !== undefined) {
-    switch (firstScrobble.loadingStatus) {
-      case 'loading': {
-        // infoArray.push('- Carregando quando você ouviu essa música pela primeira vez...')
-        infoArray.push(lang(ctxLang, 'tfPlayingnowInfoFirstScrobbleLoading'))
-        break
-      }
-      case 'loaded': {
-        // infoArray.push(`- Sua primeira reprodução dessa música foi em <b>${new Date(firstScrobble.unix).toLocaleString(lang(ctxLang, 'localeLangCode'))} (UTC)</b>.`)
-        infoArray.push(lang(ctxLang, 'tfPlayingnowInfoFirstScrobbleLoaded', { date: `${new Date(firstScrobble.unix).toLocaleString(lang(ctxLang, 'localeLangCode'), { timeZone: 'UTC' })} (UTC)` }))
-        break
-      }
-      case 'error': {
-        // infoArray.push('- Não foi possível carregar quando você ouviu essa música pela primeira vez.')
-        infoArray.push(lang(ctxLang, 'tfPlayingnowInfoFirstScrobbleError'))
-        break
-      }
-    }
-  }
   if (infoArray.length > 0) {
     textArray.push('')
     // textArray.push('<b>[ℹ️] Informações</b>')

@@ -106,53 +106,5 @@ export async function runPlayingnowCallback (msMusicApi: MsMusicApi, msPrismaDbA
   inlineKeyboard.row()
   inlineKeyboard.text(lang(ctxLang, 'trackPreviewButton'), getCallbackKey(['TP', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
   inlineKeyboard.text(lang(ctxLang, 'trackDownloadButton'), getCallbackKey(['TD', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
-  const partialReplyPromise = ctxReply(ctx, undefined, getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], mainTrack.nowPlaying, mainTrack.firstScrobble), { reply_markup: inlineKeyboard })
-  await (async (): Promise<void> => {
-    const userFirstScrobbles: Array<UserRecentTracks['recenttracks']['track'][0]> = []
-    const userAllRecentTracksPageLength = Math.ceil(Number(userRecentTracks.data.recenttracks['@attr'].total) / 1000)
-    let stopPool = false
-    const userAllRecentTracksPartialResponses = await PromisePool.for(
-      Array.from({ length: userAllRecentTracksPageLength }, (_, index) => index + 1).reverse()
-    ).withConcurrency(10).process(async (page, _index, pool) => {
-      if (stopPool) pool.stop()
-      const userPartialRecentTracksRequest = await msLastfmApi.user.getRecentTracks(lastfmUser, 1000, page)
-      if (!userPartialRecentTracksRequest.success) {
-        stopPool = true
-        return userPartialRecentTracksRequest
-      }
-      for (const userRecentTrack of userPartialRecentTracksRequest.data.recenttracks.track) {
-        if (
-          userRecentTrack.name === mainTrack.trackName &&
-          userRecentTrack.artist.name === mainTrack.artistName &&
-          userRecentTrack['@attr']?.nowplaying !== 'true'
-        ) {
-          stopPool = true
-          return userPartialRecentTracksRequest
-        }
-      }
-    })
-    for (const userAllRecentTracksPartialResponse of userAllRecentTracksPartialResponses.results) {
-      if (userAllRecentTracksPartialResponse === undefined) continue
-      if (!userAllRecentTracksPartialResponse.success) {
-        mainTrack.firstScrobble.loadingStatus = 'error'
-        return
-      }
-      for (const userRecentTrack of userAllRecentTracksPartialResponse.data.recenttracks.track) {
-        if (userRecentTrack.name === mainTrack.trackName && userRecentTrack.artist.name === mainTrack.artistName) {
-          userFirstScrobbles.push(userRecentTrack)
-        }
-      }
-    }
-    userFirstScrobbles.sort((a, b) => Number(a.date?.uts ?? dateNow) - Number(b.date?.uts ?? dateNow))
-    if (userFirstScrobbles.length <= 0) {
-      mainTrack.firstScrobble.loadingStatus = 'error'
-      return
-    }
-    mainTrack.firstScrobble.unix = Number(userFirstScrobbles[0].date?.uts ?? dateNow) * 1000
-    mainTrack.firstScrobble.loadingStatus = 'loaded'
-  })()
-  const partialReply = await partialReplyPromise
-  if (partialReply === undefined) return
-  const tfFinalText = getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], mainTrack.nowPlaying, mainTrack.firstScrobble)
-  await ctxEditMessage(ctx, { chatId: partialReply.chat.id, messageId: partialReply.message_id }, tfFinalText, { reply_markup: inlineKeyboard })
+  await ctxReply(ctx, undefined, getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
 }
