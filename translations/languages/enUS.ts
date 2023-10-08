@@ -166,5 +166,6 @@ export const enUS = {
   tfPlayingnowArtistScrobbles: '- Artist: <b>{{artistPlaycount}}</b>',
   tfPlayingnowInfoTrackPlaytime: "- You've listened to this track for <b>{{hours}} hours</b> and <b>{{minutes}} minutes</b>.",
   tfPlayingnowInfoTrackPopularity: '- The current <a href="{{popularityInfoUrl}}">popularity</a> of this track is: <b>[{{popularity}}][{{stars}}]</b>',
-  tfPlayingnowInfoTrackAlbumPercentage: '- This song represents <b>{{percentage}}%</b> of all your plays from this album.'
+  tfPlayingnowInfoTrackAlbumPercentage: '- This song represents <b>{{percentage}}%</b> of all your plays from this album.',
+  composeImageTitle: '{{trackName}} by {{artistName}}'
 }

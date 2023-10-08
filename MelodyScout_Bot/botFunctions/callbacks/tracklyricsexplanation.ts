@@ -14,7 +14,7 @@ import { MsGithubApi } from '../../../api/msGithubApi/base'
 import { randomUUID } from 'crypto'
 import path from 'path'
 
-export async function composeImage (image: Buffer, trackName: string, artistName: string): Promise<{
+export async function composeImage (ctxLang: string | undefined, image: Buffer, trackName: string, artistName: string): Promise<{
   success: true
   image: Buffer
 } | {
@@ -25,7 +25,7 @@ export async function composeImage (image: Buffer, trackName: string, artistName
   const imageFramePath = path.join(__dirname, '../../../public/v2/imageFrame.png')
   const textOverlay = await sharp({
     text: {
-      text: `${trackName} by ${artistName}`,
+      text: lang(ctxLang, 'composeImageTitle', { trackName, artistName }),
       fontfile: fontFilePath,
       font: 'Poppins Medium',
       height: 27,
@@ -81,7 +81,7 @@ export async function composeImage (image: Buffer, trackName: string, artistName
   }
 }
 
-async function getAiImageByLyrics (lyrics: string, trackName: string, artistName: string): Promise<{
+async function getAiImageByLyrics (ctxLang: string | undefined, lyrics: string, trackName: string, artistName: string): Promise<{
   success: true
   imageUrl: string
 } | {
@@ -104,7 +104,7 @@ async function getAiImageByLyrics (lyrics: string, trackName: string, artistName
       error: `Error on getting image by description: ${imageByDescription.error}`
     }
   }
-  const finalImage = await composeImage(imageByDescription.image, trackName, artistName)
+  const finalImage = await composeImage(ctxLang, imageByDescription.image, trackName, artistName)
   if (!finalImage.success) {
     return {
       success: false,
@@ -148,7 +148,7 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
     void ctxReply(ctx, undefined, lang(ctxLang, 'geniusTrackLyricsNotFoundedError'), { reply_to_message_id: messageId, allow_sending_without_reply: true })
     return
   }
-  const imageByLyricsRequest = getAiImageByLyrics(geniusSong.data.lyrics, track, artist)
+  const imageByLyricsRequest = getAiImageByLyrics(ctxLang, geniusSong.data.lyrics, track, artist)
   const msOpenAiApi = new MsOpenAiApi(openaiConfig.apiKey)
   const lyricsExplanationRequest = msOpenAiApi.getLyricsExplanation(ctxLang, geniusSong.data.lyrics)
   const lyricsEmojisRequest = msOpenAiApi.getLyricsEmojis(geniusSong.data.lyrics)

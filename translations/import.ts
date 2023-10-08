@@ -1,7 +1,12 @@
 import fs from 'fs'
 import axios from 'axios'
 
-async function importTranslation (): Promise<void> {
+export async function importTranslation (): Promise<{
+  success: true
+} | {
+  success: false
+  error: string
+}> {
   try {
     const urls = {
       ptBR: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout-Translation/main/pt_BR.json',
@@ -10,7 +15,15 @@ async function importTranslation (): Promise<void> {
     }
 
     for (const lang in urls) {
-      const response = await axios.get(urls[lang])
+      const response = await axios.get(urls[lang]).catch((error) => {
+        return new Error(error)
+      })
+      if (response instanceof Error) {
+        return {
+          success: false,
+          error: `Error on importing translations: ${response.message}`
+        }
+      }
       const json = response.data as Record<string, string>
       const textArray: string[] = []
       textArray.push(`export const ${lang} = {`)
@@ -49,10 +62,20 @@ async function importTranslation (): Promise<void> {
       console.log(`File ${lang}.ts was created!`)
     }
   } catch (error) {
-    console.error('A error occurred while importing the translation files!', error)
+    return {
+      success: false,
+      error: `Error on importing translations: ${String(error)}`
+    }
+  }
+  return {
+    success: true
   }
 }
 
-importTranslation().catch((err) => {
-  console.error(`Error: ${String(err)}`)
+importTranslation().then((result) => {
+  if (!result.success) {
+    console.error(result.error)
+  }
+}).catch((error) => {
+  console.error(error)
 })

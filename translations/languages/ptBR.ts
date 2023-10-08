@@ -166,5 +166,6 @@ export const ptBR = {
   tfPlayingnowInfoFirstScrobbleError: '- Não foi possível carregar quando você ouviu essa música pela primeira vez.',
   tfPlayingnowInfoTitle: '<b>[ℹ️] Informações</b>',
   tfPlayingnowShareTitle: '<b>[🔗] Compartilhe</b>',
-  tfPlayingnowShareLink: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>'
+  tfPlayingnowShareLink: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>',
+  composeImageTitle: '{{trackName}} por {{artistName}}'
 }
