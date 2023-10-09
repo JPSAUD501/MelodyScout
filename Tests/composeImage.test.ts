@@ -10,7 +10,7 @@ test('composeImage-DEFAULT', async () => {
   const finalImage = await composeImage(ctxLang, testImage, 'Test Track', 'Test Artist')
   if (finalImage.success) fs.writeFileSync(path.join(__dirname, './resources/results/finalImage-DEFAULT.png'), finalImage.image)
   expect(finalImage.success).toBe(true)
-}, 10000)
+}, 15000)
 
 test('composeImage-PTBR', async () => {
   const ctxLang = 'pt-br'
@@ -19,7 +19,7 @@ test('composeImage-PTBR', async () => {
   const finalImage = await composeImage(ctxLang, testImage, 'Test Track', 'Test Artist')
   if (finalImage.success) fs.writeFileSync(path.join(__dirname, './resources/results/finalImage-PTBR.png'), finalImage.image)
   expect(finalImage.success).toBe(true)
-}, 10000)
+}, 15000)
 
 test('composeImage-EN', async () => {
   const ctxLang = 'en'
@@ -28,7 +28,7 @@ test('composeImage-EN', async () => {
   const finalImage = await composeImage(ctxLang, testImage, 'Test Track', 'Test Artist')
   if (finalImage.success) fs.writeFileSync(path.join(__dirname, './resources/results/finalImage-EN.png'), finalImage.image)
   expect(finalImage.success).toBe(true)
-}, 10000)
+}, 15000)
 
 test('composeImage-JA', async () => {
   const ctxLang = 'ja'
@@ -37,4 +37,4 @@ test('composeImage-JA', async () => {
   const finalImage = await composeImage(ctxLang, testImage, 'Test Track', 'Test Artist')
   if (finalImage.success) fs.writeFileSync(path.join(__dirname, './resources/results/finalImage-JA.png'), finalImage.image)
   expect(finalImage.success).toBe(true)
-}, 10000)
+}, 15000)

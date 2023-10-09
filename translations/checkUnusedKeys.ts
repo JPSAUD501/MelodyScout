@@ -4,7 +4,7 @@ import { enUS } from './languages/enUS'
 import { jaJP } from './languages/jaJP'
 import { ptBR } from './languages/ptBR'
 
-export async function checkUnused (): Promise<{
+export async function checkUnusedKeys (): Promise<{
   success: true
   data: {
     unusedKeys: string[]
@@ -72,11 +72,3 @@ export async function checkUnused (): Promise<{
     }
   }
 }
-
-checkUnused().then((result) => {
-  if (!result.success) {
-    console.error(result.error)
-  }
-}).catch((error) => {
-  console.error(error)
-})

@@ -1,19 +1,19 @@
 import { test, expect } from '@jest/globals'
-import { importTranslation } from '../translations/import'
-import { checkUnused } from '../translations/checkUnused'
 import fs from 'fs'
 import path from 'path'
+import { updateTranslations } from '../translations/update'
+import { checkUnusedKeys } from '../translations/checkUnusedKeys'
 
 test('importTranslations', async () => {
-  const importTranslationResult = await importTranslation()
-  if (!importTranslationResult.success) {
-    throw new Error(importTranslationResult.error)
+  const updateTranslationsResult = await updateTranslations()
+  if (!updateTranslationsResult.success) {
+    throw new Error(updateTranslationsResult.error)
   }
-  expect(importTranslationResult.success).toBe(true)
+  expect(updateTranslationsResult.success).toBe(true)
 })
 
 test('checkUnused', async () => {
-  const checkUnusedKeysResult = await checkUnused()
+  const checkUnusedKeysResult = await checkUnusedKeys()
   if (!checkUnusedKeysResult.success) {
     throw new Error(checkUnusedKeysResult.error)
   }

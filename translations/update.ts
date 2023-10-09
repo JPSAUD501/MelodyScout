@@ -1,7 +1,7 @@
 import fs from 'fs'
 import axios from 'axios'
 
-export async function importTranslation (): Promise<{
+export async function updateTranslations (): Promise<{
   success: true
 } | {
   success: false
@@ -21,7 +21,7 @@ export async function importTranslation (): Promise<{
       if (response instanceof Error) {
         return {
           success: false,
-          error: `Error on importing translations: ${response.message}`
+          error: `Error on updating translations: ${response.message}`
         }
       }
       const json = response.data as Record<string, string>
@@ -68,18 +68,10 @@ export async function importTranslation (): Promise<{
   } catch (error) {
     return {
       success: false,
-      error: `Error on importing translations: ${String(error)}`
+      error: `Error on updating translations: ${String(error)}`
     }
   }
   return {
     success: true
   }
 }
-
-importTranslation().then((result) => {
-  if (!result.success) {
-    console.error(result.error)
-  }
-}).catch((error) => {
-  console.error(error)
-})
