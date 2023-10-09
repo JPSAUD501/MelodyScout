@@ -2,7 +2,7 @@ import { type CallbackQueryContext, type Context, InputFile } from 'grammy'
 import { ctxAnswerCallbackQuery, ctxEditMessage, ctxReply, ctxReplyWithVoice, ctxTempReply } from '../../../function/grammyFunctions'
 import { getTracklyricsexplanationText } from '../../textFabric/tracklyricsexplanation'
 import { geniusConfig, githubConfig, melodyScoutConfig, openaiConfig, replicateConfig } from '../../../config'
-import { advLog } from '../../../function/advancedConsole'
+import { advError, advLog } from '../../../function/advancedConsole'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
 import { MsOpenAiApi } from '../../../api/msOpenAiApi/base'
 import { MsTextToSpeechApi } from '../../../api/msTextToSpeechApi/base'
@@ -21,7 +21,7 @@ export async function composeImage (ctxLang: string | undefined, image: Buffer, 
   success: false
   error: string
 }> {
-  const fontFilePath = path.join(__dirname, '../../../public/fonts/Poppins/Poppins-Medium.ttf')
+  const fontFilePath = path.join(__dirname, '../../../public/fonts/Poppins/Poppins-Regular.ttf')
   const imageFramePath = path.join(__dirname, '../../../public/v2/imageFrame.png')
   const textOverlay = await sharp({
     text: {
@@ -106,14 +106,16 @@ async function getAiImageByLyrics (ctxLang: string | undefined, lyrics: string, 
   }
   const finalImage = await composeImage(ctxLang, imageByDescription.image, trackName, artistName)
   if (!finalImage.success) {
+    advError(`Error on composing image: ${finalImage.error}`)
     return {
-      success: false,
-      error: `Error on creating final image: ${finalImage.error}`
+      success: true,
+      imageUrl: imageByDescription.imageUrl
     }
   }
   const githubApi = new MsGithubApi(githubConfig.token)
   const uploadToGithub = await githubApi.files.putFile(`${randomUUID()}.jpg`, finalImage.image.toString('base64'))
   if (!uploadToGithub.success) {
+    advError(`Error on uploading image to github: ${uploadToGithub.errorData.message}`)
     return {
       success: true,
       imageUrl: imageByDescription.imageUrl

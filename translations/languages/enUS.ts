@@ -167,5 +167,5 @@ export const enUS = {
   tfPlayingnowInfoTrackPlaytime: "- You've listened to this track for <b>{{hours}} hours</b> and <b>{{minutes}} minutes</b>.",
   tfPlayingnowInfoTrackPopularity: '- The current <a href="{{popularityInfoUrl}}">popularity</a> of this track is: <b>[{{popularity}}][{{stars}}]</b>',
   tfPlayingnowInfoTrackAlbumPercentage: '- This song represents <b>{{percentage}}%</b> of all your plays from this album.',
-  composeImageTitle: '{{trackName}} by {{artistName}}'
+  composeImageTitle: '<span font="Poppins Medium">{{trackName}}</span> <span font="Poppins Regular">by</span> <span font="Poppins Medium">{{artistName}}</span>'
 }

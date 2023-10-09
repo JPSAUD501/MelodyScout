@@ -167,5 +167,5 @@ export const ptBR = {
   tfPlayingnowInfoTitle: '<b>[ℹ️] Informações</b>',
   tfPlayingnowShareTitle: '<b>[🔗] Compartilhe</b>',
   tfPlayingnowShareLink: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>',
-  composeImageTitle: '{{trackName}} por {{artistName}}'
+  composeImageTitle: '<span font="Poppins Medium">{{trackName}}</span> <span font="Poppins Regular">por</span> <span font="Poppins Medium">{{artistName}}</span>'
 }
