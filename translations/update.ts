@@ -63,7 +63,7 @@ export async function updateTranslations (): Promise<{
         }
       }
       fs.writeFileSync(`./translations/languages/${lang}.ts`, text)
-      console.log(`File ${lang}.ts was created!`)
+      console.log(`File ${lang}.ts was updated!`)
     }
   } catch (error) {
     return {
