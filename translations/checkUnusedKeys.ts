@@ -40,11 +40,18 @@ export async function checkUnusedKeys (): Promise<{
       allCodeArray.push(content)
     }
   }
-  const allCode = allCodeArray.join('')
-  console.log(`Checking ${allCode.length} characters of code for unused translations...`)
+  const allCode = allCodeArray.join('\n')
+  const allCodeLines = allCode.split('\n')
+  const allCodeParsedArray: string[] = []
+  for (const line of allCodeLines) {
+    if (line.trim().startsWith('//')) continue
+    allCodeParsedArray.push(line)
+  }
+  const allCodeParsed = allCodeParsedArray.join('\n')
+  console.log(`Checking ${allCodeParsed.length} characters of code for unused translations...`)
   const allKeysUsed: string[] = []
   // Example: lang('en', 'trackLyricsExplanation', { trackName: track.name, artistName: artist.name })
-  const allLangFunctions = allCode.split('lang(')
+  const allLangFunctions = allCodeParsed.split('lang(')
   allLangFunctions.shift()
   for (const langFunction of allLangFunctions) {
     const langKey = langFunction.split(/,|\)/)[1].replace(/'/g, '').replace(/"/g, '').trim()

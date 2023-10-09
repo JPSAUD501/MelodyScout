@@ -25,9 +25,7 @@ export async function composeImage (ctxLang: string | undefined, image: Buffer, 
   const imageFramePath = path.join(__dirname, '../../../public/v2/imageFrame.png')
   const textOverlay = await sharp({
     text: {
-      // text: lang(ctxLang, 'composeImageTitle', { trackName, artistName }),
-      // text: `<span font="Poppins Medium">${trackName}</span> <span font="Poppins Regular">by</span> <span font="Poppins Medium">${artistName}</span>`,
-      text: `<b>${trackName}</b> by <b>${artistName}</b>`,
+      text: lang(ctxLang, 'composeImageTitle', { trackName, artistName }),
       fontfile: fontFilePath,
       font: 'Poppins',
       height: 27,
