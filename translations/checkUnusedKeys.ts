@@ -29,7 +29,8 @@ export async function checkUnusedKeys (): Promise<{
       for (const file of files) {
         if (file.endsWith('.ts')) {
           allFiles.push(path.join(folder.parent, folder.folder, file))
-        } else {
+        }
+        if (!file.includes('.')) {
           allFolders.push({ folder: file, parent: path.join(folder.parent, folder.folder) })
         }
       }
