@@ -25,7 +25,7 @@ export class MsGeniusApi {
   }
 
   async getSong (track: string, artist: string): Promise<MsGeniusApiGetSongResponse> {
-    const songArray = await new Client(this.accessToken).songs.search(`${artist} ${track}`, { sanitizeQuery: true }).catch((err) => {
+    const songArray = await new Client(this.accessToken).songs.search(`${track} ${artist}`, { sanitizeQuery: true }).catch((err) => {
       return new Error(err)
     })
     if (songArray instanceof Error) {
