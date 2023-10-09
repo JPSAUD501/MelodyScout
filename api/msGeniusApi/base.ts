@@ -1,6 +1,6 @@
 import { Client } from 'genius-lyrics/dist/client'
 import { type Song } from 'genius-lyrics/dist/songs/song'
-import { advError } from '../../function/advancedConsole'
+import { advError } from '../../functions/advancedConsole'
 
 interface MsGeniusApiError {
   success: false

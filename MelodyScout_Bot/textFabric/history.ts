@@ -1,8 +1,8 @@
 import { type UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
 import { type UserRecentTracks } from '../../api/msLastfmApi/types/zodUserRecentTracks'
 import { melodyScoutConfig } from '../../config'
-import { sanitizeText } from '../../function/sanitizeText'
-import { urlLimiter } from '../../function/urlLimiter'
+import { sanitizeText } from '../../functions/sanitizeText'
+import { urlLimiter } from '../../functions/urlLimiter'
 
 export function getHistoryText (ctxLang: string | undefined, userInfo: UserInfo, userRecentTracks: UserRecentTracks): string {
   const { user } = userInfo

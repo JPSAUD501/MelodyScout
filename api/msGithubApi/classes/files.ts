@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { advError, advLog } from '../../../function/advancedConsole'
+import { advError, advLog } from '../../../functions/advancedConsole'
 import { msApiFetch } from '../functions/msApiFetch'
 import { type ApiErrors } from '../types/errors/ApiErrors'
 import { type PutFile, zodPutFile } from '../types/zodPutFile'

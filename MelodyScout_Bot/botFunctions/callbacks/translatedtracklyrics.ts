@@ -1,5 +1,5 @@
 import { type CallbackQueryContext, type Context } from 'grammy'
-import { ctxAnswerCallbackQuery, ctxEditMessage, ctxReply } from '../../../function/grammyFunctions'
+import { ctxAnswerCallbackQuery, ctxEditMessage, ctxReply } from '../../../functions/grammyFunctions'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
 import { geniusConfig, melodyScoutConfig } from '../../../config'
 import { translate } from '@vitalets/google-translate-api'

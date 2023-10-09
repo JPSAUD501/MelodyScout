@@ -1,5 +1,5 @@
 import { type CallbackQueryContext, type CommandContext, type Context, InlineKeyboard } from 'grammy'
-import { ctxReply } from '../../../function/grammyFunctions'
+import { ctxReply } from '../../../functions/grammyFunctions'
 import { getPnalbumText } from '../../textFabric/pnalbum'
 import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { lastfmConfig } from '../../../config'

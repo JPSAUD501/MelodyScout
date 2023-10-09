@@ -3,8 +3,8 @@ import { type AlbumInfo } from '../../api/msLastfmApi/types/zodAlbumInfo'
 import { type ArtistInfo } from '../../api/msLastfmApi/types/zodArtistInfo'
 import { type UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
 import { melodyScoutConfig } from '../../config'
-import { sanitizeText } from '../../function/sanitizeText'
-import { urlLimiter } from '../../function/urlLimiter'
+import { sanitizeText } from '../../functions/sanitizeText'
+import { urlLimiter } from '../../functions/urlLimiter'
 
 export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, spotifyAlbumInfo: AlbumSimplified, nowPlaying: boolean): string {
   const { user } = userInfo

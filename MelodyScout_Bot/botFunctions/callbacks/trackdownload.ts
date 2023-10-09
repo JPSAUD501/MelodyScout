@@ -1,6 +1,6 @@
 import { type CallbackQueryContext, type Context, InlineKeyboard } from 'grammy'
-import { ctxAnswerCallbackQuery, ctxReply } from '../../../function/grammyFunctions'
-import { getCallbackKey } from '../../../function/callbackMaker'
+import { ctxAnswerCallbackQuery, ctxReply } from '../../../functions/grammyFunctions'
+import { getCallbackKey } from '../../../functions/callbackMaker'
 import { melodyScoutConfig } from '../../../config'
 import { lang } from '../../../translations/base'
 import { getTrackdownloadText } from '../../textFabric/trackdownload'

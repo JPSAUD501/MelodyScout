@@ -1,5 +1,5 @@
 import { type CallbackQueryContext, type Context, InputFile } from 'grammy'
-import { ctxAnswerCallbackQuery, ctxReply, ctxReplyWithVideo, ctxTempReply } from '../../../function/grammyFunctions'
+import { ctxAnswerCallbackQuery, ctxReply, ctxReplyWithVideo, ctxTempReply } from '../../../functions/grammyFunctions'
 import { melodyScoutConfig } from '../../../config'
 import { type MsMusicApi } from '../../../api/msMusicApi/base'
 import { lang } from '../../../translations/base'

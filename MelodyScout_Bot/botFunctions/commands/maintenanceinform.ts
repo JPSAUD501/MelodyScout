@@ -1,6 +1,6 @@
 import { type CommandContext, type Context } from 'grammy'
-import { ctxReply } from '../../../function/grammyFunctions'
-import { advInfo } from '../../../function/advancedConsole'
+import { ctxReply } from '../../../functions/grammyFunctions'
+import { advInfo } from '../../../functions/advancedConsole'
 import { getMaintenanceinformText } from '../../textFabric/maintenanceinform'
 
 export async function runMaintenanceinformCommand (ctx: CommandContext<Context>): Promise<void> {

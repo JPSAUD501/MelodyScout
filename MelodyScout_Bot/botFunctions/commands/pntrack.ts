@@ -2,9 +2,9 @@ import { type CallbackQueryContext, type CommandContext, type Context, InlineKey
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { type MsMusicApi } from '../../../api/msMusicApi/base'
-import { getCallbackKey } from '../../../function/callbackMaker'
+import { getCallbackKey } from '../../../functions/callbackMaker'
 import { getPntrackText } from '../../textFabric/pntrack'
-import { ctxReply } from '../../../function/grammyFunctions'
+import { ctxReply } from '../../../functions/grammyFunctions'
 import { lastfmConfig } from '../../../config'
 import { lang } from '../../../translations/base'
 

@@ -4,7 +4,7 @@ import { type CreateContent, zodCreateContent } from '../types/zodCreateContent'
 import { type GetContent, zodGetContent } from '../types/zodGetContent'
 import { type GoogleApi } from './googleApi'
 import { easyAuth } from '../functions/easyAuth'
-import { advError } from '../../../function/advancedConsole'
+import { advError } from '../../../functions/advancedConsole'
 
 type GetInfoResponse = {
   success: true

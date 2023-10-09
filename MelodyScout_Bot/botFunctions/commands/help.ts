@@ -1,5 +1,5 @@
 import { type CommandContext, type Context } from 'grammy'
-import { ctxReply } from '../../../function/grammyFunctions'
+import { ctxReply } from '../../../functions/grammyFunctions'
 import { getHelpText } from '../../textFabric/help'
 import { lang } from '../../../translations/base'
 

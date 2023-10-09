@@ -1,4 +1,4 @@
-import { advError } from '../../../function/advancedConsole'
+import { advError } from '../../../functions/advancedConsole'
 import { msApiFetch } from '../functions/msApiFetch'
 import { type ApiErrors } from '../types/errors/ApiErrors'
 import { type TrackInfo, zodTrackInfo } from '../types/zodTrackInfo'

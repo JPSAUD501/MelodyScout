@@ -3,7 +3,7 @@ import youtubedl from 'youtube-dl-exec'
 import fs, { type ReadStream } from 'fs'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
-import { advError } from '../../function/advancedConsole'
+import { advError } from '../../functions/advancedConsole'
 import * as Soundify from '@soundify/web-api'
 import { type SearchEndpoint } from '@soundify/web-api/types/api/search/search.endpoints'
 

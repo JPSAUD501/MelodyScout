@@ -1,4 +1,4 @@
-import { advError } from '../../../function/advancedConsole'
+import { advError } from '../../../functions/advancedConsole'
 import { msApiFetch } from '../functions/msRaveApiFetch'
 import { type ApiErrors } from '../types/errors/ApiErrors'
 import { type GoogleNewUser, zodGoogleNewUser } from '../types/zodGoogleNewUser'

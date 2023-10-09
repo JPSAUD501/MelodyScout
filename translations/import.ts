@@ -51,14 +51,18 @@ export async function importTranslation (): Promise<{
       }
       textArray.push('}')
       textArray.push('')
+      const text = textArray.join('\n')
       if (!fs.existsSync('./translations/languages')) {
         fs.mkdirSync('./translations/languages')
       }
       if (fs.existsSync(`./translations/languages/${lang}.ts`)) {
-        fs.unlinkSync(`./translations/languages/${lang}.ts`)
+        const content = fs.readFileSync(`./translations/languages/${lang}.ts`).toString()
+        if (content === text) {
+          console.log(`File ${lang}.ts is already up to date!`)
+          continue
+        }
       }
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      fs.writeFileSync(`./translations/languages/${lang}.ts`, textArray.join('\n'))
+      fs.writeFileSync(`./translations/languages/${lang}.ts`, text)
       console.log(`File ${lang}.ts was created!`)
     }
   } catch (error) {

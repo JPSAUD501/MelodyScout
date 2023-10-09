@@ -4,8 +4,8 @@ import { type ArtistInfo } from '../../api/msLastfmApi/types/zodArtistInfo'
 import { type TrackInfo } from '../../api/msLastfmApi/types/zodTrackInfo'
 import { type UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
 import { melodyScoutConfig } from '../../config'
-import { sanitizeText } from '../../function/sanitizeText'
-import { urlLimiter } from '../../function/urlLimiter'
+import { sanitizeText } from '../../functions/sanitizeText'
+import { urlLimiter } from '../../functions/urlLimiter'
 
 export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, nowPlaying: boolean): string {
   const { user } = userInfo

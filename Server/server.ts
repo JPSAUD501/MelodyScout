@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import fastify from 'fastify'
 import { serverConfig } from '../config'
-import { advError, advLog } from '../function/advancedConsole'
+import { advError, advLog } from '../functions/advancedConsole'
 import { type GetBotInfoResponse } from '../types'
 const server = fastify()
 

@@ -1,5 +1,5 @@
 import { type CallbackQueryContext, type CommandContext, type Context, type InlineQueryContext } from 'grammy'
-import { advLog } from '../function/advancedConsole'
+import { advLog } from '../functions/advancedConsole'
 
 export function logNewCommand (ctx: CommandContext<Context>): void {
   if (!((ctx.message?.text?.startsWith('/')) ?? false)) return

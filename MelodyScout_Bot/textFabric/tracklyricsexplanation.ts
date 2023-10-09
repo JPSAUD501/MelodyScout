@@ -1,5 +1,5 @@
 import { melodyScoutConfig } from '../../config'
-import { sanitizeText } from '../../function/sanitizeText'
+import { sanitizeText } from '../../functions/sanitizeText'
 import { lang } from '../../translations/base'
 
 export function getTracklyricsexplanationText (ctxLang: string | undefined, track: string, artist: string, lyricsExplanation: string, lyricsEmojis: string | undefined, requestedBy: string, explanationImage: {

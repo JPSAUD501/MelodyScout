@@ -1,8 +1,8 @@
 import { type CallbackQueryContext, type Context, InputFile } from 'grammy'
-import { ctxAnswerCallbackQuery, ctxEditMessage, ctxReply, ctxReplyWithVoice, ctxTempReply } from '../../../function/grammyFunctions'
+import { ctxAnswerCallbackQuery, ctxEditMessage, ctxReply, ctxReplyWithVoice, ctxTempReply } from '../../../functions/grammyFunctions'
 import { getTracklyricsexplanationText } from '../../textFabric/tracklyricsexplanation'
 import { geniusConfig, githubConfig, melodyScoutConfig, openaiConfig, replicateConfig } from '../../../config'
-import { advError, advLog } from '../../../function/advancedConsole'
+import { advError, advLog } from '../../../functions/advancedConsole'
 import { MsGeniusApi } from '../../../api/msGeniusApi/base'
 import { MsOpenAiApi } from '../../../api/msOpenAiApi/base'
 import { MsTextToSpeechApi } from '../../../api/msTextToSpeechApi/base'
@@ -27,7 +27,7 @@ export async function composeImage (ctxLang: string | undefined, image: Buffer, 
     text: {
       text: lang(ctxLang, 'composeImageTitle', { trackName, artistName }),
       fontfile: fontFilePath,
-      font: 'Poppins Medium',
+      font: 'Poppins',
       height: 27,
       width: 906,
       rgba: true,

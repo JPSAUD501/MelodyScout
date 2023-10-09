@@ -3,7 +3,7 @@ import { CheckIfExists } from './classes/checkIfExists'
 import { Create } from './classes/create'
 import { Get } from './classes/get'
 import { Update } from './classes/update'
-import { advLog } from '../../function/advancedConsole'
+import { advLog } from '../../functions/advancedConsole'
 
 export class MsPrismaDbApi {
   private readonly prisma: PrismaClient

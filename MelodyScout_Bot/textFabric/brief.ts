@@ -3,8 +3,8 @@ import { type UserTopAlbums } from '../../api/msLastfmApi/types/zodUserTopAlbums
 import { type UserTopArtists } from '../../api/msLastfmApi/types/zodUserTopArtists'
 import { type UserTopTracks } from '../../api/msLastfmApi/types/zodUserTopTracks'
 import { melodyScoutConfig } from '../../config'
-import { sanitizeText } from '../../function/sanitizeText'
-import { urlLimiter } from '../../function/urlLimiter'
+import { sanitizeText } from '../../functions/sanitizeText'
+import { urlLimiter } from '../../functions/urlLimiter'
 import { lang } from '../../translations/base'
 
 export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, userTopTracks: UserTopTracks, userTopAlbums: UserTopAlbums, userTopArtists: UserTopArtists): string {

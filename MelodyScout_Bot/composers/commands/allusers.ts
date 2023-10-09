@@ -2,7 +2,7 @@ import { Composer } from 'grammy'
 import { logNewCommand } from '../../logFunctions'
 import { runAllusersCommand } from '../../botFunctions/commands/allusers'
 import { msPrismaDbApi } from '../../bot'
-import { advError } from '../../../function/advancedConsole'
+import { advError } from '../../../functions/advancedConsole'
 
 export const allusersCommand = new Composer()
 

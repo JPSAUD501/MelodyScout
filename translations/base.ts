@@ -1,4 +1,4 @@
-import { advError } from '../function/advancedConsole'
+import { advError } from '../functions/advancedConsole'
 import { enUS } from './languages/enUS'
 import { jaJP } from './languages/jaJP'
 import { ptBR } from './languages/ptBR'

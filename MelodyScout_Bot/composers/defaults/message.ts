@@ -1,5 +1,5 @@
 import { Composer } from 'grammy'
-import { advLog } from '../../../function/advancedConsole'
+import { advLog } from '../../../functions/advancedConsole'
 
 export const messageDefault = new Composer()
 

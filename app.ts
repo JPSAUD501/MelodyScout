@@ -1,7 +1,7 @@
 import { startMelodyScoutLogBot } from './MelodyScoutLog_Bot/bot'
 import { startMelodyScoutBot } from './MelodyScout_Bot/bot'
 import { Server } from './Server/server'
-import { advLog } from './function/advancedConsole'
+import { advLog } from './functions/advancedConsole'
 
 async function start (): Promise<void> {
   advLog('Running the start sequence...')

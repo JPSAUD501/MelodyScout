@@ -1,7 +1,7 @@
 import { type PrismaClient } from '@prisma/client'
 import { type CheckIfExists } from './checkIfExists'
 import { type Create } from './create'
-import { advError } from '../../../function/advancedConsole'
+import { advError } from '../../../functions/advancedConsole'
 
 type UpdateDefaultResponse = {
   success: true

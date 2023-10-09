@@ -2,8 +2,8 @@ import { type Artist } from '@soundify/web-api'
 import { type ArtistInfo } from '../../api/msLastfmApi/types/zodArtistInfo'
 import { type UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
 import { melodyScoutConfig } from '../../config'
-import { sanitizeText } from '../../function/sanitizeText'
-import { urlLimiter } from '../../function/urlLimiter'
+import { sanitizeText } from '../../functions/sanitizeText'
+import { urlLimiter } from '../../functions/urlLimiter'
 import { type UserTopTracks } from '../../api/msLastfmApi/types/zodUserTopTracks'
 
 export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, userArtistTopTracks: Array<UserTopTracks['toptracks']['track']['0']>, spotifyArtistInfo: Artist, nowPlaying: boolean): string {

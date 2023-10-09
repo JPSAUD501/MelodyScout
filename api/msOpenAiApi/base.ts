@@ -1,5 +1,5 @@
 import OpenAI from 'openai'
-import { advError } from '../../function/advancedConsole'
+import { advError } from '../../functions/advancedConsole'
 import { lang } from '../../translations/base'
 
 interface MsOpenAiApiError {

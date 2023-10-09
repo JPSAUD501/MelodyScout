@@ -4,7 +4,7 @@ import { Artist } from './classes/artist'
 import { Track } from './classes/track'
 import { User } from './classes/user'
 import { type ApiErrors } from './types/errors/ApiErrors'
-import { advError } from '../../function/advancedConsole'
+import { advError } from '../../functions/advancedConsole'
 
 export class MsLastfmApi {
   private readonly apiKey: string

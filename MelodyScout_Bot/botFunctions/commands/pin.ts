@@ -1,5 +1,5 @@
 import { type CommandContext, type Context, InlineKeyboard } from 'grammy'
-import { ctxPinMessage, ctxReply } from '../../../function/grammyFunctions'
+import { ctxPinMessage, ctxReply } from '../../../functions/grammyFunctions'
 import { melodyScoutConfig } from '../../../config'
 import { lang } from '../../../translations/base'
 import { getPinText } from '../../textFabric/pin'

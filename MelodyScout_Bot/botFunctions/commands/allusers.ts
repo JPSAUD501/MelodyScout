@@ -1,5 +1,5 @@
 import { type CommandContext, type Context } from 'grammy'
-import { ctxReply } from '../../../function/grammyFunctions'
+import { ctxReply } from '../../../functions/grammyFunctions'
 import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { melodyScoutConfig } from '../../../config'
 import { lang } from '../../../translations/base'

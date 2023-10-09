@@ -1,5 +1,4 @@
 export const jaJP = {
-  dontWorkOnChannelsInformCallback: '⚠ - チャンネルの仕事はしていません！',
   dontWorkOnChannelsInformMessage: '残念ながら、私はまだチャンネルに取り組んでいません！新しい機能が利用できるようになったら、私の更新をフォローしてください！',
   lastfmUserNoMoreRegisteredError: 'Last.fmのユーザーを忘れるように言われたようですが、新しいユーザーを教えてくれませんでした。Last.fmのユーザーを登録するには、/myuser コマンドとあなたのLastfm ユーザーを送ってください。例えば、<code>/myuser MelodyScout</code>',
   lastfmUserNotRegistered: 'Last.fm ユーザーがまだ登録されていないようです。Last.fm ユーザーを登録するには、コマンド /myuser と lastfm ユーザーを送信します (例: <code>/myuser MelodyScout</code>)',

@@ -1,7 +1,7 @@
 import { type CallbackQueryContext, type CommandContext, type Context, InlineKeyboard } from 'grammy'
 import { PromisePool } from '@supercharge/promise-pool'
 import { getPnartistText } from '../../textFabric/pnartist'
-import { ctxReply } from '../../../function/grammyFunctions'
+import { ctxReply } from '../../../functions/grammyFunctions'
 import { lastfmConfig } from '../../../config'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'

@@ -1,7 +1,7 @@
 import { type AlbumInfo, zodAlbumInfo } from '../types/zodAlbumInfo'
 import { msApiFetch } from '../functions/msApiFetch'
 import { type ApiErrors } from '../types/errors/ApiErrors'
-import { advError } from '../../../function/advancedConsole'
+import { advError } from '../../../functions/advancedConsole'
 
 type GetInfoResponse = {
   success: true

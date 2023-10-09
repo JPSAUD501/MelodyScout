@@ -1,7 +1,7 @@
 import Replicate from 'replicate'
 import z from 'zod'
 import axios from 'axios'
-import { advError, advLog } from '../../function/advancedConsole'
+import { advError, advLog } from '../../functions/advancedConsole'
 
 interface MsReplicateApiError {
   success: false

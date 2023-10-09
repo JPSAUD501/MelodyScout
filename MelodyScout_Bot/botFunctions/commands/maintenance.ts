@@ -1,6 +1,6 @@
 import { type CommandContext, type Context } from 'grammy'
-import { ctxReply } from '../../../function/grammyFunctions'
-import { advLog } from '../../../function/advancedConsole'
+import { ctxReply } from '../../../functions/grammyFunctions'
+import { advLog } from '../../../functions/advancedConsole'
 import { melodyScoutConfig } from '../../../config'
 import { lang } from '../../../translations/base'
 import { getMaintenanceText } from '../../textFabric/maintenance'

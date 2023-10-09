@@ -1,5 +1,5 @@
 import { type Context, type InlineQueryContext, InlineQueryResultBuilder } from 'grammy'
-import { ctxAnswerInlineQuery } from '../../../function/grammyFunctions'
+import { ctxAnswerInlineQuery } from '../../../functions/grammyFunctions'
 import { type MsMusicApi } from '../../../api/msMusicApi/base'
 import { type InlineQueryResult } from 'grammy/types'
 import { PromisePool } from '@supercharge/promise-pool'
