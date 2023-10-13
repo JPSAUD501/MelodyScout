@@ -22,7 +22,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
     return
   }
   if (!getGithubMetadata.success) {
-    void ctxTempReply(ctx, 'Não foi possível encontrar os metadados da imagem', 15000)
+    void ctxTempReply(ctx, 'Não foi possível encontrar os metadados da imagem ou a versão dos metadados não é compatível com a versão do bot', 15000)
     return
   }
   // const image = Buffer.from(getGithubImage.data.content, 'base64')

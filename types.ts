@@ -15,7 +15,7 @@ export const zodAIImageMetadata = z.object({
   trackName: z.string(),
   artistName: z.string(),
   lyrics: z.string(),
-  baseImageUrl: z.string(),
-  imageDescription: z.string()
+  imageDescription: z.string(),
+  baseImageUrl: z.string()
 })
 export type AIImageMetadata = z.infer<typeof zodAIImageMetadata>

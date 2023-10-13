@@ -174,8 +174,8 @@ async function getAiImageByLyrics (ctxLang: string | undefined, lyrics: string, 
         trackName,
         artistName,
         lyrics,
-        baseImageUrl: imageByDescription.imageUrl,
-        imageDescription: lyricsImageDescription.description
+        imageDescription: lyricsImageDescription.description,
+        baseImageUrl: imageByDescription.imageUrl
       })
     }
   }
