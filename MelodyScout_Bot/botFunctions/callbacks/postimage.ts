@@ -87,6 +87,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   if (imageId === undefined) {
     void ctxTempReply(ctx, 'Não foi possível encontrar o ID da imagem', 15000)
   }
+  void ctxTempReply(ctx, 'Publicando imagem...', 15000)
   const getGithubImagePromise = new MsGithubApi(githubConfig.token).files.getFile(`${imageId}.jpg`)
   const metadataVersion = zodAIImageMetadata.shape.version.value
   const getGithubMetadataPromise = new MsGithubApi(githubConfig.token).files.getFile(`${imageId}-${metadataVersion}.json`)
