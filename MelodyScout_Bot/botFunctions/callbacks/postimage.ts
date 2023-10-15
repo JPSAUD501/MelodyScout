@@ -7,6 +7,8 @@ import { type AIImageMetadata, zodAIImageMetadata } from '../../../types'
 import sharp from 'sharp'
 import { MsInstagramApi } from '../../../api/msInstagramApi/base'
 
+const postedImages: string[] = []
+
 export async function composeStoryImage (image: Buffer, imageMetadata: AIImageMetadata): Promise<{
   success: true
   storiesImage: Buffer
@@ -109,15 +111,21 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
     void ctxTempReply(ctx, 'Não foi possível compor a imagem do stories', 15000)
     return
   }
-  const editMessageReplyMarkupResponse = await ctxEditMessageReplyMarkup(ctx, undefined, undefined)
-  if (editMessageReplyMarkupResponse instanceof Error) {
-    void ctxTempReply(ctx, 'Ocorreu um erro ao tentar compartilhar a imagem', 15000)
+  if (postedImages.includes(imageId)) {
+    void ctxTempReply(ctx, 'Essa imagem já está sendo compartilhada!', 15000)
     return
   }
+  postedImages.push(imageId)
   const publishStoryResponse = await new MsInstagramApi(instagramConfig.username, instagramConfig.password).postStory({
     file: storiesImageResponse.storiesImage
   })
   if (!publishStoryResponse.success) {
+    postedImages.splice(postedImages.indexOf(imageId), 1)
+    void ctxTempReply(ctx, 'Ocorreu um erro ao tentar compartilhar a imagem', 15000)
+    return
+  }
+  const editMessageReplyMarkupResponse = await ctxEditMessageReplyMarkup(ctx, undefined, undefined)
+  if (editMessageReplyMarkupResponse instanceof Error) {
     void ctxTempReply(ctx, 'Ocorreu um erro ao tentar compartilhar a imagem', 15000)
     return
   }
