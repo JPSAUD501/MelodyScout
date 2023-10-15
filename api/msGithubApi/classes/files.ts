@@ -82,7 +82,9 @@ export class Files {
   async getFile (fileName: string): Promise<GetFileResponse> {
     const url = `https://api.github.com/repos/JPSAUD501/MelodyScout-Files/contents/Images/${encodeURI(fileName)}`
     const method = 'GET'
-    const headers = undefined
+    const headers = {
+      Authorization: `Bearer ${this.apiKey}`
+    }
     const data = undefined
     const expectedZod = zodGetFile
     console.log(`GetFile - url: ${url}`)
