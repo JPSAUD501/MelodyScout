@@ -5,7 +5,7 @@ export function getLyricsText (ctxLang: string | undefined, track: string, artis
   const lyrics = translatedLyrics ?? geniusSong.lyrics
   const textArray: string[] = []
 
-  const defaultMessageLength = 400
+  const defaultMessageLength = 450
   const maxLyricsLength = 4096 - defaultMessageLength
 
   textArray.push(`<b>[📝] Letra de "${sanitizeText(track)}" por "${sanitizeText(artist)}" fornecida pela <a href="${geniusSong.song.url}">Genius</a>${translatedLyrics !== undefined ? ' traduzida para o português' : ''} solicitada por ${requestedBy}</b>`)

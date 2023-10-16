@@ -31,8 +31,8 @@ export class MsReplicateApi {
         model,
         {
           input: {
-            prompt: imageDescription,
-            apply_watermark: false
+            // apply_watermark: false,
+            prompt: imageDescription
           }
         }
       ).catch((err) => {
