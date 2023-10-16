@@ -8,6 +8,7 @@ import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { type MsMusicApi } from '../../../api/msMusicApi/base'
 import { lang } from '../../../translations/base'
 import { type UserTopTracks } from '../../../api/msLastfmApi/types/zodUserTopTracks'
+import { MsDeezerApi } from '../../../api/msDeezerApi/base'
 
 export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context> | CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
@@ -67,7 +68,8 @@ export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi:
   }
   const artistInfoRequest = msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
   const spotifyArtistInfoRequest = msMusicApi.getSpotifyArtistInfo(mainTrack.artistName)
-  const [artistInfo, spotifyArtistInfo] = await Promise.all([artistInfoRequest, spotifyArtistInfoRequest])
+  const deezerArtistInfoRequest = new MsDeezerApi().search.artist(mainTrack.artistName, 1)
+  const [artistInfo, spotifyArtistInfo, deezerArtistInfo] = await Promise.all([artistInfoRequest, spotifyArtistInfoRequest, deezerArtistInfoRequest])
   if (!artistInfo.success) {
     void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmArtistDataNotFoundedError'))
     return
@@ -103,5 +105,11 @@ export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi:
   userArtistTopTracks.sort((a, b) => Number(b.playcount) - Number(a.playcount))
   const inlineKeyboard = new InlineKeyboard()
   inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyArtistInfo.data[0].external_urls.spotify)
+  if (
+    deezerArtistInfo.success &&
+    deezerArtistInfo.data.data.length > 0
+  ) {
+    inlineKeyboard.url(lang(ctxLang, 'deezerButton'), deezerArtistInfo.data.data[0].link)
+  }
   await ctxReply(ctx, undefined, getPnartistText(ctxLang, userInfo.data, artistInfo.data, userArtistTopTracks, spotifyArtistInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
 }

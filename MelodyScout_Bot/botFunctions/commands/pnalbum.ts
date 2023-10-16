@@ -6,6 +6,7 @@ import { lastfmConfig } from '../../../config'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { type MsMusicApi } from '../../../api/msMusicApi/base'
 import { lang } from '../../../translations/base'
+import { MsDeezerApi } from '../../../api/msDeezerApi/base'
 
 export async function runPnalbumCommand (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context> | CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
@@ -63,7 +64,8 @@ export async function runPnalbumCommand (msMusicApi: MsMusicApi, msPrismaDbApi: 
   const artistInfoRequest = msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
   const albumInfoRequest = msLastfmApi.album.getInfo(mainTrack.artistName, mainTrack.albumName, mainTrack.albumMbid, lastfmUser)
   const spotifyAlbumInfoRequest = msMusicApi.getSpotifyAlbumInfo(mainTrack.artistName, mainTrack.albumName)
-  const [artistInfo, albumInfo, spotifyAlbumInfo] = await Promise.all([artistInfoRequest, albumInfoRequest, spotifyAlbumInfoRequest])
+  const deezerAlbumInfoRequest = new MsDeezerApi().search.album(`${mainTrack.albumName} ${mainTrack.artistName}`, 1)
+  const [artistInfo, albumInfo, spotifyAlbumInfo, deezerAlbumInfo] = await Promise.all([artistInfoRequest, albumInfoRequest, spotifyAlbumInfoRequest, deezerAlbumInfoRequest])
   if (!artistInfo.success) {
     void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmArtistDataNotFoundedError'))
     return
@@ -77,6 +79,10 @@ export async function runPnalbumCommand (msMusicApi: MsMusicApi, msPrismaDbApi: 
     return
   }
   const inlineKeyboard = new InlineKeyboard()
-  if (spotifyAlbumInfo.success) inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyAlbumInfo.data[0].external_urls.spotify)
+  inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyAlbumInfo.data[0].external_urls.spotify)
+  if (
+    deezerAlbumInfo.success &&
+    deezerAlbumInfo.data.data.length > 0
+  ) inlineKeyboard.url(lang(ctxLang, 'deezerButton'), deezerAlbumInfo.data.data[0].link)
   await ctxReply(ctx, undefined, getPnalbumText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, spotifyAlbumInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
 }

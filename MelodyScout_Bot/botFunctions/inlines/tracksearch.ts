@@ -94,7 +94,7 @@ export async function runTracksearchInline (msMusicApi: MsMusicApi, ctx: InlineQ
         trackUrl.deezer = deezerTrack.link
       }
       if (youtubeTrackInfo.success) {
-        trackUrl.youtube = youtubeTrackInfo.videoUrl
+        trackUrl.youtube = youtubeTrackInfo.videoMusicUrl
       }
       if (previewUrls.length <= 0) {
         return
