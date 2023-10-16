@@ -80,9 +80,6 @@ export async function runPnalbumCommand (msMusicApi: MsMusicApi, msPrismaDbApi: 
   }
   const inlineKeyboard = new InlineKeyboard()
   inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyAlbumInfo.data[0].external_urls.spotify)
-  if (
-    deezerAlbumInfo.success &&
-    deezerAlbumInfo.data.data.length > 0
-  ) inlineKeyboard.url(lang(ctxLang, 'deezerButton'), deezerAlbumInfo.data.data[0].link)
+  if (deezerAlbumInfo.success && deezerAlbumInfo.data.data.length > 0) inlineKeyboard.url(lang(ctxLang, 'deezerButton'), deezerAlbumInfo.data.data[0].link)
   await ctxReply(ctx, undefined, getPnalbumText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, spotifyAlbumInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
 }

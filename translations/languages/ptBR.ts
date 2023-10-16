@@ -17,7 +17,7 @@ export const ptBR = {
   youtubeButton: '[🎥] - YouTube',
   lyricsButton: '[🧾] - Letra',
   iaExplanationButton: '[✨] - Explicação',
-  trackPreviewButton: '[📥] - Pré-visualizar',
+  trackPreviewButton: '[📥] - Visualizar',
   trackDownloadButton: '[📥] - Baixar',
   unableToGetMessageIdFromButtonInformMessage: 'Algo deu errado ao buscar a mensagem que você clicou, por favor tente novamente mais tarde ou entre em contato através do comando /contact.',
   errorOnSendLoadingMessageInformMessage: 'Algo deu errado ao enviar a mensagem de carregamento, por favor tente novamente mais tarde ou entre em contato através do comando /contact.',
@@ -161,5 +161,6 @@ export const ptBR = {
   tfPlayingnowInfoTitle: '<b>[ℹ️] Informações</b>',
   tfPlayingnowShareTitle: '<b>[🔗] Compartilhe</b>',
   tfPlayingnowShareLink: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>',
-  composeImageTitle: '<b>{{trackName}}</b> por <b>{{artistName}}</b>'
+  composeImageTitle: '<b>{{trackName}}</b> por <b>{{artistName}}</b>',
+  youtubeMusicButton: '[🎶] - YT Music'
 }

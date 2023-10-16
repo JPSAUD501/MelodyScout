@@ -4,7 +4,7 @@ import { lang } from '../../../../translations/base'
 import { getTrackpreviewText } from '../../../textFabric/trackpreview'
 import { v4 as uuidv4 } from 'uuid'
 
-export async function trackpreviewInlineResult (ctxLang: string | undefined, trackName: string, artistName: string, trackpreviewUrl: string, spotifyTrackUrl: string | undefined, deezerTrackUrl: string | undefined, youtubeTrackUrl: string | undefined, ctx: InlineQueryContext<Context>): Promise<{
+export async function trackpreviewInlineResult (ctxLang: string | undefined, trackName: string, artistName: string, trackpreviewUrl: string, spotifyTrackUrl: string | undefined, deezerTrackUrl: string | undefined, youtubeTrackUrl: string | undefined, youtubeMusicTrackUrl: string | undefined, ctx: InlineQueryContext<Context>): Promise<{
   success: boolean
   result: InlineQueryResult
 }> {
@@ -14,6 +14,7 @@ export async function trackpreviewInlineResult (ctxLang: string | undefined, tra
   if (deezerTrackUrl !== undefined) inlineKeyboard.url(lang(ctxLang, 'deezerButton'), deezerTrackUrl)
   inlineKeyboard.row()
   if (youtubeTrackUrl !== undefined) inlineKeyboard.url(lang(ctxLang, 'youtubeButton'), youtubeTrackUrl)
+  if (youtubeMusicTrackUrl !== undefined) inlineKeyboard.url(lang(ctxLang, 'youtubeMusicButton'), youtubeMusicTrackUrl)
   return {
     success: true,
     result: InlineQueryResultBuilder

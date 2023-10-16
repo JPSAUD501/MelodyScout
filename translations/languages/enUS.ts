@@ -161,5 +161,6 @@ export const enUS = {
   tfPlayingnowInfoTrackPlaytime: "- You've listened to this track for <b>{{hours}} hours</b> and <b>{{minutes}} minutes</b>.",
   tfPlayingnowInfoTrackPopularity: '- The current <a href="{{popularityInfoUrl}}">popularity</a> of this track is: <b>[{{popularity}}][{{stars}}]</b>',
   tfPlayingnowInfoTrackAlbumPercentage: '- This song represents <b>{{percentage}}%</b> of all your plays from this album.',
-  composeImageTitle: '<b>{{trackName}}</b> by <b>{{artistName}}</b>'
+  composeImageTitle: '<b>{{trackName}}</b> by <b>{{artistName}}</b>',
+  youtubeMusicButton: '[🎶] - YT Music'
 }

@@ -23,28 +23,6 @@ export async function runTracksearchInline (msMusicApi: MsMusicApi, ctx: InlineQ
     void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
     return
   }
-  // const lastfmSearchTrack = await new MsLastfmApi(lastfmConfig.apiKey).track.search(searchTrackName, '', 5)
-  // if (!lastfmSearchTrack.success) {
-  //   const inlineQueryResultError = InlineQueryResultBuilder
-  //     .article('ERROR', 'An error occurred!', {
-  //       description: lang(ctxLang, 'lastfmTrackDataNotFoundedError'),
-  //       thumbnail_url: melodyScoutConfig.logoImgUrl
-  //     })
-  //     .text(lang(ctxLang, 'lastfmTrackDataNotFoundedError'), { parse_mode: 'HTML' })
-  //   void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
-  //   return
-  // }
-  // const lastfmSearchTrackResults = lastfmSearchTrack.data.results.trackmatches.track
-  // if (lastfmSearchTrackResults.length <= 0) {
-  //   const inlineQueryResultError = InlineQueryResultBuilder
-  //     .article('ERROR', 'An error occurred!', {
-  //       description: lang(ctxLang, 'lastfmTrackDataNotFoundedError'),
-  //       thumbnail_url: melodyScoutConfig.logoImgUrl
-  //     })
-  //     .text(lang(ctxLang, 'lastfmTrackDataNotFoundedError'), { parse_mode: 'HTML' })
-  //   void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
-  //   return
-  // }
   const deezerSearchTrack = await new MsDeezerApi().search.track(searchTrackName, '', 10)
   if (!deezerSearchTrack.success) {
     const inlineQueryResultError = InlineQueryResultBuilder
@@ -80,10 +58,12 @@ export async function runTracksearchInline (msMusicApi: MsMusicApi, ctx: InlineQ
         spotify: string | undefined
         deezer: string | undefined
         youtube: string | undefined
+        youtubeMusic: string | undefined
       } = {
         spotify: undefined,
         deezer: undefined,
-        youtube: undefined
+        youtube: undefined,
+        youtubeMusic: undefined
       }
       if (spotifyTrackInfo.success) {
         if (spotifyTrackInfo.data[0].preview_url !== null) previewUrls.push(spotifyTrackInfo.data[0].preview_url)
@@ -95,11 +75,12 @@ export async function runTracksearchInline (msMusicApi: MsMusicApi, ctx: InlineQ
       }
       if (youtubeTrackInfo.success) {
         trackUrl.youtube = youtubeTrackInfo.videoMusicUrl
+        trackUrl.youtubeMusic = youtubeTrackInfo.videoMusicUrl
       }
       if (previewUrls.length <= 0) {
         return
       }
-      const trackpreviewInlineResultResponse = await trackpreviewInlineResult(ctxLang, deezerTrack.title, deezerTrack.artist.name, previewUrls[0], trackUrl.spotify, trackUrl.deezer, trackUrl.youtube, ctx)
+      const trackpreviewInlineResultResponse = await trackpreviewInlineResult(ctxLang, deezerTrack.title, deezerTrack.artist.name, previewUrls[0], trackUrl.spotify, trackUrl.deezer, trackUrl.youtube, trackUrl.youtubeMusic, ctx)
       return trackpreviewInlineResultResponse.result
     })
   for (const inlineQueryResult of inlineQueryResultsPromisePool.results) {
@@ -114,7 +95,7 @@ export async function runTracksearchInline (msMusicApi: MsMusicApi, ctx: InlineQ
         thumbnail_url: melodyScoutConfig.logoImgUrl
       })
       .text(lang(ctxLang, 'trackOrArtistNameNotFoundedInCallbackDataErrorMessage'), { parse_mode: 'HTML' })
-    void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
+    void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 60 * 60 * 24 })
     return
   }
 
