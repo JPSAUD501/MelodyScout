@@ -32,6 +32,7 @@ import { callbackDefault } from './composers/defaults/callback'
 import { inlineDefault } from './composers/defaults/inline'
 import { messageDefault } from './composers/defaults/message'
 import { type GetBotInfoResponse } from '../types'
+import { postimageCallback } from './composers/callbacks/postimage'
 
 export const maintenanceMode = {
   active: false
@@ -66,6 +67,7 @@ export async function startMelodyScoutBot (): Promise<{
   bot.use(trackdownloadCallback)
   bot.use(trackaudiodownloadCallback)
   bot.use(trackvideodownloadCallback)
+  bot.use(postimageCallback)
   bot.use(tracksearchInline)
   bot.use(callbackDefault)
   bot.use(inlineDefault)

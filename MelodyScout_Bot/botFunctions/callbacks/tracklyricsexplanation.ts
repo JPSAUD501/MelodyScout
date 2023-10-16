@@ -1,4 +1,4 @@
-import { type CallbackQueryContext, type Context, InputFile } from 'grammy'
+import { type CallbackQueryContext, type Context, InputFile, InlineKeyboard } from 'grammy'
 import { ctxAnswerCallbackQuery, ctxEditMessage, ctxReply, ctxReplyWithVoice, ctxTempReply } from '../../../functions/grammyFunctions'
 import { getTracklyricsexplanationText } from '../../textFabric/tracklyricsexplanation'
 import { geniusConfig, githubConfig, melodyScoutConfig, openaiConfig, replicateConfig } from '../../../config'
@@ -13,6 +13,8 @@ import fs from 'fs'
 import { MsGithubApi } from '../../../api/msGithubApi/base'
 import { randomUUID } from 'crypto'
 import path from 'path'
+import { getCallbackKey } from '../../../functions/callbackMaker'
+import { type AIImageMetadata } from '../../../types'
 
 export async function composeImage (ctxLang: string | undefined, image: Buffer, trackName: string, artistName: string): Promise<{
   success: true
@@ -81,9 +83,40 @@ export async function composeImage (ctxLang: string | undefined, image: Buffer, 
   }
 }
 
+async function uploadMetadata (imageMetadata: AIImageMetadata): Promise<{
+  success: true
+} | {
+  success: false
+  error: string
+}> {
+  const uploadMetadataToGithub = await new MsGithubApi(githubConfig.token).files.putFile(`${imageMetadata.imageId}-${imageMetadata.version}.json`, Buffer.from(JSON.stringify(imageMetadata, null, 2)).toString('base64'))
+  if (!uploadMetadataToGithub.success) {
+    return {
+      success: false,
+      error: `Error on uploading metadata to github: ${uploadMetadataToGithub.errorData.message}`
+    }
+  }
+  return {
+    success: true
+  }
+}
+
 async function getAiImageByLyrics (ctxLang: string | undefined, lyrics: string, trackName: string, artistName: string): Promise<{
   success: true
-  imageUrl: string
+  result: {
+    withLayout: false
+    imageUrl: string
+  } | {
+    withLayout: true
+    imageUrl: string
+    imageId: string
+    uploadMetadataPromise: Promise<{
+      success: true
+    } | {
+      success: false
+      error: string
+    }>
+  }
 } | {
   success: false
   error: string
@@ -109,22 +142,42 @@ async function getAiImageByLyrics (ctxLang: string | undefined, lyrics: string, 
     advError(`Error on composing image: ${finalImage.error}`)
     return {
       success: true,
-      imageUrl: imageByDescription.imageUrl
+      result: {
+        withLayout: false,
+        imageUrl: imageByDescription.imageUrl
+      }
     }
   }
   const githubApi = new MsGithubApi(githubConfig.token)
-  const uploadToGithub = await githubApi.files.putFile(`${randomUUID()}.jpg`, finalImage.image.toString('base64'))
+  const imageId = randomUUID()
+  const uploadToGithub = await githubApi.files.putFile(`${imageId}.jpg`, finalImage.image.toString('base64'))
   if (!uploadToGithub.success) {
     advError(`Error on uploading image to github: ${uploadToGithub.errorData.message}`)
     return {
       success: true,
-      imageUrl: imageByDescription.imageUrl
+      result: {
+        withLayout: false,
+        imageUrl: imageByDescription.imageUrl
+      }
     }
   }
   advLog(`New image generated for ${trackName} by ${artistName}: ${uploadToGithub.data.content.download_url}`)
   return {
     success: true,
-    imageUrl: uploadToGithub.data.content.download_url
+    result: {
+      withLayout: true,
+      imageUrl: uploadToGithub.data.content.download_url,
+      imageId,
+      uploadMetadataPromise: uploadMetadata({
+        version: 'v1',
+        imageId,
+        trackName,
+        artistName,
+        lyrics,
+        imageDescription: lyricsImageDescription.description,
+        baseImageUrl: imageByDescription.imageUrl
+      })
+    }
   }
 }
 
@@ -194,6 +247,17 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
     return
   }
   aiImageStatus.status = 'success'
-  aiImageStatus.imageUrl = imageByLyrics.imageUrl
-  await ctxEditMessage(ctx, { chatId: commandResponse.chat.id, messageId: commandResponse.message_id }, getTracklyricsexplanationText(ctxLang, track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, aiImageStatus))
+  aiImageStatus.imageUrl = imageByLyrics.result.imageUrl
+  const editedMessage = await ctxEditMessage(ctx, { chatId: commandResponse.chat.id, messageId: commandResponse.message_id }, getTracklyricsexplanationText(ctxLang, track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, aiImageStatus))
+  if (editedMessage === undefined) return
+  if (imageByLyrics.result.withLayout) {
+    const uploadedMetadata = await imageByLyrics.result.uploadMetadataPromise
+    if (uploadedMetadata.success) {
+      const inlineKeyboard = new InlineKeyboard()
+      inlineKeyboard.text('[📸] - Postar no insta do MS!', getCallbackKey(['PI', imageByLyrics.result.imageId]))
+      await ctxEditMessage(ctx, { chatId: editedMessage.chat.id, messageId: editedMessage.message_id }, getTracklyricsexplanationText(ctxLang, track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, aiImageStatus), {
+        reply_markup: inlineKeyboard
+      })
+    }
+  }
 }

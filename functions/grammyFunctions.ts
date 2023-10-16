@@ -3,7 +3,7 @@ import { advError } from './advancedConsole'
 import { type Message } from '@grammyjs/types'
 import { type Other } from 'grammy/out/core/api'
 import { lang } from '../translations/base'
-import { type InlineQueryResult } from 'grammy/types'
+import { type Update, type InlineQueryResult } from 'grammy/types'
 
 export async function ctxReply (ctx: Context, messageToSend: { chatId: number } | undefined, message: string, options?: Other<RawApi, 'sendMessage', 'text' | 'chat_id'>): Promise<Message.TextMessage | undefined> {
   try {
@@ -124,6 +124,37 @@ export async function ctxEditMessage (ctx: Context, messageToEdit: { chatId: num
       return undefined
     }
     return editedMessage
+  } catch (error) {
+    advError(`GrammyFunctions - Error: ${String(error)}`)
+  }
+}
+
+export async function ctxEditMessageReplyMarkup (ctx: Context, messageToEdit: { chatId: number, messageId: number } | undefined, options?: Other<RawApi, 'editMessageReplyMarkup', 'chat_id' | 'message_id' | 'inline_message_id'>): Promise<Update.Edited | undefined> {
+  try {
+    const ctxChatId = messageToEdit?.chatId ?? ctx.chat?.id ?? ctx.from?.id
+    if (ctxChatId === undefined) {
+      advError('MelodyScout_Bot - Error: ctxChatId is undefined')
+      return undefined
+    }
+    const editMessageId = messageToEdit?.messageId ?? ctx.message?.message_id ?? ctx.update.callback_query?.message?.message_id
+    if (editMessageId === undefined) {
+      advError('MelodyScout_Bot - Error: editMessageId is undefined')
+      return undefined
+    }
+    const editedMessageReplyMarkup = await ctx.api.editMessageReplyMarkup(ctxChatId, editMessageId, {
+      ...options
+    }).catch((err) => {
+      advError(`MelodyScout_Bot - Error: ${String(err)}`)
+    })
+    if (editedMessageReplyMarkup === undefined) {
+      advError('MelodyScout_Bot - Error: editedMessageReplyMarkup is undefined')
+      return undefined
+    }
+    if (editedMessageReplyMarkup === true) {
+      advError('MelodyScout_Bot - Error: editedMessageReplyMarkup is true')
+      return undefined
+    }
+    return editedMessageReplyMarkup
   } catch (error) {
     advError(`GrammyFunctions - Error: ${String(error)}`)
   }

@@ -48,6 +48,11 @@ export const githubConfig = {
 }
 
 export const serverConfig = {
-  port: process.env.PORT ?? '3000',
+  port: process.env.PORT ?? '9000',
   host: process.env.HOST ?? '0.0.0.0'
+}
+
+export const instagramConfig = {
+  username: process.env.IG_USERNAME ?? '',
+  password: process.env.IG_PASSWORD ?? ''
 }

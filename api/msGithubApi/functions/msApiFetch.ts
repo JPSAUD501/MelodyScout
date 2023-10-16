@@ -1,4 +1,4 @@
-import { type ZodAny, type ZodObject, type ZodString } from 'zod'
+import { type ZodUnion, type ZodAny, type ZodObject, type ZodString } from 'zod'
 import { type ApiErrors } from '../types/errors/ApiErrors'
 import axios from 'axios'
 import { zodGithubApiError } from '../types/errors/zodGithubApiError'
@@ -8,7 +8,7 @@ type MsApiFetchResponse = {
   data: any
 } | ApiErrors
 
-export const msApiFetch = async (url: string, method: string | undefined, headers: object | undefined, data: object | undefined, expectedZod: ZodObject<any> | ZodAny | ZodString): Promise<MsApiFetchResponse> => {
+export const msApiFetch = async (url: string, method: string | undefined, headers: object | undefined, data: object | undefined, expectedZod: ZodObject<any> | ZodAny | ZodString | ZodUnion<any>): Promise<MsApiFetchResponse> => {
   try {
     const response = await axios({
       method,
