@@ -3,81 +3,11 @@ import { githubConfig, instagramConfig, melodyScoutConfig } from '../../../confi
 import { ctxAnswerCallbackQuery, ctxEditMessageReplyMarkup, ctxReply, ctxTempReply } from '../../../functions/grammyFunctions'
 import { lang } from '../../../translations/base'
 import { MsGithubApi } from '../../../api/msGithubApi/base'
-import { type AIImageMetadata, zodAIImageMetadata } from '../../../types'
-import sharp from 'sharp'
+import { zodAIImageMetadata } from '../../../types'
 import { MsInstagramApi } from '../../../api/msInstagramApi/base'
+import { composeStoryImage } from '../../../functions/mediaEditors'
 
 const postedImages: string[] = []
-
-export async function composeStoryImage (image: Buffer, imageMetadata: AIImageMetadata): Promise<{
-  success: true
-  storiesImage: Buffer
-} | {
-  success: false
-  error: string
-}> {
-  const storiesMainImageRequest = sharp(image)
-    .resize(1080, 1920, {
-      fit: 'contain',
-      background: {
-        r: 0,
-        g: 0,
-        b: 0,
-        alpha: 0
-      }
-    })
-    .png()
-    .toBuffer()
-    .catch((err) => {
-      return new Error(err)
-    })
-  const storiesImageBackgroundRequest = sharp(image)
-    .resize(1080, 1920, {
-      fit: 'cover'
-    })
-    .blur(70)
-    .ensureAlpha(0.25)
-    .png()
-    .toBuffer()
-    .catch((err) => {
-      return new Error(err)
-    })
-  const [storiesMainImage, storiesImageBackground] = await Promise.all([storiesMainImageRequest, storiesImageBackgroundRequest])
-  if (storiesMainImage instanceof Error) {
-    return {
-      success: false,
-      error: storiesMainImage.message
-    }
-  }
-  if (storiesImageBackground instanceof Error) {
-    return {
-      success: false,
-      error: storiesImageBackground.message
-    }
-  }
-  const storiesFinalImage = await sharp(storiesImageBackground)
-    .composite([{
-      input: storiesMainImage,
-      gravity: 'center'
-    }])
-    .jpeg({
-      mozjpeg: true
-    })
-    .toBuffer()
-    .catch((err) => {
-      return new Error(err)
-    })
-  if (storiesFinalImage instanceof Error) {
-    return {
-      success: false,
-      error: storiesFinalImage.message
-    }
-  }
-  return {
-    success: true,
-    storiesImage: storiesFinalImage
-  }
-}
 
 export async function runPostimageCallback (ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
@@ -107,7 +37,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
     void ctxTempReply(ctx, 'Não foi possível ler os metadados da imagem', 15000)
     return
   }
-  const storiesImageResponse = await composeStoryImage(image, parsedMetadata.data)
+  const storiesImageResponse = await composeStoryImage(image)
   if (!storiesImageResponse.success) {
     void ctxTempReply(ctx, 'Não foi possível compor a imagem do stories', 15000)
     return

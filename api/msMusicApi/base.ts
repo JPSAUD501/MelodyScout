@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { advError } from '../../functions/advancedConsole'
 import * as Soundify from '@soundify/web-api'
 import { type SearchEndpoint } from '@soundify/web-api/types/api/search/search.endpoints'
+import axios from 'axios'
 
 export interface MsMusicApiError {
   success: false
@@ -37,6 +38,13 @@ export interface MsMusicApiYoutubeTrackInfo {
 }
 
 export interface MsMusicApiYoutubeTrackDownload {
+  success: true
+  file: {
+    buffer: Buffer
+  }
+}
+
+export interface MsMusicApiTrackPreviewDownload {
   success: true
   file: {
     buffer: Buffer
@@ -341,6 +349,30 @@ export class MsMusicApi {
       file: {
         buffer: readFileResult.buffer
       }
+    }
+  }
+
+  async getTrackPreviewBuffer (trackPreviewUrl: string): Promise<MsMusicApiError | MsMusicApiTrackPreviewDownload> {
+    try {
+      const response = await axios.get(trackPreviewUrl, {
+        responseType: 'arraybuffer'
+      }).catch((err) => {
+        return new Error(String(err))
+      })
+      if (response instanceof Error) {
+        return { success: false, error: response.message }
+      }
+      if (!(response.data instanceof Buffer)) {
+        return { success: false, error: 'Response is not a buffer!' }
+      }
+      return {
+        success: true,
+        file: {
+          buffer: response.data
+        }
+      }
+    } catch (err) {
+      return { success: false, error: String(err) }
     }
   }
 }

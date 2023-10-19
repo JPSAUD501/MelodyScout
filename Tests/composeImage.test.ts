@@ -1,7 +1,7 @@
 import { test, expect } from '@jest/globals'
-import { composeImage } from '../MelodyScout_Bot/botFunctions/callbacks/tracklyricsexplanation'
 import fs from 'fs'
 import path from 'path'
+import { composeImage } from '../functions/mediaEditors'
 
 test('composeImage-DEFAULT', async () => {
   const ctxLang = undefined
