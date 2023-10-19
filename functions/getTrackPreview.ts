@@ -1,8 +1,15 @@
 import { MsDeezerApi } from '../api/msDeezerApi/base'
-import { type MsMusicApi } from '../api/msMusicApi/base'
+import { MsMusicApi } from '../api/msMusicApi/base'
+import { spotifyConfig } from '../config'
 
-export async function getTrackPreview (msMusicApi: MsMusicApi, trackName: string, trackArtist: string): Promise<{}> {
-  const spotifyTrackInfoPromise = msMusicApi.getSpotifyTrackInfo(trackName, trackArtist)
+export async function getTrackPreview (trackName: string, trackArtist: string): Promise<{
+  success: true
+  previewUrl: string
+} | {
+  success: false
+  error: string
+}> {
+  const spotifyTrackInfoPromise = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret).getSpotifyTrackInfo(trackName, trackArtist)
   const deezerSearchTrackPromise = new MsDeezerApi().search.track(trackName, trackArtist, 1)
   const [spotifyTrackInfo, deezerSearchTrack] = await Promise.all([spotifyTrackInfoPromise, deezerSearchTrackPromise])
   const previewUrls: string[] = []
@@ -17,6 +24,13 @@ export async function getTrackPreview (msMusicApi: MsMusicApi, trackName: string
     }
   }
   if (previewUrls.length <= 0) {
-    await ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'spotifyTrackPreviewUrlNotFoundedErrorCallback'))
+    return {
+      success: false,
+      error: 'Track preview url not founded'
+    }
+  }
+  return {
+    success: true,
+    previewUrl: previewUrls[0]
   }
 }

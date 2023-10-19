@@ -1,14 +1,14 @@
 import { InlineQueryResultBuilder, InlineKeyboard } from 'grammy'
 import { type InlineQueryResult } from 'grammy/types'
 import { MsLastfmApi } from '../../../../api/msLastfmApi/base'
-import { lastfmConfig, melodyScoutConfig } from '../../../../config'
+import { lastfmConfig, melodyScoutConfig, spotifyConfig } from '../../../../config'
 import { lang } from '../../../../translations/base'
 import { type UserTopTracks } from '../../../../api/msLastfmApi/types/zodUserTopTracks'
-import { type MsMusicApi } from '../../../../api/msMusicApi/base'
+import { MsMusicApi } from '../../../../api/msMusicApi/base'
 import PromisePool from '@supercharge/promise-pool'
 import { getPnartistText } from '../../../textFabric/pnartist'
 
-export async function pnartistInlineResult (ctxLang: string | undefined, lastfmUser: string, msMusicApi: MsMusicApi): Promise<{
+export async function pnartistInlineResult (ctxLang: string | undefined, lastfmUser: string): Promise<{
   success: boolean
   result: InlineQueryResult
 }> {
@@ -68,6 +68,7 @@ export async function pnartistInlineResult (ctxLang: string | undefined, lastfmU
     artistMbid: userRecentTracks.data.recenttracks.track[0].artist.mbid,
     nowPlaying: userRecentTracks.data.recenttracks.track[0]['@attr']?.nowplaying === 'true'
   }
+  const msMusicApi = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret)
   const artistInfoRequest = msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
   const spotifyArtistInfoRequest = msMusicApi.getSpotifyArtistInfo(mainTrack.artistName)
   const [artistInfo, spotifyArtistInfo] = await Promise.all([artistInfoRequest, spotifyArtistInfoRequest])

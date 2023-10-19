@@ -1,6 +1,6 @@
 import { Composer } from 'grammy'
 import { melodyScoutConfig } from '../../../config'
-import { maintenanceMode, msMusicApi } from '../../bot'
+import { maintenanceMode } from '../../bot'
 import { runMaintenanceinformCallback } from '../../botFunctions/callbacks/maintenanceinform'
 import { runTrackVideoDownloadCallback } from '../../botFunctions/callbacks/trackvideodownload'
 import { logNewCallbackQuery } from '../../logFunctions'
@@ -13,7 +13,7 @@ trackvideodownloadCallback.callbackQuery(new RegExp(`^TVD${melodyScoutConfig.div
     void runMaintenanceinformCallback(ctx)
     return
   }
-  void runTrackVideoDownloadCallback(msMusicApi, ctx)
+  void runTrackVideoDownloadCallback(ctx)
 })
 
 trackvideodownloadCallback.errorBoundary((err) => {

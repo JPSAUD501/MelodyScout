@@ -1,14 +1,15 @@
 import { type Context, type InlineQueryContext, InlineQueryResultBuilder } from 'grammy'
 import { ctxAnswerInlineQuery } from '../../../functions/grammyFunctions'
-import { type MsMusicApi } from '../../../api/msMusicApi/base'
+
 import { type InlineQueryResult } from 'grammy/types'
 import { PromisePool } from '@supercharge/promise-pool'
-import { melodyScoutConfig } from '../../../config'
+import { melodyScoutConfig, spotifyConfig } from '../../../config'
 import { lang } from '../../../translations/base'
 import { trackpreviewInlineResult } from './tracksearchResults/trackpreview'
 import { MsDeezerApi } from '../../../api/msDeezerApi/base'
+import { MsMusicApi } from '../../../api/msMusicApi/base'
 
-export async function runTracksearchInline (msMusicApi: MsMusicApi, ctx: InlineQueryContext<Context>): Promise<void> {
+export async function runTracksearchInline (ctx: InlineQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
   const inlineQueryResults: InlineQueryResult[] = []
 
@@ -45,6 +46,7 @@ export async function runTracksearchInline (msMusicApi: MsMusicApi, ctx: InlineQ
     void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
     return
   }
+  const msMusicApi = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret)
   const inlineQueryResultsPromisePool = await PromisePool
     .for(deezerSearchTrackResults)
     .withConcurrency(deezerSearchTrackResults.length)

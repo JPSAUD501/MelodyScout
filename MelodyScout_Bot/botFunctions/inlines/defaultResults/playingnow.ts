@@ -1,13 +1,13 @@
 import { type InlineQueryContext, type Context, InlineQueryResultBuilder, InlineKeyboard } from 'grammy'
 import { type InlineQueryResult } from 'grammy/types'
 import { MsLastfmApi } from '../../../../api/msLastfmApi/base'
-import { type MsMusicApi } from '../../../../api/msMusicApi/base'
-import { melodyScoutConfig, lastfmConfig } from '../../../../config'
+import { MsMusicApi } from '../../../../api/msMusicApi/base'
+import { melodyScoutConfig, lastfmConfig, spotifyConfig } from '../../../../config'
 import { lang } from '../../../../translations/base'
 import { getPlayingnowText } from '../../../textFabric/playingnow'
 import { MsDeezerApi } from '../../../../api/msDeezerApi/base'
 
-export async function playingnowInlineResult (ctxLang: string | undefined, lastfmUser: string, msMusicApi: MsMusicApi, ctx: InlineQueryContext<Context>): Promise<{
+export async function playingnowInlineResult (ctxLang: string | undefined, lastfmUser: string, ctx: InlineQueryContext<Context>): Promise<{
   success: boolean
   result: InlineQueryResult
 }> {
@@ -59,6 +59,7 @@ export async function playingnowInlineResult (ctxLang: string | undefined, lastf
     artistMbid: userRecentTracks.data.recenttracks.track[0].artist.mbid,
     nowPlaying: userRecentTracks.data.recenttracks.track[0]['@attr']?.nowplaying === 'true'
   }
+  const msMusicApi = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret)
   const artistInfoRequest = msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
   const albumInfoRequest = msLastfmApi.album.getInfo(mainTrack.artistName, mainTrack.albumName, mainTrack.albumMbid, lastfmUser)
   const trackInfoRequest = msLastfmApi.track.getInfo(mainTrack.artistName, mainTrack.trackName, mainTrack.trackMbid, lastfmUser)

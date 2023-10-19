@@ -5,7 +5,7 @@ import { melodyScoutConfig } from '../../../config'
 import { lang } from '../../../translations/base'
 import { getTrackdownloadText } from '../../textFabric/trackdownload'
 // import axios from 'axios'
-MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret)
+
 export async function runTrackDownloadCallback (ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'loadingInformCallback'))

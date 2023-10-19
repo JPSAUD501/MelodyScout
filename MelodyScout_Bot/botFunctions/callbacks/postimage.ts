@@ -1,12 +1,13 @@
 import { type CallbackQueryContext, type Context } from 'grammy'
-import { githubConfig, instagramConfig, melodyScoutConfig } from '../../../config'
+import { githubConfig, instagramConfig, melodyScoutConfig, spotifyConfig } from '../../../config'
 import { ctxAnswerCallbackQuery, ctxEditMessageReplyMarkup, ctxReply, ctxTempReply } from '../../../functions/grammyFunctions'
 import { lang } from '../../../translations/base'
 import { MsGithubApi } from '../../../api/msGithubApi/base'
 import { zodAIImageMetadata } from '../../../types'
 import { MsInstagramApi } from '../../../api/msInstagramApi/base'
-import { composeStoryImage } from '../../../functions/mediaEditors'
-import { createStoriesVideo } from 'melodyscout/functions/mediaEditors'
+import { composeStoryImage, createStoriesVideo } from '../../../functions/mediaEditors'
+import { getTrackPreview } from '../../../functions/getTrackPreview'
+import { MsMusicApi } from '../../../api/msMusicApi/base'
 
 const postedImages: string[] = []
 
@@ -43,15 +44,28 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
     void ctxTempReply(ctx, 'Não foi possível compartilhar a imagem! As informações da imagem são invalidas!', 15000)
     return
   }
-  const track
+  const trackPreview = await getTrackPreview(parsedMetadata.data.trackName, parsedMetadata.data.artistName)
+  if (!trackPreview.success) {
+    void ctxTempReply(ctx, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar buscar informações da música!', 15000)
+    return
+  }
+  const trackPreviewData = await new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret).getTrackPreviewBuffer(trackPreview.previewUrl)
+  if (!trackPreviewData.success) {
+    void ctxTempReply(ctx, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar buscar informações da música!', 15000)
+    return
+  }
   const storiesImageResponse = await composeStoryImage(image)
   if (!storiesImageResponse.success) {
     void ctxTempReply(ctx, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar criar a imagem para o Instagram!', 15000)
     return
   }
-  const storiesVideoResponse = await createStoriesVideo(storiesImageResponse.storiesImage)
+  const storiesVideoResponse = await createStoriesVideo(storiesImageResponse.storiesImage, trackPreviewData.file.buffer, parsedMetadata.data)
+  if (!storiesVideoResponse.success) {
+    void ctxTempReply(ctx, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar criar o vídeo para o Instagram!', 15000)
+    return
+  }
   const publishStoryResponse = await new MsInstagramApi(instagramConfig.username, instagramConfig.password).postStory({
-    file: storiesImageResponse.storiesImage
+    file: storiesVideoResponse.data.video
   })
   if (!publishStoryResponse.success) {
     postedImages.splice(postedImages.indexOf(imageId), 1)

@@ -1,4 +1,4 @@
-import { youtube } from 'scrape-youtube'
+import youtube from 'scrape-youtube'
 import youtubedl from 'youtube-dl-exec'
 import fs, { type ReadStream } from 'fs'
 import path from 'path'

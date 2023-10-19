@@ -1,6 +1,6 @@
 import { type Context, InlineKeyboard, type InlineQueryContext, InlineQueryResultBuilder } from 'grammy'
 import { ctxAnswerInlineQuery } from '../../../functions/grammyFunctions'
-import { type MsMusicApi } from '../../../api/msMusicApi/base'
+
 import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { type InlineQueryResult } from 'grammy/types'
 import { playingnowInlineResult } from './defaultResults/playingnow'
@@ -8,7 +8,7 @@ import { briefInlineResult } from './defaultResults/brief'
 import { lang } from '../../../translations/base'
 import { melodyScoutConfig } from '../../../config'
 
-export async function runDefaultInline (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: InlineQueryContext<Context>): Promise<void> {
+export async function runDefaultInline (msPrismaDbApi: MsPrismaDbApi, ctx: InlineQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
   const telegramUserId = ctx.from?.id
   const defaultErrorInlineKeyboard = new InlineKeyboard()
@@ -72,9 +72,9 @@ export async function runDefaultInline (msMusicApi: MsMusicApi, msPrismaDbApi: M
     return
   }
   const inlineQueryResults: InlineQueryResult[] = []
-  const inlinePlayingnowResultPromise = playingnowInlineResult(ctxLang, lastfmUser, msMusicApi, ctx)
+  const inlinePlayingnowResultPromise = playingnowInlineResult(ctxLang, lastfmUser, ctx)
   const inlineBriefResultPromise = briefInlineResult(ctxLang, lastfmUser)
-  // const inlinePnartistResultPromise = pnartistInlineResult(ctxLang, lastfmUser, msMusicApi, msPrismaDbApi, ctx)
+  // const inlinePnartistResultPromise = pnartistInlineResult(ctxLang, lastfmUser, msPrismaDbApi, ctx)
   const inlineResults = await Promise.all([inlinePlayingnowResultPromise, inlineBriefResultPromise])
   for (const inlineResult of inlineResults) {
     inlineQueryResults.push(inlineResult.result)

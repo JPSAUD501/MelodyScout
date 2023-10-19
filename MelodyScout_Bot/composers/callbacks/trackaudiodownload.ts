@@ -1,6 +1,6 @@
 import { Composer } from 'grammy'
 import { melodyScoutConfig } from '../../../config'
-import { maintenanceMode, msMusicApi } from '../../bot'
+import { maintenanceMode } from '../../bot'
 import { runMaintenanceinformCallback } from '../../botFunctions/callbacks/maintenanceinform'
 import { runTrackAudioDownloadCallback } from '../../botFunctions/callbacks/trackaudiodownload'
 import { logNewCallbackQuery } from '../../logFunctions'
@@ -13,7 +13,7 @@ trackaudiodownloadCallback.callbackQuery(new RegExp(`^TAD${melodyScoutConfig.div
     void runMaintenanceinformCallback(ctx)
     return
   }
-  void runTrackAudioDownloadCallback(msMusicApi, ctx)
+  void runTrackAudioDownloadCallback(ctx)
 })
 
 trackaudiodownloadCallback.errorBoundary((err) => {
