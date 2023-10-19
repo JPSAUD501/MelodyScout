@@ -4,7 +4,7 @@ import fs from 'fs'
 import { type AIImageMetadata } from '../types'
 
 test('createStoriesVideo-DEFAULT', async () => {
-  const imageBuffer = Buffer.from(fs.readFileSync('./Tests/resources/base/image.png'))
+  const imageBuffer = Buffer.from(fs.readFileSync('./Tests/resources/base/editedImage.png'))
   const trackPreviewBuffer = Buffer.from(fs.readFileSync('./Tests/resources/base/trackPreview.mp3'))
   const mockMetadata: AIImageMetadata = {
     version: 'v1',

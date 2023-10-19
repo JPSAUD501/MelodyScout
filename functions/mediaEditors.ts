@@ -5,8 +5,8 @@ import { lang } from '../translations/base'
 import { type AIImageMetadata } from '../types'
 import ffmpeg from 'fluent-ffmpeg'
 import stream from 'stream'
+import { deleteTempDir, getTempDir } from './tempy'
 import { ffConfig } from '../config'
-import { temporaryDirectoryTask } from './tempy'
 
 export async function composeImage (ctxLang: string | undefined, image: Buffer, trackName: string, artistName: string): Promise<{
   success: true
@@ -166,48 +166,48 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
       }
     }
     const storiesImageStream = stream.Readable.from(storiesImage.storiesImage)
-    const trackPreviewStream = stream.Readable.from(trackPreview)
-    ffmpeg.setFfmpegPath(ffConfig.ffmpegPath)
-    ffmpeg.setFfprobePath(ffConfig.ffprobePath)
-    const video: {
-      inputImage: stream.Readable
-      inputAudio: stream.Readable
-      output: Buffer | undefined
+    const output: {
+      video: Buffer | undefined
     } = {
-      inputImage: storiesImageStream,
-      inputAudio: trackPreviewStream,
-      output: undefined
+      video: undefined
     }
-    await temporaryDirectoryTask(async (tempDir) => {
-      console.log(`Temporary directory: ${tempDir}`)
-      const getVideo = async (): Promise<Buffer> => {
-        return await new Promise((_resolve, reject) => {
-          ffmpeg(storiesImageStream)
-            .outputFormat('mp4')
-            .on('start', (commandLine) => {
-              console.log(`ffmpeg command: ${commandLine}`)
-            })
-            .on('progress', (progress) => {
-              console.log(`Processing: ${progress.percent}% done`)
-            })
-            .on('error', (error) => {
-              reject(new Error(error))
-            })
-            .save(path.join(tempDir, 'video.mp4'))
-        })
-      }
-      const processVideo = await getVideo().catch((error) => {
-        return new Error(error)
+    const tempDir = getTempDir()
+    console.log(`Temporary directory: ${tempDir}`)
+    fs.writeFileSync(path.join(tempDir, 'trackPreview.mp3'), trackPreview)
+    const getVideo = async (): Promise<Buffer> => {
+      return await new Promise((resolve, reject) => {
+        ffmpeg(storiesImageStream)
+          .setFfmpegPath(ffConfig.ffmpegPath)
+          .setFfprobePath(ffConfig.ffprobePath)
+          .loop(15)
+          .fps(30)
+          .addInput(path.join(tempDir, 'trackPreview.mp3'))
+          .outputFormat('mp4')
+          .on('start', (commandLine) => {
+            console.log(`ffmpeg command: ${commandLine}`)
+          })
+          .on('end', () => {
+            resolve(fs.readFileSync(path.join(tempDir, 'video.mp4')))
+          })
+          .on('error', (error) => {
+            reject(new Error(error))
+          })
+          .save(path.join(tempDir, 'video.mp4'))
       })
-      if (processVideo instanceof Error) {
-        return {
-          success: false,
-          error: `Error on creating video: ${processVideo.message}`
-        }
-      }
-      video.output = fs.readFileSync(path.join(tempDir, 'video.mp4'))
+    }
+    const processVideo = await getVideo().catch((error) => {
+      return new Error(error)
     })
-    if (video.output === undefined) {
+    if (processVideo instanceof Error) {
+      deleteTempDir(tempDir)
+      return {
+        success: false,
+        error: `Error on creating video: ${processVideo.message}`
+      }
+    }
+    output.video = fs.readFileSync(path.join(tempDir, 'video.mp4'))
+    deleteTempDir(tempDir)
+    if (output.video === undefined) {
       return {
         success: false,
         error: 'Error on creating video: Output is undefined'
@@ -216,7 +216,7 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
     return {
       success: true,
       data: {
-        video: video.output
+        video: output.video
       }
     }
   } catch (error) {
