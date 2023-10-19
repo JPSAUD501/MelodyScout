@@ -6,6 +6,7 @@ import { MsGithubApi } from '../../../api/msGithubApi/base'
 import { zodAIImageMetadata } from '../../../types'
 import { MsInstagramApi } from '../../../api/msInstagramApi/base'
 import { composeStoryImage } from '../../../functions/mediaEditors'
+import { createStoriesVideo } from 'melodyscout/functions/mediaEditors'
 
 const postedImages: string[] = []
 
@@ -15,38 +16,40 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   const dataArray = ctx.callbackQuery.data.split(melodyScoutConfig.divider)
   const imageId = dataArray[1]
   if (imageId === undefined) {
-    void ctxTempReply(ctx, 'Não foi possível encontrar o ID da imagem', 15000)
+    void ctxTempReply(ctx, 'Infelizmente ocorreu um erro ao tentar compartilhar essa imagem!', 15000)
   }
-  void ctxTempReply(ctx, 'Publicando imagem...', 15000)
+  if (postedImages.includes(imageId)) {
+    void ctxTempReply(ctx, 'Opa! Parece que a imagem que você me pediu para compartilhar já está sendo compartilhada!', 15000)
+    return
+  }
+  postedImages.push(imageId)
+  void ctxTempReply(ctx, 'Que legal! Vou compartilhar essa imagem nos stories do MelodyScout no Instagram!\nAssim que a imagem for compartilhada, eu te aviso!', 30000)
   const getGithubImagePromise = new MsGithubApi(githubConfig.token).files.getFile(`${imageId}.jpg`)
   const metadataVersion = zodAIImageMetadata.shape.version.value
   const getGithubMetadataPromise = new MsGithubApi(githubConfig.token).files.getFile(`${imageId}-${metadataVersion}.json`)
   const [getGithubImage, getGithubMetadata] = await Promise.all([getGithubImagePromise, getGithubMetadataPromise])
   if (!getGithubImage.success) {
-    void ctxTempReply(ctx, 'Não foi possível encontrar a imagem', 15000)
+    void ctxTempReply(ctx, 'Não foi possível compartilhar a imagem! A imagem não foi encontrada no sistema!', 15000)
     return
   }
   if (!getGithubMetadata.success) {
-    void ctxTempReply(ctx, 'Não foi possível encontrar os metadados da imagem ou a versão dos metadados não é compatível com a versão do bot', 15000)
+    void ctxTempReply(ctx, 'Não foi possível compartilhar a imagem! A imagem não foi encontrada ou versão dela não é mais suportada!', 15000)
     return
   }
   const image = Buffer.from(getGithubImage.data.content, 'base64')
   const metadata = JSON.parse(Buffer.from(getGithubMetadata.data.content, 'base64').toString())
   const parsedMetadata = zodAIImageMetadata.safeParse(metadata)
   if (!parsedMetadata.success) {
-    void ctxTempReply(ctx, 'Não foi possível ler os metadados da imagem', 15000)
+    void ctxTempReply(ctx, 'Não foi possível compartilhar a imagem! As informações da imagem são invalidas!', 15000)
     return
   }
+  const track
   const storiesImageResponse = await composeStoryImage(image)
   if (!storiesImageResponse.success) {
-    void ctxTempReply(ctx, 'Não foi possível compor a imagem do stories', 15000)
+    void ctxTempReply(ctx, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar criar a imagem para o Instagram!', 15000)
     return
   }
-  if (postedImages.includes(imageId)) {
-    void ctxTempReply(ctx, 'Essa imagem já está sendo compartilhada!', 15000)
-    return
-  }
-  postedImages.push(imageId)
+  const storiesVideoResponse = await createStoriesVideo(storiesImageResponse.storiesImage)
   const publishStoryResponse = await new MsInstagramApi(instagramConfig.username, instagramConfig.password).postStory({
     file: storiesImageResponse.storiesImage
   })

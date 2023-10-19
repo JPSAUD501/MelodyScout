@@ -16,23 +16,23 @@ export async function runTrackpreviewCallback (msMusicApi: MsMusicApi, ctx: Call
     await ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'lastfmTrackOrArtistDataNotFoundedErrorCallback'))
     return
   }
-  const spotifyTrackInfoPromise = msMusicApi.getSpotifyTrackInfo(track, artist)
-  const deezerSearchTrackPromise = new MsDeezerApi().search.track(track, artist, 1)
-  const [spotifyTrackInfo, deezerSearchTrack] = await Promise.all([spotifyTrackInfoPromise, deezerSearchTrackPromise])
-  const previewUrls: string[] = []
-  if (spotifyTrackInfo.success) {
-    if (spotifyTrackInfo.data.length >= 1) {
-      if (spotifyTrackInfo.data[0].preview_url !== null) previewUrls.push(spotifyTrackInfo.data[0].preview_url)
-    }
-  }
-  if (deezerSearchTrack.success) {
-    if (deezerSearchTrack.data.data.length >= 1) {
-      if (deezerSearchTrack.data.data[0].preview !== null) previewUrls.push(deezerSearchTrack.data.data[0].preview)
-    }
-  }
-  if (previewUrls.length <= 0) {
-    await ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'spotifyTrackPreviewUrlNotFoundedErrorCallback')); return
-  }
+  // const spotifyTrackInfoPromise = msMusicApi.getSpotifyTrackInfo(track, artist)
+  // const deezerSearchTrackPromise = new MsDeezerApi().search.track(track, artist, 1)
+  // const [spotifyTrackInfo, deezerSearchTrack] = await Promise.all([spotifyTrackInfoPromise, deezerSearchTrackPromise])
+  // const previewUrls: string[] = []
+  // if (spotifyTrackInfo.success) {
+  //   if (spotifyTrackInfo.data.length >= 1) {
+  //     if (spotifyTrackInfo.data[0].preview_url !== null) previewUrls.push(spotifyTrackInfo.data[0].preview_url)
+  //   }
+  // }
+  // if (deezerSearchTrack.success) {
+  //   if (deezerSearchTrack.data.data.length >= 1) {
+  //     if (deezerSearchTrack.data.data[0].preview !== null) previewUrls.push(deezerSearchTrack.data.data[0].preview)
+  //   }
+  // }
+  // if (previewUrls.length <= 0) {
+  //   await ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'spotifyTrackPreviewUrlNotFoundedErrorCallback')); return
+  // }
   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'sendingTrackPreviewInformCallback'))
   await ctxReplyWithAudio(ctx, new InputFile({ url: previewUrls[0] }), {
     title: track,

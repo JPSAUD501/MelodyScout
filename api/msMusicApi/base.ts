@@ -7,6 +7,7 @@ import { advError } from '../../functions/advancedConsole'
 import * as Soundify from '@soundify/web-api'
 import { type SearchEndpoint } from '@soundify/web-api/types/api/search/search.endpoints'
 import axios from 'axios'
+import { deleteTempDir, getTempDir } from '../../functions/tempy'
 
 export interface MsMusicApiError {
   success: false
@@ -209,17 +210,8 @@ export class MsMusicApi {
   }
 
   async youtubeTrackVideoDownload (youtubeUrl: string): Promise<MsMusicApiError | MsMusicApiYoutubeTrackDownload> {
-    if (!fs.existsSync(path.join(__dirname, './temp'))) {
-      fs.mkdirSync(path.join(__dirname, './temp'))
-    }
-    const id = uuidv4()
-    const pathToSave = path.join(__dirname, `./temp/${id}.mp4`)
-    if (fs.existsSync(pathToSave)) {
-      return {
-        success: false,
-        error: 'File already exists!'
-      }
-    }
+    const tempDir = getTempDir()
+    const pathToSave = path.join(tempDir, 'video.mp4')
     const output = await youtubedl.exec(youtubeUrl, {
       format: 'best',
       noWarnings: true,
@@ -232,21 +224,14 @@ export class MsMusicApi {
     }).catch((err) => {
       return new Error(String(err))
     })
-    const deleteFile = async (): Promise<void> => {
-      try {
-        fs.rmSync(pathToSave)
-      } catch (err) {
-        advError(`Error while deleting file! File: ${id}.* - Error: ${String(err)}`)
-      }
-    }
     if (output instanceof Error) {
       advError(`Error while downloading video from Youtube! Url: ${youtubeUrl} - Error: ${output.message}`)
-      await deleteFile()
+      deleteTempDir(tempDir)
       return { success: false, error: output.message }
     }
     if (!fs.existsSync(pathToSave)) {
       advError(`Error while downloading video from Youtube! Url: ${youtubeUrl} - Error: File not found!`)
-      await deleteFile()
+      deleteTempDir(tempDir)
       return { success: false, error: 'File not found!' }
     }
     const readFileResult: {
@@ -262,16 +247,16 @@ export class MsMusicApi {
       readFileResult.buffer = new Error(String(err))
     }
     if (readFileResult.buffer instanceof Error) {
-      advError(`Error while reading file! File: ${id}.* - Error: ${readFileResult.buffer.message}`)
-      await deleteFile()
+      advError(`Error while reading file! File: ${pathToSave} - Error: ${readFileResult.buffer.message}`)
+      deleteTempDir(tempDir)
       return { success: false, error: readFileResult.buffer.message }
     }
     if (readFileResult.buffer === undefined) {
-      advError(`Error while reading file! File: ${id}.* - Error: Buffer is undefined!`)
-      await deleteFile()
+      advError(`Error while reading file! File: ${pathToSave} - Error: Buffer is undefined!`)
+      deleteTempDir(tempDir)
       return { success: false, error: 'Buffer is undefined!' }
     }
-    await deleteFile()
+    deleteTempDir(tempDir)
     return {
       success: true,
       file: {
