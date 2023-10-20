@@ -4,10 +4,10 @@
   "description": "Last.fm Telegram Tracker bot",
   "main": "app.ts",
   "scripts": {
-    "start:prod": "npm run deploy && npm run start",
+    "start:prod": "yarn deploy && yarn start",
     "start": "ts-node ./app.ts",
-    "deploy": "npx --yes prisma migrate deploy",
-    "dev": "npm run translation && npm start",
+    "deploy": "yarn prisma migrate deploy",
+    "dev": "yarn translation && yarn start",
     "translation": "ts-node ./translations/runModule.ts",
     "test": "jest"
   },
