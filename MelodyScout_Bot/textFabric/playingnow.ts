@@ -34,13 +34,13 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
     Number(track.userplaycount) > 0 &&
     (
       Number(track.duration) > 0 ||
-      Number(spotifyTrackInfo.duration) > 0
+      spotifyTrackInfo.duration_ms > 0
     )
   ) {
-    // postInfoArray.push(`Já ouviu essa música por ${Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)} horas e ${Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)) * 60)} minutos.`)
+    // postInfoArray.push(`Já ouviu essa música por ${Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : spotifyTrackInfo.duration_ms) / 1000 / 3600)} horas e ${Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : spotifyTrackInfo.duration_ms) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : spotifyTrackInfo.duration_ms) / 1000 / 3600)) * 60)} minutos.`)
     postInfoArray.push(lang(ctxLang, 'tfPlayingnowPostTrackPlaytime', {
-      hours: Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600),
-      minutes: Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)) * 60)
+      hours: Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : spotifyTrackInfo.duration_ms) / 1000 / 3600),
+      minutes: Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : spotifyTrackInfo.duration_ms) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : spotifyTrackInfo.duration_ms) / 1000 / 3600)) * 60)
     }))
   }
   switch (postInfoArray.length) {
@@ -123,13 +123,13 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
     Number(track.userplaycount) > 0 &&
     (
       Number(track.duration) > 0 ||
-      Number(spotifyTrackInfo.duration) > 0
+      Number(spotifyTrackInfo.duration_ms) > 0
     )
-  // ) infoArray.push(`- Você já ouviu essa música por <b>${Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)} horas</b> e <b>${Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)) * 60)} minutos</b>.`)
+  // ) infoArray.push(`- Você já ouviu essa música por <b>${Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration_ms)) / 1000 / 3600)} horas</b> e <b>${Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration_ms)) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration_ms)) / 1000 / 3600)) * 60)} minutos</b>.`)
   ) {
     infoArray.push(lang(ctxLang, 'tfPlayingnowInfoTrackPlaytime', {
-      hours: Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600),
-      minutes: Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration)) / 1000 / 3600)) * 60)
+      hours: Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration_ms)) / 1000 / 3600),
+      minutes: Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration_ms)) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : Number(spotifyTrackInfo.duration_ms)) / 1000 / 3600)) * 60)
     }))
   }
   // if (spotifyTrackInfo.popularity !== undefined) infoArray.push(`- A <a href="${melodyScoutConfig.popularityImgUrl}">popularidade</a> atual dessa música é: <b>[${spotifyTrackInfo.popularity}][${'★'.repeat(Math.floor(spotifyTrackInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyTrackInfo.popularity / 20))}]</b>`)
