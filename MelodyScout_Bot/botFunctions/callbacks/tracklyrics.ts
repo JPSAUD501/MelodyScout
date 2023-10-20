@@ -1,6 +1,6 @@
 import { type CallbackQueryContext, type Context, InlineKeyboard } from 'grammy'
 import { ctxAnswerCallbackQuery, ctxReply } from '../../../functions/grammyFunctions'
-import { MsGeniusApi } from '../../../api/msGeniusApi/base'
+import { MsLyricsApi } from '../../../api/msLyricsApi/base'
 import { getCallbackKey } from '../../../functions/callbackMaker'
 import { getLyricsText } from '../../textFabric/lyrics'
 import { geniusConfig, melodyScoutConfig } from '../../../config'
@@ -17,13 +17,13 @@ export async function runTracklyricsCallback (ctx: CallbackQueryContext<Context>
     void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmTrackDataNotFoundedError'))
     return
   }
-  const msGeniusApi = new MsGeniusApi(geniusConfig.accessToken)
-  const geniusSong = await msGeniusApi.getSong(track, artist)
-  if (!geniusSong.success) {
-    void ctxReply(ctx, undefined, lang(ctxLang, 'geniusTrackLyricsNotFoundedError'), { reply_to_message_id: messageId, allow_sending_without_reply: true })
+  const msLyricsApi = new MsLyricsApi(geniusConfig.accessToken)
+  const songLyricsData = await msLyricsApi.getLyrics(track, artist)
+  if (!songLyricsData.success) {
+    void ctxReply(ctx, undefined, lang(ctxLang, 'trackLyricsNotFoundedError'), { reply_to_message_id: messageId, allow_sending_without_reply: true })
     return
   }
   const inlineKeyboard = new InlineKeyboard()
   inlineKeyboard.text(lang(ctxLang, 'trackLyricsTranslateButton'), getCallbackKey(['TTL', track, artist]))
-  await ctxReply(ctx, undefined, getLyricsText(ctxLang, track, artist, geniusSong.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId, allow_sending_without_reply: true, reply_markup: inlineKeyboard, disable_web_page_preview: true })
+  await ctxReply(ctx, undefined, getLyricsText(ctxLang, track, artist, songLyricsData.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId, allow_sending_without_reply: true, reply_markup: inlineKeyboard, disable_web_page_preview: true })
 }

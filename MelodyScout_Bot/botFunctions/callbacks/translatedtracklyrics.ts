@@ -1,6 +1,6 @@
 import { type CallbackQueryContext, type Context } from 'grammy'
 import { ctxAnswerCallbackQuery, ctxEditMessage, ctxReply } from '../../../functions/grammyFunctions'
-import { MsGeniusApi } from '../../../api/msGeniusApi/base'
+import { MsLyricsApi } from '../../../api/msLyricsApi/base'
 import { geniusConfig, melodyScoutConfig } from '../../../config'
 import { translate } from '@vitalets/google-translate-api'
 import { getLyricsText } from '../../textFabric/lyrics'
@@ -21,18 +21,18 @@ export async function runTranslatedtracklyricsCallback (ctx: CallbackQueryContex
     void ctxReply(ctx, undefined, lang(ctxLang, 'trackOrArtistNameNotFoundedInCallbackDataErrorMessage'))
     return
   }
-  const msGeniusApi = new MsGeniusApi(geniusConfig.accessToken)
-  const geniusSong = await msGeniusApi.getSong(track, artist)
-  if (!geniusSong.success) {
-    void ctxReply(ctx, undefined, lang(ctxLang, 'geniusTrackLyricsNotFoundedError'))
+  const msLyricsApi = new MsLyricsApi(geniusConfig.accessToken)
+  const songLyricsData = await msLyricsApi.getLyrics(track, artist)
+  if (!songLyricsData.success) {
+    void ctxReply(ctx, undefined, lang(ctxLang, 'trackLyricsNotFoundedError'))
     return
   }
   console.log('Translating lyrics...')
-  const translatedTrackLyrics = await translate(geniusSong.data.lyrics, { to: 'pt-BR' })
+  const translatedTrackLyrics = await translate(songLyricsData.data.lyrics, { to: 'pt-BR' })
   console.log('Lyrics translated!')
   if (translatedTrackLyrics.text.length <= 0) {
     void ctxReply(ctx, undefined, lang(ctxLang, 'unableToTranslateLyricsErrorMessage'))
     return
   }
-  await ctxEditMessage(ctx, undefined, getLyricsText(ctxLang, track, artist, geniusSong.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, translatedTrackLyrics.text), { disable_web_page_preview: true })
+  await ctxEditMessage(ctx, undefined, getLyricsText(ctxLang, track, artist, songLyricsData.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, translatedTrackLyrics.text), { disable_web_page_preview: true })
 }

@@ -125,7 +125,6 @@ export const enUS = {
   tfBriefMostPlayedArtistsListItem: '- ({{artistPlaycount}}x) <a href="{{artistUrl}}"><b>{{artistName}}</b></a>',
   tfBriefMetricsRepeatedTracks: '- Repeated tracks: <b>{{repeatedTracksLength}}</b>',
   tfBriefPostInfosAverageRepeatTracks: '- Each known track is repeated {{averageRepeatTracks}} times on average.',
-  geniusTrackLyricsNotFoundedError: "Unfortunately we couldn't find the lyrics to this track on Genius.",
   tfContactInform: 'To get in touch with the MelodyScout developer, send a message to @jpsaud!',
   lyricsExplanationAiPrompt: 'A brief explanation of the lyrics:',
   tfTracklyricsexplanationHeader: '<b>[✨] Explanation of "{{trackName}}" by "{{artistName}}" provided by MelodyScoutAi requested by {{requestedBy}}</b>',
@@ -162,5 +161,6 @@ export const enUS = {
   tfPlayingnowInfoTrackPopularity: '- The current <a href="{{popularityInfoUrl}}">popularity</a> of this track is: <b>[{{popularity}}][{{stars}}]</b>',
   tfPlayingnowInfoTrackAlbumPercentage: '- This song represents <b>{{percentage}}%</b> of all your plays from this album.',
   composeImageTitle: '<b>{{trackName}}</b> by <b>{{artistName}}</b>',
-  youtubeMusicButton: '[🎶] - YT Music'
+  youtubeMusicButton: '[🎶] - YT Music',
+  trackLyricsNotFoundedError: 'Unfortunately we were unable to find the lyrics to this song in any of our sources.'
 }

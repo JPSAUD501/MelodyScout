@@ -125,7 +125,6 @@ export const ptBR = {
   tfBriefMostPlayedAlbumsListItem: '- ({{albumPlaycount}}x) <a href="{{albumUrl}}"><b>{{albumName}}</b> de <b>{{albumArtistName}}</b></a>',
   tfBriefMostPlayedArtistsTittle: '<b>[👨‍🎤] Artistas mais tocados</b>',
   tfBriefMostPlayedArtistsListItem: '- ({{artistPlaycount}}x) <a href="{{artistUrl}}"><b>{{artistName}}</b></a>',
-  geniusTrackLyricsNotFoundedError: 'Infelizmente não foi possível encontrar a letra dessa música na Genius.',
   tfContactInform: 'Para entrar em contato com o desenvolvedor do MelodyScout, envie uma mensagem para o @jpsaud!',
   lyricsExplanationAiPrompt: 'Explicação resumida da letra da música:',
   tfTracklyricsexplanationHeader: '<b>[✨] Explicação de "{{trackName}}" por "{{artistName}}" fornecida pelo MelodyScoutAi solicitada por {{requestedBy}}</b>',
@@ -162,5 +161,6 @@ export const ptBR = {
   tfPlayingnowShareTitle: '<b>[🔗] Compartilhe</b>',
   tfPlayingnowShareLink: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>',
   composeImageTitle: '<b>{{trackName}}</b> por <b>{{artistName}}</b>',
-  youtubeMusicButton: '[🎶] - YT Music'
+  youtubeMusicButton: '[🎶] - YT Music',
+  trackLyricsNotFoundedError: 'Infelizmente não foi possível encontrar a letra dessa música em nenhuma de nossas fontes.'
 }

@@ -3,7 +3,7 @@ import { ctxAnswerCallbackQuery, ctxEditMessage, ctxReply, ctxReplyWithVoice, ct
 import { getTracklyricsexplanationText } from '../../textFabric/tracklyricsexplanation'
 import { geniusConfig, melodyScoutConfig, openaiConfig } from '../../../config'
 import { advLog } from '../../../functions/advancedConsole'
-import { MsGeniusApi } from '../../../api/msGeniusApi/base'
+import { MsLyricsApi } from '../../../api/msLyricsApi/base'
 import { MsOpenAiApi } from '../../../api/msOpenAiApi/base'
 import { MsTextToSpeechApi } from '../../../api/msTextToSpeechApi/base'
 import { lang } from '../../../translations/base'
@@ -26,16 +26,16 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
     void ctxReply(ctx, undefined, lang(ctxLang, 'errorOnSendLoadingMessageInformMessage'))
     return
   }
-  const msGeniusApi = new MsGeniusApi(geniusConfig.accessToken)
-  const geniusSong = await msGeniusApi.getSong(track, artist)
-  if (!geniusSong.success) {
-    void ctxReply(ctx, undefined, lang(ctxLang, 'geniusTrackLyricsNotFoundedError'), { reply_to_message_id: messageId, allow_sending_without_reply: true })
+  const msLyricsApi = new MsLyricsApi(geniusConfig.accessToken)
+  const songLyricsData = await msLyricsApi.getLyrics(track, artist)
+  if (!songLyricsData.success) {
+    void ctxReply(ctx, undefined, lang(ctxLang, 'trackLyricsNotFoundedError'), { reply_to_message_id: messageId, allow_sending_without_reply: true })
     return
   }
-  const imageByLyricsRequest = getAiImageByLyrics(ctxLang, geniusSong.data.lyrics, track, artist)
+  const imageByLyricsRequest = getAiImageByLyrics(ctxLang, songLyricsData.data.lyrics, track, artist)
   const msOpenAiApi = new MsOpenAiApi(openaiConfig.apiKey)
-  const lyricsExplanationRequest = msOpenAiApi.getLyricsExplanation(ctxLang, geniusSong.data.lyrics)
-  const lyricsEmojisRequest = msOpenAiApi.getLyricsEmojis(geniusSong.data.lyrics)
+  const lyricsExplanationRequest = msOpenAiApi.getLyricsExplanation(ctxLang, songLyricsData.data.lyrics)
+  const lyricsEmojisRequest = msOpenAiApi.getLyricsEmojis(songLyricsData.data.lyrics)
   const [lyricsExplanation, lyricsEmojis] = await Promise.all([lyricsExplanationRequest, lyricsEmojisRequest])
   if (!lyricsExplanation.success) {
     void ctxReply(ctx, undefined, lang(ctxLang, 'errorOnCreatingLyricsExplanationInformMessage'), { reply_to_message_id: messageId, allow_sending_without_reply: true })

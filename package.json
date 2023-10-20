@@ -4,13 +4,13 @@
   "description": "Last.fm Telegram Tracker bot",
   "main": "app.ts",
   "scripts": {
-    "start": "ts-node --transpile-only ./app.ts",
-    "deploy": "yarn prisma migrate deploy",
-    "dev": "yarn translation && ts-node ./app.ts",
-    "translation": "ts-node ./translations/runModule.ts",
-    "build": "tsc",
-    "start-server": "node ./dist/app.js",
-    "test": "jest"
+    "start:prod": "npm run deploy && npm run start",
+    "start": "npx --yes bun ./app.ts",
+    "deploy": "npx --yes bun x prisma migrate deploy",
+    "dev": "npm run translation && npm start",
+    "translation": "npx --yes bun  ./translations/runModule.ts",
+    "test": "jest",
+    "bun:install": "npx --yes bun install && npx --yes bun x prisma generate"
   },
   "repository": {
     "type": "git",
@@ -41,6 +41,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@flytri/lyrics-finder": "^1.0.7",
     "@prisma/client": "^5.4.1",
     "@soundify/web-api": "^0.2.4",
     "@supercharge/promise-pool": "^3.0.0",
@@ -49,6 +50,7 @@
     "@vitalets/google-translate-api": "^9.0.0",
     "axios": "^1.2.1",
     "cd": "^0.3.3",
+    "cheerio": "^1.0.0-rc.12",
     "dotenv": "^16.0.1",
     "fastify": "^4.4.0",
     "ffmpeg-static": "^5.2.0",
@@ -72,6 +74,9 @@
     "youtube-stream-url": "^2.4.1",
     "zod": "^3.20.2"
   },
+  "trustedDependencies": [
+    "sharp"
+  ],
   "engines": {
     "node": ">=18.x"
   }

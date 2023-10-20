@@ -12,6 +12,7 @@
     "fastify",
     "ffprobe",
     "Filesize",
+    "flytri",
     "fontfile",
     "forgetme",
     "fulltrack",
@@ -28,6 +29,7 @@
     "lastfm",
     "LASTFM",
     "listeningnow",
+    "llyrics",
     "luxon",
     "lyricslite",
     "maintenanceinform",
@@ -37,6 +39,8 @@
     "mozjpeg",
     "MSBC",
     "MSLB",
+    "musicxmatch",
+    "musixmatch",
     "myuser",
     "nowplaying",
     "ontour",
@@ -110,5 +114,7 @@
     "youtube",
     "youtubedl"
   ],
-  "todo-tree.tree.disableCompactFolders": false
+  "todo-tree.tree.disableCompactFolders": false,
+  "jest.autoRun": "off",
+  "bun.debugTerminal.enabled": true
 }
