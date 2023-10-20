@@ -5,12 +5,11 @@
   "main": "app.ts",
   "scripts": {
     "start:prod": "npm run deploy && npm run start",
-    "start": "npx --yes bun ./app.ts",
-    "deploy": "npx --yes bun x prisma migrate deploy",
+    "start": "ts-node ./app.ts",
+    "deploy": "npx --yes prisma migrate deploy",
     "dev": "npm run translation && npm start",
-    "translation": "npx --yes bun  ./translations/runModule.ts",
-    "test": "jest",
-    "bun:install": "npx --yes bun install && npx --yes bun x prisma generate"
+    "translation": "ts-node ./translations/runModule.ts",
+    "test": "jest"
   },
   "repository": {
     "type": "git",

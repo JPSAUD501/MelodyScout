@@ -1,6 +1,6 @@
-import genius from 'genius-lyrics/dist/client'
+import { Client } from 'genius-lyrics/dist/client'
 import { advError, advLog } from '../../functions/advancedConsole'
-import lyricsFinder from '@flytri/lyrics-finder'
+import { Google, Musixmatch } from '@flytri/lyrics-finder'
 import { zodLyricsFinderData } from './types/zodLyricsFinderData'
 
 interface MsLyricsApiError {
@@ -42,7 +42,7 @@ export class MsLyricsApi {
   }
 
   private async getGeniusLyrics (track: string, artist: string): Promise<MsLyricsApiGetGeniusLyricsResponse> {
-    const songArray = await new genius.Client(this.accessToken).songs.search(`${track} ${artist}`, { sanitizeQuery: true }).catch((err) => {
+    const songArray = await new Client(this.accessToken).songs.search(`${track} ${artist}`, { sanitizeQuery: true }).catch((err) => {
       return new Error(err)
     })
     if (songArray instanceof Error) {
@@ -81,7 +81,7 @@ export class MsLyricsApi {
   }
 
   private async getGoogleLyrics (track: string, artist: string): Promise<MsLyricsApiGetGoogleLyricsResponse> {
-    const lyrics = await lyricsFinder.Google(`${track} ${artist}`).catch((err) => {
+    const lyrics = await Google(`${track} ${artist}`).catch((err) => {
       return new Error(err)
     })
     if (lyrics instanceof Error) {
@@ -117,7 +117,7 @@ export class MsLyricsApi {
   }
 
   private async getMusicxmatchLyrics (track: string, artist: string): Promise<MsLyricsApiGetMusicxmatchLyricsResponse> {
-    const lyrics = await lyricsFinder.Musixmatch(`${track} ${artist}`).catch((err) => {
+    const lyrics = await Musixmatch(`${track} ${artist}`).catch((err) => {
       return new Error(err)
     })
     if (lyrics instanceof Error) {
