@@ -1,5 +1,5 @@
 import { Composer } from 'grammy'
-import { maintenanceMode, msMusicApi, msPrismaDbApi } from '../../bot'
+import { maintenanceMode, msPrismaDbApi } from '../../bot'
 import { runMaintenanceinformCallback } from '../../botFunctions/callbacks/maintenanceinform'
 import { runPlayingnowCallback } from '../../botFunctions/callbacks/playingnow'
 import { logNewCallbackQuery } from '../../logFunctions'
@@ -12,7 +12,7 @@ playingnowCallback.callbackQuery('PLAYINGNOW', async (ctx) => {
     void runMaintenanceinformCallback(ctx)
     return
   }
-  void runPlayingnowCallback(msMusicApi, msPrismaDbApi, ctx)
+  void runPlayingnowCallback(msPrismaDbApi, ctx)
 })
 
 playingnowCallback.errorBoundary((err) => {

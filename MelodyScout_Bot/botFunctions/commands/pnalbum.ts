@@ -2,13 +2,14 @@ import { type CallbackQueryContext, type CommandContext, type Context, InlineKey
 import { ctxReply } from '../../../functions/grammyFunctions'
 import { getPnalbumText } from '../../textFabric/pnalbum'
 import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
-import { lastfmConfig } from '../../../config'
+import { lastfmConfig, spotifyConfig } from '../../../config'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
-import { type MsMusicApi } from '../../../api/msMusicApi/base'
+
 import { lang } from '../../../translations/base'
 import { MsDeezerApi } from '../../../api/msDeezerApi/base'
+import { MsMusicApi } from '../../../api/msMusicApi/base'
 
-export async function runPnalbumCommand (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context> | CallbackQueryContext<Context>): Promise<void> {
+export async function runPnalbumCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context> | CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
   if (ctx.chat?.type === 'channel') {
     void ctxReply(ctx, undefined, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
@@ -61,6 +62,7 @@ export async function runPnalbumCommand (msMusicApi: MsMusicApi, msPrismaDbApi: 
     artistMbid: userRecentTracks.data.recenttracks.track[0].artist.mbid,
     nowPlaying: userRecentTracks.data.recenttracks.track[0]['@attr']?.nowplaying === 'true'
   }
+  const msMusicApi = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret)
   const artistInfoRequest = msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
   const albumInfoRequest = msLastfmApi.album.getInfo(mainTrack.artistName, mainTrack.albumName, mainTrack.albumMbid, lastfmUser)
   const spotifyAlbumInfoRequest = msMusicApi.getSpotifyAlbumInfo(mainTrack.artistName, mainTrack.albumName)

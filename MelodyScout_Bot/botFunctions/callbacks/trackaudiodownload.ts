@@ -1,11 +1,12 @@
 import { type CallbackQueryContext, type Context, InputFile } from 'grammy'
 import { ctxAnswerCallbackQuery, ctxReply, ctxReplyWithAudio, ctxTempReply } from '../../../functions/grammyFunctions'
-import { type MsMusicApi } from '../../../api/msMusicApi/base'
-import { melodyScoutConfig } from '../../../config'
+
+import { melodyScoutConfig, spotifyConfig } from '../../../config'
 import { lang } from '../../../translations/base'
 import { getTrackaudiodownloadText } from '../../textFabric/trackaudiodownload'
+import { MsMusicApi } from '../../../api/msMusicApi/base'
 
-export async function runTrackAudioDownloadCallback (msMusicApi: MsMusicApi, ctx: CallbackQueryContext<Context>): Promise<void> {
+export async function runTrackAudioDownloadCallback (ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'loadingInformCallback'))
   const messageReplyId = ctx.callbackQuery.message?.reply_to_message?.message_id
@@ -16,6 +17,7 @@ export async function runTrackAudioDownloadCallback (msMusicApi: MsMusicApi, ctx
     void ctxReply(ctx, undefined, lang(ctxLang, 'trackOrArtistNameNotFoundedInCallbackDataErrorMessage'))
     return
   }
+  const msMusicApi = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret)
   const trackInfo = await msMusicApi.getYoutubeTrackInfo(track, artist)
   if (!trackInfo.success) {
     void ctxReply(ctx, undefined, lang(ctxLang, 'youtubeTrackDataNotFoundedErrorMessage'))

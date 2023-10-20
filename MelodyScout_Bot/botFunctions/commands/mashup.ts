@@ -6,12 +6,13 @@ import { MsRaveApi } from '../../../api/msRaveApi/base'
 import { type RaveContent } from '../../../api/msRaveApi/types/zodRaveContent'
 import axios from 'axios'
 import { advError } from '../../../functions/advancedConsole'
-import { lastfmConfig, melodyScoutConfig } from '../../../config'
-import { type MsMusicApi } from '../../../api/msMusicApi/base'
+import { lastfmConfig, melodyScoutConfig, spotifyConfig } from '../../../config'
+
 import { lang } from '../../../translations/base'
 import { getMashupText } from '../../textFabric/mashup'
+import { MsMusicApi } from '../../../api/msMusicApi/base'
 
-export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
+export async function runMashupCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
   if (ctx.chat?.type === 'channel') {
     void ctxReply(ctx, undefined, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
@@ -68,6 +69,7 @@ export async function runMashupCommand (msMusicApi: MsMusicApi, msPrismaDbApi: M
       track: userRecentTracks.data.recenttracks.track[1].name
     }
   ]
+  const msMusicApi = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret)
   const youtubeTrack1InfoRequest = msMusicApi.getYoutubeTrackInfo(mashupTracks[0].track, mashupTracks[0].artist)
   const youtubeTrack2InfoRequest = msMusicApi.getYoutubeTrackInfo(mashupTracks[1].track, mashupTracks[1].artist)
   const [youtubeTrack1Info, youtubeTrack2Info] = await Promise.all([youtubeTrack1InfoRequest, youtubeTrack2InfoRequest])

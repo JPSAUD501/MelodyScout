@@ -1,12 +1,12 @@
 import { type CallbackQueryContext, type Context, InputFile } from 'grammy'
 import { ctxAnswerCallbackQuery, ctxReplyWithAudio } from '../../../functions/grammyFunctions'
-import { type MsMusicApi } from '../../../api/msMusicApi/base'
+
 import { melodyScoutConfig } from '../../../config'
 import { lang } from '../../../translations/base'
 import { getTrackpreviewText } from '../../textFabric/trackpreview'
-import { MsDeezerApi } from '../../../api/msDeezerApi/base'
+import { getTrackPreview } from '../../../functions/getTrackPreview'
 
-export async function runTrackpreviewCallback (msMusicApi: MsMusicApi, ctx: CallbackQueryContext<Context>): Promise<void> {
+export async function runTrackpreviewCallback (ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
   const messageId = ctx.callbackQuery.message?.message_id
   const dataArray = ctx.callbackQuery.data.split(melodyScoutConfig.divider)
@@ -16,25 +16,13 @@ export async function runTrackpreviewCallback (msMusicApi: MsMusicApi, ctx: Call
     await ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'lastfmTrackOrArtistDataNotFoundedErrorCallback'))
     return
   }
-  const spotifyTrackInfoPromise = msMusicApi.getSpotifyTrackInfo(track, artist)
-  const deezerSearchTrackPromise = new MsDeezerApi().search.track(track, artist, 1)
-  const [spotifyTrackInfo, deezerSearchTrack] = await Promise.all([spotifyTrackInfoPromise, deezerSearchTrackPromise])
-  const previewUrls: string[] = []
-  if (spotifyTrackInfo.success) {
-    if (spotifyTrackInfo.data.length >= 1) {
-      if (spotifyTrackInfo.data[0].preview_url !== null) previewUrls.push(spotifyTrackInfo.data[0].preview_url)
-    }
-  }
-  if (deezerSearchTrack.success) {
-    if (deezerSearchTrack.data.data.length >= 1) {
-      if (deezerSearchTrack.data.data[0].preview !== null) previewUrls.push(deezerSearchTrack.data.data[0].preview)
-    }
-  }
-  if (previewUrls.length <= 0) {
-    await ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'spotifyTrackPreviewUrlNotFoundedErrorCallback')); return
+  const trackPreview = await getTrackPreview(track, artist)
+  if (!trackPreview.success) {
+    await ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'spotifyTrackPreviewUrlNotFoundedErrorCallback'))
+    return
   }
   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'sendingTrackPreviewInformCallback'))
-  await ctxReplyWithAudio(ctx, new InputFile({ url: previewUrls[0] }), {
+  await ctxReplyWithAudio(ctx, new InputFile({ url: trackPreview.previewUrl }), {
     title: track,
     performer: artist,
     caption: getTrackpreviewText(ctxLang, track, artist, ctx.from.id.toString(), ctx.from.first_name),

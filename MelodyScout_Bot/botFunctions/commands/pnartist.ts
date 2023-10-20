@@ -2,15 +2,16 @@ import { type CallbackQueryContext, type CommandContext, type Context, InlineKey
 import { PromisePool } from '@supercharge/promise-pool'
 import { getPnartistText } from '../../textFabric/pnartist'
 import { ctxReply } from '../../../functions/grammyFunctions'
-import { lastfmConfig } from '../../../config'
+import { lastfmConfig, spotifyConfig } from '../../../config'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
-import { type MsMusicApi } from '../../../api/msMusicApi/base'
+
 import { lang } from '../../../translations/base'
 import { type UserTopTracks } from '../../../api/msLastfmApi/types/zodUserTopTracks'
 import { MsDeezerApi } from '../../../api/msDeezerApi/base'
+import { MsMusicApi } from '../../../api/msMusicApi/base'
 
-export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context> | CallbackQueryContext<Context>): Promise<void> {
+export async function runPnartistCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context> | CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
   if (ctx.chat?.type === 'channel') {
     void ctxReply(ctx, undefined, lang(ctxLang, 'dontWorkOnChannelsInformMessage'))
@@ -66,6 +67,7 @@ export async function runPnartistCommand (msMusicApi: MsMusicApi, msPrismaDbApi:
     artistMbid: userRecentTracks.data.recenttracks.track[0].artist.mbid,
     nowPlaying: userRecentTracks.data.recenttracks.track[0]['@attr']?.nowplaying === 'true'
   }
+  const msMusicApi = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret)
   const artistInfoRequest = msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
   const spotifyArtistInfoRequest = msMusicApi.getSpotifyArtistInfo(mainTrack.artistName)
   const deezerArtistInfoRequest = new MsDeezerApi().search.artist(mainTrack.artistName, 1)

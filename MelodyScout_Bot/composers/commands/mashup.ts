@@ -2,7 +2,7 @@ import { Composer } from 'grammy'
 import { logNewCommand } from '../../logFunctions'
 import { runMashupCommand } from '../../botFunctions/commands/mashup'
 import { runMaintenanceinformCommand } from '../../botFunctions/commands/maintenanceinform'
-import { maintenanceMode, msMusicApi, msPrismaDbApi } from '../../bot'
+import { maintenanceMode, msPrismaDbApi } from '../../bot'
 
 export const mashupCommand = new Composer()
 
@@ -12,7 +12,7 @@ mashupCommand.command(['mashup'], async (ctx) => {
     void runMaintenanceinformCommand(ctx)
     return
   }
-  void runMashupCommand(msMusicApi, msPrismaDbApi, ctx)
+  void runMashupCommand(msPrismaDbApi, ctx)
 })
 
 mashupCommand.errorBoundary((err) => {

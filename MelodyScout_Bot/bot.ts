@@ -1,8 +1,6 @@
 import botConfig from './config'
 import { type Api, Bot, type Context, type RawApi } from 'grammy'
-import { spotifyConfig } from '../config'
 import { advError, advLog } from '../functions/advancedConsole'
-import { MsMusicApi } from '../api/msMusicApi/base'
 import { MsPrismaDbApi } from '../api/msPrismaDbApi/base'
 import { startCommand } from './composers/commands/start'
 import { maintenanceCommand } from './composers/commands/maintenance'
@@ -38,7 +36,6 @@ export const maintenanceMode = {
   active: false
 }
 export const msPrismaDbApi = new MsPrismaDbApi()
-export const msMusicApi = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret)
 
 export async function startMelodyScoutBot (): Promise<{
   getBotInfo: () => Promise<GetBotInfoResponse>

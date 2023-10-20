@@ -1,7 +1,7 @@
 import { Composer } from 'grammy'
 import { logNewCallbackQuery } from '../../logFunctions'
 import { runTrackpreviewCallback } from '../../botFunctions/callbacks/trackpreview'
-import { maintenanceMode, msMusicApi } from '../../bot'
+import { maintenanceMode } from '../../bot'
 import { melodyScoutConfig } from '../../../config'
 import { runMaintenanceinformCallback } from '../../botFunctions/callbacks/maintenanceinform'
 
@@ -13,7 +13,7 @@ trackpreviewCallback.callbackQuery(new RegExp(`^TP${melodyScoutConfig.divider}`)
     void runMaintenanceinformCallback(ctx)
     return
   }
-  void runTrackpreviewCallback(msMusicApi, ctx)
+  void runTrackpreviewCallback(ctx)
 })
 
 trackpreviewCallback.errorBoundary((err) => {

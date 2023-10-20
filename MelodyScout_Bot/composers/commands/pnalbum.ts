@@ -2,7 +2,7 @@ import { Composer } from 'grammy'
 import { logNewCommand } from '../../logFunctions'
 import { runPnalbumCommand } from '../../botFunctions/commands/pnalbum'
 import { runMaintenanceinformCommand } from '../../botFunctions/commands/maintenanceinform'
-import { maintenanceMode, msMusicApi, msPrismaDbApi } from '../../bot'
+import { maintenanceMode, msPrismaDbApi } from '../../bot'
 
 export const pnalbumCommand = new Composer()
 
@@ -12,7 +12,7 @@ pnalbumCommand.command(['pnalbum'], async (ctx) => {
     void runMaintenanceinformCommand(ctx)
     return
   }
-  void runPnalbumCommand(msMusicApi, msPrismaDbApi, ctx)
+  void runPnalbumCommand(msPrismaDbApi, ctx)
 })
 
 pnalbumCommand.errorBoundary((err) => {

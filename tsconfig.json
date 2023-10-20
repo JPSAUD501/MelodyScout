@@ -3,9 +3,9 @@
   "display": "Node 18",
 
   "compilerOptions": {
-    "lib": ["es2021"],
+    "lib": ["ES2022"],
     "module": "commonjs",
-    "target": "es2021",
+    "target": "ES2022",
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
