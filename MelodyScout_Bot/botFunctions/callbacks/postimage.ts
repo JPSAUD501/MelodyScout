@@ -65,7 +65,8 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
     return
   }
   const publishStoryResponse = await new MsInstagramApi(instagramConfig.username, instagramConfig.password).postStory({
-    file: storiesVideoResponse.data.video
+    video: storiesVideoResponse.data.video,
+    coverImage: storiesImageResponse.storiesImage
   })
   if (!publishStoryResponse.success) {
     postedImages.splice(postedImages.indexOf(imageId), 1)

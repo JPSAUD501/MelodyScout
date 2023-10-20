@@ -17,5 +17,5 @@ export function deleteTempDir (tempDir: string): void {
   if (!fs.existsSync(tempDir)) {
     return
   }
-  fs.rmdirSync(tempDir, { recursive: true })
+  fs.rmSync(tempDir, { recursive: true })
 }

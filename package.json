@@ -61,7 +61,7 @@
     "instagram-private-api": "^1.45.3",
     "jest": "^29.7.0",
     "luxon": "^3.0.1",
-    "openai": "^4.11.1",
+    "openai": "^4.12.4",
     "replicate": "^0.20.0",
     "sanitize-html": "^2.10.0",
     "scrape-youtube": "^2.3.2",

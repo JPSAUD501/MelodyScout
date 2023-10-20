@@ -182,6 +182,7 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
           .loop(15)
           .fps(30)
           .addInput(path.join(tempDir, 'trackPreview.mp3'))
+          .addInputOption('-stream_loop -1')
           .outputFormat('mp4')
           .on('start', (commandLine) => {
             console.log(`ffmpeg command: ${commandLine}`)
