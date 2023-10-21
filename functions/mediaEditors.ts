@@ -178,7 +178,6 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
       return await new Promise((resolve, reject) => {
         ffmpeg(storiesImageStream)
           .setFfmpegPath(ffConfig.ffmpegPath)
-          .setFfprobePath(ffConfig.ffprobePath)
           .loop(15)
           .fps(30)
           .addInput(path.join(tempDir, 'trackPreview.mp3'))

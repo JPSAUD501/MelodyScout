@@ -2,13 +2,13 @@ import { type InlineQueryContext, type Context, InlineQueryResultBuilder, Inline
 import { type InlineQueryResult } from 'grammy/types'
 import { lang } from '../../../../translations/base'
 import { getTrackpreviewText } from '../../../textFabric/trackpreview'
-import { v4 as uuidv4 } from 'uuid'
+import { randomUUID } from 'crypto'
 
 export async function trackpreviewInlineResult (ctxLang: string | undefined, trackName: string, artistName: string, trackpreviewUrl: string, spotifyTrackUrl: string | undefined, deezerTrackUrl: string | undefined, youtubeTrackUrl: string | undefined, youtubeMusicTrackUrl: string | undefined, ctx: InlineQueryContext<Context>): Promise<{
   success: boolean
   result: InlineQueryResult
 }> {
-  const resultId = `TP:${uuidv4()}`
+  const resultId = `TP:${randomUUID()}`
   const inlineKeyboard = new InlineKeyboard()
   if (spotifyTrackUrl !== undefined) inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyTrackUrl)
   if (deezerTrackUrl !== undefined) inlineKeyboard.url(lang(ctxLang, 'deezerButton'), deezerTrackUrl)

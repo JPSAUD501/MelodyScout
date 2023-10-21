@@ -146,7 +146,7 @@ export class MsLyricsApi {
       success: true,
       data: {
         lyrics: safeParse.data.lyrics,
-        url: `https://www.musixmatch.com/pt-br/search/${encodeURIComponent(`Lyrics ${track} ${artist}`)}`,
+        url: `https://www.musixmatch.com/search/${encodeURIComponent(`Lyrics ${track} ${artist}`)}`,
         provider: 'Musixmatch'
       }
     }
@@ -158,14 +158,14 @@ export class MsLyricsApi {
     const musicxmatchLyricsPromise = this.getMusicxmatchLyrics(track, artist)
     const [geniusLyrics, googleLyrics, musicxmatchLyrics] = await Promise.all([geniusLyricsPromise, googleLyricsPromise, musicxmatchLyricsPromise])
     const validLyrics: MsLyricsData[] = []
-    if (geniusLyrics.success) {
-      validLyrics.push(geniusLyrics.data)
+    if (musicxmatchLyrics.success) {
+      validLyrics.push(musicxmatchLyrics.data)
     }
     if (googleLyrics.success) {
       validLyrics.push(googleLyrics.data)
     }
-    if (musicxmatchLyrics.success) {
-      validLyrics.push(musicxmatchLyrics.data)
+    if (geniusLyrics.success) {
+      validLyrics.push(geniusLyrics.data)
     }
     if (validLyrics.length <= 0) {
       advError(`MsLyricsApi - No lyrics found! Track: ${track} Artist: ${artist}`)

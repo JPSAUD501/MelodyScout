@@ -1,9 +1,9 @@
 import fs from 'fs'
 import path from 'path'
-import crypto from 'crypto'
+import { randomUUID } from 'crypto'
 
 export function getTempDir (): string {
-  const uuid = crypto.randomUUID().replaceAll('-', '')
+  const uuid = randomUUID()
   if (!fs.existsSync(path.join(__dirname, '../temp'))) {
     fs.mkdirSync(path.join(__dirname, '../temp'))
   }

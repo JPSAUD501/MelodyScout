@@ -13,11 +13,6 @@ model TelegramUsers {
   lastUpdate     String
 }
 
-model ErrorLog {
-   id                      Int @id @unique @default(autoincrement())
-   date                    String
-   error                   String
-   userId                  String
-   chatId                  String
-   messageId               String?
+model PostRollout {
+  telegramChatId String  @id @unique
 }

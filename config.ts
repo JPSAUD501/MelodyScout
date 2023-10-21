@@ -1,6 +1,5 @@
 import dotenv from 'dotenv'
 import pathToFfmpeg from 'ffmpeg-static'
-import ffprobe from 'ffprobe-static'
 dotenv.config()
 
 export const melodyScoutConfig = {
@@ -60,6 +59,5 @@ export const instagramConfig = {
 }
 
 export const ffConfig = {
-  ffmpegPath: pathToFfmpeg ?? '',
-  ffprobePath: ffprobe.path ?? ''
+  ffmpegPath: pathToFfmpeg ?? ''
 }

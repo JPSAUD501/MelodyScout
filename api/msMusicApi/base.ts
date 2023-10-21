@@ -2,12 +2,12 @@ import { youtube } from 'scrape-youtube'
 import youtubedl from 'youtube-dl-exec'
 import fs, { type ReadStream } from 'fs'
 import path from 'path'
-import { v4 as uuidv4 } from 'uuid'
 import { advError } from '../../functions/advancedConsole'
 import * as Soundify from '@soundify/web-api'
 import { type SearchEndpoint } from '@soundify/web-api/types/api/search/search.endpoints'
 import axios from 'axios'
 import { deleteTempDir, getTempDir } from '../../functions/tempy'
+import { randomUUID } from 'crypto'
 
 export interface MsMusicApiError {
   success: false
@@ -269,7 +269,7 @@ export class MsMusicApi {
     if (!fs.existsSync(path.join(__dirname, './temp'))) {
       fs.mkdirSync(path.join(__dirname, './temp'))
     }
-    const id = uuidv4()
+    const id = randomUUID()
     const pathToSave = path.join(__dirname, `./temp/${id}.mp3`)
     if (fs.existsSync(pathToSave)) {
       return {
