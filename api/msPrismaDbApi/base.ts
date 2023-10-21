@@ -18,7 +18,7 @@ export class MsPrismaDbApi {
 
     this.checkIfExists = new CheckIfExists(this.prisma)
     this.create = new Create(this.prisma)
-    this.get = new Get(this.prisma)
+    this.get = new Get(this.prisma, this.checkIfExists, this.create)
     this.update = new Update(this.prisma, this.checkIfExists, this.create)
 
     advLog('MsPrismaDbApi started!')

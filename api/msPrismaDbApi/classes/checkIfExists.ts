@@ -38,4 +38,27 @@ export class CheckIfExists {
       exists: true
     }
   }
+
+  async postRollout (chatId: string): Promise<CheckIfExistsDefaultResponse> {
+    const postRolloutExists = await this.prisma.postRollout.findUnique({
+      where: {
+        telegramChatId: chatId
+      }
+    }).catch((err) => {
+      advError('Error while checking if chatIdPosted exists in database! ChatId: ' + chatId)
+      advError(err)
+      return new Error(err)
+    })
+    if (postRolloutExists instanceof Error) return { success: false, error: postRolloutExists.message }
+    if (postRolloutExists === null) {
+      return {
+        success: true,
+        exists: false
+      }
+    }
+    return {
+      success: true,
+      exists: true
+    }
+  }
 }

@@ -30,4 +30,19 @@ export class Create {
     if (createdTelegramUser instanceof Error) return { success: false, error: createdTelegramUser.message }
     return { success: true, info: 'Telegram user created!' }
   }
+
+  async postRollout (chatId: string): Promise<CreateDefaultResponse> {
+    const createdChatIdPosted = await this.prisma.postRollout.create({
+      data: {
+        telegramChatId: chatId,
+        posted: false
+      }
+    }).catch((err) => {
+      advError('Error while creating new chatIdPosted! ChatId: ' + chatId)
+      advError(err)
+      return new Error(err)
+    })
+    if (createdChatIdPosted instanceof Error) return { success: false, error: createdChatIdPosted.message }
+    return { success: true, info: 'ChatIdPosted created!' }
+  }
 }

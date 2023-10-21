@@ -48,4 +48,47 @@ export class Update {
       info: 'Telegram user set!'
     }
   }
+
+  async postRollout (chatId: string, posted: boolean): Promise<UpdateDefaultResponse> {
+    const checkIfExists = await this.checkIfExists.postRollout(chatId)
+    if (!checkIfExists.success) return { success: false, error: checkIfExists.error }
+    if (!checkIfExists.exists) {
+      const createPostRollout = await this.create.postRollout(chatId)
+      if (!createPostRollout.success) return { success: false, error: createPostRollout.error }
+    }
+    const setPostRollout = await this.prisma.postRollout.update({
+      where: {
+        telegramChatId: chatId
+      },
+      data: {
+        posted
+      }
+    }).catch((err) => {
+      advError('Error while setting postRollout! ChatId: ' + chatId)
+      advError(err)
+      return new Error(err)
+    })
+    if (setPostRollout instanceof Error) return { success: false, error: setPostRollout.message }
+    return {
+      success: true,
+      info: 'PostRollout set!'
+    }
+  }
+
+  async resetPostRollout (status: boolean): Promise<UpdateDefaultResponse> {
+    const resetPostRollout = await this.prisma.postRollout.updateMany({
+      data: {
+        posted: status
+      }
+    }).catch((err) => {
+      advError('Error while resetting postRollout!')
+      advError(err)
+      return new Error(err)
+    })
+    if (resetPostRollout instanceof Error) return { success: false, error: resetPostRollout.message }
+    return {
+      success: true,
+      info: `PostRollout reset to ${status}!`
+    }
+  }
 }

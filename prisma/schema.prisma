@@ -15,4 +15,5 @@ model TelegramUsers {
 
 model PostRollout {
   telegramChatId String  @id @unique
+  posted         Boolean
 }

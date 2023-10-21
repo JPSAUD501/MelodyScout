@@ -4,7 +4,6 @@ import sharp from 'sharp'
 import { lang } from '../translations/base'
 import { type AIImageMetadata } from '../types'
 import ffmpeg from 'fluent-ffmpeg'
-import stream from 'stream'
 import { deleteTempDir, getTempDir } from './tempy'
 import { ffConfig } from '../config'
 
@@ -165,7 +164,6 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
         error: storiesImage.error
       }
     }
-    const storiesImageStream = stream.Readable.from(storiesImage.storiesImage)
     const output: {
       video: Buffer | undefined
     } = {
@@ -173,15 +171,15 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
     }
     const tempDir = getTempDir()
     console.log(`Temporary directory: ${tempDir}`)
+    fs.writeFileSync(path.join(tempDir, 'image.png'), storiesImage.storiesImage)
     fs.writeFileSync(path.join(tempDir, 'trackPreview.mp3'), trackPreview)
     const getVideo = async (): Promise<Buffer> => {
       return await new Promise((resolve, reject) => {
-        ffmpeg(storiesImageStream)
+        ffmpeg(path.join(tempDir, 'image.png'))
           .setFfmpegPath(ffConfig.ffmpegPath)
-          .loop(15)
+          .loop(60)
           .fps(30)
           .addInput(path.join(tempDir, 'trackPreview.mp3'))
-          .addInputOption('-stream_loop -1')
           .outputFormat('mp4')
           .on('start', (commandLine) => {
             console.log(`ffmpeg command: ${commandLine}`)
