@@ -22,7 +22,10 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
     void ctxTempReply(ctx, 'Infelizmente ocorreu um erro ao tentar compartilhar essa imagem!', 15000)
   }
   if (postedImages.includes(imageId)) {
-    void ctxTempReply(ctx, 'Opa! Parece que a imagem que você me pediu para compartilhar já está sendo compartilhada!', 15000)
+    void ctxTempReply(ctx, 'Opa! Parece que essa imagem que você me pediu para compartilhar já está sendo compartilhada!', 15000, {
+      reply_to_message_id: messageId,
+      allow_sending_without_reply: true
+    })
     return
   }
   postedImages.push(imageId)
