@@ -54,37 +54,4 @@ export class Get {
       telegramUsers: getAllTelegramUsers
     }
   }
-
-  async errorLog (errorId: string): Promise<GetDefaultResponseError | { success: true, errorLog: { errorId: number, date: string, error: string, userId: string, chatId: string, messageId: string | null } }> {
-    const getErrorLog = await this.prisma.errorLog.findUnique({
-      where: {
-        id: Number(errorId)
-      },
-      select: {
-        id: true,
-        date: true,
-        error: true,
-        userId: true,
-        chatId: true,
-        messageId: true
-      }
-    }).catch((err) => {
-      advError('Error while getting error log! ErrorId: ' + errorId)
-      advError(err)
-      return new Error(err)
-    })
-    if (getErrorLog instanceof Error) return { success: false, error: getErrorLog.message }
-    if (getErrorLog === null) return { success: false, error: 'Error log does not exist!' }
-    return {
-      success: true,
-      errorLog: {
-        errorId: getErrorLog.id,
-        date: getErrorLog.date,
-        error: getErrorLog.error,
-        userId: getErrorLog.userId,
-        chatId: getErrorLog.chatId,
-        messageId: getErrorLog.messageId
-      }
-    }
-  }
 }

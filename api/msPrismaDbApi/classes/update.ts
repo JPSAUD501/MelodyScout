@@ -48,33 +48,4 @@ export class Update {
       info: 'Telegram user set!'
     }
   }
-
-  async errorLog (errorId: string, error: string, userId: string, chatId: string, messageId?: string): Promise<UpdateDefaultResponse> {
-    const checkIfExists = await this.checkIfExists.errorLog(errorId)
-    if (!checkIfExists.success) return { success: false, error: checkIfExists.error }
-    if (!checkIfExists.exists) {
-      const createErrorLog = await this.create.errorLog(error, userId, chatId, messageId)
-      if (!createErrorLog.success) return { success: false, error: createErrorLog.error }
-    }
-    const setErrorLog = await this.prisma.errorLog.update({
-      where: {
-        id: Number(errorId)
-      },
-      data: {
-        error,
-        userId,
-        chatId,
-        messageId
-      }
-    }).catch((err) => {
-      advError('Error while setting error log! Error: ' + error)
-      advError(err)
-      return new Error(err)
-    })
-    if (setErrorLog instanceof Error) return { success: false, error: setErrorLog.message }
-    return {
-      success: true,
-      info: 'Error log set!'
-    }
-  }
 }

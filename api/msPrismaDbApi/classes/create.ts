@@ -30,22 +30,4 @@ export class Create {
     if (createdTelegramUser instanceof Error) return { success: false, error: createdTelegramUser.message }
     return { success: true, info: 'Telegram user created!' }
   }
-
-  async errorLog (error: string, userId: string, chatId: string, messageId?: string): Promise<CreateDefaultResponse> {
-    const createdErrorLog = await this.prisma.errorLog.create({
-      data: {
-        date: new Date().getTime().toString(),
-        error,
-        userId,
-        chatId,
-        messageId
-      }
-    }).catch((err) => {
-      advError('Error while creating new error log! Error: ' + error)
-      advError(err)
-      return new Error(err)
-    })
-    if (createdErrorLog instanceof Error) return { success: false, error: createdErrorLog.message }
-    return { success: true, info: 'Error log created!' }
-  }
 }
