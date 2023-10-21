@@ -44,7 +44,7 @@ export const enUS = {
   unableToGetUserIdErrorMessage: 'Unfortunately we could not identify your id, please try again later!',
   unableToGetAllUsersFromDatabaseErrorMessage: 'Unfortunately it was not possible to retrieve the users from the database, please try again later!',
   sendingVideoMessage: '<b>[🎥] Uploading video please wait!</b>',
-  allUsersListUserMessagePart: '<b>[{{userEmoji}}]<code> {{userLastfmName}</code>:</b>\n- TelegramID: <code>{{userTelegramId}}</code>\n- LastUpdate: <code>{{userLastUpdate}}</code>',
+  allUsersListUserMessagePart: '<b>[{{userEmoji}}]<code> {{userLastfmName}}</code>:</b>\n- TelegramID: <code>{{userTelegramId}}</code>\n- LastUpdate: <code>{{userLastUpdate}}</code>',
   chooseTrackDownloadOptionMessage: '<b>[📥] Download "{{track}}" by "{{artist}}"</b>\n- Please choose an option below.\n\nRequested by: <b><a href=\'tg://user?id={{requesterId}}\'>{{requesterName}}</a></b>',
   errorOnCreatingLyricsExplanationInformMessage: 'An error occurred while trying to generate the lyrics explanation for this track, please try again later.',
   trackPreviewCaptionMessage: '<b>[🎵] Preview of "{{track}}" by "{{artist}}"</b>\n\nRequested by: <b><a href=\'tg://user?id={{requesterId}}\'>{{requesterName}}</a></b>',

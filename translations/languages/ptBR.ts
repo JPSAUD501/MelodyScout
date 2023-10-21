@@ -51,7 +51,7 @@ export const ptBR = {
   unableToGetAllUsersFromDatabaseErrorMessage: 'Infelizmente não foi possível recuperar os usuários do banco de dados, por favor tente novamente mais tarde!',
   sendingVideoMessage: '<b>[🎥] Enviando vídeo por favor aguarde!</b>',
   allUsersListHeaderMessage: '<b>[🗃] Lista de usuários:</b>\n- Total de usuários: <code>{{userCount}}</code>',
-  allUsersListUserMessagePart: '<b>[{{userEmoji}}]<code> {{userLastfmName}</code>:</b>\n- TelegramID: <code>{{userTelegramId}}</code>\n- LastUpdate: <code>{{userLastUpdate}}</code>',
+  allUsersListUserMessagePart: '<b>[{{userEmoji}}]<code> {{userLastfmName}}</code>:</b>\n- TelegramID: <code>{{userTelegramId}}</code>\n- LastUpdate: <code>{{userLastUpdate}}</code>',
   firstTimeRegisterWelcomeMessage: 'Verifiquei que é seu primeiro cadastro no MelodyScout! Que bom que você decidiu me conhecer!',
   getTopAlbumsErrorMessage: 'Estranho, não foi possível resgatar os seus álbuns mais tocados do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.',
   getTopArtistsErrorMessage: 'Estranho, não foi possível resgatar os seus artistas mais tocados do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.',
