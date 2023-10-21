@@ -6,8 +6,9 @@
   "scripts": {
     "start:prod": "yarn deploy && yarn start",
     "start": "ts-node --transpile-only ./app.ts",
+    "start:dev": "ts-node ./app.ts",
     "deploy": "yarn prisma migrate deploy",
-    "dev": "yarn translation && yarn start",
+    "dev": "yarn translation && yarn start:dev",
     "translation": "ts-node ./translations/runModule.ts",
     "test": "jest"
   },
