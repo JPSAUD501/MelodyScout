@@ -16,7 +16,7 @@ export const msApiFetch = async (url: string, method: string | undefined, header
       data,
       url
     }).catch((err: any) => {
-      if (err.response.status === 404) {
+      if (err?.response?.status === 404) {
         return err.response.data
       }
       return new Error(err)
