@@ -4,17 +4,17 @@
   "description": "Last.fm Telegram Tracker bot",
   "main": "app.ts",
   "scripts": {
-    "start:prod": "yarn deploy && yarn start",
-    "start": "yarn ts-node --transpile-only ./app.ts",
+    "build": "yarn install && yarn ts-node ./build/clearDist.ts && yarn ncc build --transpile-only ./app.ts -o ./build/dist && yarn ts-node ./build/fixDist.ts",
+
     "start:dev": "yarn ts-node ./app.ts",
+    "start:prod": "node ./build/dist/index.js",
+    "start:render": "yarn deploy && yarn start:prod",
+
+    "translation": "yarn ts-node ./translations/runModule.ts",
     "deploy": "yarn prisma migrate deploy",
     "dev": "yarn translation && yarn start:dev",
-    "translation": "yarn ts-node ./translations/runModule.ts",
-    "test": "jest",
-
-    "beta:build": "yarn && yarn ncc build --transpile-only ./app.ts -o ./dist && yarn ts-node ./functions/fixDist.ts",
-    "beta:start": "node ./dist/index.js",
-    "beta:start:prod": "yarn deploy && yarn beta:start"
+    
+    "test": "jest"
   },
   "repository": {
     "type": "git",
