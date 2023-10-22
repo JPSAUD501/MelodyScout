@@ -12,7 +12,7 @@
     "translation": "yarn ts-node ./translations/runModule.ts",
     "test": "jest",
 
-    "beta:build": "yarn ncc build --transpile-only ./app.ts -o ./dist",
+    "beta:build": "yarn && yarn ncc build --transpile-only ./app.ts -o ./dist",
     "beta:start": "node ./dist/index.js",
     "beta:start:prod": "yarn deploy && yarn beta:start"
   },
