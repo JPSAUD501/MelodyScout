@@ -178,11 +178,14 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
         ffmpeg(path.join(tempDir, 'image.png'))
           .setFfmpegPath(ffConfig.ffmpegPath)
           .loop(15)
-          .fps(30)
+          .fps(1)
           .addInput(path.join(tempDir, 'trackPreview.mp3'))
           .outputFormat('mp4')
           .on('start', (commandLine) => {
             console.log(`ffmpeg command: ${commandLine}`)
+          })
+          .on('progress', (progress) => {
+            console.log(`Processing: ${progress.percent}% done`)
           })
           .on('end', () => {
             resolve(fs.readFileSync(path.join(tempDir, 'video.mp4')))

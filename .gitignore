@@ -107,5 +107,6 @@ dist
 *.db
 *.db-journal
 dist/
+build/dist/
 temp/
 Tests/resources/results/*.*

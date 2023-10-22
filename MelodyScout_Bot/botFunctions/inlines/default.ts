@@ -1,6 +1,5 @@
 import { type Context, InlineKeyboard, type InlineQueryContext, InlineQueryResultBuilder } from 'grammy'
 import { ctxAnswerInlineQuery } from '../../../functions/grammyFunctions'
-
 import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { type InlineQueryResult } from 'grammy/types'
 import { playingnowInlineResult } from './defaultResults/playingnow'
