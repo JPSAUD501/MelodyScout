@@ -6,6 +6,7 @@ import { type AIImageMetadata } from '../types'
 import ffmpeg from 'fluent-ffmpeg'
 import { deleteTempDir, getTempDir } from './tempy'
 import { ffConfig } from '../config'
+import { advError, advLog } from './advancedConsole'
 
 export async function composeImage (ctxLang: string | undefined, image: Buffer, trackName: string, artistName: string): Promise<{
   success: true
@@ -112,12 +113,14 @@ export async function composeStoryImage (image: Buffer): Promise<{
     })
   const [storiesMainImage, storiesImageBackground] = await Promise.all([storiesMainImageRequest, storiesImageBackgroundRequest])
   if (storiesMainImage instanceof Error) {
+    advError(`MediaEditor - ComposeStoryImage - Error on creating main image: ${storiesMainImage.message}`)
     return {
       success: false,
       error: storiesMainImage.message
     }
   }
   if (storiesImageBackground instanceof Error) {
+    advError(`MediaEditor - ComposeStoryImage - Error on creating background image: ${storiesImageBackground.message}`)
     return {
       success: false,
       error: storiesImageBackground.message
@@ -136,6 +139,7 @@ export async function composeStoryImage (image: Buffer): Promise<{
       return new Error(err)
     })
   if (storiesFinalImage instanceof Error) {
+    advError(`MediaEditor - ComposeStoryImage - Error on creating final image: ${storiesFinalImage.message}`)
     return {
       success: false,
       error: storiesFinalImage.message
@@ -159,6 +163,7 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
   try {
     const storiesImage = await composeStoryImage(image)
     if (!storiesImage.success) {
+      advError(`MediaEditor - CreateStoriesVideo - Error on creating stories image: ${storiesImage.error}`)
       return {
         success: false,
         error: storiesImage.error
@@ -170,21 +175,23 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
       video: undefined
     }
     const tempDir = getTempDir()
-    console.log(`Temporary directory: ${tempDir}`)
     fs.writeFileSync(path.join(tempDir, 'image.png'), storiesImage.storiesImage)
     fs.writeFileSync(path.join(tempDir, 'trackPreview.mp3'), trackPreview)
     const getVideo = async (): Promise<Buffer> => {
       return await new Promise((resolve, reject) => {
+        const startTime = Date.now()
         ffmpeg(path.join(tempDir, 'image.png'))
           .setFfmpegPath(ffConfig.ffmpegPath)
           .loop(15)
-          .fps(1)
+          .fps(24)
           .addInput(path.join(tempDir, 'trackPreview.mp3'))
           .outputFormat('mp4')
           .on('start', (commandLine) => {
-            console.log(`ffmpeg command: ${commandLine}`)
+            advLog(`MediaEditor - CreateStoriesVideo - FFMPEG Start - Track: ${imageMetadata.trackName} - Artist: ${imageMetadata.artistName} - Command: ${commandLine}`)
           })
           .on('end', () => {
+            const endTime = Date.now()
+            advLog(`MediaEditor - CreateStoriesVideo - FFMPEG End - Track: ${imageMetadata.trackName} - Artist: ${imageMetadata.artistName} - Time: ${((endTime - startTime) / 1000).toFixed(2)}s`)
             resolve(fs.readFileSync(path.join(tempDir, 'video.mp4')))
           })
           .on('error', (error) => {
@@ -198,6 +205,7 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
     })
     if (processVideo instanceof Error) {
       deleteTempDir(tempDir)
+      advError(`MediaEditor - CreateStoriesVideo - Error on creating video: ${processVideo.message}`)
       return {
         success: false,
         error: `Error on creating video: ${processVideo.message}`
@@ -206,6 +214,7 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
     output.video = fs.readFileSync(path.join(tempDir, 'video.mp4'))
     deleteTempDir(tempDir)
     if (output.video === undefined) {
+      advError('MediaEditor - CreateStoriesVideo - Error on creating video: Output is undefined')
       return {
         success: false,
         error: 'Error on creating video: Output is undefined'
@@ -218,6 +227,7 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
       }
     }
   } catch (error) {
+    advError(`MediaEditor - CreateStoriesVideo - Error on creating video: ${String(error)}`)
     return {
       success: false,
       error: `Error on creating video: ${String(error)}`
