@@ -24,6 +24,7 @@
   "homepage": "https://github.com/JPSAUD501/MelodyScout#readme",
   "devDependencies": {
     "@jest/globals": "^29.7.0",
+    "@swc/cli": "^0.1.62",
     "@types/ffprobe-static": "^2.0.2",
     "@types/fluent-ffmpeg": "^2.1.22",
     "@types/google-translate-api": "^2.3.2",
