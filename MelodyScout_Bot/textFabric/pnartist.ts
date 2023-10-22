@@ -4,9 +4,9 @@ import { type UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
 import { melodyScoutConfig } from '../../config'
 import { sanitizeText } from '../../functions/sanitizeText'
 import { urlLimiter } from '../../functions/urlLimiter'
-import { type UserTopTracks } from '../../api/msLastfmApi/types/zodUserTopTracks'
+import { type UserArtistTopTracks } from '../botFunctions/commands/pnartist'
 
-export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, userArtistTopTracks: Array<UserTopTracks['toptracks']['track']['0']>, spotifyArtistInfo: Artist, nowPlaying: boolean): string {
+export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, userArtistTopTracks: UserArtistTopTracks, spotifyArtistInfo: Artist, nowPlaying: boolean): string {
   const { user } = userInfo
   const { artist } = artistInfo
 
@@ -63,14 +63,33 @@ export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo
   textArray.push('')
   textArray.push(`<b>[📊] ${Number(artist.stats.userplaycount).toLocaleString('pt-BR')} Scrobbles</b>`)
   textArray.push('')
-  if (userArtistTopTracks.length > 0) {
-    textArray.push('<b>[🎶] As suas mais ouvidas</b>')
-    for (let i = 0; i < userArtistTopTracks.length && i < 5; i++) {
-      const track = userArtistTopTracks[i]
-      textArray.push(`- (${Number(track.playcount).toLocaleString('pt-BR')}x) <a href="${urlLimiter(track.url)}">${sanitizeText(track.name)}</a>`)
+
+  textArray.push('<b>[🎶] As suas mais ouvidas</b>')
+  switch (true) {
+    case (userArtistTopTracks.status === 'loading'): {
+      textArray.push('- Carregando...')
+      break
     }
-    textArray.push('')
+    case (userArtistTopTracks.status === 'error'): {
+      textArray.push('- Erro ao carregar musicas')
+      break
+    }
+    case (userArtistTopTracks.status === 'success'): {
+      if (userArtistTopTracks.data === undefined) {
+        textArray.push('- Erro ao carregar musicas')
+        break
+      }
+      if (userArtistTopTracks.data.length <= 0) {
+        textArray.push('- Nenhuma musica encontrada')
+        break
+      }
+      for (let i = 0; i < userArtistTopTracks.data.length && i <= 10; i++) {
+        const track = userArtistTopTracks.data[i]
+        textArray.push(`- (${Number(track.playcount).toLocaleString('pt-BR')}x) <a href="${urlLimiter(track.url)}">${sanitizeText(track.name)}</a>`)
+      }
+    }
   }
+  textArray.push('')
   textArray.push('<b>[🔗] Compartilhe</b>')
   textArray.push(`- <a href="${postUrl}">Compartilhar no 𝕏!</a>`)
 
