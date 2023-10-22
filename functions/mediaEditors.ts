@@ -187,7 +187,6 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
           .loop(10)
           .fps(30)
           .addInput(path.join(tempDir, 'trackPreview.mp3'))
-          .videoCodec('libx265')
           .addOption('-preset', 'ultrafast')
           .outputFormat('mp4')
           .on('start', (commandLine) => {

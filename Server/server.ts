@@ -17,6 +17,18 @@ export class Server {
       await reply.status(200).send('OK')
     })
 
+    server.get('/health/process', async (_request, reply) => {
+      const formatMemoryUsage = (data): string => `${Math.round(data / 1024 / 1024 * 100) / 100} MB`
+      const memoryData = process.memoryUsage()
+      const memoryUsage = {
+        rss: `${formatMemoryUsage(memoryData.rss)} -> Resident Set Size - total memory allocated for the process execution`,
+        heapTotal: `${formatMemoryUsage(memoryData.heapTotal)} -> total size of the allocated heap`,
+        heapUsed: `${formatMemoryUsage(memoryData.heapUsed)} -> actual memory used during the execution`,
+        external: `${formatMemoryUsage(memoryData.external)} -> V8 external memory`
+      }
+      await reply.status(200).send(`[${DateTime.now().setZone('America/Sao_Paulo').toFormat('dd/MM/yyyy - HH:mm:ss')}] MelodyScout - Running!\n\n${JSON.stringify(memoryUsage, null, 2)}`)
+    })
+
     server.get('/health/MelodyScoutBot', async (_request, reply) => {
       const botInfo = await getMelodyScoutBotInfo()
       if (!botInfo.success) {
