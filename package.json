@@ -5,12 +5,16 @@
   "main": "app.ts",
   "scripts": {
     "start:prod": "yarn deploy && yarn start",
-    "start": "ts-node --transpile-only ./app.ts",
-    "start:dev": "ts-node ./app.ts",
+    "start": "yarn ts-node --transpile-only ./app.ts",
+    "start:dev": "yarn ts-node ./app.ts",
     "deploy": "yarn prisma migrate deploy",
     "dev": "yarn translation && yarn start:dev",
-    "translation": "ts-node ./translations/runModule.ts",
-    "test": "jest"
+    "translation": "yarn ts-node ./translations/runModule.ts",
+    "test": "jest",
+
+    "beta:build": "yarn ncc build --transpile-only ./app.ts -o ./dist",
+    "beta:start": "node ./dist/index.js",
+    "beta:start:prod": "yarn deploy && yarn beta:start"
   },
   "repository": {
     "type": "git",
@@ -37,9 +41,10 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^16.1.0",
     "eslint-plugin-promise": "^6.1.1",
-    "prisma": "^5.4.1",
     "ts-jest": "^29.1.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "@vercel/ncc": "^0.38.1",
+    "prisma": "^5.4.1"
   },
   "dependencies": {
     "@flytri/lyrics-finder": "^1.0.7",
