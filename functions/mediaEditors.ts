@@ -177,7 +177,7 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
       return await new Promise((resolve, reject) => {
         ffmpeg(path.join(tempDir, 'image.png'))
           .setFfmpegPath(ffConfig.ffmpegPath)
-          .loop(60)
+          .loop(15)
           .fps(30)
           .addInput(path.join(tempDir, 'trackPreview.mp3'))
           .outputFormat('mp4')
