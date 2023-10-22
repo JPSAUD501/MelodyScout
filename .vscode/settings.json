@@ -114,6 +114,5 @@
     "youtubedl"
   ],
   "todo-tree.tree.disableCompactFolders": false,
-  "jest.autoRun": "off",
-  "bun.debugTerminal.enabled": true
+  "jest.autoRun": "off"
 }
