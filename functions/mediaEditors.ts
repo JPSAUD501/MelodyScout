@@ -106,7 +106,9 @@ export async function composeStoryImage (image: Buffer): Promise<{
     })
     .blur(70)
     .ensureAlpha(0.25)
-    .png()
+    .jpeg({
+      mozjpeg: true
+    })
     .toBuffer()
     .catch((err) => {
       return new Error(err)
@@ -175,16 +177,18 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
       video: undefined
     }
     const tempDir = getTempDir()
-    fs.writeFileSync(path.join(tempDir, 'image.png'), storiesImage.storiesImage)
+    fs.writeFileSync(path.join(tempDir, 'image.jpg'), storiesImage.storiesImage)
     fs.writeFileSync(path.join(tempDir, 'trackPreview.mp3'), trackPreview)
     const getVideo = async (): Promise<Buffer> => {
       return await new Promise((resolve, reject) => {
         const startTime = Date.now()
-        ffmpeg(path.join(tempDir, 'image.png'))
+        ffmpeg(path.join(tempDir, 'image.jpg'))
           .setFfmpegPath(ffConfig.ffmpegPath)
-          .loop(15)
-          .fps(24)
+          .loop(10)
+          .fps(30)
           .addInput(path.join(tempDir, 'trackPreview.mp3'))
+          .videoCodec('libx265')
+          .addOption('-preset', 'ultrafast')
           .outputFormat('mp4')
           .on('start', (commandLine) => {
             advLog(`MediaEditor - CreateStoriesVideo - FFMPEG Start - Track: ${imageMetadata.trackName} - Artist: ${imageMetadata.artistName} - Command: ${commandLine}`)
