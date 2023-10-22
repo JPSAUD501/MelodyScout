@@ -83,7 +83,7 @@ export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo
         textArray.push('- Nenhuma musica encontrada')
         break
       }
-      for (let i = 0; i < userArtistTopTracks.data.length && i <= 10; i++) {
+      for (let i = 0; i < userArtistTopTracks.data.length && i < 10; i++) {
         const track = userArtistTopTracks.data[i]
         textArray.push(`- (${Number(track.playcount).toLocaleString('pt-BR')}x) <a href="${urlLimiter(track.url)}">${sanitizeText(track.name)}</a>`)
       }
