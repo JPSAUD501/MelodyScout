@@ -21,7 +21,7 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
     void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmTrackDataNotFoundedError'))
     return
   }
-  const loadingMessage = await ctxTempReply(ctx, lang(ctxLang, 'creatingLyricsExplanationWithAiInformMessage'), 15000, { reply_to_message_id: messageId, allow_sending_without_reply: true, disable_notification: true })
+  const loadingMessage = await ctxTempReply(ctx, lang(ctxLang, 'creatingLyricsExplanationWithAiInformMessage'), 20000, { reply_to_message_id: messageId, allow_sending_without_reply: true, disable_notification: true })
   if (loadingMessage === undefined) {
     void ctxReply(ctx, undefined, lang(ctxLang, 'errorOnSendLoadingMessageInformMessage'))
     return
