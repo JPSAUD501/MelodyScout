@@ -188,6 +188,7 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
           .fps(30)
           .addInput(path.join(tempDir, 'trackPreview.mp3'))
           .addOption('-preset', 'ultrafast')
+          .addOption('-threads', '1')
           .outputFormat('mp4')
           .on('start', (commandLine) => {
             advLog(`MediaEditor - CreateStoriesVideo - FFMPEG Start - Track: ${imageMetadata.trackName} - Artist: ${imageMetadata.artistName} - Command: ${commandLine}`)
