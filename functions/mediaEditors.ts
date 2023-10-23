@@ -17,6 +17,7 @@ export async function composeImage (ctxLang: string | undefined, image: Buffer, 
 }> {
   const fontFilePath = path.join(__dirname, '../public/fonts/Poppins/Poppins-Regular.ttf')
   const imageFramePath = path.join(__dirname, '../public/v2/imageFrame.png')
+  const startTimeTextOverlay = Date.now()
   const textOverlay = await sharp({
     text: {
       text: lang(ctxLang, 'composeImageTitle', {
@@ -44,11 +45,15 @@ export async function composeImage (ctxLang: string | undefined, image: Buffer, 
     return new Error(error)
   })
   if (textOverlay instanceof Error) {
+    advError(`MediaEditor - ComposeImage - Error on creating text overlay: ${textOverlay.message}`)
     return {
       success: false,
       error: `Error on creating text overlay: ${textOverlay.message}`
     }
   }
+  const endTimeTextOverlay = Date.now()
+  advLog(`MediaEditor - ComposeImage - Text overlay created in ${(endTimeTextOverlay - startTimeTextOverlay) / 1000}s`)
+  const startTimeFinalImage = Date.now()
   const finalImage = await sharp(image)
     .resize(1000, 1000)
     .composite([
@@ -67,11 +72,14 @@ export async function composeImage (ctxLang: string | undefined, image: Buffer, 
       return new Error(error)
     })
   if (finalImage instanceof Error) {
+    advError(`MediaEditor - ComposeImage - Error on creating final image: ${finalImage.message}`)
     return {
       success: false,
       error: `Error on creating final image: ${finalImage.message}`
     }
   }
+  const endTimeFinalImage = Date.now()
+  advLog(`MediaEditor - ComposeImage - Final image created in ${(endTimeFinalImage - startTimeFinalImage) / 1000}s`)
   return {
     success: true,
     image: finalImage
@@ -85,6 +93,7 @@ export async function composeStoryImage (image: Buffer): Promise<{
   success: false
   error: string
 }> {
+  const startTimeMainImage = Date.now()
   const storiesMainImageRequest = sharp(image)
     .resize(1080, 1920, {
       fit: 'contain',
@@ -100,6 +109,12 @@ export async function composeStoryImage (image: Buffer): Promise<{
     .catch((err) => {
       return new Error(err)
     })
+    .then((image) => {
+      const endTimeMainImage = Date.now()
+      advLog(`MediaEditor - ComposeStoryImage - Main image created in ${(endTimeMainImage - startTimeMainImage) / 1000}s`)
+      return image
+    })
+  const startTimeBackgroundImage = Date.now()
   const storiesImageBackgroundRequest = sharp(image)
     .resize(1080, 1920, {
       fit: 'cover'
@@ -112,6 +127,11 @@ export async function composeStoryImage (image: Buffer): Promise<{
     .toBuffer()
     .catch((err) => {
       return new Error(err)
+    })
+    .then((image) => {
+      const endTimeBackgroundImage = Date.now()
+      advLog(`MediaEditor - ComposeStoryImage - Background image created in ${(endTimeBackgroundImage - startTimeBackgroundImage) / 1000}s`)
+      return image
     })
   const [storiesMainImage, storiesImageBackground] = await Promise.all([storiesMainImageRequest, storiesImageBackgroundRequest])
   if (storiesMainImage instanceof Error) {
@@ -128,6 +148,7 @@ export async function composeStoryImage (image: Buffer): Promise<{
       error: storiesImageBackground.message
     }
   }
+  const startTimeStoriesFinalImage = Date.now()
   const storiesFinalImage = await sharp(storiesImageBackground)
     .composite([{
       input: storiesMainImage,
@@ -147,6 +168,8 @@ export async function composeStoryImage (image: Buffer): Promise<{
       error: storiesFinalImage.message
     }
   }
+  const endTimeStoriesFinalImage = Date.now()
+  advLog(`MediaEditor - ComposeStoryImage - Stories final image created in ${(endTimeStoriesFinalImage - startTimeStoriesFinalImage) / 1000}s`)
   return {
     success: true,
     storiesImage: storiesFinalImage
@@ -165,7 +188,6 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
   try {
     const storiesImage = await composeStoryImage(image)
     if (!storiesImage.success) {
-      advError(`MediaEditor - CreateStoriesVideo - Error on creating stories image: ${storiesImage.error}`)
       return {
         success: false,
         error: storiesImage.error
