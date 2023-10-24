@@ -35,7 +35,7 @@ export class Create {
     const createdChatIdPosted = await this.prisma.postRollout.create({
       data: {
         telegramChatId: chatId,
-        
+        posted: false
       }
     }).catch((err) => {
       advError('Error while creating new chatIdPosted! ChatId: ' + chatId)

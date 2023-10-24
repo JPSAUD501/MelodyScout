@@ -133,7 +133,6 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
   textArray.push(lang(ctxLang, 'tfPlayingnowArtistScrobbles', { artistPlaycount: Number(artist.stats.userplaycount).toLocaleString(lang(ctxLang, 'localeLangCode')) }))
   const infoArray: string[] = []
   if (Number(track.userplaycount) > 0 && trackDuration > 0) {
-    // 
     const playedHours = Math.floor((Number(track.userplaycount) * trackDuration) / 3600)
     const playedMinutes = Math.floor(((Number(track.userplaycount) * trackDuration) % 3600) / 60)
     infoArray.push(lang(ctxLang, 'tfPlayingnowInfoTrackPlaytime', {

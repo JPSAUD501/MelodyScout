@@ -30,7 +30,7 @@ async function getTracksTotalPlaytime (tracks: Array<UserTopTracks['toptracks'][
   const tracksWithNoDuration: Array<UserTopTracks['toptracks']['track']['0']> = []
   for (const track of tracks) {
     const trackPlaycount = Number(track.playcount)
-    const trackDuration = Number(track.duration) / 1000
+    const trackDuration = Number(track.duration)
     if (trackDuration > 0) {
       success.tracksLength += trackPlaycount
       success.totalPlaytime += trackDuration * trackPlaycount
@@ -61,7 +61,9 @@ async function getTracksTotalPlaytime (tracks: Array<UserTopTracks['toptracks'][
       }
     }
   })
-  advError(`GetTracksTotalPlaytime - Errors: ${errors.tracksLength} - Tracks: ${success.tracksLength}`)
+  if (errors.tracksLength > 0) {
+    advError(`GetTracksTotalPlaytime - Errors: ${errors.tracksLength} - Tracks: ${tracksWithNoDuration.length} - ${((errors.tracksLength / tracksWithNoDuration.length) * 100).toFixed(2)}%`)
+  }
   const errorPercentage = errors.tracksLength / success.tracksLength
   if (errorPercentage > 0.3) {
     return {
