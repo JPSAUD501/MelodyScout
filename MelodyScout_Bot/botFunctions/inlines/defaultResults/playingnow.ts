@@ -6,6 +6,7 @@ import { melodyScoutConfig, lastfmConfig, spotifyConfig } from '../../../../conf
 import { lang } from '../../../../translations/base'
 import { getPlayingnowText } from '../../../textFabric/playingnow'
 import { MsDeezerApi } from '../../../../api/msDeezerApi/base'
+import { type DeezerTrack } from '../../../../api/msDeezerApi/types/zodSearchTrack'
 
 export async function playingnowInlineResult (ctxLang: string | undefined, lastfmUser: string, ctx: InlineQueryContext<Context>): Promise<{
   success: boolean
@@ -111,9 +112,10 @@ export async function playingnowInlineResult (ctxLang: string | undefined, lastf
         .text(lang(ctxLang, 'spotifyTrackDataNotFoundedError'), { parse_mode: 'HTML' })
     }
   }
+  const deezerTrack: DeezerTrack | undefined = deezerTrackInfo.success && deezerTrackInfo.data.data.length > 0 ? deezerTrackInfo.data.data[0] : undefined
   const inlineKeyboard = new InlineKeyboard()
   inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyTrackInfo.data[0].external_urls.spotify)
-  if (deezerTrackInfo.success && deezerTrackInfo.data.data.length > 0) inlineKeyboard.url(lang(ctxLang, 'deezerButton'), deezerTrackInfo.data.data[0].link)
+  if (deezerTrack !== undefined) inlineKeyboard.url(lang(ctxLang, 'deezerButton'), deezerTrack.link)
   inlineKeyboard.row()
   if (youtubeTrackInfo.success) inlineKeyboard.url(lang(ctxLang, 'youtubeButton'), youtubeTrackInfo.videoUrl)
   if (youtubeTrackInfo.success) inlineKeyboard.url(lang(ctxLang, 'youtubeMusicButton'), youtubeTrackInfo.videoMusicUrl)
@@ -127,6 +129,6 @@ export async function playingnowInlineResult (ctxLang: string | undefined, lastf
         thumbnail_url: albumInfo.data.album.image[albumInfo.data.album.image.length - 1]['#text'] ?? melodyScoutConfig.trackImgUrl,
         reply_markup: inlineKeyboard
       })
-      .text(getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], mainTrack.nowPlaying), { parse_mode: 'HTML' })
+      .text(getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], deezerTrack, mainTrack.nowPlaying), { parse_mode: 'HTML' })
   }
 }

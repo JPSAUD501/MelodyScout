@@ -7,12 +7,30 @@ import { melodyScoutConfig } from '../../config'
 import { sanitizeText } from '../../functions/sanitizeText'
 import { urlLimiter } from '../../functions/urlLimiter'
 import { lang } from '../../translations/base'
+import { type DeezerTrack } from '../../api/msDeezerApi/types/zodSearchTrack'
 
-export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, nowPlaying: boolean): string {
+export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, deezerTrackInfo: DeezerTrack | undefined, nowPlaying: boolean): string { // todo
   const { user } = userInfo
   const { artist } = artistInfo
   const { album } = albumInfo
   const { track } = trackInfo
+  let trackDuration = 0
+  switch (true) {
+    default: {
+      if (Number(track.duration) > 0) {
+        trackDuration = Number(track.duration) / 1000
+        break
+      }
+      if (spotifyTrackInfo.duration_ms > 0) {
+        trackDuration = spotifyTrackInfo.duration_ms / 1000
+        break
+      }
+      if (deezerTrackInfo !== undefined && deezerTrackInfo.duration > 0) {
+        trackDuration = deezerTrackInfo.duration
+        break
+      }
+    }
+  }
 
   const postTextArray: string[] = []
   // postTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
@@ -30,17 +48,12 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
   // postTextArray.push(`- Artista: ${Number(artist.stats.userplaycount).toLocaleString(lang(ctxLang, 'localeLangCode'))}`)
   postTextArray.push(lang(ctxLang, 'tfPlayingnowPostArtistScrobbles', { artistPlaycount: Number(artist.stats.userplaycount).toLocaleString(lang(ctxLang, 'localeLangCode')) }))
   const postInfoArray: string[] = []
-  if (
-    Number(track.userplaycount) > 0 &&
-    (
-      Number(track.duration) > 0 ||
-      spotifyTrackInfo.duration_ms > 0
-    )
-  ) {
-    // postInfoArray.push(`Já ouviu essa música por ${Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : spotifyTrackInfo.duration_ms) / 1000 / 3600)} horas e ${Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : spotifyTrackInfo.duration_ms) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : spotifyTrackInfo.duration_ms) / 1000 / 3600)) * 60)} minutos.`)
+  if (Number(track.userplaycount) > 0 && trackDuration > 0) {
+    const playedHours = Math.floor((Number(track.userplaycount) * trackDuration) / 3600)
+    const playedMinutes = Math.floor(((Number(track.userplaycount) * trackDuration) % 3600) / 60)
     postInfoArray.push(lang(ctxLang, 'tfPlayingnowPostTrackPlaytime', {
-      hours: Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : spotifyTrackInfo.duration_ms) / 1000 / 3600),
-      minutes: Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : spotifyTrackInfo.duration_ms) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : spotifyTrackInfo.duration_ms) / 1000 / 3600)) * 60)
+      hours: playedHours,
+      minutes: playedMinutes
     }))
   }
   switch (postInfoArray.length) {
@@ -119,17 +132,13 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
   // textArray.push(`- Artista: <b>${Number(artist.stats.userplaycount).toLocaleString(lang(ctxLang, 'localeLangCode'))}</b>`)
   textArray.push(lang(ctxLang, 'tfPlayingnowArtistScrobbles', { artistPlaycount: Number(artist.stats.userplaycount).toLocaleString(lang(ctxLang, 'localeLangCode')) }))
   const infoArray: string[] = []
-  if (
-    Number(track.userplaycount) > 0 &&
-    (
-      Number(track.duration) > 0 ||
-      spotifyTrackInfo.duration_ms > 0
-    )
-  // ) infoArray.push(`- Você já ouviu essa música por <b>${Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : spotifyTrackInfo.duration_ms) / 1000 / 3600)} horas</b> e <b>${Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : spotifyTrackInfo.duration_ms) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : spotifyTrackInfo.duration_ms) / 1000 / 3600)) * 60)} minutos</b>.`)
-  ) {
+  if (Number(track.userplaycount) > 0 && trackDuration > 0) {
+    // 
+    const playedHours = Math.floor((Number(track.userplaycount) * trackDuration) / 3600)
+    const playedMinutes = Math.floor(((Number(track.userplaycount) * trackDuration) % 3600) / 60)
     infoArray.push(lang(ctxLang, 'tfPlayingnowInfoTrackPlaytime', {
-      hours: Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : spotifyTrackInfo.duration_ms) / 1000 / 3600),
-      minutes: Math.floor((Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : spotifyTrackInfo.duration_ms) / 1000 / 3600 - Math.floor(Number(track.userplaycount) * (Number(track.duration) > 0 ? Number(track.duration) : spotifyTrackInfo.duration_ms) / 1000 / 3600)) * 60)
+      hours: playedHours,
+      minutes: playedMinutes
     }))
   }
   // if (spotifyTrackInfo.popularity !== undefined) infoArray.push(`- A <a href="${melodyScoutConfig.popularityImgUrl}">popularidade</a> atual dessa música é: <b>[${spotifyTrackInfo.popularity}][${'★'.repeat(Math.floor(spotifyTrackInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyTrackInfo.popularity / 20))}]</b>`)

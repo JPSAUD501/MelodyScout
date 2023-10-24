@@ -9,13 +9,79 @@ import { lang } from '../../../translations/base'
 import { type UserTopTracks } from '../../../api/msLastfmApi/types/zodUserTopTracks'
 import { MsDeezerApi } from '../../../api/msDeezerApi/base'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
+import { advError, advLog } from '../../../functions/advancedConsole'
+
+export type TracksTotalPlaytime = {
+  status: 'loading' | 'error'
+} | {
+  status: 'success'
+  totalPlaytime: number
+}
+async function getTracksTotalPlaytime (tracks: Array<UserTopTracks['toptracks']['track']['0']>): Promise<TracksTotalPlaytime> {
+  const success = {
+    tracksLength: 0,
+    totalPlaytime: 0
+  }
+  const errors = {
+    tracksLength: 0,
+    totalPlaytime: 0
+  }
+  const msMusicApi = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret)
+  const tracksWithNoDuration: Array<UserTopTracks['toptracks']['track']['0']> = []
+  for (const track of tracks) {
+    const trackPlaycount = Number(track.playcount)
+    const trackDuration = Number(track.duration) / 1000
+    if (trackDuration > 0) {
+      success.tracksLength += trackPlaycount
+      success.totalPlaytime += trackDuration * trackPlaycount
+      continue
+    }
+    tracksWithNoDuration.push(track)
+  }
+  advLog(`GetTracksTotalPlaytime - Tracks with no duration: ${tracksWithNoDuration.length} - ${((tracksWithNoDuration.length / tracks.length) * 100).toFixed(2)}%`)
+  await PromisePool.for(tracksWithNoDuration).withConcurrency(1).process(async (track, _index, _pool) => {
+    const trackPlaycount = Number(track.playcount)
+    const spotifyTrackInfoRequest = msMusicApi.getSpotifyTrackInfo(track.name, track.artist.name)
+    const deezerTrackInfoRequest = new MsDeezerApi().search.track(track.name, track.artist.name, 1)
+    const [spotifyTrackInfo, deezerTrackInfo] = await Promise.all([spotifyTrackInfoRequest, deezerTrackInfoRequest])
+    switch (true) {
+      default: {
+        if (spotifyTrackInfo.success && spotifyTrackInfo.data.length > 0) {
+          success.tracksLength += trackPlaycount
+          success.totalPlaytime += (spotifyTrackInfo.data[0].duration_ms / 1000) * trackPlaycount
+          break
+        }
+        if (deezerTrackInfo.success && deezerTrackInfo.data.data.length > 0) {
+          success.tracksLength += trackPlaycount
+          success.totalPlaytime += deezerTrackInfo.data.data[0].duration * trackPlaycount
+          break
+        }
+        errors.tracksLength += trackPlaycount
+        break
+      }
+    }
+  })
+  advError(`GetTracksTotalPlaytime - Errors: ${errors.tracksLength} - Tracks: ${success.tracksLength}`)
+  const errorPercentage = errors.tracksLength / success.tracksLength
+  if (errorPercentage > 0.3) {
+    return {
+      status: 'error'
+    }
+  }
+  const medianTrackDuration = success.totalPlaytime / success.tracksLength
+  errors.totalPlaytime = errors.tracksLength * medianTrackDuration
+  success.totalPlaytime += errors.totalPlaytime
+  return {
+    status: 'success',
+    totalPlaytime: success.totalPlaytime
+  }
+}
 
 export interface UserArtistTopTracks {
   status: 'loading' | 'error' | 'success'
   data: Array<UserTopTracks['toptracks']['track']['0']>
 }
-
-async function getUserTopTracks (lastfmUser: string, artistName: string): Promise<UserArtistTopTracks> {
+async function getUserArtistTopTracks (lastfmUser: string, artistName: string): Promise<UserArtistTopTracks> {
   const userArtistTopTracks: UserArtistTopTracks = {
     status: 'loading',
     data: []
@@ -87,7 +153,6 @@ export async function runPnartistCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Com
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
   const userInfoRequest = msLastfmApi.user.getInfo(lastfmUser)
   const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 1, 1)
-
   const [userInfo, userRecentTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest])
   if (!userInfo.success) {
     void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmUserDataNotFoundedError', { lastfmUser }))
@@ -106,7 +171,7 @@ export async function runPnartistCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Com
     artistMbid: userRecentTracks.data.recenttracks.track[0].artist.mbid,
     nowPlaying: userRecentTracks.data.recenttracks.track[0]['@attr']?.nowplaying === 'true'
   }
-  const userArtistTopTracksRequest = getUserTopTracks(lastfmUser, mainTrack.artistName)
+  const userArtistTopTracksRequest = getUserArtistTopTracks(lastfmUser, mainTrack.artistName)
   const msMusicApi = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret)
   const artistInfoRequest = msLastfmApi.artist.getInfo(mainTrack.artistName, mainTrack.artistMbid, lastfmUser)
   const spotifyArtistInfoRequest = msMusicApi.getSpotifyArtistInfo(mainTrack.artistName)
@@ -124,6 +189,9 @@ export async function runPnartistCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Com
     status: 'loading',
     data: []
   }
+  const defaultUserArtistTotalPlaytime: TracksTotalPlaytime = {
+    status: 'loading'
+  }
   const inlineKeyboard = new InlineKeyboard()
   inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyArtistInfo.data[0].external_urls.spotify)
   if (
@@ -132,8 +200,11 @@ export async function runPnartistCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Com
   ) {
     inlineKeyboard.url(lang(ctxLang, 'deezerButton'), deezerArtistInfo.data.data[0].link)
   }
-  const response = await ctxReply(ctx, undefined, getPnartistText(ctxLang, userInfo.data, artistInfo.data, defaultUserArtistTopTracks, spotifyArtistInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+  const response = await ctxReply(ctx, undefined, getPnartistText(ctxLang, userInfo.data, artistInfo.data, defaultUserArtistTopTracks, defaultUserArtistTotalPlaytime, spotifyArtistInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   if (response === undefined) return
   const userArtistTopTracks = await userArtistTopTracksRequest
-  await ctxEditMessage(ctx, { chatId: response.chat.id, messageId: response.message_id }, getPnartistText(ctxLang, userInfo.data, artistInfo.data, userArtistTopTracks, spotifyArtistInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+  const userArtistTotalPlaytimeRequest = getTracksTotalPlaytime(userArtistTopTracks.data)
+  await ctxEditMessage(ctx, { chatId: response.chat.id, messageId: response.message_id }, getPnartistText(ctxLang, userInfo.data, artistInfo.data, userArtistTopTracks, defaultUserArtistTotalPlaytime, spotifyArtistInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+  const userArtistTotalPlaytime = await userArtistTotalPlaytimeRequest
+  await ctxEditMessage(ctx, { chatId: response.chat.id, messageId: response.message_id }, getPnartistText(ctxLang, userInfo.data, artistInfo.data, userArtistTopTracks, userArtistTotalPlaytime, spotifyArtistInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
 }
