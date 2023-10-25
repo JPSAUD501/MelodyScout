@@ -3,11 +3,12 @@ import { type UserTopAlbums } from '../../api/msLastfmApi/types/zodUserTopAlbums
 import { type UserTopArtists } from '../../api/msLastfmApi/types/zodUserTopArtists'
 import { type UserTopTracks } from '../../api/msLastfmApi/types/zodUserTopTracks'
 import { melodyScoutConfig } from '../../config'
+import { type TracksTotalPlaytime } from '../../functions/getTracksTotalPlaytime'
 import { sanitizeText } from '../../functions/sanitizeText'
 import { urlLimiter } from '../../functions/urlLimiter'
 import { lang } from '../../translations/base'
 
-export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, userTopTracks: UserTopTracks, userTopAlbums: UserTopAlbums, userTopArtists: UserTopArtists): string {
+export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, userTopTracks: UserTopTracks, userTopAlbums: UserTopAlbums, userTopArtists: UserTopArtists, userTotalPlaytime: TracksTotalPlaytime | undefined): string {
   const { user } = userInfo
   const { toptracks } = userTopTracks
   const { topalbums } = userTopAlbums
@@ -85,6 +86,11 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
   postText.infos.textArray.push('')
   // postText.infos.textArray.push('[ℹ️] Informações')
   postText.infos.textArray.push(lang(ctxLang, 'tfBriefPostInfosTittle'))
+  if (userTotalPlaytime !== undefined && userTotalPlaytime.status === 'success') {
+    const playedHours = Math.floor(userTotalPlaytime.totalPlaytime / 3600)
+    const playedMinutes = Math.floor((userTotalPlaytime.totalPlaytime % 3600) / 60)
+    postText.infos.textArray.push(`- Já ouviu ${Math.floor(playedHours)} horas e ${playedMinutes} minutos de música`)
+  }
   if (((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount)) > ((Number(user.track_count) / Number(user.playcount)))) {
     // postText.infos.textArray.push(`- ${Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount) * 100).toFixed(2)).toLocaleString('pt-BR')}% das músicas ouvidas são repetidas.`)
     postText.infos.textArray.push(lang(ctxLang, 'tfBriefPostInfosRepeatedTracks', { repeatedTracksPercentage: Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount) * 100).toFixed(2)).toLocaleString(lang(ctxLang, 'localeLangCode')) }))
@@ -154,6 +160,25 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
   textArray.push('')
   // textArray.push(`<b>[ℹ️] Informações</b> (<i><a href="${postText.infos.postUrl()}">Postar 𝕏</a></i>)`)
   textArray.push(`${lang(ctxLang, 'tfBriefInfosTittle')} ${lang(ctxLang, 'tfBriefPostShareButton', { postUrl: postText.infos.postUrl() })}`)
+  if (userTotalPlaytime !== undefined) {
+    switch (true) {
+      default: {
+        if (userTotalPlaytime.status === 'loading') {
+          textArray.push('- Carregando tempo de reprodução...')
+          break
+        }
+        if (userTotalPlaytime.status === 'error') {
+          textArray.push('- Erro ao carregar tempo de reprodução.')
+          break
+        }
+        if (userTotalPlaytime.status === 'success') {
+          const playedHours = Math.floor(userTotalPlaytime.totalPlaytime / 3600)
+          const playedMinutes = Math.floor((userTotalPlaytime.totalPlaytime % 3600) / 60)
+          textArray.push(`- Você já ouviu <b>${Math.floor(playedHours)} horas</b> e <b>${playedMinutes} minutos</b> de música.`)
+        }
+      }
+    }
+  }
   // textArray.push(`- Dentre as suas músicas ouvidas <b>${Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount) * 100).toFixed(2)).toLocaleString('pt-BR')}%</b> são repetidas e <b>${Number(((Number(user.track_count) / Number(user.playcount)) * 100).toFixed(2)).toLocaleString('pt-BR')}%</b> são novas.`)
   textArray.push(lang(ctxLang, 'tfBriefInfosRepeatedTracks', { repeatedTracksPercentage: Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount) * 100).toFixed(2)).toLocaleString(lang(ctxLang, 'localeLangCode')), newTracksPercentage: Number(((Number(user.track_count) / Number(user.playcount)) * 100).toFixed(2)).toLocaleString(lang(ctxLang, 'localeLangCode')) }))
   // textArray.push(`- Em média você repete <b>${Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.track_count)).toFixed(2)).toLocaleString('pt-BR')}</b> vezes cada música que conhece.`)

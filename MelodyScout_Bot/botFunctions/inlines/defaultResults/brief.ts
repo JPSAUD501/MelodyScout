@@ -68,6 +68,6 @@ export async function briefInlineResult (ctxLang: string | undefined, lastfmUser
         description: `${userInfo.data.user.name} - ${userInfo.data.user.realname}`,
         thumbnail_url: userInfo.data.user.image[userInfo.data.user.image.length - 1]['#text'] ?? melodyScoutConfig.userImgUrl
       })
-      .text(getBriefText(ctxLang, userInfo.data, userTopTracks.data, userTopAlbums.data, userTopArtists.data), { parse_mode: 'HTML' })
+      .text(getBriefText(ctxLang, userInfo.data, userTopTracks.data, userTopAlbums.data, userTopArtists.data, undefined), { parse_mode: 'HTML' })
   }
 }

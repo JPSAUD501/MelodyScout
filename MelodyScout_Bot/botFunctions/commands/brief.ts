@@ -1,10 +1,12 @@
 import { type CommandContext, type Context } from 'grammy'
-import { ctxReply } from '../../../functions/grammyFunctions'
+import { ctxEditMessage, ctxReply } from '../../../functions/grammyFunctions'
 import { getBriefText } from '../../textFabric/brief'
 import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
-import { lastfmConfig, melodyScoutConfig } from '../../../config'
+import { lastfmConfig } from '../../../config'
 import { lang } from '../../../translations/base'
+import { getUserFilteredTopTracks } from '../../../functions/getUserFilteredTopTracks'
+import { type TracksTotalPlaytime, getTracksTotalPlaytime } from '../../../functions/getTracksTotalPlaytime'
 
 export async function runBriefCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
@@ -36,6 +38,12 @@ export async function runBriefCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comman
     void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmUserNoMoreRegisteredError'))
     return
   }
+  const getUserTotalPlaytime = async (): Promise<TracksTotalPlaytime> => {
+    const userAllTopTracks = await getUserFilteredTopTracks(lastfmUser, undefined, undefined)
+    const userTotalPlaytime = await getTracksTotalPlaytime(userAllTopTracks.data)
+    return userTotalPlaytime
+  }
+  const userTotalPlaytimeRequest = getUserTotalPlaytime()
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
   const userInfoRequest = msLastfmApi.user.getInfo(lastfmUser)
   const userTopTracksRequest = msLastfmApi.user.getTopTracks(lastfmUser, 5, 1)
@@ -58,7 +66,11 @@ export async function runBriefCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comman
     void ctxReply(ctx, undefined, lang(ctxLang, 'getTopArtistsErrorMessage'))
     return
   }
-  const tfFinalText = getBriefText(ctxLang, userInfo.data, userTopTracks.data, userTopAlbums.data, userTopArtists.data)
-  await ctxReply(ctx, undefined, tfFinalText)
-  await ctxReply(ctx, { chatId: melodyScoutConfig.blogChannelChatId }, tfFinalText)
+  const defaultUserTotalPlaytime: TracksTotalPlaytime = {
+    status: 'loading'
+  }
+  const response = await ctxReply(ctx, undefined, getBriefText(ctxLang, userInfo.data, userTopTracks.data, userTopAlbums.data, userTopArtists.data, defaultUserTotalPlaytime))
+  if (response === undefined) return
+  const userTotalPlaytime = await userTotalPlaytimeRequest
+  await ctxEditMessage(ctx, { chatId: response.chat.id, messageId: response.message_id }, getBriefText(ctxLang, userInfo.data, userTopTracks.data, userTopAlbums.data, userTopArtists.data, userTotalPlaytime))
 }
