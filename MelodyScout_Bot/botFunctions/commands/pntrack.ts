@@ -9,6 +9,7 @@ import { lastfmConfig, spotifyConfig } from '../../../config'
 import { lang } from '../../../translations/base'
 import { MsDeezerApi } from '../../../api/msDeezerApi/base'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
+import { type DeezerTrack } from '../../../api/msDeezerApi/types/zodSearchTrack'
 
 export async function runPntrackCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context> | CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
@@ -89,6 +90,7 @@ export async function runPntrackCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comm
     void ctxReply(ctx, undefined, lang(ctxLang, 'spotifyTrackDataNotFoundedError'))
     return
   }
+  const deezerTrack: DeezerTrack | undefined = deezerTrackInfo.success && deezerTrackInfo.data.data.length > 0 ? deezerTrackInfo.data.data[0] : undefined
   const inlineKeyboard = new InlineKeyboard()
   inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyTrackInfo.data[0].external_urls.spotify)
   if (deezerTrackInfo.success && deezerTrackInfo.data.data.length > 0) inlineKeyboard.url(lang(ctxLang, 'deezerButton'), deezerTrackInfo.data.data[0].link)
@@ -101,5 +103,5 @@ export async function runPntrackCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comm
   inlineKeyboard.row()
   inlineKeyboard.text(lang(ctxLang, 'trackPreviewButton'), getCallbackKey(['TP', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
   inlineKeyboard.text(lang(ctxLang, 'trackDownloadButton'), getCallbackKey(['TD', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
-  await ctxReply(ctx, undefined, getPntrackText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+  await ctxReply(ctx, undefined, getPntrackText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], deezerTrack, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
 }

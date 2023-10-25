@@ -4,9 +4,10 @@ import { type UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
 import { melodyScoutConfig } from '../../config'
 import { sanitizeText } from '../../functions/sanitizeText'
 import { urlLimiter } from '../../functions/urlLimiter'
-import { type TracksTotalPlaytime, type UserArtistTopTracks } from '../botFunctions/commands/pnartist'
+import { type TracksTotalPlaytime } from '../../functions/getTracksTotalPlaytime'
+import { type UserFilteredTopTracks } from '../../functions/getUserFilteredTopTracks'
 
-export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, userArtistTopTracks: UserArtistTopTracks, userArtistTotalPlaytime: TracksTotalPlaytime, spotifyArtistInfo: Artist, nowPlaying: boolean): string {
+export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, userArtistTopTracks: UserFilteredTopTracks, userArtistTotalPlaytime: TracksTotalPlaytime, spotifyArtistInfo: Artist, nowPlaying: boolean): string {
   const { user } = userInfo
   const { artist } = artistInfo
 
@@ -18,6 +19,11 @@ export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo
   postTextArray.push('')
   postTextArray.push(`[📊] ${Number(artist.stats.userplaycount).toLocaleString('pt-BR')} Scrobbles`)
   const postInfoArray: string[] = []
+  if (userArtistTotalPlaytime.status === 'success') {
+    const playedHours = Math.floor(userArtistTotalPlaytime.totalPlaytime / 3600)
+    const playedMinutes = Math.floor((userArtistTotalPlaytime.totalPlaytime % 3600) / 60)
+    postInfoArray.push(`- Já ouviu esse artista por ${Math.floor(playedHours)} horas e ${playedMinutes} minutos`)
+  }
   if (spotifyArtistInfo.popularity !== undefined) postInfoArray.push(`A popularidade atual desse artista é: [${spotifyArtistInfo.popularity}][${'★'.repeat(Math.floor(spotifyArtistInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyArtistInfo.popularity / 20))}]`)
   switch (postInfoArray.length) {
     case 0: {
@@ -54,7 +60,6 @@ export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo
   }
   textArray.push(`- Artista: <b><a href="${urlLimiter(artist.url)}">${sanitizeText(artist.name)}</a></b>`)
   const infoArray: string[] = []
-  if (spotifyArtistInfo.popularity !== undefined) infoArray.push(`- A <a href="${melodyScoutConfig.popularityImgUrl}">popularidade</a> atual desse artista é: <b>[${spotifyArtistInfo.popularity}][${'★'.repeat(Math.floor(spotifyArtistInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyArtistInfo.popularity / 20))}]</b>`)
   switch (true) {
     default: {
       if (userArtistTotalPlaytime.status === 'loading') {
@@ -62,16 +67,17 @@ export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo
         break
       }
       if (userArtistTotalPlaytime.status === 'error') {
-        infoArray.push('- Erro ao carregar tempo de reprodução')
+        infoArray.push('- Erro ao carregar tempo de reprodução.')
         break
       }
       if (userArtistTotalPlaytime.status === 'success') {
         const playedHours = Math.floor(userArtistTotalPlaytime.totalPlaytime / 3600)
         const playedMinutes = Math.floor((userArtistTotalPlaytime.totalPlaytime % 3600) / 60)
-        infoArray.push(`- Você já ouviu esse artista por <b>${Math.floor(playedHours)} horas</b> e <b>${playedMinutes} minutos</b>`)
+        infoArray.push(`- Você já ouviu esse artista por <b>${Math.floor(playedHours)} horas</b> e <b>${playedMinutes} minutos</b>.`)
       }
     }
   }
+  if (spotifyArtistInfo.popularity !== undefined) infoArray.push(`- A <a href="${melodyScoutConfig.popularityImgUrl}">popularidade</a> atual desse artista é: <b>[${spotifyArtistInfo.popularity}][${'★'.repeat(Math.floor(spotifyArtistInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyArtistInfo.popularity / 20))}]</b>`)
   if (infoArray.length > 0) {
     textArray.push('')
     textArray.push('<b>[ℹ️] Informações</b>')
@@ -80,7 +86,6 @@ export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo
   textArray.push('')
   textArray.push(`<b>[📊] ${Number(artist.stats.userplaycount).toLocaleString('pt-BR')} Scrobbles</b>`)
   textArray.push('')
-
   textArray.push('<b>[🎶] As suas mais ouvidas</b>')
   switch (true) {
     default: {
@@ -89,12 +94,12 @@ export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo
         break
       }
       if (userArtistTopTracks.status === 'error') {
-        textArray.push('- Erro ao carregar musicas')
+        textArray.push('- Erro ao carregar musicas.')
         break
       }
       if (userArtistTopTracks.status === 'success') {
         if (userArtistTopTracks.data.length <= 0) {
-          textArray.push('- Nenhuma musica encontrada')
+          textArray.push('- Nenhuma musica encontrada.')
           break
         }
         for (let i = 0; i < userArtistTopTracks.data.length && i < 10; i++) {

@@ -6,12 +6,30 @@ import { type UserInfo } from '../../api/msLastfmApi/types/zodUserInfo'
 import { melodyScoutConfig } from '../../config'
 import { sanitizeText } from '../../functions/sanitizeText'
 import { urlLimiter } from '../../functions/urlLimiter'
+import { type DeezerTrack } from '../../api/msDeezerApi/types/zodSearchTrack'
 
-export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, nowPlaying: boolean): string {
+export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, deezerTrackInfo: DeezerTrack | undefined, nowPlaying: boolean): string {
   const { user } = userInfo
   const { artist } = artistInfo
   const { album } = albumInfo
   const { track } = trackInfo
+  let trackDuration = 0
+  switch (true) {
+    default: {
+      if (Number(track.duration) > 0) {
+        trackDuration = Number(track.duration) / 1000
+        break
+      }
+      if (spotifyTrackInfo.duration_ms > 0) {
+        trackDuration = spotifyTrackInfo.duration_ms / 1000
+        break
+      }
+      if (deezerTrackInfo !== undefined && deezerTrackInfo.duration > 0) {
+        trackDuration = deezerTrackInfo.duration
+        break
+      }
+    }
+  }
 
   const postTextArray: string[] = []
   postTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
@@ -21,6 +39,11 @@ export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo,
   postTextArray.push('')
   postTextArray.push(`[📊] ${Number(track.userplaycount).toLocaleString('pt-BR')} Scrobbles`)
   const postInfoArray: string[] = []
+  if (Number(track.userplaycount) > 0 && trackDuration > 0) {
+    const playedHours = Math.floor((Number(track.userplaycount) * trackDuration) / 3600)
+    const playedMinutes = Math.floor(((Number(track.userplaycount) * trackDuration) % 3600) / 60)
+    postInfoArray.push(`Já ouviu essa música por ${playedHours} horas e ${playedMinutes} minutos.`)
+  }
   if (spotifyTrackInfo.popularity !== undefined) postInfoArray.push(`A popularidade atual dessa música é: [${spotifyTrackInfo.popularity}][${'★'.repeat(Math.floor(spotifyTrackInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyTrackInfo.popularity / 20))}]`)
   switch (postInfoArray.length) {
     case 0: {
@@ -59,6 +82,11 @@ export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo,
   textArray.push(`- Álbum: <b><a href="${urlLimiter(album.url)}">${sanitizeText(album.name)}</a></b>`)
   textArray.push(`- Artista: <b><a href="${urlLimiter(artist.url)}">${sanitizeText(artist.name)}</a></b>`)
   const infoArray: string[] = []
+  if (Number(track.userplaycount) > 0 && trackDuration > 0) {
+    const playedHours = Math.floor((Number(track.userplaycount) * trackDuration) / 3600)
+    const playedMinutes = Math.floor(((Number(track.userplaycount) * trackDuration) % 3600) / 60)
+    infoArray.push(`- Você já ouviu essa música por <b>${playedHours} horas</b> e <b>${playedMinutes} minutos</b>.`)
+  }
   if (spotifyTrackInfo.popularity !== undefined) infoArray.push(`- A <a href="${melodyScoutConfig.popularityImgUrl}">popularidade</a> atual dessa música é: <b>[${spotifyTrackInfo.popularity}][${'★'.repeat(Math.floor(spotifyTrackInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyTrackInfo.popularity / 20))}]</b>`)
   if (infoArray.length > 0) {
     textArray.push('')
