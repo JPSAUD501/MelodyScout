@@ -42,22 +42,53 @@ export async function getTracksTotalPlaytime (tracks: Array<UserTopTracks['toptr
     type: {
       undefined: {
         tracks: () => allTracks.tracks.filter(track => track.trackDurationType === undefined),
-        totalPlaycount: () => allTracks.type.undefined.tracks().reduce((accumulator, track) => accumulator + track.playcount, 0)
+        totalPlaycount: () => {
+          const undefinedTracks = allTracks.type.undefined.tracks()
+          let totalPlaycount = 0
+          for (const track of undefinedTracks) {
+            totalPlaycount += track.playcount
+          }
+          return totalPlaycount
+        }
       },
       estimated: {
         tracks: () => allTracks.tracks.filter(track => track.trackDurationType === 'estimated'),
-        totalPlaycount: () => allTracks.type.estimated.tracks().reduce((accumulator, track) => accumulator + track.playcount, 0)
+        totalPlaycount: () => {
+          const estimatedTracks = allTracks.type.estimated.tracks()
+          let totalPlaycount = 0
+          for (const track of estimatedTracks) {
+            totalPlaycount += track.playcount
+          }
+          return totalPlaycount
+        }
       }
     },
     mediumTrackDuration: () => {
       const validTracks = allTracks.tracks.filter(track => (track.trackDurationType !== undefined) && (track.trackDurationType !== 'estimated'))
-      const totalPlaytime = validTracks.reduce((accumulator, track) => accumulator + ((track.trackDuration ?? 0) * track.playcount), 0)
-      const totalPlaycount = validTracks.reduce((accumulator, track) => accumulator + track.playcount, 0)
+      let totalPlaycount = 0
+      let totalPlaytime = 0
+      for (const track of validTracks) {
+        totalPlaycount += track.playcount
+        totalPlaytime += (track.trackDuration ?? 0) * track.playcount
+      }
+      if (totalPlaycount === 0) return 0
       const mediumTrackDuration = totalPlaytime / totalPlaycount
       return mediumTrackDuration
     },
-    totalPlaycount: () => allTracks.tracks.reduce((accumulator, track) => accumulator + track.playcount, 0),
-    totalPlaytime: () => allTracks.tracks.reduce((accumulator, track) => accumulator + (track.trackDuration ?? 0), 0),
+    totalPlaycount: () => {
+      let totalPlaycount = 0
+      for (const track of allTracks.tracks) {
+        totalPlaycount += track.playcount
+      }
+      return totalPlaycount
+    },
+    totalPlaytime: () => {
+      let totalPlaytime = 0
+      for (const track of allTracks.tracks) {
+        totalPlaytime += (track.trackDuration ?? 0) * track.playcount
+      }
+      return totalPlaytime
+    },
     tracks: []
   }
   const msMusicApi = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret)
