@@ -7,6 +7,7 @@ import { sanitizeText } from '../../functions/sanitizeText'
 import { urlLimiter } from '../../functions/urlLimiter'
 import { type TracksTotalPlaytime } from '../../functions/getTracksTotalPlaytime'
 import { type UserFilteredTopTracks } from '../../functions/getUserFilteredTopTracks'
+import { lang } from '../../translations/base'
 
 export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, userAlbumTopTracks: UserFilteredTopTracks, userAlbumTotalPlaytime: TracksTotalPlaytime, spotifyAlbumInfo: AlbumSimplified, nowPlaying: boolean): string {
   const { user } = userInfo
@@ -25,7 +26,7 @@ export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo,
   if (userAlbumTotalPlaytime.status === 'success') {
     const playedHours = Math.floor(userAlbumTotalPlaytime.totalPlaytime / 3600)
     const playedMinutes = Math.floor((userAlbumTotalPlaytime.totalPlaytime % 3600) / 60)
-    postInfoArray.push(`Já ouviu esse album por <b>${Math.floor(playedHours)} horas</b> e <b>${playedMinutes} minutos</b>`)
+    postInfoArray.push(`Já ouviu esse album por <b>${playedHours.toLocaleString(lang(ctxLang, 'localeLangCode'))} horas</b> e <b>${playedMinutes} minutos</b>`)
   }
   if (spotifyAlbumInfo.popularity !== undefined) postInfoArray.push(`A popularidade atual desse album é: [${spotifyAlbumInfo.popularity}][${'★'.repeat(Math.floor(spotifyAlbumInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyAlbumInfo.popularity / 20))}]`)
   switch (postInfoArray.length) {
@@ -77,7 +78,7 @@ export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo,
       if (userAlbumTotalPlaytime.status === 'success') {
         const playedHours = Math.floor(userAlbumTotalPlaytime.totalPlaytime / 3600)
         const playedMinutes = Math.floor((userAlbumTotalPlaytime.totalPlaytime % 3600) / 60)
-        infoArray.push(`- Você já ouviu esse album por <b>${Math.floor(playedHours)} horas</b> e <b>${playedMinutes} minutos</b>.`)
+        infoArray.push(`- Você já ouviu esse album por <b>${playedHours.toLocaleString(lang(ctxLang, 'localeLangCode'))} horas</b> e <b>${playedMinutes} minutos</b>.`)
       }
     }
   }

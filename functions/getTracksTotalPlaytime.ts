@@ -5,100 +5,155 @@ import { MsMusicApi } from '../api/msMusicApi/base'
 import { spotifyConfig } from '../config'
 import { advLog, advError } from './advancedConsole'
 
+const estimatedThreshold = 0.3
+
 export type TracksTotalPlaytime = {
   status: 'loading' | 'error'
 } | {
   status: 'success'
   totalPlaytime: number
 }
+
+interface Track {
+  trackName: string
+  trackArtist: string
+  playcount: number
+  trackDurationType: 'lastfm' | 'spotify' | 'deezer' | 'estimated' | undefined
+  trackDuration: number | undefined
+}
+
 export async function getTracksTotalPlaytime (tracks: Array<UserTopTracks['toptracks']['track']['0']>): Promise<TracksTotalPlaytime> {
-  const success = {
-    tracksLength: 0,
-    totalPlaytime: 0
-  }
-  const estimated = {
-    tracksLength: 0,
-    totalPlaytime: 0
-  }
-  const errors = {
-    tracksLength: 0,
-    totalPlaytime: 0
+  const allTracks: {
+    type: {
+      undefined: {
+        tracks: () => Track[]
+        totalPlaycount: () => number
+      }
+      estimated: {
+        tracks: () => Track[]
+        totalPlaycount: () => number
+      }
+    }
+    mediumTrackDuration: () => number
+    totalPlaycount: () => number
+    totalPlaytime: () => number
+    tracks: Track[]
+  } = {
+    type: {
+      undefined: {
+        tracks: () => allTracks.tracks.filter(track => track.trackDurationType === undefined),
+        totalPlaycount: () => allTracks.type.undefined.tracks().reduce((accumulator, track) => accumulator + track.playcount, 0)
+      },
+      estimated: {
+        tracks: () => allTracks.tracks.filter(track => track.trackDurationType === 'estimated'),
+        totalPlaycount: () => allTracks.type.estimated.tracks().reduce((accumulator, track) => accumulator + track.playcount, 0)
+      }
+    },
+    mediumTrackDuration: () => {
+      const validTracks = allTracks.tracks.filter(track => (track.trackDurationType !== undefined) && (track.trackDurationType !== 'estimated'))
+      const totalPlaytime = validTracks.reduce((accumulator, track) => accumulator + ((track.trackDuration ?? 0) * track.playcount), 0)
+      const totalPlaycount = validTracks.reduce((accumulator, track) => accumulator + track.playcount, 0)
+      const mediumTrackDuration = totalPlaytime / totalPlaycount
+      return mediumTrackDuration
+    },
+    totalPlaycount: () => allTracks.tracks.reduce((accumulator, track) => accumulator + track.playcount, 0),
+    totalPlaytime: () => allTracks.tracks.reduce((accumulator, track) => accumulator + (track.trackDuration ?? 0), 0),
+    tracks: []
   }
   const msMusicApi = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret)
-  const tracksWithNoDuration: Array<UserTopTracks['toptracks']['track']['0']> = []
   for (const track of tracks) {
     const trackPlaycount = Number(track.playcount)
     const trackDuration = Number(track.duration)
     if (trackDuration > 0) {
-      success.tracksLength += trackPlaycount
-      success.totalPlaytime += trackDuration * trackPlaycount
+      allTracks.tracks.push({
+        trackName: track.name,
+        trackArtist: track.artist.name,
+        playcount: trackPlaycount,
+        trackDurationType: 'lastfm',
+        trackDuration
+      })
       continue
     }
-    tracksWithNoDuration.push(track)
+    allTracks.tracks.push({
+      trackName: track.name,
+      trackArtist: track.artist.name,
+      playcount: trackPlaycount,
+      trackDurationType: undefined,
+      trackDuration: undefined
+    })
   }
-  advLog(`GetTracksTotalPlaytime - Tracks with no duration: ${tracksWithNoDuration.length} / ${tracks.length} - ${((tracksWithNoDuration.length / tracks.length) * 100).toFixed(2)}%`)
-  switch (true) {
-    case tracksWithNoDuration.length <= 0: {
-      break
-    }
-    case tracksWithNoDuration.length > 150: {
-      advLog(`GetTracksTotalPlaytime - Tracks with no duration: ${tracksWithNoDuration.length} - Using median track duration`)
-      const medianTrackDuration = success.totalPlaytime / success.tracksLength
-      tracksWithNoDuration.forEach(track => {
-        const trackPlaycount = Number(track.playcount)
-        estimated.tracksLength += trackPlaycount
-        estimated.totalPlaytime += medianTrackDuration * trackPlaycount
-      })
-      advLog(`GetTracksTotalPlaytime - Estimated total playcount: ${estimated.tracksLength} - Estimated total playtime: ${estimated.totalPlaytime} - Median track duration: ${medianTrackDuration}`)
-      if (estimated.tracksLength > (success.tracksLength * 0.3)) {
-        advError(`GetTracksTotalPlaytime - The estimated playcount are more than 30% of the total playcount - Estimated playcount: ${estimated.tracksLength} - Total playcount: ${success.tracksLength} - ${((estimated.tracksLength / success.tracksLength) * 100).toFixed(2)}%`)
-        return {
-          status: 'error'
-        }
+  if (allTracks.type.undefined.tracks().length > 150) {
+    allTracks.tracks = allTracks.tracks.map(track => {
+      if (track.trackDurationType === undefined) {
+        track.trackDurationType = 'estimated'
       }
-      break
-    }
-    default: {
-      await PromisePool.for(tracksWithNoDuration).withConcurrency(1).process(async (track, _index, _pool) => {
-        const trackPlaycount = Number(track.playcount)
-        const spotifyTrackInfoRequest = msMusicApi.getSpotifyTrackInfo(track.name, track.artist.name)
-        const deezerTrackInfoRequest = new MsDeezerApi().search.track(track.name, track.artist.name, 1)
-        const [spotifyTrackInfo, deezerTrackInfo] = await Promise.all([spotifyTrackInfoRequest, deezerTrackInfoRequest])
-        switch (true) {
-          default: {
-            if (spotifyTrackInfo.success && spotifyTrackInfo.data.length > 0) {
-              success.tracksLength += trackPlaycount
-              success.totalPlaytime += (spotifyTrackInfo.data[0].duration_ms / 1000) * trackPlaycount
-              break
-            }
-            if (deezerTrackInfo.success && deezerTrackInfo.data.data.length > 0) {
-              success.tracksLength += trackPlaycount
-              success.totalPlaytime += deezerTrackInfo.data.data[0].duration * trackPlaycount
-              break
-            }
-            errors.tracksLength += trackPlaycount
-            break
-          }
-        }
-      })
-      advLog(`GetTracksTotalPlaytime - Fetched tracks: ${tracksWithNoDuration.length} - Success tracks: ${success.tracksLength} - Error tracks: ${errors.tracksLength} - ${((errors.tracksLength / tracksWithNoDuration.length) * 100).toFixed(2)}%`)
-      const errorPercentage = errors.tracksLength / success.tracksLength
-      if (errorPercentage > 0.3) {
-        return {
-          status: 'error'
-        }
+      return track
+    })
+  }
+  const process = await PromisePool
+    .for(allTracks.tracks)
+    .withConcurrency(1)
+    .useCorrespondingResults()
+    .process(async (track, _index, _pool) => {
+      if (track.trackDurationType !== undefined) {
+        return track
       }
+      const spotifyTrackInfoRequest = msMusicApi.getSpotifyTrackInfo(track.trackName, track.trackArtist)
+      const deezerTrackInfoRequest = new MsDeezerApi().search.track(track.trackName, track.trackArtist, 1)
+      const [spotifyTrackInfo, deezerTrackInfo] = await Promise.all([spotifyTrackInfoRequest, deezerTrackInfoRequest])
+      if (spotifyTrackInfo.success && spotifyTrackInfo.data.length > 0) {
+        track.trackDurationType = 'spotify'
+        track.trackDuration = spotifyTrackInfo.data[0].duration_ms / 1000
+        return track
+      }
+      if (deezerTrackInfo.success && deezerTrackInfo.data.data.length > 0) {
+        track.trackDurationType = 'deezer'
+        track.trackDuration = deezerTrackInfo.data.data[0].duration
+        return track
+      }
+      track.trackDurationType = 'estimated'
+      return track
+    })
+  const processResult: Track[] = []
+  process.results.forEach(result => {
+    if (typeof result === 'symbol') return
+    processResult.push(result)
+  })
+  if (processResult.length !== allTracks.tracks.length) {
+    advError(`GetTracksTotalPlaytime - The number of tracks (${allTracks.tracks.length}) is different from the number of results (${processResult.length})`)
+    return {
+      status: 'error'
     }
   }
-  success.tracksLength += estimated.tracksLength
-  success.totalPlaytime += estimated.totalPlaytime
-  const finalMedianTrackDuration = success.totalPlaytime / success.tracksLength
-  advLog(`GetTracksTotalPlaytime - Final median track duration: ${finalMedianTrackDuration}`)
-  errors.totalPlaytime = errors.tracksLength * finalMedianTrackDuration
-  success.totalPlaytime += errors.totalPlaytime
-  advLog(`GetTracksTotalPlaytime - Final total playtime: ${success.totalPlaytime}`)
+  allTracks.tracks = processResult
+  allTracks.tracks = allTracks.tracks.map(track => {
+    if (track.trackDurationType !== 'estimated') return track
+    track.trackDuration = allTracks.mediumTrackDuration()
+    return track
+  })
+  if ((allTracks.type.estimated.totalPlaycount() / allTracks.totalPlaycount()) > estimatedThreshold) {
+    advError(`GetTracksTotalPlaytime - The number of estimated tracks (${allTracks.type.estimated.totalPlaycount()}) is greater than ${estimatedThreshold * 100}% of the total number of tracks (${allTracks.totalPlaycount()})`)
+    return {
+      status: 'error'
+    }
+  }
+  for (const track of allTracks.tracks) {
+    if (track.trackDurationType === undefined) {
+      advError(`GetTracksTotalPlaytime - The tracklist contains a track without a duration type: ${track.trackName} - ${track.trackArtist}`)
+      return {
+        status: 'error'
+      }
+    }
+    if (track.trackDuration === undefined) {
+      advError(`GetTracksTotalPlaytime - The tracklist contains a track without a duration: ${track.trackName} - ${track.trackArtist}`)
+      return {
+        status: 'error'
+      }
+    }
+  }
+  advLog(`GetTracksTotalPlaytime - Success!\n\nTracks length: ${allTracks.tracks.length}\nTotal playcount: ${allTracks.totalPlaycount()}\nTotal playtime: ${(allTracks.totalPlaytime() / 36000).toFixed(2)}h\n\nEstimated tracks length: ${allTracks.type.estimated.tracks().length}\nEstimated total playcount: ${allTracks.type.estimated.totalPlaycount()}\n\nMedium track duration: ${(allTracks.mediumTrackDuration() / 60).toFixed(2)}\n\nEstimated tracks percentage: ${(allTracks.type.estimated.totalPlaycount() / allTracks.totalPlaycount()) * 100}%`)
   return {
     status: 'success',
-    totalPlaytime: success.totalPlaytime
+    totalPlaytime: allTracks.totalPlaytime()
   }
 }

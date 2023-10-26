@@ -89,7 +89,7 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
   if (userTotalPlaytime !== undefined && userTotalPlaytime.status === 'success') {
     const playedHours = Math.floor(userTotalPlaytime.totalPlaytime / 3600)
     const playedMinutes = Math.floor((userTotalPlaytime.totalPlaytime % 3600) / 60)
-    postText.infos.textArray.push(`- Já ouviu ${Math.floor(playedHours)} horas e ${playedMinutes} minutos de música`)
+    postText.infos.textArray.push(`- Já ouviu ${playedHours.toLocaleString(lang(ctxLang, 'localeLangCode'))} horas e ${playedMinutes} minutos de música`)
   }
   if (((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount)) > ((Number(user.track_count) / Number(user.playcount)))) {
     // postText.infos.textArray.push(`- ${Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount) * 100).toFixed(2)).toLocaleString('pt-BR')}% das músicas ouvidas são repetidas.`)
@@ -174,7 +174,7 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
         if (userTotalPlaytime.status === 'success') {
           const playedHours = Math.floor(userTotalPlaytime.totalPlaytime / 3600)
           const playedMinutes = Math.floor((userTotalPlaytime.totalPlaytime % 3600) / 60)
-          textArray.push(`- Você já ouviu <b>${Math.floor(playedHours)} horas</b> e <b>${playedMinutes} minutos</b> de música.`)
+          textArray.push(`- Você já ouviu <b>${playedHours.toLocaleString(lang(ctxLang, 'localeLangCode'))} horas</b> e <b>${playedMinutes} minutos</b> de música.`)
         }
       }
     }

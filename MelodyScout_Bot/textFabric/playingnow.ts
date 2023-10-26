@@ -52,7 +52,7 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
     const playedHours = Math.floor((Number(track.userplaycount) * trackDuration) / 3600)
     const playedMinutes = Math.floor(((Number(track.userplaycount) * trackDuration) % 3600) / 60)
     postInfoArray.push(lang(ctxLang, 'tfPlayingnowPostTrackPlaytime', {
-      hours: playedHours,
+      hours: playedHours.toLocaleString(lang(ctxLang, 'localeLangCode')),
       minutes: playedMinutes
     }))
   }
