@@ -34,7 +34,8 @@ export async function getTracksTotalPlaytime (tracks: Array<UserTopTracks['toptr
         totalPlaycount: () => number
       }
     }
-    mediumTrackDuration: () => number
+    mediumTrackDurationPerPlay: () => number
+    mediumTrackDurationPerTrack: () => number
     totalPlaycount: () => number
     totalPlaytime: () => number
     tracks: Track[]
@@ -63,7 +64,7 @@ export async function getTracksTotalPlaytime (tracks: Array<UserTopTracks['toptr
         }
       }
     },
-    mediumTrackDuration: () => {
+    mediumTrackDurationPerPlay: () => {
       const validTracks = allTracks.tracks.filter(track => (track.trackDurationType !== undefined) && (track.trackDurationType !== 'estimated'))
       let totalPlaycount = 0
       let totalPlaytime = 0
@@ -73,6 +74,16 @@ export async function getTracksTotalPlaytime (tracks: Array<UserTopTracks['toptr
       }
       if (totalPlaycount === 0) return 0
       const mediumTrackDuration = totalPlaytime / totalPlaycount
+      return mediumTrackDuration
+    },
+    mediumTrackDurationPerTrack: () => {
+      const validTracks = allTracks.tracks.filter(track => (track.trackDurationType !== undefined) && (track.trackDurationType !== 'estimated'))
+      let totalPlaytime = 0
+      for (const track of validTracks) {
+        totalPlaytime += track.trackDuration ?? 0
+      }
+      if (validTracks.length === 0) return 0
+      const mediumTrackDuration = totalPlaytime / validTracks.length
       return mediumTrackDuration
     },
     totalPlaycount: () => {
@@ -159,7 +170,8 @@ export async function getTracksTotalPlaytime (tracks: Array<UserTopTracks['toptr
   allTracks.tracks = processResult
   allTracks.tracks = allTracks.tracks.map(track => {
     if (track.trackDurationType !== 'estimated') return track
-    track.trackDuration = allTracks.mediumTrackDuration()
+    // track.trackDuration = allTracks.mediumTrackDurationPerPlay()
+    track.trackDuration = allTracks.mediumTrackDurationPerTrack()
     return track
   })
   if ((allTracks.type.estimated.totalPlaycount() / allTracks.totalPlaycount()) > estimatedThreshold) {
@@ -182,7 +194,7 @@ export async function getTracksTotalPlaytime (tracks: Array<UserTopTracks['toptr
       }
     }
   }
-  advLog(`GetTracksTotalPlaytime - Success!\n\nTracks length: ${allTracks.tracks.length}\nTotal playcount: ${allTracks.totalPlaycount()}\nTotal playtime: ${(allTracks.totalPlaytime() / 36000).toFixed(2)}h\n\nEstimated tracks length: ${allTracks.type.estimated.tracks().length}\nEstimated total playcount: ${allTracks.type.estimated.totalPlaycount()}\n\nMedium track duration: ${(allTracks.mediumTrackDuration() / 60).toFixed(2)}\n\nEstimated tracks percentage: ${(allTracks.type.estimated.totalPlaycount() / allTracks.totalPlaycount()) * 100}%`)
+  advLog(`GetTracksTotalPlaytime - Success!\n\nTracks length: ${allTracks.tracks.length}\nTotal playcount: ${allTracks.totalPlaycount()}\nTotal playtime: ${(allTracks.totalPlaytime() / 36000).toFixed(2)}h\n\nEstimated tracks length: ${allTracks.type.estimated.tracks().length}\nEstimated total playcount: ${allTracks.type.estimated.totalPlaycount()}\n\nMedium track duration per play: ${(allTracks.mediumTrackDurationPerPlay() / 60).toFixed(2)}\n(Using this) Medium track duration per track: ${(allTracks.mediumTrackDurationPerTrack() / 60).toFixed(2)}\n\nEstimated tracks percentage: ${((allTracks.type.estimated.totalPlaycount() / allTracks.totalPlaycount()) * 100).toFixed(2)}%`)
   return {
     status: 'success',
     totalPlaytime: allTracks.totalPlaytime()
