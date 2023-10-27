@@ -161,5 +161,6 @@ export const en = {
   tfPlayingnowShareTitle: '<b>[🔗] Share</b>',
   tfPlayingnowShareLink: '- <a href="{{postUrl}}">Share on 𝕏!</a>',
   composeImageTitle: '<b>{{trackName}}</b> by <b>{{artistName}}</b>',
+  youtubeMusicButton: '[🎶] - YT Music',
   trackLyricsNotFoundedError: 'Unfortunately we were unable to find the lyrics to this song in any of our sources.'
 }
