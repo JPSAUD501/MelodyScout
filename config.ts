@@ -35,11 +35,6 @@ export const openaiConfig = {
   apiKey: process.env.OPENAI_API_KEY ?? ''
 }
 
-export const clickupConfig = {
-  defaultUploadTaskId: '8685udey7',
-  token: process.env.CLICKUP_TOKEN ?? ''
-}
-
 export const replicateConfig = {
   token: process.env.REPLICATE_TOKEN ?? ''
 }

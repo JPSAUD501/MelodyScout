@@ -9,9 +9,7 @@ export async function updateTranslations (): Promise<{
 }> {
   try {
     const urls = {
-      ptBR: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout-Translation/main/pt_BR.json',
-      enUS: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout-Translation/main/en.json',
-      jaJP: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout-Translation/main/ja.json'
+      en: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/Crowdin/en.json'
     }
 
     for (const lang in urls) {

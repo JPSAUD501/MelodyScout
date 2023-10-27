@@ -1,21 +1,15 @@
 import fs from 'fs'
 import path from 'path'
-import { enUS } from './languages/enUS'
-import { jaJP } from './languages/jaJP'
-import { ptBR } from './languages/ptBR'
 
-export async function checkUnusedKeys (): Promise<{
+export async function getAllKeys (): Promise<{
   success: true
   data: {
-    unusedKeys: string[]
+    keys: string[]
   }
 } | {
   success: false
   error: string
 }> {
-  const allLangs = [...Object.keys(enUS), ...Object.keys(jaJP), ...Object.keys(ptBR)]
-  const allKeys = [...new Set(allLangs)]
-  const unusedKeys: string[] = []
   const allCodeArray: string[] = []
   const codeFolders = ['MelodyScout_Bot', 'functions', 'api']
   for (const codeFolder of codeFolders) {
@@ -58,25 +52,11 @@ export async function checkUnusedKeys (): Promise<{
     allKeysUsed.push(langKey)
   }
   const allUniqueKeysUsed = [...new Set(allKeysUsed)]
-  for (const key of allUniqueKeysUsed) {
-    if (!allKeys.includes(key)) {
-      return {
-        success: false,
-        error: `The key ${key} was not found in any language!`
-      }
-    }
-  }
-  for (const key of allKeys) {
-    if (!allUniqueKeysUsed.includes(key)) {
-      unusedKeys.push(key)
-    }
-  }
-  console.log(`Found ${unusedKeys.length} unused translations`)
-  console.log(unusedKeys)
+  console.log(`Found ${allUniqueKeysUsed.length} unique keys used in code!`)
   return {
     success: true,
     data: {
-      unusedKeys
+      keys: allUniqueKeysUsed
     }
   }
 }
