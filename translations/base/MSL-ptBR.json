@@ -161,6 +161,5 @@
   "tfPlayingnowShareTitle": "<b>[🔗] Compartilhe</b>",
   "tfPlayingnowShareLink": "- <a href=\"{{postUrl}}\">Compartilhar no 𝕏!</a>",
   "composeImageTitle": "<b>{{trackName}}</b> por <b>{{artistName}}</b>",
-  "youtubeMusicButton": "[🎶] - YT Music",
   "trackLyricsNotFoundedError": "Infelizmente não foi possível encontrar a letra dessa música em nenhuma de nossas fontes."
 }
