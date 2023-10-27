@@ -1,6 +1,7 @@
 import { MsDeezerApi } from '../api/msDeezerApi/base'
 import { MsMusicApi } from '../api/msMusicApi/base'
 import { spotifyConfig } from '../config'
+import { advError, advLog } from './advancedConsole'
 
 export async function getTrackPreview (trackName: string, trackArtist: string): Promise<{
   success: true
@@ -24,11 +25,13 @@ export async function getTrackPreview (trackName: string, trackArtist: string): 
     }
   }
   if (previewUrls.length <= 0) {
+    advError(`GetTrackPreview - No one preview url founded for track (${trackName} - ${trackArtist})`)
     return {
       success: false,
       error: 'Track preview url not founded'
     }
   }
+  advLog(`GetTrackPreview - Preview url founded for track (${trackName} - ${trackArtist}):\n\n${previewUrls.map(url => `${url}`).join('\n')}`)
   return {
     success: true,
     previewUrl: previewUrls[0]

@@ -39,7 +39,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   const [getGithubImage, getGithubMetadata] = await Promise.all([getGithubImagePromise, getGithubMetadataPromise])
   if (!getGithubImage.success) {
     postedImages[imageId] = false
-    void ctxTempReply(ctx, 'Não foi possível compartilhar a imagem! A imagem não foi encontrada no sistema!', 15000, {
+    await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! A imagem não foi encontrada no sistema!', {
       reply_to_message_id: loadingReply?.message_id,
       allow_sending_without_reply: true
     })
@@ -47,7 +47,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   }
   if (!getGithubMetadata.success) {
     postedImages[imageId] = false
-    void ctxTempReply(ctx, 'Não foi possível compartilhar a imagem! A imagem não foi encontrada ou versão dela não é mais suportada!', 15000, {
+    await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! A imagem não foi encontrada ou versão dela não é mais suportada!', {
       reply_to_message_id: loadingReply?.message_id,
       allow_sending_without_reply: true
     })
@@ -58,7 +58,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   const parsedMetadata = zodAIImageMetadata.safeParse(metadata)
   if (!parsedMetadata.success) {
     postedImages[imageId] = false
-    void ctxTempReply(ctx, 'Não foi possível compartilhar a imagem! As informações da imagem são invalidas!', 15000, {
+    await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! As informações da imagem são invalidas!', {
       reply_to_message_id: loadingReply?.message_id,
       allow_sending_without_reply: true
     })
@@ -67,7 +67,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   const trackPreview = await getTrackPreview(parsedMetadata.data.trackName, parsedMetadata.data.artistName)
   if (!trackPreview.success) {
     postedImages[imageId] = false
-    void ctxTempReply(ctx, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar buscar informações da música!', 15000, {
+    await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar buscar informações da música!', {
       reply_to_message_id: loadingReply?.message_id,
       allow_sending_without_reply: true
     })
@@ -76,7 +76,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   const trackPreviewData = await new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret).getTrackPreviewBuffer(trackPreview.previewUrl)
   if (!trackPreviewData.success) {
     postedImages[imageId] = false
-    void ctxTempReply(ctx, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar buscar informações da música!', 15000, {
+    await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao recuperar o preview da música!', {
       reply_to_message_id: loadingReply?.message_id,
       allow_sending_without_reply: true
     })
@@ -85,7 +85,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   const storiesImageResponse = await composeStoryImage(image)
   if (!storiesImageResponse.success) {
     postedImages[imageId] = false
-    void ctxTempReply(ctx, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar criar a imagem para o Instagram!', 15000, {
+    await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar criar a imagem para o Instagram!', {
       reply_to_message_id: loadingReply?.message_id,
       allow_sending_without_reply: true
     })
@@ -94,7 +94,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   const storiesVideoResponse = await createStoriesVideo(storiesImageResponse.storiesImage, trackPreviewData.file.buffer, parsedMetadata.data)
   if (!storiesVideoResponse.success) {
     postedImages[imageId] = false
-    void ctxTempReply(ctx, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar criar o vídeo para o Instagram!', 15000, {
+    await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar criar o vídeo para o Instagram!', {
       reply_to_message_id: loadingReply?.message_id,
       allow_sending_without_reply: true
     })
@@ -106,7 +106,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   })
   if (!publishStoryResponse.success) {
     postedImages[imageId] = false
-    void ctxTempReply(ctx, 'Ocorreu um erro ao tentar compartilhar a imagem', 15000, {
+    await ctxReply(ctx, undefined, 'Ocorreu um erro ao tentar compartilhar a imagem', {
       reply_to_message_id: loadingReply?.message_id,
       allow_sending_without_reply: true
     })
@@ -115,7 +115,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   const editMessageReplyMarkupResponse = await ctxEditMessageReplyMarkup(ctx, undefined, undefined)
   if (editMessageReplyMarkupResponse instanceof Error) {
     postedImages[imageId] = false
-    void ctxTempReply(ctx, 'Ocorreu um erro ao tentar compartilhar a imagem', 15000, {
+    await ctxReply(ctx, undefined, 'Ocorreu um erro ao tentar compartilhar a imagem', {
       reply_to_message_id: loadingReply?.message_id,
       allow_sending_without_reply: true
     })
