@@ -1,7 +1,10 @@
 import fs from 'fs'
 import path from 'path'
 
-export function getAllCode (): string {
+export function getAllCode (): {
+  fullCode: string
+  codeFiles: string[]
+} {
   const allCodeArray: string[] = []
   const codeFolders = ['MelodyScout_Bot', 'functions', 'api']
   for (const codeFolder of codeFolders) {
@@ -26,6 +29,8 @@ export function getAllCode (): string {
       allCodeArray.push(content)
     }
   }
-  const allCode = allCodeArray.join('\n')
-  return allCode
+  return {
+    fullCode: allCodeArray.join('\n'),
+    codeFiles: allCodeArray
+  }
 }
