@@ -89,7 +89,8 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
   if (userTotalPlaytime !== undefined && userTotalPlaytime.status === 'success') {
     const playedHours = Math.floor(userTotalPlaytime.totalPlaytime / 3600)
     const playedMinutes = Math.floor((userTotalPlaytime.totalPlaytime % 3600) / 60)
-    postText.infos.textArray.push(`- Já ouviu ${playedHours.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))} horas e ${playedMinutes} minutos de música`)
+    // postText.infos.textArray.push(`- Já ouviu ${playedHours.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))} horas e ${playedMinutes} minutos de música`)
+    postText.infos.textArray.push(lang(ctxLang, { key: 'tfBriefPostInfosTotalPlaytime', value: '- Já ouviu {{playedHours}} horas e {{playedMinutes}} minutos de música' }, { playedHours: playedHours.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })), playedMinutes }))
   }
   if (((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount)) > ((Number(user.track_count) / Number(user.playcount)))) {
     // postText.infos.textArray.push(`- ${Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount) * 100).toFixed(2)).toLocaleString('pt-BR')}% das músicas ouvidas são repetidas.`)
@@ -164,17 +165,20 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
     switch (true) {
       default: {
         if (userTotalPlaytime.status === 'loading') {
-          textArray.push('- Carregando tempo de reprodução...')
+          // textArray.push('- Carregando tempo de reprodução...')
+          textArray.push(lang(ctxLang, { key: 'tfBriefInfosLoadingPlaytime', value: '- Carregando tempo de reprodução...' }))
           break
         }
         if (userTotalPlaytime.status === 'error') {
-          textArray.push('- Erro ao carregar tempo de reprodução.')
+          // textArray.push('- Erro ao carregar tempo de reprodução.')
+          textArray.push(lang(ctxLang, { key: 'tfBriefInfosErrorLoadingPlaytime', value: '- Erro ao carregar tempo de reprodução.' }))
           break
         }
         if (userTotalPlaytime.status === 'success') {
           const playedHours = Math.floor(userTotalPlaytime.totalPlaytime / 3600)
           const playedMinutes = Math.floor((userTotalPlaytime.totalPlaytime % 3600) / 60)
-          textArray.push(`- Você já ouviu <b>${playedHours.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))} horas</b> e <b>${playedMinutes} minutos</b> de música.`)
+          // textArray.push(`- Você já ouviu <b>${playedHours.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))} horas</b> e <b>${playedMinutes} minutos</b> de música.`)
+          textArray.push(lang(ctxLang, { key: 'tfBriefInfosTotalPlaytime', value: '- Você já ouviu <b>{{playedHours}} horas</b> e <b>{{playedMinutes}} minutos</b> de música.' }, { playedHours: playedHours.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })), playedMinutes }))
         }
       }
     }

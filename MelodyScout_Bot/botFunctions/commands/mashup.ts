@@ -112,19 +112,31 @@ export async function runMashupCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comma
   })
   if (!raveCreateContentRequest.success) {
     // void ctxReply(ctx, undefined, 'Não foi possível criar o mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'unableToCreateMashupErrorMessage', value: 'Não foi possível criar o mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
+    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'unableToCreateMashupErrorMessage', value: 'Não foi possível criar o mashup! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }), {
+      reply_to_message_id: startProcessMessage?.message_id,
+      allow_sending_without_reply: true,
+      disable_notification: true
+    })
     return
   }
   const mashupId = raveCreateContentRequest.data.data.id
   const raveGetContentRequest = await msRaveApi.raveApi.getInfo(mashupId)
   if (!raveGetContentRequest.success) {
     // void ctxReply(ctx, undefined, 'Não foi possível garantir que o mashup foi enviado para criação! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'unableToGetMashupStartCreationConfirmationErrorMessage', value: 'Não foi possível garantir que o mashup foi enviado para criação! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
+    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'unableToGetMashupStartCreationConfirmationErrorMessage', value: 'Não foi possível garantir que o mashup foi enviado para criação! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }), {
+      reply_to_message_id: startProcessMessage?.message_id,
+      allow_sending_without_reply: true,
+      disable_notification: true
+    })
     return
   }
   const startTime = Date.now()
   // await ctxReply(ctx, undefined, 'Beleza! Seu mashup já foi enviado para criação! Essa etapa costuma demorar bastante mas não se preocupe, estou monitorando o processo e te aviso assim que ele estiver pronto! 😊')
-  await ctxReply(ctx, undefined, lang(ctxLang, { key: 'mashupStartCreationInformMessage', value: 'Beleza! Seu mashup já foi enviado para criação! Essa etapa costuma demorar bastante mas não se preocupe, estou monitorando o processo e te aviso assim que ele estiver pronto! 😊' }))
+  await ctxReply(ctx, undefined, lang(ctxLang, { key: 'mashupStartCreationInformMessage', value: 'Beleza! Seu mashup já foi enviado para criação! Essa etapa costuma demorar bastante mas não se preocupe, estou monitorando o processo e te aviso assim que ele estiver pronto! 😊' }), {
+    reply_to_message_id: startProcessMessage?.message_id,
+    allow_sending_without_reply: true,
+    disable_notification: true
+  })
   const maxTries = 100
   const timeBetweenTries = 15000
   let tries = 0
@@ -152,19 +164,29 @@ export async function runMashupCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comma
   if (!mashupReady) {
     advError(`Mashup creation timed out! (id: ${mashupId}) (time: ${(endTime - startTime) / 1000}s) - ${JSON.stringify(lastResponse)} - URL: https://rave.dj/${mashupId}`)
     // void ctxReply(ctx, undefined, 'Infelizmente não foi possível criar o mashup ou ele demorou demais para ser criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'mashupCreationTimeoutErrorMessage', value: 'Infelizmente não foi possível criar o mashup ou ele demorou demais para ser criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
+    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'mashupCreationTimeoutErrorMessage', value: 'Infelizmente não foi possível criar o mashup ou ele demorou demais para ser criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }), {
+      reply_to_message_id: startProcessMessage?.message_id,
+      allow_sending_without_reply: true,
+      disable_notification: true
+    })
     return
   }
   if (lastResponse === undefined) {
     advError(`Mashup last response is undefined! (id: ${mashupId}) (time: ${(endTime - startTime) / 1000}s) - URL: https://rave.dj/${mashupId}`)
     // void ctxReply(ctx, undefined, 'Não foi possível resgatar as informações do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'unableToGetFinalMashupInfoErrorMessage', value: 'Não foi possível resgatar as informações do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
+    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'unableToGetFinalMashupInfoErrorMessage', value: 'Não foi possível resgatar as informações do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }), {
+      reply_to_message_id: startProcessMessage?.message_id,
+      allow_sending_without_reply: true,
+      disable_notification: true
+    })
     return
   }
   // await ctxTempReply(ctx, 'Mashup criado com sucesso! 🎉\nEstou enviando ele para você, por favor aguarde enquanto o Telegram faz o upload do vídeo...', 10000, {
   //   disable_notification: true
   // })
   await ctxTempReply(ctx, lang(ctxLang, { key: 'mashupCreatedInformMessage', value: 'Mashup criado com sucesso! 🎉\nEstou enviando ele para você, por favor aguarde enquanto o Telegram faz o upload do vídeo…' }), 10000, {
+    reply_to_message_id: startProcessMessage?.message_id,
+    allow_sending_without_reply: true,
     disable_notification: true
   })
   const mashupUrlThumb = lastResponse?.thumbnails.default ?? melodyScoutConfig.msAndRaveDj
@@ -173,14 +195,22 @@ export async function runMashupCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comma
   if (mashupUrlAudio === undefined || mashupUrlVideo === undefined) {
     advError(`Mashup audio or video URL is undefined! (id: ${mashupId}) (time: ${(endTime - startTime) / 1000}s) - ${mashupUrlAudio === undefined ? 'Audio URL is undefined' : 'Video URL is undefined'} - URL: https://rave.dj/${mashupId}`)
     // void ctxReply(ctx, undefined, 'Não foi possível resgatar a URL do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'unableToGetFinalMashupUrlErrorMessage', value: 'Não foi possível resgatar a URL do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
+    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'unableToGetFinalMashupUrlErrorMessage', value: 'Não foi possível resgatar a URL do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }), {
+      reply_to_message_id: startProcessMessage?.message_id,
+      allow_sending_without_reply: true,
+      disable_notification: true
+    })
     return
   }
   const thumbResponse = await axios.get(mashupUrlThumb, { responseType: 'arraybuffer' }).catch((err) => { return Error(err) })
   if (thumbResponse instanceof Error) {
     advError(`Error while getting mashup thumbnail in mashup (id: ${mashupId}) (time: ${(endTime - startTime) / 1000}s) - ${thumbResponse.message} - URL: ${mashupUrlThumb}`)
     // void ctxReply(ctx, undefined, 'Não foi possível resgatar a thumbnail do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'unableToGetFinalMashupThumbnailErrorMessage', value: 'Não foi possível resgatar a thumbnail do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
+    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'unableToGetFinalMashupThumbnailErrorMessage', value: 'Não foi possível resgatar a thumbnail do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }), {
+      reply_to_message_id: startProcessMessage?.message_id,
+      allow_sending_without_reply: true,
+      disable_notification: true
+    })
     return
   }
   const thumbBuffer = Buffer.from(thumbResponse.data, 'utf-8')
@@ -188,7 +218,11 @@ export async function runMashupCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comma
   if (videoResponse instanceof Error) {
     advError(`Error while getting mashup video: ${videoResponse.message}`)
     // void ctxReply(ctx, undefined, 'Não foi possível resgatar o vídeo do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.')
-    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'unableToGetFinalMashupVideoErrorMessage', value: 'Não foi possível resgatar o vídeo do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
+    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'unableToGetFinalMashupVideoErrorMessage', value: 'Não foi possível resgatar o vídeo do mashup criado! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }), {
+      reply_to_message_id: startProcessMessage?.message_id,
+      allow_sending_without_reply: true,
+      disable_notification: true
+    })
     return
   }
   const videoBuffer = Buffer.from(videoResponse.data, 'utf-8')

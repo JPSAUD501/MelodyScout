@@ -164,4 +164,94 @@ export type BaseLang =
   { key: 'tiktokApiVoiceCode', value: 'br' } |
   { key: 'googleTTSVoiceCode', value: 'pt' } |
   { key: 'trackpreviewInlineResultTrackName', value: 'Pre-visualização: {{trackName}}' } |
-  { key: 'trackpreviewInlineResultByArtistName', value: 'Por {{artistName}}' }
+  { key: 'trackpreviewInlineResultByArtistName', value: 'Por {{artistName}}' } |
+  { key: 'tfBriefPostInfosTotalPlaytime', value: '- Já ouviu {{playedHours}} horas e {{playedMinutes}} minutos de música' } |
+  { key: 'tfBriefInfosLoadingPlaytime', value: '- Carregando tempo de reprodução...' } |
+  { key: 'tfBriefInfosErrorLoadingPlaytime', value: '- Erro ao carregar tempo de reprodução.' } |
+  { key: 'tfBriefInfosTotalPlaytime', value: '- Você já ouviu <b>{{playedHours}} horas</b> e <b>{{playedMinutes}} minutos</b> de música.' } |
+  { key: 'tfHelpInform', value: 'Bem vindo ao MelodyScout! Todos os meus comandos aparecerão ao digitar "/" no chat. Para começar use por exemplo o comando /playingnow para ver o que está ouvindo agora! Se quiser depois gerar uma imagem que represente a musica usando o MelodyScoutAI utilize o botão com o emoji "✨" que irá aparecer!' } |
+  { key: 'tfHistoryTitle', value: '<b>Histórico de reprodução de <a href="{{userUrl}}">{{userName}}</a></b>' } |
+  { key: 'tfHistoryNowPlayingHeader', value: '<b>[🎧] Ouvindo agora <a href="{{trackUrl}}">{{trackName}} de {{trackArtist}}</a></b>' } |
+  { key: 'tfHistoryHeader', value: '<b>[📒] Histórico de reprodução</b>' } |
+  { key: 'tfHistoryTrack', value: '- <a href="{{trackUrl}}"><b>{{trackName}}</b> de <b>{{trackArtist}}</b></a>' } |
+  { key: 'tfLyricsTranslatedHeader', value: '<b>[📝] Letra de "{{track}}" por "{{artist}}" fornecida por <a href="{{lyricsUrl}}">{{lyricsProvider}}</a> traduzida para ({{translatedLanguageCode}}) solicitada por {{requestedBy}}</b>' } |
+  { key: 'tfLyricsHeader', value: '<b>[📝] Letra de "{{track}}" por "{{artist}}" fornecida por <a href="{{lyricsUrl}}">{{lyricsProvider}}</a> solicitada por {{requestedBy}}</b>' } |
+  { key: 'tfLyricsFull', value: '<a href="{{lyricsUrl}}">(Para ver a letra completa, clique aqui)</a>' } |
+  { key: 'tfMashupHeader', value: 'Mashup criado! Espero que goste!' } |
+  { key: 'tfMashupLink', value: '<b><a href="{{mashupUrl}}">{{mashupTitle}} por RaveDJ</a></b>' } |
+  { key: 'tfMashupDownloadInform', value: 'Você pode também fazer o download do vídeo ou audio do mashup clicando nos botões abaixo!' } |
+  { key: 'tfPnalbumPostHeader', value: '[🎧] Sobre o album' } |
+  { key: 'tfPnalbumPostAlbumName', value: '- Álbum: {{albumName}}' } |
+  { key: 'tfPnalbumPostScrobblesHeader', value: '[📊] {{albumScrobbles}} Scrobbles' } |
+  { key: 'tfPnalbumPostInfoTotalPlaytime', value: '- Já ouviu esse album por <b>{{playedHours}} horas</b> e <b>{{playedMinutes}} minutos</b>' } |
+  { key: 'tfPnalbumPostInfoPopularity', value: '- A popularidade atual desse album é: [{{spotifyAlbumPopularity}}][{{spotifyAlbumPopularityStars}}]' } |
+  { key: 'tfPnalbumPostOneInfoHeader', value: '[ℹ️] {{postInfo}}' } |
+  { key: 'tfPnalbumPostInfoHeader', value: '[ℹ️] Informações' } |
+  { key: 'tfPnalbumHeaderNowPlaying', value: '<b><a href="{{userUrl}}">{{userName}}</a> está ouvindo:</b>' } |
+  { key: 'tfPnalbumHeaderLastPlayed', value: '<b><a href="{{userUrl}}">{{userName}}</a> estava ouvindo:</b>' } |
+  { key: 'tfPnalbumHeaderNowPlayingAlbum', value: '<b>[🎧] Ouvindo o album</b>' } |
+  { key: 'tfPnalbumHeaderLastPlayedAlbum', value: '<b>[🎧] Último album ouvido</b>' } |
+  { key: 'tfPnalbumAlbumName', value: '- Álbum: <b><a href="{{albumUrl}}">{{albumName}}</a></b>' } |
+  { key: 'tfPnalbumArtistName', value: '- Artista: <b><a href="{{artistUrl}}">{{artistName}}</a></b>' } |
+  { key: 'tfPnalbumInfoLoadingPlaytime', value: '- Carregando tempo de reprodução...' } |
+  { key: 'tfPnalbumInfoErrorLoadingPlaytime', value: '- Erro ao carregar tempo de reprodução.' } |
+  { key: 'tfPnalbumInfoTotalPlaytime', value: '- Você já ouviu esse album por <b>{{playedHours}} horas</b> e <b>{{playedMinutes}} minutos</b>.' } |
+  { key: 'tfPnalbumInfoPopularity', value: '- A <a href="{{popularityHelpImgUrl}}">popularidade</a> atual desse album é: <b>[{{spotifyAlbumPopularity}}][{{spotifyAlbumPopularityStars}}]</b>' } |
+  { key: 'tfPnalbumInfoHeader', value: '<b>[ℹ️] Informações</b>' } |
+  { key: 'tfPnalbumScrobblesHeader', value: '<b>[📊] {{albumScrobbles}} Scrobbles</b>' } |
+  { key: 'tfPnalbumTopTracksHeader', value: '<b>[🎶] As suas mais ouvidas</b>' } |
+  { key: 'tfPnalbumLoadingTopTracks', value: '- Carregando...' } |
+  { key: 'tfPnalbumErrorLoadingTopTracks', value: '- Erro ao carregar musicas.' } |
+  { key: 'tfPnalbumNoTopTracks', value: '- Nenhuma musica encontrada.' } |
+  { key: 'tfPnalbumTopTrackItem', value: '- ({{trackPlaycount}}x) <a href="{{trackUrl}}">{{trackName}}</a>' } |
+  { key: 'tfPnalbumShareHeader', value: '<b>[🔗] Compartilhe</b>' } |
+  { key: 'tfPnalbumShareOnX', value: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>' } |
+  { key: 'tfPnartistPostUserAtMelodyScoutBot', value: '{{username}} no @MelodyScoutBot' } |
+  { key: 'tfPnartistPostAboutArtistHeader', value: '[🎧] Sobre o artista' } |
+  { key: 'tfPnartistPostAboutArtistArtist', value: '- Artista: {{artist}}' } |
+  { key: 'tfPnartistPostScrobbles', value: '[📊] {{artistScrobbles}} Scrobbles' } |
+  { key: 'tfPnartistPostArtistTotalPlaytime', value: '- Já ouviu esse artista por {{artistTotalPlaytimeHours}} horas e {{artistTotalPlaytimeMinutes}} minutos' } |
+  { key: 'tfPnartistPostArtistPopularity', value: '- A popularidade atual desse artista é: [{{artistPopularity}}][{{artistPopularityStars}}]' } |
+  { key: 'tfPnartistPostOneInfo', value: '[ℹ️] {{info}}' } |
+  { key: 'tfPnartistPostInfoHeader', value: '[ℹ️] Informações' } |
+  { key: 'tfPnartistHeaderNowPlaying', value: '<b><a href="{{userUrl}}">{{username}}</a> está ouvindo</b>' } |
+  { key: 'tfPnartistHeaderLastPlayed', value: '<b><a href="{{userUrl}}">{{username}}</a> estava ouvindo</b>' } |
+  { key: 'tfPnartistHeaderNowPlayingArtist', value: '<b>[🎧] Ouvindo o artista</b>' } |
+  { key: 'tfPnartistHeaderLastPlayedArtist', value: '<b>[🎧] Último artista ouvido</b>' } |
+  { key: 'tfPnartistArtistName', value: '- Artista: <b><a href="{{artistUrl}}">{{artistName}}</a></b>' } |
+  { key: 'tfPnartistInfoLoadingTotalPlaytime', value: '- Carregando tempo de reprodução...' } |
+  { key: 'tfPnartistInfoErrorLoadingTotalPlaytime', value: '- Erro ao carregar tempo de reprodução.' } |
+  { key: 'tfPnartistInfoTotalPlaytime', value: '- Você já ouviu esse artista por <b>{{artistTotalPlaytimeHours}} horas</b> e <b>{{artistTotalPlaytimeMinutes}} minutos</b>.' } |
+  { key: 'tfPnartistInfoPopularity', value: '- A <a href="{{popularityHelpImgUrl}}">popularidade</a> atual desse artista é: <b>[{{artistPopularity}}][{{artistPopularityStars}}]</b>' } |
+  { key: 'tfPnartistInfoHeader', value: '<b>[ℹ️] Informações</b>' } |
+  { key: 'tfPnartistScrobbles', value: '<b>[📊] {{artistScrobbles}} Scrobbles</b>' } |
+  { key: 'tfPnartistTopTracksHeader', value: '<b>[🎶] As suas mais ouvidas</b>' } |
+  { key: 'tfPnartistLoadingTopTracks', value: '- Carregando...' } |
+  { key: 'tfPnartistErrorLoadingTopTracks', value: '- Erro ao carregar musicas.' } |
+  { key: 'tfPnartistNoTopTracks', value: '- Nenhuma musica encontrada.' } |
+  { key: 'tfPnartistTopTracks', value: '- ({{trackPlaycount}}x) <a href="{{trackUrl}}">{{trackName}}</a>' } |
+  { key: 'tfPnartistShareHeader', value: '<b>[🔗] Compartilhe</b>' } |
+  { key: 'tfPnartistShareOnX', value: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>' } |
+  { key: 'tfPntrackPostUserAtMelodyScoutBot', value: '{{userRealname}} no @MelodyScoutBot' } |
+  { key: 'tfPntrackPostTrackHeader', value: '[🎧{{badge}}] {{trackName}}' } |
+  { key: 'tfPntrackPostArtist', value: '- Artista: {{artistName}}' } |
+  { key: 'tfPntrackPostScrobbles', value: '[📊] {{trackScrobbles}} Scrobbles' } |
+  { key: 'tfPntrackPostTrackTotalPlaytime', value: 'Já ouviu essa música por {{hours}} horas e {{minutes}} minutos.' } |
+  { key: 'tfPntrackPostTrackPopularity', value: '- A popularidade atual dessa música é: [{{trackPopularity}}][{{trackPopularityStars}}]' } |
+  { key: 'tfPntrackPostOneInfo', value: '[ℹ️] {{info}}' } |
+  { key: 'tfPntrackPostInfoHeader', value: '[ℹ️] Informações' } |
+  { key: 'tfPntrackHeaderNowPlaying', value: '<b><a href="{{userUrl}}">{{userRealname}}</a> está ouvindo</b>' } |
+  { key: 'tfPntrackHeaderLastPlayed', value: '<b><a href="{{userUrl}}">{{userRealname}}</a> estava ouvindo</b>' } |
+  { key: 'tfPntrackHeaderNowPlayingTrack', value: '<b>[🎧{{badge}}] Ouvindo a música</b>' } |
+  { key: 'tfPntrackHeaderLastPlayedTrack', value: '<b>[🎧{{badge}}] Última música ouvida</b>' } |
+  { key: 'tfPntrackTrackName', value: '- Música: <b><a href="{{trackUrl}}">{{trackName}}</a></b>' } |
+  { key: 'tfPntrackAlbumName', value: '- Álbum: <b><a href="{{albumUrl}}">{{albumName}}</a></b>' } |
+  { key: 'tfPntrackArtistName', value: '- Artista: <b><a href="{{artistUrl}}">{{artistName}}</a></b>' } |
+  { key: 'tfPntrackInfoTotalPlaytime', value: '- Você já ouviu essa música por <b>{{hours}} horas</b> e <b>{{minutes}} minutos</b>.' } |
+  { key: 'tfPntrackInfoPopularity', value: '- A <a href="{{popularityHelpImgUrl}}">popularidade</a> atual dessa música é: <b>[{{trackPopularity}}][{{trackPopularityStars}}]</b>' } |
+  { key: 'tfPntrackInfoHeader', value: '<b>[ℹ️] Informações</b>' } |
+  { key: 'tfPntrackScrobbles', value: '<b>[📊] {{trackScrobbles}} Scrobbles</b>' } |
+  { key: 'tfPntrackShareHeader', value: '<b>[🔗] Compartilhe</b>' } |
+  { key: 'tfPntrackShareOnX', value: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>' } |
+  { key: 'tfPostimageSuccessMessage', value: 'Imagem compartilhada com sucesso nos stories da conta do MelodyScout no Instagram!\n\n<b><a href="{{postUrl}}">Ver publicação</a></b>\n\nSolicitado por: <b><a href=\'tg://user?id={{requesterId}}\'>{{requesterName}}</a></b>' } |
+  { key: 'tfStartMessage', value: 'Oie! Eu sou o MelodyScout! Sou um bot feito para ser seu companheiro musical aqui no Telegram!\n\nEstou muito feliz em te conhecer!\n\nUtilize o comando <code>/myuser</code> para definir seu nome de usuário do Last.fm!\n\nEm seguida, utilize o comando <code>/help</code> para descobrir tudo que eu posso fazer! 😏' }

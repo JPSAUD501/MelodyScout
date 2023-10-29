@@ -28,7 +28,7 @@ export async function runTranslatedtracklyricsCallback (ctx: CallbackQueryContex
     return
   }
   console.log('Translating lyrics...')
-  const translatedTrackLyrics = await translate(songLyricsData.data.lyrics, { to: 'pt-BR' })
+  const translatedTrackLyrics = await translate(songLyricsData.data.lyrics, { to: lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }) })
   console.log('Lyrics translated!')
   if (translatedTrackLyrics.text.length <= 0) {
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'unableToTranslateLyricsErrorMessage', value: 'Não foi possível traduzir a letra dessa música, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
