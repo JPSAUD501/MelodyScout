@@ -162,4 +162,6 @@ export type BaseLang =
   { key: 'composeImageTitle', value: '<b>{{trackName}}</b> por <b>{{artistName}}</b>' } |
   { key: 'lyricsExplanationAiPrompt', value: 'Explicação resumida da letra da música:' } |
   { key: 'tiktokApiVoiceCode', value: 'br' } |
-  { key: 'googleTTSVoiceCode', value: 'pt' }
+  { key: 'googleTTSVoiceCode', value: 'pt' } |
+  { key: 'trackpreviewInlineResultTrackName', value: 'Pre-visualização: {{trackName}}' } |
+  { key: 'trackpreviewInlineResultByArtistName', value: 'Por {{artistName}}' }

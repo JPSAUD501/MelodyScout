@@ -162,5 +162,7 @@
   "composeImageTitle": "<b>{{trackName}}</b> por <b>{{artistName}}</b>",
   "lyricsExplanationAiPrompt": "Explicação resumida da letra da música:",
   "tiktokApiVoiceCode": "br",
-  "googleTTSVoiceCode": "pt"
+  "googleTTSVoiceCode": "pt",
+  "trackpreviewInlineResultTrackName": "Pre-visualização: {{trackName}}",
+  "trackpreviewInlineResultByArtistName": "Por {{artistName}}"
 }

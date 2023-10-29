@@ -18,9 +18,9 @@ export async function trackpreviewInlineResult (ctxLang: string | undefined, tra
   return {
     success: true,
     result: InlineQueryResultBuilder
-      .audio(resultId, `Preview: ${trackName}`, trackpreviewUrl, {
+      .audio(resultId, lang(ctxLang, { key: 'trackpreviewInlineResultTrackName', value: 'Pre-visualização: {{trackName}}' }, { trackName }), trackpreviewUrl, {
         caption: getTrackpreviewText(ctxLang, trackName, artistName, ctx.from.id.toString(), ctx.from.first_name),
-        performer: `By ${artistName}`,
+        performer: lang(ctxLang, { key: 'trackpreviewInlineResultByArtistName', value: 'Por {{artistName}}' }, { artistName }),
         parse_mode: 'HTML',
         reply_markup: inlineKeyboard
       })
