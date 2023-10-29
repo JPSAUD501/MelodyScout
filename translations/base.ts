@@ -1,3 +1,4 @@
+import { type BaseLangInterface } from './auto/I-MSL-ptBR'
 import { baseLang } from './auto/MSL-ptBR'
 import { en } from './languages/en'
 
@@ -10,12 +11,12 @@ export function lang (langCode: string | undefined, getParameter: Parameters, va
   return lang[getParameter]
 }
 
-export function lang2 (langCode: string | undefined, getParameter: string, text: string, values?: Record<string, string | number>): string {
+export function lang2 (langCode: string | undefined, { key, value }: BaseLangInterface, variables?: Record<string, string | number>): string {
   const lang: Language = langCode === 'en' ? { ...baseLang, ...en } : baseLang
-  const parameter: string | undefined = lang[getParameter]
-  if (parameter === undefined) return text
-  if (values === undefined) return parameter
-  return keyReplace(parameter, values)
+  const keyValue: string | undefined = lang[key]
+  if (keyValue === undefined) return value
+  if (variables === undefined) return keyValue
+  return keyReplace(keyValue, variables)
 }
 
 function keyReplace (text: string, values: Record<string, string | number>): string {

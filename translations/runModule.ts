@@ -1,10 +1,10 @@
-import { generateBaseType } from './generateBaseType'
+import { generateBase } from './generateBase'
 import { updateTranslations } from './update'
 
 async function runTranslationModule (): Promise<{
   success: true
 }> {
-  const generateBaseTypeResult = generateBaseType()
+  const generateBaseTypeResult = generateBase()
   if (!generateBaseTypeResult.success) {
     throw new Error(generateBaseTypeResult.error)
   }

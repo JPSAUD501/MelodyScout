@@ -2,6 +2,7 @@ import * as swc from '@swc/core'
 import fs from 'fs'
 import { getAllCode } from './getAllCode'
 import { z } from 'zod'
+import cliProgress from 'cli-progress'
 
 const zodValidLangFunction = z.object({
   expression: z.object({
@@ -13,9 +14,31 @@ type ValidLangFunction = z.infer<typeof zodValidLangFunction>
 
 const zodValidLangArgument = z.object({
   expression: z.object({
-    type: z.literal('StringLiteral'),
-    value: z.string(),
-    raw: z.string()
+    type: z.literal('ObjectExpression'),
+    properties: z.array(z.union([
+      z.object({
+        type: z.literal('KeyValueProperty'),
+        key: z.object({
+          type: z.literal('Identifier'),
+          value: z.literal('key')
+        }),
+        value: z.object({
+          type: z.literal('StringLiteral'),
+          value: z.string()
+        })
+      }),
+      z.object({
+        type: z.literal('KeyValueProperty'),
+        key: z.object({
+          type: z.literal('Identifier'),
+          value: z.literal('value')
+        }),
+        value: z.object({
+          type: z.literal('StringLiteral'),
+          value: z.string()
+        })
+      })
+    ]))
   })
 })
 type ValidLangArgument = z.infer<typeof zodValidLangArgument>
@@ -29,12 +52,17 @@ function getModuleObjects (item: object): object[] {
         getObjects(object[key])
       }
     }
+    if (object instanceof Array) {
+      for (const item of object) {
+        getObjects(item)
+      }
+    }
   }
   getObjects(item)
   return objects
 }
 
-function getLangKeys (code: string[]): Record<string, string> {
+async function getLangKeys (code: string[]): Promise<Record<string, string>> {
   const modules: swc.ModuleItem[] = []
   for (const file of code) {
     const ast = swc.parseSync(file, {
@@ -42,39 +70,63 @@ function getLangKeys (code: string[]): Record<string, string> {
     })
     modules.push(...ast.body)
   }
-  const objects: object[] = []
+  const allObjects: Record<number, object> = {}
+  let objectsFounded = 0
   for (const module of modules) {
-    objects.push(...getModuleObjects(module))
+    const objects = getModuleObjects(module)
+    for (const object of objects) {
+      allObjects[objectsFounded] = object
+      objectsFounded++
+    }
   }
-  console.log(objects.length)
+  console.log(`Founded ${objectsFounded} objects in ${modules.length} modules`)
   const validObjects: ValidLangFunction[] = []
-  for (const object of objects) {
+  const progressBar = new cliProgress.SingleBar({
+    align: 'left',
+    hideCursor: true,
+    barsize: 10,
+    etaBuffer: 0,
+    fps: 10,
+    progressCalculationRelative: true,
+    format: '[{bar} {percentage}%] | {value}/{total} | {duration_formatted}'
+  }, cliProgress.Presets.shades_grey)
+  progressBar.start(Object.keys(allObjects).length, 0)
+  let processedObjects = 0
+  for (const object of Object.values(allObjects)) {
     const safeObject = zodValidLangFunction.safeParse(object)
     if (safeObject.success) {
       validObjects.push(safeObject.data)
     }
+    processedObjects++
+    progressBar.update(processedObjects)
   }
-  console.log(validObjects.length)
-  const validLangCalls: ValidLangArgument[][] = []
+  progressBar.stop()
+  fs.writeFileSync('validObjects.json', JSON.stringify(validObjects, null, 2))
+  console.log(`Founded ${validObjects.length} valid lang calls`)
+  const validLangCalls: ValidLangArgument[] = []
   for (const object of validObjects) {
-    const literalArguments: ValidLangArgument[] = []
     for (const argument of object.expression.arguments) {
       const safeArgument = zodValidLangArgument.safeParse(argument)
       if (safeArgument.success) {
-        literalArguments.push(safeArgument.data)
+        validLangCalls.push(safeArgument.data)
       }
     }
-    validLangCalls.push(literalArguments)
   }
   fs.writeFileSync('validLangCalls.json', JSON.stringify(validLangCalls, null, 2))
   const langKeys: Record<string, string> = {}
   for (const langParameters of validLangCalls) {
-    if (langParameters.length < 2) {
-      console.log(`Invalid lang call - Missing parameters: ${JSON.stringify(langParameters, null, 2)}`)
+    if (langParameters.expression.properties.length !== 2) {
+      console.log('Invalid lang call - Different number of arguments')
       continue
     }
-    const key = langParameters[0].expression.value
-    const value = langParameters[1].expression.value
+    const prop1 = langParameters.expression.properties[0]
+    const prop2 = langParameters.expression.properties[1]
+    if (prop1.key.value !== 'key' || prop2.key.value !== 'value') {
+      console.log('Invalid lang call - Different argument names')
+      continue
+    }
+    const key = prop1.value.value
+    const value = prop2.value.value
     if (langKeys[key] !== undefined) {
       if (langKeys[key] !== value) {
         console.log(`Invalid lang call - Different values for key ${key}: ${langKeys[key]} and ${value}`)
@@ -88,4 +140,4 @@ function getLangKeys (code: string[]): Record<string, string> {
 }
 
 const code = getAllCode()
-getLangKeys(code.codeFiles)
+void getLangKeys(code.codeFiles)

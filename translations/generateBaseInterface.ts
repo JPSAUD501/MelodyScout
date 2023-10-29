@@ -1,7 +1,7 @@
 import fs from 'fs'
 import z from 'zod'
 
-export function generateBaseType (): {
+export function generateBaseInterface (): {
   success: true
 } | {
   success: false
@@ -24,7 +24,7 @@ export function generateBaseType (): {
   }
   const json: Record<string, string> = safeParse.data
   const textArray: string[] = []
-  textArray.push('export const baseLang = {')
+  textArray.push('export type BaseLangInterface =')
   for (const key in json) {
     let value: string = json[key]
     value = value.replaceAll('\n', '\\n')
@@ -41,30 +41,32 @@ export function generateBaseType (): {
       default:
         value = `'${value}'`
     }
-    let finalString = `  ${key}: ${value}`
+    let finalString = `  { key: '${key}', value: ${value} }`
     if (Object.keys(json).indexOf(key) < Object.keys(json).length - 1) {
-      finalString += ','
+      finalString += ' |'
     }
     textArray.push(`${finalString}`)
   }
-  textArray.push('}')
+  // textArray.push('}')
   textArray.push('')
   const text = textArray.join('\n')
   if (!fs.existsSync('./translations/auto')) {
     fs.mkdirSync('./translations/auto')
   }
-  if (fs.existsSync('./translations/auto/MSL-ptBR.ts')) {
-    const content = fs.readFileSync('./translations/auto/MSL-ptBR.ts').toString()
+  if (fs.existsSync('./translations/auto/I-MSL-ptBR.ts')) {
+    const content = fs.readFileSync('./translations/auto/I-MSL-ptBR.ts').toString()
     if (content === text) {
-      console.log('File MSL-ptBR.ts is already up to date!')
+      console.log('File I-MSL-ptBR.ts is already up to date!')
       return {
         success: true
       }
     }
   }
-  fs.writeFileSync('./translations/auto/MSL-ptBR.ts', text)
-  console.log('File MSL-ptBR.ts was updated!')
+  fs.writeFileSync('./translations/auto/I-MSL-ptBR.ts', text)
+  console.log('File I-MSL-ptBR.ts was updated!')
   return {
     success: true
   }
 }
+
+generateBaseInterface()
