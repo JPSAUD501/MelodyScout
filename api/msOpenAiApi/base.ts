@@ -33,7 +33,7 @@ export class MsOpenAiApi {
 
   async getLyricsExplanation (ctxLang: string | undefined, lyrics: string): Promise<MsOpenAiApiGetLyricsExplanationResponse> {
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
-    const prompt = `${lyricsParsed}\n\n${lang(ctxLang, 'lyricsExplanationAiPrompt')}`
+    const prompt = `${lyricsParsed}\n\n${lang(ctxLang, { key: 'lyricsExplanationAiPrompt', value: 'Explicação resumida da letra da música:' })}`
     const response = await this.openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [

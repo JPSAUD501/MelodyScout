@@ -24,13 +24,13 @@ export function getTracklyricsexplanationText (ctxLang: string | undefined, trac
       break
     }
   }
-  textArray.push(`<a href="${image.url}">️️</a><a href="${melodyScoutConfig.artificialIntelligenceImgUrl}">️️</a>${lang(ctxLang, 'tfTracklyricsexplanationHeader', { trackName: sanitizeText(track), artistName: sanitizeText(artist), melodyScoutAiAboutUrl: melodyScoutConfig.aboutMelodyScoutAi, requestedBy })}`)
+  textArray.push(`<a href="${image.url}">️️</a><a href="${melodyScoutConfig.artificialIntelligenceImgUrl}">️️</a>${lang(ctxLang, { key: 'tfTracklyricsexplanationHeader', value: '<b>[✨] Explicação de "{{trackName}}" por "{{artistName}}" fornecida pelo MelodyScoutAi solicitada por {{requestedBy}}</b>' }, { trackName: sanitizeText(track), artistName: sanitizeText(artist), melodyScoutAiAboutUrl: melodyScoutConfig.aboutMelodyScoutAi, requestedBy })}`)
   textArray.push('')
   textArray.push(`${lyricsExplanation}`)
   if (lyricsEmojis !== undefined) {
     textArray.push('')
     // textArray.push(`Em emojis: ${lyricsEmojis}`)
-    textArray.push(lang(ctxLang, 'tfTracklyricsexplanationInEmojis', { lyricsEmojis }))
+    textArray.push(lang(ctxLang, { key: 'tfTracklyricsexplanationInEmojis', value: 'Em emojis: {{lyricsEmojis}}' }, { lyricsEmojis }))
   }
 
   const text = textArray.join('\n')

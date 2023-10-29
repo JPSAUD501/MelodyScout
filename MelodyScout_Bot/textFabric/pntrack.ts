@@ -43,7 +43,7 @@ export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo,
   if (Number(track.userplaycount) > 0 && trackDuration > 0) {
     const playedHours = Math.floor((Number(track.userplaycount) * trackDuration) / 3600)
     const playedMinutes = Math.floor(((Number(track.userplaycount) * trackDuration) % 3600) / 60)
-    postInfoArray.push(`Já ouviu essa música por ${playedHours.toLocaleString(lang(ctxLang, 'localeLangCode'))} horas e ${playedMinutes} minutos.`)
+    postInfoArray.push(`Já ouviu essa música por ${playedHours.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))} horas e ${playedMinutes} minutos.`)
   }
   if (spotifyTrackInfo.popularity !== undefined) postInfoArray.push(`A popularidade atual dessa música é: [${spotifyTrackInfo.popularity}][${'★'.repeat(Math.floor(spotifyTrackInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyTrackInfo.popularity / 20))}]`)
   switch (postInfoArray.length) {
@@ -86,7 +86,7 @@ export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo,
   if (Number(track.userplaycount) > 0 && trackDuration > 0) {
     const playedHours = Math.floor((Number(track.userplaycount) * trackDuration) / 3600)
     const playedMinutes = Math.floor(((Number(track.userplaycount) * trackDuration) % 3600) / 60)
-    infoArray.push(`- Você já ouviu essa música por <b>${playedHours.toLocaleString(lang(ctxLang, 'localeLangCode'))} horas</b> e <b>${playedMinutes} minutos</b>.`)
+    infoArray.push(`- Você já ouviu essa música por <b>${playedHours.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))} horas</b> e <b>${playedMinutes} minutos</b>.`)
   }
   if (spotifyTrackInfo.popularity !== undefined) infoArray.push(`- A <a href="${melodyScoutConfig.popularityImgUrl}">popularidade</a> atual dessa música é: <b>[${spotifyTrackInfo.popularity}][${'★'.repeat(Math.floor(spotifyTrackInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyTrackInfo.popularity / 20))}]</b>`)
   if (infoArray.length > 0) {

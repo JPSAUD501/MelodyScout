@@ -22,10 +22,10 @@ export async function briefInlineResult (ctxLang: string | undefined, lastfmUser
       success: false,
       result: InlineQueryResultBuilder
         .article(resultId, resultName, {
-          description: lang(ctxLang, 'lastfmUserDataNotFoundedError', { lastfmUser }),
+          description: lang(ctxLang, { key: 'lastfmUserDataNotFoundedError', value: 'Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>{{lastfmUser}}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }, { lastfmUser }),
           thumbnail_url: melodyScoutConfig.userImgUrl
         })
-        .text(lang(ctxLang, 'lastfmUserDataNotFoundedError', { lastfmUser }), { parse_mode: 'HTML' })
+        .text(lang(ctxLang, { key: 'lastfmUserDataNotFoundedError', value: 'Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>{{lastfmUser}}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }, { lastfmUser }), { parse_mode: 'HTML' })
     }
   }
   if (!userTopTracks.success) {
@@ -33,10 +33,10 @@ export async function briefInlineResult (ctxLang: string | undefined, lastfmUser
       success: false,
       result: InlineQueryResultBuilder
         .article(resultId, resultName, {
-          description: lang(ctxLang, 'getTopTracksErrorMessage'),
+          description: lang(ctxLang, { key: 'getTopTracksErrorMessage', value: 'Estranho, não foi possível resgatar as suas músicas mais tocadas do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }),
           thumbnail_url: melodyScoutConfig.userImgUrl
         })
-        .text(lang(ctxLang, 'getTopTracksErrorMessage'), { parse_mode: 'HTML' })
+        .text(lang(ctxLang, { key: 'getTopTracksErrorMessage', value: 'Estranho, não foi possível resgatar as suas músicas mais tocadas do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }), { parse_mode: 'HTML' })
     }
   }
   if (!userTopAlbums.success) {
@@ -44,10 +44,10 @@ export async function briefInlineResult (ctxLang: string | undefined, lastfmUser
       success: false,
       result: InlineQueryResultBuilder
         .article(resultId, resultName, {
-          description: lang(ctxLang, 'getTopAlbumsErrorMessage'),
+          description: lang(ctxLang, { key: 'getTopAlbumsErrorMessage', value: 'Estranho, não foi possível resgatar os seus álbuns mais tocados do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }),
           thumbnail_url: melodyScoutConfig.userImgUrl
         })
-        .text(lang(ctxLang, 'getTopAlbumsErrorMessage'), { parse_mode: 'HTML' })
+        .text(lang(ctxLang, { key: 'getTopAlbumsErrorMessage', value: 'Estranho, não foi possível resgatar os seus álbuns mais tocados do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }), { parse_mode: 'HTML' })
     }
   }
   if (!userTopArtists.success) {
@@ -55,10 +55,10 @@ export async function briefInlineResult (ctxLang: string | undefined, lastfmUser
       success: false,
       result: InlineQueryResultBuilder
         .article(resultId, resultName, {
-          description: lang(ctxLang, 'getTopArtistsErrorMessage'),
+          description: lang(ctxLang, { key: 'getTopArtistsErrorMessage', value: 'Estranho, não foi possível resgatar os seus artistas mais tocados do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }),
           thumbnail_url: melodyScoutConfig.userImgUrl
         })
-        .text(lang(ctxLang, 'getTopArtistsErrorMessage'), { parse_mode: 'HTML' })
+        .text(lang(ctxLang, { key: 'getTopArtistsErrorMessage', value: 'Estranho, não foi possível resgatar os seus artistas mais tocados do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }), { parse_mode: 'HTML' })
     }
   }
   return {

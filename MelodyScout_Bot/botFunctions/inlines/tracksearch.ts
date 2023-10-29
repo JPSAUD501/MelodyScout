@@ -17,10 +17,10 @@ export async function runTracksearchInline (ctx: InlineQueryContext<Context>): P
   if (searchTrackName.length <= 0) {
     const inlineQueryResultError = InlineQueryResultBuilder
       .article('ERROR', 'An error occurred!', {
-        description: lang(ctxLang, 'trackOrArtistNameNotFoundedInCallbackDataErrorMessage'),
+        description: lang(ctxLang, { key: 'trackOrArtistNameNotFoundedInCallbackDataErrorMessage', value: 'Algo deu errado ao identificar a música ou o artista, por favor tente novamente mais tarde ou entre em contato através do comando /contact.' }),
         thumbnail_url: melodyScoutConfig.logoImgUrl
       })
-      .text(lang(ctxLang, 'trackOrArtistNameNotFoundedInCallbackDataErrorMessage'), { parse_mode: 'HTML' })
+      .text(lang(ctxLang, { key: 'trackOrArtistNameNotFoundedInCallbackDataErrorMessage', value: 'Algo deu errado ao identificar a música ou o artista, por favor tente novamente mais tarde ou entre em contato através do comando /contact.' }), { parse_mode: 'HTML' })
     void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
     return
   }
@@ -93,10 +93,10 @@ export async function runTracksearchInline (ctx: InlineQueryContext<Context>): P
   if (inlineQueryResults.length <= 0) {
     const inlineQueryResultError = InlineQueryResultBuilder
       .article('ERROR', 'An error occurred!', {
-        description: lang(ctxLang, 'trackOrArtistNameNotFoundedInCallbackDataErrorMessage'),
+        description: lang(ctxLang, { key: 'trackOrArtistNameNotFoundedInCallbackDataErrorMessage', value: 'Algo deu errado ao identificar a música ou o artista, por favor tente novamente mais tarde ou entre em contato através do comando /contact.' }),
         thumbnail_url: melodyScoutConfig.logoImgUrl
       })
-      .text(lang(ctxLang, 'trackOrArtistNameNotFoundedInCallbackDataErrorMessage'), { parse_mode: 'HTML' })
+      .text(lang(ctxLang, { key: 'trackOrArtistNameNotFoundedInCallbackDataErrorMessage', value: 'Algo deu errado ao identificar a música ou o artista, por favor tente novamente mais tarde ou entre em contato através do comando /contact.' }), { parse_mode: 'HTML' })
     void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 60 * 60 * 24 })
     return
   }

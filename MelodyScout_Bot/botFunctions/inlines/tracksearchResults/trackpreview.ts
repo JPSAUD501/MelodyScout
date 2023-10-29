@@ -10,11 +10,11 @@ export async function trackpreviewInlineResult (ctxLang: string | undefined, tra
 }> {
   const resultId = `TP:${randomUUID()}`
   const inlineKeyboard = new InlineKeyboard()
-  if (spotifyTrackUrl !== undefined) inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyTrackUrl)
-  if (deezerTrackUrl !== undefined) inlineKeyboard.url(lang(ctxLang, 'deezerButton'), deezerTrackUrl)
+  if (spotifyTrackUrl !== undefined) inlineKeyboard.url(lang(ctxLang, { key: 'spotifyButton', value: '[🎧] - Spotify' }), spotifyTrackUrl)
+  if (deezerTrackUrl !== undefined) inlineKeyboard.url(lang(ctxLang, { key: 'deezerButton', value: '[🎧] - Deezer' }), deezerTrackUrl)
   inlineKeyboard.row()
-  if (youtubeTrackUrl !== undefined) inlineKeyboard.url(lang(ctxLang, 'youtubeButton'), youtubeTrackUrl)
-  if (youtubeMusicTrackUrl !== undefined) inlineKeyboard.url(lang(ctxLang, 'youtubeMusicButton'), youtubeMusicTrackUrl)
+  if (youtubeTrackUrl !== undefined) inlineKeyboard.url(lang(ctxLang, { key: 'youtubeButton', value: '[🎥] - YouTube' }), youtubeTrackUrl)
+  if (youtubeMusicTrackUrl !== undefined) inlineKeyboard.url(lang(ctxLang, { key: 'youtubeMusicButton', value: '[🎶] - YT Music' }), youtubeMusicTrackUrl)
   return {
     success: true,
     result: InlineQueryResultBuilder

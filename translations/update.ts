@@ -1,5 +1,8 @@
 import fs from 'fs'
 import axios from 'axios'
+import path from 'path'
+
+const translationsDir = path.join('translations', 'languages')
 
 export async function updateTranslations (): Promise<{
   success: true
@@ -50,18 +53,19 @@ export async function updateTranslations (): Promise<{
       textArray.push('}')
       textArray.push('')
       const text = textArray.join('\n')
-      if (!fs.existsSync('./translations/languages')) {
-        fs.mkdirSync('./translations/languages')
+      if (!fs.existsSync(translationsDir)) {
+        fs.mkdirSync(translationsDir)
       }
-      if (fs.existsSync(`./translations/languages/${lang}.ts`)) {
-        const content = fs.readFileSync(`./translations/languages/${lang}.ts`).toString()
+      const translationFileDir = path.join(translationsDir, `${lang}.ts`)
+      if (fs.existsSync(translationFileDir)) {
+        const content = fs.readFileSync(translationFileDir).toString()
         if (content === text) {
-          console.log(`File ${lang}.ts is already up to date!`)
+          console.log(`File ${translationFileDir} is already up to date!`)
           continue
         }
       }
-      fs.writeFileSync(`./translations/languages/${lang}.ts`, text)
-      console.log(`File ${lang}.ts was updated!`)
+      fs.writeFileSync(translationFileDir, text)
+      console.log(`File ${translationFileDir} was updated!`)
     }
   } catch (error) {
     return {

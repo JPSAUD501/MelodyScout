@@ -15,7 +15,7 @@ export async function ctxReply (ctx: Context, messageToSend: { chatId: number } 
     }
     if (message.length > 4096) {
       advError('MelodyScout_Bot - Error: message length is greater than 4096')
-      await ctxReply(ctx, { chatId: ctxChatId }, lang(ctxLang, 'messageLengthGreater4096ErrorMessage'))
+      await ctxReply(ctx, { chatId: ctxChatId }, lang(ctxLang, { key: 'messageLengthGreater4096ErrorMessage', value: 'Ocorreu um erro ao tentar responder ao seu comando pois por algum motivo a mensagem ficou maior que 4096 caracteres. Nossa equipe já foi notificada e está trabalhando para resolver o problema o mais rápido possível. Desculpe pelo transtorno. Por favor, tente novamente!' }))
       return
     }
     const sendedMessage = await ctx.api.sendMessage(ctxChatId, message, {
@@ -71,7 +71,7 @@ export async function ctxPinMessage (ctx: Context, message: Message): Promise<vo
     }
     if (pinedMessage === undefined) {
       if (message.chat === undefined) return
-      const alertMessage = await ctxReply(ctx, undefined, lang(ctxLang, 'cantPinMessageErrorMessage'))
+      const alertMessage = await ctxReply(ctx, undefined, lang(ctxLang, { key: 'cantPinMessageErrorMessage', value: '[⚠] Não foi possível fixar a mensagem automaticamente. Caso queira você ainda pode fixa-la manualmente. Para isso, clique na mensagem acima e em seguida em "Fixar".\n\nEssa mensagem de aviso será apagada em 15 segundos.' }))
       if (alertMessage === undefined) {
         advError('MelodyScout_Bot - Error: alertMessage is undefined')
         return
@@ -101,7 +101,7 @@ export async function ctxEditMessage (ctx: Context, messageToEdit: { chatId: num
     }
     if (text.length > 4096) {
       advError('MelodyScout_Bot - Error: text length is greater than 4096')
-      await ctxReply(ctx, undefined, lang(ctxLang, 'messageLengthGreater4096ErrorMessage'))
+      await ctxReply(ctx, undefined, lang(ctxLang, { key: 'messageLengthGreater4096ErrorMessage', value: 'Ocorreu um erro ao tentar responder ao seu comando pois por algum motivo a mensagem ficou maior que 4096 caracteres. Nossa equipe já foi notificada e está trabalhando para resolver o problema o mais rápido possível. Desculpe pelo transtorno. Por favor, tente novamente!' }))
       return undefined
     }
     const editMessageId = messageToEdit?.messageId ?? ctx.message?.message_id ?? ctx.update.callback_query?.message?.message_id
@@ -216,10 +216,10 @@ export async function ctxReplyWithVoice (ctx: Context, audio: string | InputFile
     }
     if ((options?.caption?.length ?? 0) > 1024) {
       advError('MelodyScout_Bot - Error: options.caption.length > 1024')
-      void ctxReply(ctx, undefined, lang(ctxLang, 'messageLengthGreater1024ErrorMessage'))
+      void ctxReply(ctx, undefined, lang(ctxLang, { key: 'messageLengthGreater1024ErrorMessage', value: 'Ocorreu um erro ao enviar a resposta pois o tamanho da mensagem ficou maior que 1024 caracteres! Nossa equipe já foi notificada e irá corrigir o problema o mais rápido possível! Por favor tente novamente mais tarde!' }))
       return
     }
-    const loadingMessage = await ctxReply(ctx, undefined, lang(ctxLang, 'sendingVoiceMessage'), {
+    const loadingMessage = await ctxReply(ctx, undefined, lang(ctxLang, { key: 'sendingVoiceMessage', value: '<b>[🎤] Enviando áudio por favor aguarde!</b>' }), {
       parse_mode: 'HTML',
       disable_notification: true
     })
@@ -256,10 +256,10 @@ export async function ctxReplyWithAudio (ctx: Context, audio: string | InputFile
     }
     if ((options?.caption?.length ?? 0) > 1024) {
       advError('MelodyScout_Bot - Error: options.caption.length > 1024')
-      void ctxReply(ctx, undefined, lang(ctxLang, 'messageLengthGreater1024ErrorMessage'))
+      void ctxReply(ctx, undefined, lang(ctxLang, { key: 'messageLengthGreater1024ErrorMessage', value: 'Ocorreu um erro ao enviar a resposta pois o tamanho da mensagem ficou maior que 1024 caracteres! Nossa equipe já foi notificada e irá corrigir o problema o mais rápido possível! Por favor tente novamente mais tarde!' }))
       return
     }
-    const loadingMessage = await ctxReply(ctx, undefined, lang(ctxLang, 'sendingAudioMessage'), {
+    const loadingMessage = await ctxReply(ctx, undefined, lang(ctxLang, { key: 'sendingAudioMessage', value: '<b>[🎵] Enviando áudio por favor aguarde!</b>' }), {
       parse_mode: 'HTML',
       disable_notification: true
     })
@@ -296,10 +296,10 @@ export async function ctxReplyWithVideo (ctx: Context, video: string | InputFile
     }
     if ((options?.caption?.length ?? 0) > 1024) {
       advError('MelodyScout_Bot - Error: options.caption.length > 1024')
-      void ctxReply(ctx, undefined, lang(ctxLang, 'messageLengthGreater1024ErrorMessage'))
+      void ctxReply(ctx, undefined, lang(ctxLang, { key: 'messageLengthGreater1024ErrorMessage', value: 'Ocorreu um erro ao enviar a resposta pois o tamanho da mensagem ficou maior que 1024 caracteres! Nossa equipe já foi notificada e irá corrigir o problema o mais rápido possível! Por favor tente novamente mais tarde!' }))
       return
     }
-    const loadingMessage = await ctxReply(ctx, undefined, lang(ctxLang, 'sendingVideoMessage'), {
+    const loadingMessage = await ctxReply(ctx, undefined, lang(ctxLang, { key: 'sendingVideoMessage', value: '<b>[🎥] Enviando vídeo por favor aguarde!</b>' }), {
       parse_mode: 'HTML',
       disable_notification: true
     })
@@ -336,10 +336,10 @@ export async function ctxReplyWithDocument (ctx: Context, file: string | InputFi
     }
     if ((options?.caption?.length ?? 0) > 1024) {
       advError('MelodyScout_Bot - Error: options.caption.length > 1024')
-      void ctxReply(ctx, undefined, lang(ctxLang, 'messageLengthGreater1024ErrorMessage'))
+      void ctxReply(ctx, undefined, lang(ctxLang, { key: 'messageLengthGreater1024ErrorMessage', value: 'Ocorreu um erro ao enviar a resposta pois o tamanho da mensagem ficou maior que 1024 caracteres! Nossa equipe já foi notificada e irá corrigir o problema o mais rápido possível! Por favor tente novamente mais tarde!' }))
       return
     }
-    const loadingMessage = await ctxReply(ctx, undefined, lang(ctxLang, 'sendingDocumentMessage'), {
+    const loadingMessage = await ctxReply(ctx, undefined, lang(ctxLang, { key: 'sendingDocumentMessage', value: '<b>[📁] Enviando arquivo por favor aguarde!</b>' }), {
       parse_mode: 'HTML',
       disable_notification: true
     })
@@ -376,10 +376,10 @@ export async function ctxReplyWithPhoto (ctx: Context, photo: string | InputFile
     }
     if ((options?.caption?.length ?? 0) > 1024) {
       advError('MelodyScout_Bot - Error: options.caption.length > 1024')
-      void ctxReply(ctx, undefined, lang(ctxLang, 'messageLengthGreater1024ErrorMessage'))
+      void ctxReply(ctx, undefined, lang(ctxLang, { key: 'messageLengthGreater1024ErrorMessage', value: 'Ocorreu um erro ao enviar a resposta pois o tamanho da mensagem ficou maior que 1024 caracteres! Nossa equipe já foi notificada e irá corrigir o problema o mais rápido possível! Por favor tente novamente mais tarde!' }))
       return
     }
-    const loadingMessage = await ctxReply(ctx, undefined, lang(ctxLang, 'sendingPhotoMessage'), {
+    const loadingMessage = await ctxReply(ctx, undefined, lang(ctxLang, { key: 'sendingPhotoMessage', value: '<b>[📷] Enviando foto por favor aguarde!</b>' }), {
       parse_mode: 'HTML',
       disable_notification: true
     })

@@ -20,7 +20,7 @@ export async function composeImage (ctxLang: string | undefined, image: Buffer, 
   const startTimeTextOverlay = Date.now()
   const textOverlay = await sharp({
     text: {
-      text: lang(ctxLang, 'composeImageTitle', {
+      text: lang(ctxLang, { key: 'composeImageTitle', value: '<b>{{trackName}}</b> por <b>{{artistName}}</b>' }, {
         trackName: trackName.replaceAll('&', '').replaceAll('  ', ' '),
         artistName: artistName.replaceAll('&', '').replaceAll('  ', ' ')
       }),

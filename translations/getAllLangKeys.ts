@@ -1,14 +1,14 @@
 import * as swc from '@swc/core'
-import fs from 'fs'
-import { getAllCode } from './getAllCode'
 import { z } from 'zod'
 import cliProgress from 'cli-progress'
 
 const zodValidLangFunction = z.object({
-  expression: z.object({
-    callee: z.object({ value: z.literal('lang2') }),
-    arguments: z.unknown().array()
-  })
+  type: z.literal('CallExpression'),
+  callee: z.object({
+    type: z.literal('Identifier'),
+    value: z.literal('lang')
+  }),
+  arguments: z.unknown().array()
 })
 type ValidLangFunction = z.infer<typeof zodValidLangFunction>
 
@@ -45,8 +45,8 @@ type ValidLangArgument = z.infer<typeof zodValidLangArgument>
 
 function getModuleObjects (item: object): object[] {
   const objects: object[] = []
-  function getObjects (object: object): void {
-    if (object instanceof Object) {
+  function getObjects (object: any): void {
+    if (object instanceof Object || typeof object === 'object') {
       objects.push(object)
       for (const key in object) {
         getObjects(object[key])
@@ -62,12 +62,13 @@ function getModuleObjects (item: object): object[] {
   return objects
 }
 
-async function getLangKeys (code: string[]): Promise<Record<string, string>> {
+export async function getAllLangKeys (code: string[]): Promise<Record<string, string>> {
   const modules: swc.ModuleItem[] = []
   for (const file of code) {
     const ast = swc.parseSync(file, {
       syntax: 'typescript'
     })
+    if (!JSON.stringify(ast).includes('lang')) continue
     modules.push(...ast.body)
   }
   const allObjects: Record<number, object> = {}
@@ -79,7 +80,7 @@ async function getLangKeys (code: string[]): Promise<Record<string, string>> {
       objectsFounded++
     }
   }
-  console.log(`Founded ${objectsFounded} objects in ${modules.length} modules`)
+  console.log(`In ${code.length} files and ${modules.length} valid modules, founded ${objectsFounded} possible objects`)
   const validObjects: ValidLangFunction[] = []
   const progressBar = new cliProgress.SingleBar({
     align: 'left',
@@ -88,31 +89,32 @@ async function getLangKeys (code: string[]): Promise<Record<string, string>> {
     etaBuffer: 0,
     fps: 10,
     progressCalculationRelative: true,
+    linewrap: true,
     format: '[{bar} {percentage}%] | {value}/{total} | {duration_formatted}'
   }, cliProgress.Presets.shades_grey)
   progressBar.start(Object.keys(allObjects).length, 0)
   let processedObjects = 0
   for (const object of Object.values(allObjects)) {
-    const safeObject = zodValidLangFunction.safeParse(object)
-    if (safeObject.success) {
-      validObjects.push(safeObject.data)
+    if (JSON.stringify(object).includes('lang')) {
+      const safeObject = zodValidLangFunction.safeParse(object)
+      if (safeObject.success) {
+        validObjects.push(safeObject.data)
+      }
     }
     processedObjects++
     progressBar.update(processedObjects)
   }
   progressBar.stop()
-  fs.writeFileSync('validObjects.json', JSON.stringify(validObjects, null, 2))
   console.log(`Founded ${validObjects.length} valid lang calls`)
   const validLangCalls: ValidLangArgument[] = []
   for (const object of validObjects) {
-    for (const argument of object.expression.arguments) {
+    for (const argument of object.arguments) {
       const safeArgument = zodValidLangArgument.safeParse(argument)
       if (safeArgument.success) {
         validLangCalls.push(safeArgument.data)
       }
     }
   }
-  fs.writeFileSync('validLangCalls.json', JSON.stringify(validLangCalls, null, 2))
   const langKeys: Record<string, string> = {}
   for (const langParameters of validLangCalls) {
     if (langParameters.expression.properties.length !== 2) {
@@ -129,15 +131,10 @@ async function getLangKeys (code: string[]): Promise<Record<string, string>> {
     const value = prop2.value.value
     if (langKeys[key] !== undefined) {
       if (langKeys[key] !== value) {
-        console.log(`Invalid lang call - Different values for key ${key}: ${langKeys[key]} and ${value}`)
-        continue
+        throw new Error(`Invalid lang call - Different values for key ${key}: ${langKeys[key]} and ${value}`)
       }
     }
     langKeys[key] = value
   }
-  fs.writeFileSync('langKeys.json', JSON.stringify(langKeys, null, 2))
   return langKeys
 }
-
-const code = getAllCode()
-void getLangKeys(code.codeFiles)

@@ -136,12 +136,12 @@ export class MsTextToSpeechApi {
         error: `Text length is greater than ${tiktokApiMaxTextLength} characters (Max Tiktok TTS text length)`
       }
     }
-    const tiktokApiVoiceOptions = tiktokApiVoices[lang(ctxLang, 'tiktokApiVoiceCode')]
+    const tiktokApiVoiceOptions = tiktokApiVoices[lang(ctxLang, { key: 'tiktokApiVoiceCode', value: 'br' })]
     if (tiktokApiVoiceOptions === undefined) {
-      advError(`MsTextToSpeechApi - Error no Tiktok TTS voice options for language: ${lang(ctxLang, 'tiktokApiVoiceCode')}`)
+      advError(`MsTextToSpeechApi - Error no Tiktok TTS voice options for language: ${lang(ctxLang, { key: 'tiktokApiVoiceCode', value: 'br' })}`)
       return {
         success: false,
-        error: `No Tiktok TTS voice options for language: ${lang(ctxLang, 'tiktokApiVoiceCode')}`
+        error: `No Tiktok TTS voice options for language: ${lang(ctxLang, { key: 'tiktokApiVoiceCode', value: 'br' })}`
       }
     }
     const tiktokApiVoice = tiktokApiVoiceOptions[Math.floor(Math.random() * tiktokApiVoiceOptions.length)]
@@ -224,7 +224,7 @@ export class MsTextToSpeechApi {
     }
     const googleTTSResponse = await googleTTS.getAllAudioBase64(fullText, {
       // lang: 'pt',
-      lang: lang(ctxLang, 'googleTTSVoiceCode'),
+      lang: lang(ctxLang, { key: 'googleTTSVoiceCode', value: 'pt' }),
       slow: false,
       splitPunct: ',;.!?:'
     }).catch((error) => {

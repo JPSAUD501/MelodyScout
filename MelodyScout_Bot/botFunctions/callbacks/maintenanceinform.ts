@@ -10,6 +10,6 @@ export async function runMaintenanceinformCallback (ctx: CallbackQueryContext<Co
   if (ctxFromId !== undefined) {
     advInfo(`User ${ctxFromId} tried to use a command but the bot is in maintenance mode!`)
   }
-  void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'maintenanceInformCallback'))
+  void ctxAnswerCallbackQuery(ctx, lang(ctxLang, { key: 'maintenanceInformCallback', value: '🛠 - O bot está em manutenção!' }))
   await ctxReply(ctx, undefined, getMaintenanceinformText(ctxLang))
 }

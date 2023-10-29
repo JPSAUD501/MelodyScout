@@ -14,7 +14,7 @@ const postedImages: Record<string, boolean> = {}
 
 export async function runPostimageCallback (ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
-  void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'loadingInformCallback'))
+  void ctxAnswerCallbackQuery(ctx, lang(ctxLang, { key: 'loadingInformCallback', value: '⏳ - Carregando…' }))
   const messageId = ctx.callbackQuery.message?.message_id
   const dataArray = ctx.callbackQuery.data.split(melodyScoutConfig.divider)
   const imageId = dataArray[1]

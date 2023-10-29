@@ -23,10 +23,10 @@ export async function playingnowInlineResult (ctxLang: string | undefined, lastf
       success: false,
       result: InlineQueryResultBuilder
         .article(resultId, resultName, {
-          description: lang(ctxLang, 'lastfmUserDataNotFoundedError', { lastfmUser }),
+          description: lang(ctxLang, { key: 'lastfmUserDataNotFoundedError', value: 'Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>{{lastfmUser}}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }, { lastfmUser }),
           thumbnail_url: melodyScoutConfig.trackImgUrl
         })
-        .text(lang(ctxLang, 'lastfmUserDataNotFoundedError', { lastfmUser }), { parse_mode: 'HTML' })
+        .text(lang(ctxLang, { key: 'lastfmUserDataNotFoundedError', value: 'Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>{{lastfmUser}}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }, { lastfmUser }), { parse_mode: 'HTML' })
     }
   }
   if (!userRecentTracks.success) {
@@ -34,10 +34,10 @@ export async function playingnowInlineResult (ctxLang: string | undefined, lastf
       success: false,
       result: InlineQueryResultBuilder
         .article(resultId, resultName, {
-          description: lang(ctxLang, 'unableToGetUserRecentTracksHistory'),
+          description: lang(ctxLang, { key: 'unableToGetUserRecentTracksHistory', value: 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }),
           thumbnail_url: melodyScoutConfig.trackImgUrl
         })
-        .text(lang(ctxLang, 'unableToGetUserRecentTracksHistory'), { parse_mode: 'HTML' })
+        .text(lang(ctxLang, { key: 'unableToGetUserRecentTracksHistory', value: 'Estranho, não foi possível resgatar o histórico do seu perfil do Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }), { parse_mode: 'HTML' })
     }
   }
   if (userRecentTracks.data.recenttracks.track.length <= 0) {
@@ -45,10 +45,10 @@ export async function playingnowInlineResult (ctxLang: string | undefined, lastf
       success: false,
       result: InlineQueryResultBuilder
         .article(resultId, resultName, {
-          description: lang(ctxLang, 'noRecentTracksError'),
+          description: lang(ctxLang, { key: 'noRecentTracksError', value: 'Parece que você nunca ouviu nada no Last.fm, que tal começar a ouvir algo agora? Se isso não for verdade entre em contato com o meu desenvolvedor utilizando o comando /contact.' }),
           thumbnail_url: melodyScoutConfig.trackImgUrl
         })
-        .text(lang(ctxLang, 'noRecentTracksError'), { parse_mode: 'HTML' })
+        .text(lang(ctxLang, { key: 'noRecentTracksError', value: 'Parece que você nunca ouviu nada no Last.fm, que tal começar a ouvir algo agora? Se isso não for verdade entre em contato com o meu desenvolvedor utilizando o comando /contact.' }), { parse_mode: 'HTML' })
     }
   }
   const mainTrack = {
@@ -73,10 +73,10 @@ export async function playingnowInlineResult (ctxLang: string | undefined, lastf
       success: false,
       result: InlineQueryResultBuilder
         .article(resultId, resultName, {
-          description: lang(ctxLang, 'lastfmArtistDataNotFoundedError'),
+          description: lang(ctxLang, { key: 'lastfmArtistDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }),
           thumbnail_url: melodyScoutConfig.trackImgUrl
         })
-        .text(lang(ctxLang, 'lastfmArtistDataNotFoundedError'), { parse_mode: 'HTML' })
+        .text(lang(ctxLang, { key: 'lastfmArtistDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }), { parse_mode: 'HTML' })
     }
   }
   if (!albumInfo.success) {
@@ -84,10 +84,10 @@ export async function playingnowInlineResult (ctxLang: string | undefined, lastf
       success: false,
       result: InlineQueryResultBuilder
         .article(resultId, resultName, {
-          description: lang(ctxLang, 'lastfmAlbumDataNotFoundedError'),
+          description: lang(ctxLang, { key: 'lastfmAlbumDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }),
           thumbnail_url: melodyScoutConfig.trackImgUrl
         })
-        .text(lang(ctxLang, 'lastfmAlbumDataNotFoundedError'), { parse_mode: 'HTML' })
+        .text(lang(ctxLang, { key: 'lastfmAlbumDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }), { parse_mode: 'HTML' })
     }
   }
   if (!trackInfo.success) {
@@ -95,10 +95,10 @@ export async function playingnowInlineResult (ctxLang: string | undefined, lastf
       success: false,
       result: InlineQueryResultBuilder
         .article(resultId, resultName, {
-          description: lang(ctxLang, 'lastfmTrackDataNotFoundedError'),
+          description: lang(ctxLang, { key: 'lastfmTrackDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações da música que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }),
           thumbnail_url: melodyScoutConfig.trackImgUrl
         })
-        .text(lang(ctxLang, 'lastfmTrackDataNotFoundedError'), { parse_mode: 'HTML' })
+        .text(lang(ctxLang, { key: 'lastfmTrackDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações da música que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }), { parse_mode: 'HTML' })
     }
   }
   if (!spotifyTrackInfo.success) {
@@ -106,19 +106,19 @@ export async function playingnowInlineResult (ctxLang: string | undefined, lastf
       success: false,
       result: InlineQueryResultBuilder
         .article(resultId, resultName, {
-          description: lang(ctxLang, 'spotifyTrackDataNotFoundedError'),
+          description: lang(ctxLang, { key: 'spotifyTrackDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do Spotify da música que você está ouvindo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }),
           thumbnail_url: melodyScoutConfig.trackImgUrl
         })
-        .text(lang(ctxLang, 'spotifyTrackDataNotFoundedError'), { parse_mode: 'HTML' })
+        .text(lang(ctxLang, { key: 'spotifyTrackDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do Spotify da música que você está ouvindo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }), { parse_mode: 'HTML' })
     }
   }
   const deezerTrack: DeezerTrack | undefined = deezerTrackInfo.success && deezerTrackInfo.data.data.length > 0 ? deezerTrackInfo.data.data[0] : undefined
   const inlineKeyboard = new InlineKeyboard()
-  inlineKeyboard.url(lang(ctxLang, 'spotifyButton'), spotifyTrackInfo.data[0].external_urls.spotify)
-  if (deezerTrack !== undefined) inlineKeyboard.url(lang(ctxLang, 'deezerButton'), deezerTrack.link)
+  inlineKeyboard.url(lang(ctxLang, { key: 'spotifyButton', value: '[🎧] - Spotify' }), spotifyTrackInfo.data[0].external_urls.spotify)
+  if (deezerTrack !== undefined) inlineKeyboard.url(lang(ctxLang, { key: 'deezerButton', value: '[🎧] - Deezer' }), deezerTrack.link)
   inlineKeyboard.row()
-  if (youtubeTrackInfo.success) inlineKeyboard.url(lang(ctxLang, 'youtubeButton'), youtubeTrackInfo.videoUrl)
-  if (youtubeTrackInfo.success) inlineKeyboard.url(lang(ctxLang, 'youtubeMusicButton'), youtubeTrackInfo.videoMusicUrl)
+  if (youtubeTrackInfo.success) inlineKeyboard.url(lang(ctxLang, { key: 'youtubeButton', value: '[🎥] - YouTube' }), youtubeTrackInfo.videoUrl)
+  if (youtubeTrackInfo.success) inlineKeyboard.url(lang(ctxLang, { key: 'youtubeMusicButton', value: '[🎶] - YT Music' }), youtubeTrackInfo.videoMusicUrl)
   inlineKeyboard.row()
   inlineKeyboard.url('Para mais funções conheça o MelodyScout!', `https://t.me/${ctx.me.username}`)
   return {

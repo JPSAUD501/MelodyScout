@@ -13,15 +13,15 @@ export async function runTrackpreviewCallback (ctx: CallbackQueryContext<Context
   const track = dataArray[1]
   const artist = dataArray[2]
   if (track === undefined || artist === undefined) {
-    await ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'lastfmTrackOrArtistDataNotFoundedErrorCallback'))
+    await ctxAnswerCallbackQuery(ctx, lang(ctxLang, { key: 'lastfmTrackOrArtistDataNotFoundedErrorCallback', value: '⚠ - Nome da música ou do artista não encontrado!' }))
     return
   }
   const trackPreview = await getTrackPreview(track, artist)
   if (!trackPreview.success) {
-    await ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'spotifyTrackPreviewUrlNotFoundedErrorCallback'))
+    await ctxAnswerCallbackQuery(ctx, lang(ctxLang, { key: 'spotifyTrackPreviewUrlNotFoundedErrorCallback', value: '⚠ - Ocorreu um erro ao tentar obter a URL de pré-visualização da música' }))
     return
   }
-  void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'sendingTrackPreviewInformCallback'))
+  void ctxAnswerCallbackQuery(ctx, lang(ctxLang, { key: 'sendingTrackPreviewInformCallback', value: '🎵 - Enviando preview da música' }))
   await ctxReplyWithAudio(ctx, new InputFile({ url: trackPreview.previewUrl }), {
     title: track,
     performer: artist,

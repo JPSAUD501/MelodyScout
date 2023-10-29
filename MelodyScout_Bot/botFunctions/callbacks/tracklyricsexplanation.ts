@@ -12,20 +12,20 @@ import { getAiImageByLyrics } from '../../../functions/trackAiFunctions'
 
 export async function runTracklyricsexplanationCallback (ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
-  void ctxAnswerCallbackQuery(ctx, lang(ctxLang, 'loadingInformCallback'))
+  void ctxAnswerCallbackQuery(ctx, lang(ctxLang, { key: 'loadingInformCallback', value: '⏳ - Carregando…' }))
   const messageId = ctx.callbackQuery.message?.message_id
   const dataArray = ctx.callbackQuery.data.split(melodyScoutConfig.divider)
   const track = dataArray[1]
   const artist = dataArray[2]
   if (track === undefined || artist === undefined) {
-    void ctxReply(ctx, undefined, lang(ctxLang, 'lastfmTrackDataNotFoundedError'))
+    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'lastfmTrackDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações da música que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
     return
   }
-  void ctxTempReply(ctx, lang(ctxLang, 'creatingLyricsExplanationWithAiInformMessage'), 20000, { reply_to_message_id: messageId, allow_sending_without_reply: true, disable_notification: true })
+  void ctxTempReply(ctx, lang(ctxLang, { key: 'creatingLyricsExplanationWithAiInformMessage', value: '⏳ - Gerando explicação da música com inteligência artificial, aguarde um momento…' }), 20000, { reply_to_message_id: messageId, allow_sending_without_reply: true, disable_notification: true })
   const msLyricsApi = new MsLyricsApi(geniusConfig.accessToken)
   const songLyricsData = await msLyricsApi.getLyrics(track, artist)
   if (!songLyricsData.success) {
-    void ctxReply(ctx, undefined, lang(ctxLang, 'trackLyricsNotFoundedError'), { reply_to_message_id: messageId, allow_sending_without_reply: true })
+    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'trackLyricsNotFoundedError', value: 'Infelizmente não foi possível encontrar a letra dessa música em nenhuma de nossas fontes.' }), { reply_to_message_id: messageId, allow_sending_without_reply: true })
     return
   }
   const imageByLyricsRequest = getAiImageByLyrics(ctxLang, songLyricsData.data.lyrics, track, artist)
@@ -34,15 +34,15 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
   const lyricsEmojisRequest = msOpenAiApi.getLyricsEmojis(songLyricsData.data.lyrics)
   const [lyricsExplanation, lyricsEmojis] = await Promise.all([lyricsExplanationRequest, lyricsEmojisRequest])
   if (!lyricsExplanation.success) {
-    void ctxReply(ctx, undefined, lang(ctxLang, 'errorOnCreatingLyricsExplanationInformMessage'), { reply_to_message_id: messageId, allow_sending_without_reply: true })
+    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'errorOnCreatingLyricsExplanationInformMessage', value: 'Ocorreu um erro ao tentar gerar a explicação da letra dessa música, por favor tente novamente mais tarde.' }), { reply_to_message_id: messageId, allow_sending_without_reply: true })
     return
   }
   advLog(`New track lyrics explanation generated for ${track} by ${artist} by user ${ctx.from.id}: ${lyricsExplanation.explanation} / ${lyricsEmojis.success ? lyricsEmojis.emojis : 'No emojis'}`)
   const msTextToSpeechApi = new MsTextToSpeechApi()
-  const TTSAudioRequest = msTextToSpeechApi.getTTS(ctxLang, lang(ctxLang, 'trackLyricsExplanationTTSHeader', { track, artist }), `${lyricsExplanation.explanation}`)
+  const TTSAudioRequest = msTextToSpeechApi.getTTS(ctxLang, lang(ctxLang, { key: 'trackLyricsExplanationTTSHeader', value: 'Explicação da música "{{track}}" de "{{artist}}" pelo MelodyScout.' }, { track, artist }), `${lyricsExplanation.explanation}`)
   const TTSAudio = await TTSAudioRequest
   if (!TTSAudio.success) {
-    void ctxReply(ctx, undefined, lang(ctxLang, 'errorOnCreatingLyricsExplanationTTSInformMessage'), { reply_to_message_id: messageId, allow_sending_without_reply: true })
+    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'errorOnCreatingLyricsExplanationTTSInformMessage', value: 'Ocorreu um erro ao tentar gerar o áudio da explicação da letra dessa música, por favor tente novamente mais tarde.' }), { reply_to_message_id: messageId, allow_sending_without_reply: true })
     return
   }
   const TTSAudioInputFile = new InputFile(TTSAudio.data.audio, `${track}-MelodyScoutAi.mp3`)

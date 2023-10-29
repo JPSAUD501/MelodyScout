@@ -16,11 +16,11 @@ export async function runDefaultInline (msPrismaDbApi: MsPrismaDbApi, ctx: Inlin
   if (telegramUserId === undefined) {
     const inlineQueryResultError = InlineQueryResultBuilder
       .article('ERROR', 'An error occurred!', {
-        description: lang(ctxLang, 'unableToGetUserIdErrorMessage'),
+        description: lang(ctxLang, { key: 'unableToGetUserIdErrorMessage', value: 'Infelizmente não foi possível identificar seu id, por favor tente novamente mais tarde!' }),
         thumbnail_url: melodyScoutConfig.logoImgUrl,
         reply_markup: defaultErrorInlineKeyboard
       })
-      .text(lang(ctxLang, 'unableToGetUserIdErrorMessage'), { parse_mode: 'HTML' })
+      .text(lang(ctxLang, { key: 'unableToGetUserIdErrorMessage', value: 'Infelizmente não foi possível identificar seu id, por favor tente novamente mais tarde!' }), { parse_mode: 'HTML' })
     void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 5 })
     return
   }
@@ -28,22 +28,22 @@ export async function runDefaultInline (msPrismaDbApi: MsPrismaDbApi, ctx: Inlin
   if (!checkIfExistsTgUserDBResponse.success) {
     const inlineQueryResultError = InlineQueryResultBuilder
       .article('ERROR', 'An error occurred!', {
-        description: lang(ctxLang, 'unableToGetUserInfoInDb'),
+        description: lang(ctxLang, { key: 'unableToGetUserInfoInDb', value: 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }),
         thumbnail_url: melodyScoutConfig.logoImgUrl,
         reply_markup: defaultErrorInlineKeyboard
       })
-      .text(lang(ctxLang, 'unableToGetUserInfoInDb'), { parse_mode: 'HTML' })
+      .text(lang(ctxLang, { key: 'unableToGetUserInfoInDb', value: 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }), { parse_mode: 'HTML' })
     void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
     return
   }
   if (!checkIfExistsTgUserDBResponse.exists) {
     const inlineQueryResultError = InlineQueryResultBuilder
       .article('ERROR', 'An error occurred!', {
-        description: lang(ctxLang, 'lastfmUserNotRegistered'),
+        description: lang(ctxLang, { key: 'lastfmUserNotRegistered', value: 'Parece que você ainda não possui um usuário do Last.fm registrado, para registrar um usuário do Last.fm envie o comando /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>' }),
         thumbnail_url: melodyScoutConfig.logoImgUrl,
         reply_markup: defaultErrorInlineKeyboard
       })
-      .text(lang(ctxLang, 'lastfmUserNotRegistered'), { parse_mode: 'HTML' })
+      .text(lang(ctxLang, { key: 'lastfmUserNotRegistered', value: 'Parece que você ainda não possui um usuário do Last.fm registrado, para registrar um usuário do Last.fm envie o comando /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>' }), { parse_mode: 'HTML' })
     void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
     return
   }
@@ -51,11 +51,11 @@ export async function runDefaultInline (msPrismaDbApi: MsPrismaDbApi, ctx: Inlin
   if (!telegramUserDBResponse.success) {
     const inlineQueryResultError = InlineQueryResultBuilder
       .article('ERROR', 'An error occurred!', {
-        description: lang(ctxLang, 'unableToGetUserInfoInDb'),
+        description: lang(ctxLang, { key: 'unableToGetUserInfoInDb', value: 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }),
         thumbnail_url: melodyScoutConfig.logoImgUrl,
         reply_markup: defaultErrorInlineKeyboard
       })
-      .text(lang(ctxLang, 'unableToGetUserInfoInDb'), { parse_mode: 'HTML' })
+      .text(lang(ctxLang, { key: 'unableToGetUserInfoInDb', value: 'Não foi possível resgatar suas informações no banco de dados, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }), { parse_mode: 'HTML' })
     void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
     return
   }
@@ -63,11 +63,11 @@ export async function runDefaultInline (msPrismaDbApi: MsPrismaDbApi, ctx: Inlin
   if (lastfmUser === null) {
     const inlineQueryResultError = InlineQueryResultBuilder
       .article('ERROR', 'An error occurred!', {
-        description: lang(ctxLang, 'lastfmUserNoMoreRegisteredError'),
+        description: lang(ctxLang, { key: 'lastfmUserNoMoreRegisteredError', value: 'Parece que você me pediu para esquecer seu usuário do Last.fm e não me informou um novo usuário, para registrar o seu usuário do Last.fm envie o comando /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>' }),
         thumbnail_url: melodyScoutConfig.logoImgUrl,
         reply_markup: defaultErrorInlineKeyboard
       })
-      .text(lang(ctxLang, 'lastfmUserNoMoreRegisteredError'), { parse_mode: 'HTML' })
+      .text(lang(ctxLang, { key: 'lastfmUserNoMoreRegisteredError', value: 'Parece que você me pediu para esquecer seu usuário do Last.fm e não me informou um novo usuário, para registrar o seu usuário do Last.fm envie o comando /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>' }), { parse_mode: 'HTML' })
     void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
     return
   }

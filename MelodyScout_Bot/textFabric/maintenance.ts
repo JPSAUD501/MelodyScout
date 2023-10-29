@@ -4,10 +4,10 @@ export function getMaintenanceText (ctxLang: string | undefined, activated: bool
   const textArray: string[] = []
   switch (activated) {
     case true:
-      textArray.push(lang(ctxLang, 'maintenanceModeActivatedInformMessage'))
+      textArray.push(lang(ctxLang, { key: 'maintenanceModeActivatedInformMessage', value: 'Modo de manutenção ativado!' }))
       break
     case false:
-      textArray.push(lang(ctxLang, 'maintenanceModeDeactivatedInformMessage'))
+      textArray.push(lang(ctxLang, { key: 'maintenanceModeDeactivatedInformMessage', value: 'Modo de manutenção desativado!' }))
       break
   }
   const text = textArray.join('\n')
