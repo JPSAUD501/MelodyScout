@@ -38,7 +38,7 @@
   "maintenanceModeDeactivatedInformMessage": "Maintenance mode disabled!",
   "maintenanceInformMessage": "I don't know how to apologize for this, but unfortunately I'm down for maintenance! I know this is really annoying, but I'm trying to solve this problem as soon as possible! I will be back soon! Taking this opportunity on behalf of my developer I would like to thank all my users! 💜\n\nIf you have any suggestions or criticisms, please get in touch using the /contact command! I will be very happy to hear what you have to say!",
   "myuserLastfmUserSuccessfullyRegisteredInformMessage": "Done! Your Last.fm username has been successfully registered! Thank you so much for this and I hope you enjoy the bot!",
-  "whatAreYouListeningNowPinMessage": "O que vc está ouvindo?",
+  "whatAreYouListeningNowPinMessage": "What are you listening?",
   "tfPlayingnowPostUserAtMelodyScoutBot": "{{username}} at @MelodyScoutBot",
   "tfPlayingnowPostTrackName": "[🎧{{badge}}] {{trackName}}",
   "tfPlayingnowPostArtistName": "- Artist: {{artistName}}",
@@ -67,7 +67,7 @@
   "tfPlayingnowShareTitle": "<b>[🔗] Share</b>",
   "tfPlayingnowShareLink": "- <a href=\"{{postUrl}}\">Share on 𝕏!</a>",
   "trackAudioDownloadCaption": "<b>[🎵] Download audio of \"{{track}}\" by \"{{artist}}\"</b>\n\nRequested by: <b><a href='tg://user?id={{requesterId}}'>{{requesterName}}</a></b>",
-  "chooseTrackDownloadOptionMessage": "<b>[📥] Download de \"{{track}}\" por \"{{artist}}\"</b>\n- Por favor escolha uma opção abaixo.\n\nSolicitado por: <b><a href='tg://user?id={{requesterId}}'>{{requesterName}}</a></b>",
+  "chooseTrackDownloadOptionMessage": "<b>[📥] Download of \"{{track}}\" by \"{{artist}}\"</b>\n- Please choose an option below.\n\nRequested by: <b><a href='tg://user?id={{requesterId}}'>{{requesterName}}</a></b>",
   "tfTracklyricsexplanationHeader": "<b>[✨] Explanation of \"{{trackName}}\" by \"{{artistName}}\" provided by MelodyScoutAi requested by {{requestedBy}}</b>",
   "tfTracklyricsexplanationInEmojis": "In emojis: {{lyricsEmojis}}",
   "trackPreviewCaptionMessage": "<b>[🎵] Preview of \"{{track}}\" by \"{{artist}}\"</b>\n\nRequested by: <b><a href='tg://user?id={{requesterId}}'>{{requesterName}}</a></b>",
@@ -114,7 +114,7 @@
   "unableToGetUserIdErrorMessage": "Unfortunately we could not identify your id, please try again later!",
   "unableToGetAllUsersFromDatabaseErrorMessage": "Unfortunately it was not possible to retrieve the users from the database, please try again later!",
   "allUsersListUserMessagePart": "<b>[{{userEmoji}}]<code> {{userLastfmName}}</code>:</b>\n- TelegramID: <code>{{userTelegramId}}</code>\n- LastUpdate: <code>{{userLastUpdate}}</code>",
-  "allUsersListHeaderMessage": "<b>[🗃] Lista de usuários:</b>\n- Total de usuários: <code>{{userCount}}</code>",
+  "allUsersListHeaderMessage": "<b>[🗃] List of users:</b>\n- Total users: <code>{{userCount}}</code>",
   "getTopTracksErrorMessage": "Strange, we couldn't retrieve your most listened tracks from your Last.fm profile! If the problem persists please contact my developer using the /contact command.",
   "getTopAlbumsErrorMessage": "Strange, we couldn't retrieve your most played albums from your Last.fm profile! If the problem persists please contact my developer using the /contact command.",
   "getTopArtistsErrorMessage": "Strange, we couldn't retrieve your most played artists from your Last.fm profile! If the problem persists please contact my developer using the /contact command.",
@@ -162,5 +162,7 @@
   "composeImageTitle": "<b>{{trackName}}</b> by <b>{{artistName}}</b>",
   "lyricsExplanationAiPrompt": "A brief explanation of the lyrics:",
   "tiktokApiVoiceCode": "en",
-  "googleTTSVoiceCode": "en"
+  "googleTTSVoiceCode": "en",
+  "trackpreviewInlineResultTrackName": "Preview: {{trackName}}",
+  "trackpreviewInlineResultByArtistName": "By {{artistName}}"
 }
