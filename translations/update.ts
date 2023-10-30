@@ -1,6 +1,7 @@
 import fs from 'fs'
 import axios from 'axios'
 import path from 'path'
+import { baseLang } from './languages/auto/Base-MS-ptBR'
 
 const translationsDir = path.join('translations', 'languages')
 
@@ -30,6 +31,7 @@ export async function updateTranslations (): Promise<{
       textArray.push(`export const ${lang} = {`)
       for (const key in json) {
         let value: string = json[key]
+        if (baseLang[key] === value) continue
         value = value.replaceAll('\n', '\\n')
         switch (true) {
           case (value.includes("'") && value.includes('"')):
