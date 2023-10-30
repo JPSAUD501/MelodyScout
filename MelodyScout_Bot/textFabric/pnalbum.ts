@@ -18,7 +18,7 @@ export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo,
   postTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
   postTextArray.push('')
   // postTextArray.push('[🎧] Sobre o album')
-  postTextArray.push(lang(ctxLang, { key: 'tfPnalbumPostHeader', value: '[🎧] Sobre o album' }))
+  postTextArray.push(lang(ctxLang, { key: 'tfPnalbumPostHeader', value: '[🎧] Sobre o álbum' }))
   // postTextArray.push(`- Álbum: ${sanitizeText(album.name)}`)
   postTextArray.push(lang(ctxLang, { key: 'tfPnalbumPostAlbumName', value: '- Álbum: {{albumName}}' }, { albumName: sanitizeText(album.name) }))
   // postTextArray.push(`- Artista: ${sanitizeText(artist.name)}`)

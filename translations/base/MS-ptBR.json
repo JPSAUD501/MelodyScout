@@ -177,7 +177,7 @@
   "tfLyricsTranslatedHeader": "<b>[📝] Letra de \"{{track}}\" por \"{{artist}}\" fornecida por <a href=\"{{lyricsUrl}}\">{{lyricsProvider}}</a> traduzida para ({{translatedLanguageCode}}) solicitada por {{requestedBy}}</b>",
   "tfLyricsHeader": "<b>[📝] Letra de \"{{track}}\" por \"{{artist}}\" fornecida por <a href=\"{{lyricsUrl}}\">{{lyricsProvider}}</a> solicitada por {{requestedBy}}</b>",
   "tfLyricsFull": "<a href=\"{{lyricsUrl}}\">(Para ver a letra completa, clique aqui)</a>",
-  "tfPnalbumPostHeader": "[🎧] Sobre o album",
+  "tfPnalbumPostHeader": "[🎧] Sobre o álbum",
   "tfPnalbumPostAlbumName": "- Álbum: {{albumName}}",
   "tfPnalbumPostScrobblesHeader": "[📊] {{albumScrobbles}} Scrobbles",
   "tfPnalbumPostInfoTotalPlaytime": "- Já ouviu esse album por <b>{{playedHours}} horas</b> e <b>{{playedMinutes}} minutos</b>",

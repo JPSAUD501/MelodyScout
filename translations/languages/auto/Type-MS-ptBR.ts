@@ -177,7 +177,7 @@ export type BaseLang =
   { key: 'tfLyricsTranslatedHeader', value: '<b>[📝] Letra de "{{track}}" por "{{artist}}" fornecida por <a href="{{lyricsUrl}}">{{lyricsProvider}}</a> traduzida para ({{translatedLanguageCode}}) solicitada por {{requestedBy}}</b>' } |
   { key: 'tfLyricsHeader', value: '<b>[📝] Letra de "{{track}}" por "{{artist}}" fornecida por <a href="{{lyricsUrl}}">{{lyricsProvider}}</a> solicitada por {{requestedBy}}</b>' } |
   { key: 'tfLyricsFull', value: '<a href="{{lyricsUrl}}">(Para ver a letra completa, clique aqui)</a>' } |
-  { key: 'tfPnalbumPostHeader', value: '[🎧] Sobre o album' } |
+  { key: 'tfPnalbumPostHeader', value: '[🎧] Sobre o álbum' } |
   { key: 'tfPnalbumPostAlbumName', value: '- Álbum: {{albumName}}' } |
   { key: 'tfPnalbumPostScrobblesHeader', value: '[📊] {{albumScrobbles}} Scrobbles' } |
   { key: 'tfPnalbumPostInfoTotalPlaytime', value: '- Já ouviu esse album por <b>{{playedHours}} horas</b> e <b>{{playedMinutes}} minutos</b>' } |
