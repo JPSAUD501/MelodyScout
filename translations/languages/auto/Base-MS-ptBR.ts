@@ -177,9 +177,6 @@ export const baseLang = {
   tfLyricsTranslatedHeader: '<b>[📝] Letra de "{{track}}" por "{{artist}}" fornecida por <a href="{{lyricsUrl}}">{{lyricsProvider}}</a> traduzida para ({{translatedLanguageCode}}) solicitada por {{requestedBy}}</b>',
   tfLyricsHeader: '<b>[📝] Letra de "{{track}}" por "{{artist}}" fornecida por <a href="{{lyricsUrl}}">{{lyricsProvider}}</a> solicitada por {{requestedBy}}</b>',
   tfLyricsFull: '<a href="{{lyricsUrl}}">(Para ver a letra completa, clique aqui)</a>',
-  tfMashupHeader: 'Mashup criado! Espero que goste!',
-  tfMashupLink: '<b><a href="{{mashupUrl}}">{{mashupTitle}} por RaveDJ</a></b>',
-  tfMashupDownloadInform: 'Você pode também fazer o download do vídeo ou audio do mashup clicando nos botões abaixo!',
   tfPnalbumPostHeader: '[🎧] Sobre o album',
   tfPnalbumPostAlbumName: '- Álbum: {{albumName}}',
   tfPnalbumPostScrobblesHeader: '[📊] {{albumScrobbles}} Scrobbles',
@@ -254,5 +251,6 @@ export const baseLang = {
   tfPntrackShareHeader: '<b>[🔗] Compartilhe</b>',
   tfPntrackShareOnX: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>',
   tfPostimageSuccessMessage: 'Imagem compartilhada com sucesso nos stories da conta do MelodyScout no Instagram!\n\n<b><a href="{{postUrl}}">Ver publicação</a></b>\n\nSolicitado por: <b><a href=\'tg://user?id={{requesterId}}\'>{{requesterName}}</a></b>',
-  tfStartMessage: 'Oie! Eu sou o MelodyScout! Sou um bot feito para ser seu companheiro musical aqui no Telegram!\n\nEstou muito feliz em te conhecer!\n\nUtilize o comando <code>/myuser</code> para definir seu nome de usuário do Last.fm!\n\nEm seguida, utilize o comando <code>/help</code> para descobrir tudo que eu posso fazer! 😏'
+  tfStartMessage: 'Oie! Eu sou o MelodyScout! Sou um bot feito para ser seu companheiro musical aqui no Telegram!\n\nEstou muito feliz em te conhecer!\n\nUtilize o comando <code>/myuser</code> para definir seu nome de usuário do Last.fm!\n\nEm seguida, utilize o comando <code>/help</code> para descobrir tudo que eu posso fazer! 😏',
+  tfMashupMessage: 'Mashup criado! Espero que goste!\n\n<b><a href="{{mashupUrl}}">{{mashupTitle}} por RaveDJ</a></b>\n\nVocê pode também fazer o download do vídeo ou audio do mashup clicando nos botões abaixo!'
 }

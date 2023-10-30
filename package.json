@@ -8,9 +8,9 @@
     "start": "yarn ts-node --swc ./app.ts",
     "start:dev": "yarn ts-node ./app.ts",
     "deploy": "yarn prisma migrate deploy",
-    "dev": "yarn translation:dev && yarn start:dev",
-    "translation:dev": "yarn ts-node --swc ./translations/runModule.ts",
-    "translation": "yarn ts-node ./translations/runModule.ts",
+    "dev": "yarn translate:dev && yarn start:dev",
+    "translate:dev": "yarn ts-node --swc ./translations/runModule.ts",
+    "translate": "yarn ts-node ./translations/runModule.ts",
     "test": "jest"
   },
   "repository": {

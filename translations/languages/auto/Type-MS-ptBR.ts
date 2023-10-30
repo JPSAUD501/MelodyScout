@@ -177,9 +177,6 @@ export type BaseLang =
   { key: 'tfLyricsTranslatedHeader', value: '<b>[📝] Letra de "{{track}}" por "{{artist}}" fornecida por <a href="{{lyricsUrl}}">{{lyricsProvider}}</a> traduzida para ({{translatedLanguageCode}}) solicitada por {{requestedBy}}</b>' } |
   { key: 'tfLyricsHeader', value: '<b>[📝] Letra de "{{track}}" por "{{artist}}" fornecida por <a href="{{lyricsUrl}}">{{lyricsProvider}}</a> solicitada por {{requestedBy}}</b>' } |
   { key: 'tfLyricsFull', value: '<a href="{{lyricsUrl}}">(Para ver a letra completa, clique aqui)</a>' } |
-  { key: 'tfMashupHeader', value: 'Mashup criado! Espero que goste!' } |
-  { key: 'tfMashupLink', value: '<b><a href="{{mashupUrl}}">{{mashupTitle}} por RaveDJ</a></b>' } |
-  { key: 'tfMashupDownloadInform', value: 'Você pode também fazer o download do vídeo ou audio do mashup clicando nos botões abaixo!' } |
   { key: 'tfPnalbumPostHeader', value: '[🎧] Sobre o album' } |
   { key: 'tfPnalbumPostAlbumName', value: '- Álbum: {{albumName}}' } |
   { key: 'tfPnalbumPostScrobblesHeader', value: '[📊] {{albumScrobbles}} Scrobbles' } |
@@ -254,4 +251,5 @@ export type BaseLang =
   { key: 'tfPntrackShareHeader', value: '<b>[🔗] Compartilhe</b>' } |
   { key: 'tfPntrackShareOnX', value: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>' } |
   { key: 'tfPostimageSuccessMessage', value: 'Imagem compartilhada com sucesso nos stories da conta do MelodyScout no Instagram!\n\n<b><a href="{{postUrl}}">Ver publicação</a></b>\n\nSolicitado por: <b><a href=\'tg://user?id={{requesterId}}\'>{{requesterName}}</a></b>' } |
-  { key: 'tfStartMessage', value: 'Oie! Eu sou o MelodyScout! Sou um bot feito para ser seu companheiro musical aqui no Telegram!\n\nEstou muito feliz em te conhecer!\n\nUtilize o comando <code>/myuser</code> para definir seu nome de usuário do Last.fm!\n\nEm seguida, utilize o comando <code>/help</code> para descobrir tudo que eu posso fazer! 😏' }
+  { key: 'tfStartMessage', value: 'Oie! Eu sou o MelodyScout! Sou um bot feito para ser seu companheiro musical aqui no Telegram!\n\nEstou muito feliz em te conhecer!\n\nUtilize o comando <code>/myuser</code> para definir seu nome de usuário do Last.fm!\n\nEm seguida, utilize o comando <code>/help</code> para descobrir tudo que eu posso fazer! 😏' } |
+  { key: 'tfMashupMessage', value: 'Mashup criado! Espero que goste!\n\n<b><a href="{{mashupUrl}}">{{mashupTitle}} por RaveDJ</a></b>\n\nVocê pode também fazer o download do vídeo ou audio do mashup clicando nos botões abaixo!' }
