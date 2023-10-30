@@ -184,10 +184,10 @@ export type BaseLang =
   { key: 'tfPnalbumPostInfoPopularity', value: '- A popularidade atual desse album é: [{{spotifyAlbumPopularity}}][{{spotifyAlbumPopularityStars}}]' } |
   { key: 'tfPnalbumPostOneInfoHeader', value: '[ℹ️] {{postInfo}}' } |
   { key: 'tfPnalbumPostInfoHeader', value: '[ℹ️] Informações' } |
-  { key: 'tfPnalbumHeaderNowPlaying', value: '<b><a href="{{userUrl}}">{{userName}}</a> está ouvindo:</b>' } |
-  { key: 'tfPnalbumHeaderLastPlayed', value: '<b><a href="{{userUrl}}">{{userName}}</a> estava ouvindo:</b>' } |
-  { key: 'tfPnalbumHeaderNowPlayingAlbum', value: '<b>[🎧] Ouvindo o album</b>' } |
-  { key: 'tfPnalbumHeaderLastPlayedAlbum', value: '<b>[🎧] Último album ouvido</b>' } |
+  { key: 'tfPnalbumHeaderNowPlaying', value: '<b><a href="{{userUrl}}">{{userName}}</a> está ouvindo</b>' } |
+  { key: 'tfPnalbumHeaderLastPlayed', value: '<b><a href="{{userUrl}}">{{userName}}</a> estava ouvindo</b>' } |
+  { key: 'tfPnalbumHeaderNowPlayingAlbum', value: '<b>[🎧] Ouvindo o álbum</b>' } |
+  { key: 'tfPnalbumHeaderLastPlayedAlbum', value: '<b>[🎧] Último álbum ouvido</b>' } |
   { key: 'tfPnalbumAlbumName', value: '- Álbum: <b><a href="{{albumUrl}}">{{albumName}}</a></b>' } |
   { key: 'tfPnalbumArtistName', value: '- Artista: <b><a href="{{artistUrl}}">{{artistName}}</a></b>' } |
   { key: 'tfPnalbumInfoLoadingPlaytime', value: '- Carregando tempo de reprodução...' } |
@@ -199,7 +199,7 @@ export type BaseLang =
   { key: 'tfPnalbumTopTracksHeader', value: '<b>[🎶] As suas mais ouvidas</b>' } |
   { key: 'tfPnalbumLoadingTopTracks', value: '- Carregando...' } |
   { key: 'tfPnalbumErrorLoadingTopTracks', value: '- Erro ao carregar musicas.' } |
-  { key: 'tfPnalbumNoTopTracks', value: '- Nenhuma musica encontrada.' } |
+  { key: 'tfPnalbumNoTopTracks', value: '- Nenhuma música encontrada.' } |
   { key: 'tfPnalbumTopTrackItem', value: '- ({{trackPlaycount}}x) <a href="{{trackUrl}}">{{trackName}}</a>' } |
   { key: 'tfPnalbumShareHeader', value: '<b>[🔗] Compartilhe</b>' } |
   { key: 'tfPnalbumShareOnX', value: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>' } |
@@ -225,7 +225,7 @@ export type BaseLang =
   { key: 'tfPnartistTopTracksHeader', value: '<b>[🎶] As suas mais ouvidas</b>' } |
   { key: 'tfPnartistLoadingTopTracks', value: '- Carregando...' } |
   { key: 'tfPnartistErrorLoadingTopTracks', value: '- Erro ao carregar musicas.' } |
-  { key: 'tfPnartistNoTopTracks', value: '- Nenhuma musica encontrada.' } |
+  { key: 'tfPnartistNoTopTracks', value: '- Nenhuma música encontrada.' } |
   { key: 'tfPnartistTopTracks', value: '- ({{trackPlaycount}}x) <a href="{{trackUrl}}">{{trackName}}</a>' } |
   { key: 'tfPnartistShareHeader', value: '<b>[🔗] Compartilhe</b>' } |
   { key: 'tfPnartistShareOnX', value: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>' } |

@@ -71,21 +71,21 @@ export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo,
   // textArray.push(`<a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.albumImgUrl}">️️</a><b><a href="${urlLimiter(user.url)}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}:</b>`)
   switch (nowPlaying) {
     case true:
-      textArray.push(`<a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.albumImgUrl}">️️</a>${lang(ctxLang, { key: 'tfPnalbumHeaderNowPlaying', value: '<b><a href="{{userUrl}}">{{userName}}</a> está ouvindo:</b>' }, { userUrl: urlLimiter(user.url), userName: user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name) })}`)
+      textArray.push(`<a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.albumImgUrl}">️️</a>${lang(ctxLang, { key: 'tfPnalbumHeaderNowPlaying', value: '<b><a href="{{userUrl}}">{{userName}}</a> está ouvindo</b>' }, { userUrl: urlLimiter(user.url), userName: user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name) })}`)
       break
     case false:
-      textArray.push(`<a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.albumImgUrl}">️️</a>${lang(ctxLang, { key: 'tfPnalbumHeaderLastPlayed', value: '<b><a href="{{userUrl}}">{{userName}}</a> estava ouvindo:</b>' }, { userUrl: urlLimiter(user.url), userName: user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name) })}`)
+      textArray.push(`<a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.albumImgUrl}">️️</a>${lang(ctxLang, { key: 'tfPnalbumHeaderLastPlayed', value: '<b><a href="{{userUrl}}">{{userName}}</a> estava ouvindo</b>' }, { userUrl: urlLimiter(user.url), userName: user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name) })}`)
       break
   }
   textArray.push('')
   switch (nowPlaying) {
     case true:
       // textArray.push('<b>[🎧] Ouvindo o album</b>')
-      textArray.push(lang(ctxLang, { key: 'tfPnalbumHeaderNowPlayingAlbum', value: '<b>[🎧] Ouvindo o album</b>' }))
+      textArray.push(lang(ctxLang, { key: 'tfPnalbumHeaderNowPlayingAlbum', value: '<b>[🎧] Ouvindo o álbum</b>' }))
       break
     case false:
       // textArray.push('<b>[🎧] Último album ouvido</b>')
-      textArray.push(lang(ctxLang, { key: 'tfPnalbumHeaderLastPlayedAlbum', value: '<b>[🎧] Último album ouvido</b>' }))
+      textArray.push(lang(ctxLang, { key: 'tfPnalbumHeaderLastPlayedAlbum', value: '<b>[🎧] Último álbum ouvido</b>' }))
       break
   }
   // textArray.push(`- Álbum: <b><a href="${urlLimiter(album.url)}">${sanitizeText(album.name)}</a></b>`)
@@ -151,7 +151,7 @@ export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo,
       if (userAlbumTopTracks.status === 'success') {
         if (userAlbumTopTracks.data.length <= 0) {
           // textArray.push('- Nenhuma musica encontrada.')
-          textArray.push(lang(ctxLang, { key: 'tfPnalbumNoTopTracks', value: '- Nenhuma musica encontrada.' }))
+          textArray.push(lang(ctxLang, { key: 'tfPnalbumNoTopTracks', value: '- Nenhuma música encontrada.' }))
           break
         }
         for (let i = 0; i < userAlbumTopTracks.data.length && i < 10; i++) {
