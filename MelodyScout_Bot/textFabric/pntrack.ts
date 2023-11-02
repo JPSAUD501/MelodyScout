@@ -9,7 +9,7 @@ import { urlLimiter } from '../../functions/urlLimiter'
 import { type DeezerTrack } from '../../api/msDeezerApi/types/zodSearchTrack'
 import { lang } from '../../translations/base'
 
-export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, deezerTrackInfo: DeezerTrack | undefined, nowPlaying: boolean): string {
+export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, deezerTrackInfo: DeezerTrack | undefined, nowPlaying: boolean, previewUrl: string | undefined): string {
   const { user } = userInfo
   const { artist } = artistInfo
   const { album } = albumInfo
@@ -85,10 +85,10 @@ export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo,
   // textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.trackImgUrl}">️️</a><a href="${urlLimiter(user.url)}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}</b>`)
   switch (nowPlaying) {
     case true:
-      textArray.push(`<a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.trackImgUrl}">️️</a>${lang(ctxLang, { key: 'tfPntrackHeaderNowPlaying', value: '<b><a href="{{userUrl}}">{{userRealname}}</a> está ouvindo</b>' }, { userUrl: urlLimiter(user.url), userRealname: user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name) })}`)
+      textArray.push(`<a href="${previewUrl}">️️</a><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.trackImgUrl}">️️</a>${lang(ctxLang, { key: 'tfPntrackHeaderNowPlaying', value: '<b><a href="{{userUrl}}">{{userRealname}}</a> está ouvindo</b>' }, { userUrl: urlLimiter(user.url), userRealname: user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name) })}`)
       break
     case false:
-      textArray.push(`<a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.trackImgUrl}">️️</a>${lang(ctxLang, { key: 'tfPntrackHeaderLastPlayed', value: '<b><a href="{{userUrl}}">{{userRealname}}</a> estava ouvindo</b>' }, { userUrl: urlLimiter(user.url), userRealname: user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name) })}`)
+      textArray.push(`<a href="${previewUrl}">️️</a><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.trackImgUrl}">️️</a>${lang(ctxLang, { key: 'tfPntrackHeaderLastPlayed', value: '<b><a href="{{userUrl}}">{{userRealname}}</a> estava ouvindo</b>' }, { userUrl: urlLimiter(user.url), userRealname: user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name) })}`)
       break
   }
   textArray.push('')
@@ -137,6 +137,7 @@ export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo,
   textArray.push(lang(ctxLang, { key: 'tfPntrackShareHeader', value: '<b>[🔗] Compartilhe</b>' }))
   // textArray.push(`- <a href="${postUrl}">Compartilhar no 𝕏!</a>`)
   textArray.push(lang(ctxLang, { key: 'tfPntrackShareOnX', value: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>' }, { postUrl }))
+  if (previewUrl !== undefined) textArray.push('️️')
 
   const text = textArray.join('\n')
   return text
