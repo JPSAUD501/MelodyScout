@@ -1,11 +1,38 @@
+import { type Context, InputFile } from 'grammy'
 import { MsDeezerApi } from '../api/msDeezerApi/base'
 import { MsMusicApi } from '../api/msMusicApi/base'
-import { spotifyConfig } from '../config'
+import { melodyScoutConfig, spotifyConfig } from '../config'
 import { advError, advLog } from './advancedConsole'
 
-export async function getTrackPreview (trackName: string, trackArtist: string): Promise<{
+export async function getTelegramPreviewUrl (ctx: Context, previewUrl: string, trackName: string, trackArtist: string): Promise<string> {
+  const audioMessage = await ctx.api.sendAudio(melodyScoutConfig.filesChannelId, new InputFile({ url: previewUrl }, trackName), {
+    disable_notification: true,
+    title: trackName,
+    performer: trackArtist
+  }).catch((err) => {
+    return new Error(err)
+  })
+  if (audioMessage instanceof Error) {
+    advError(`GetTrackPreview - Error on sending cache track preview to Telegram: Track (${trackName} - ${trackArtist}) - Track preview url: ${previewUrl} - Error: ${audioMessage.message}`)
+    return previewUrl
+  }
+  if (audioMessage.chat.type !== 'channel') {
+    advError(`GetTrackPreview - Error on sending cache track preview to Telegram: Track (${trackName} - ${trackArtist}) - Track preview url: ${previewUrl} - Error: Audio message chat type is not channel`)
+    return previewUrl
+  }
+  const channelUsername = audioMessage.chat.username
+  if (channelUsername === undefined) {
+    advError(`GetTrackPreview - Error on sending cache track preview to Telegram: Track (${trackName} - ${trackArtist}) - Track preview url: ${previewUrl} - Error: Audio message chat username is undefined`)
+    return previewUrl
+  }
+  const audioMessageLink = `https://t.me/${channelUsername}/${audioMessage.message_id}`
+  return audioMessageLink
+}
+
+export async function getTrackPreview (trackName: string, trackArtist: string, getTelegramPreview: Context | undefined): Promise<{
   success: true
   previewUrl: string
+  telegramPreviewUrl: string
 } | {
   success: false
   error: string
@@ -31,9 +58,15 @@ export async function getTrackPreview (trackName: string, trackArtist: string): 
       error: 'Track preview url not founded'
     }
   }
+  const mainPreviewUrl = previewUrls[0]
+  let telegramPreviewUrl = mainPreviewUrl
+  if (getTelegramPreview !== undefined) {
+    telegramPreviewUrl = await getTelegramPreviewUrl(getTelegramPreview, mainPreviewUrl, trackName, trackArtist)
+  }
   advLog(`GetTrackPreview - Preview url founded for track (${trackName} - ${trackArtist}):\n\n${previewUrls.map(url => `${url}`).join('\n')}`)
   return {
     success: true,
-    previewUrl: previewUrls[0]
+    previewUrl: mainPreviewUrl,
+    telegramPreviewUrl
   }
 }

@@ -64,7 +64,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
     })
     return
   }
-  const trackPreview = await getTrackPreview(parsedMetadata.data.trackName, parsedMetadata.data.artistName)
+  const trackPreview = await getTrackPreview(parsedMetadata.data.trackName, parsedMetadata.data.artistName, undefined)
   if (!trackPreview.success) {
     postedImages[imageId] = false
     await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar buscar informações da música!', {

@@ -7,6 +7,7 @@ import ffmpeg from 'fluent-ffmpeg'
 import { deleteTempDir, getTempDir } from './tempy'
 import { ffConfig } from '../config'
 import { advError, advLog } from './advancedConsole'
+import { randomUUID } from 'crypto'
 
 export async function composeImage (ctxLang: string | undefined, image: Buffer, trackName: string, artistName: string): Promise<{
   success: true
@@ -176,6 +177,7 @@ export async function composeStoryImage (image: Buffer): Promise<{
   }
 }
 
+const videoProcessingQueue: string[] = []
 export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, imageMetadata: AIImageMetadata): Promise<{
   success: true
   data: {
@@ -185,6 +187,18 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
   success: false
   error: string
 }> {
+  const processUuid = randomUUID()
+  videoProcessingQueue.push(processUuid)
+  advLog(`MediaEditor - CreateStoriesVideo - Add process (${processUuid}) to queue - Track: ${imageMetadata.trackName} - Artist: ${imageMetadata.artistName} - Queue length: ${videoProcessingQueue.length}`)
+  while (videoProcessingQueue[0] !== processUuid) {
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(true)
+      }, 1000)
+    })
+  }
+  videoProcessingQueue.shift()
+  advLog(`MediaEditor - CreateStoriesVideo - Start process (${processUuid}) - Track: ${imageMetadata.trackName} - Artist: ${imageMetadata.artistName} - New queue length: ${videoProcessingQueue.length}`)
   try {
     const storiesImage = await composeStoryImage(image)
     if (!storiesImage.success) {

@@ -15,7 +15,7 @@ export const melodyScoutConfig = {
   aboutMelodyScoutAi: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/ms-ai.png',
   urltoolong: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/urlLong.png',
   msAndRaveDj: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/ms-rdj.png',
-  blogChannelChatId: Number(process.env.MSBC_TELEGRAM_CHAT_ID ?? '')
+  filesChannelId: Number(process.env.MSB_FC_TELEGRAM_CHAT_ID ?? '')
 }
 
 export const lastfmConfig = {
@@ -44,7 +44,7 @@ export const githubConfig = {
 }
 
 export const serverConfig = {
-  port: process.env.PORT ?? '9001',
+  port: process.env.PORT ?? '9015',
   host: process.env.HOST ?? '0.0.0.0'
 }
 
@@ -56,3 +56,26 @@ export const instagramConfig = {
 export const ffConfig = {
   ffmpegPath: pathToFfmpeg ?? ''
 }
+
+function checkConfig (): void {
+  const allConfig = {
+    melodyScoutConfig,
+    lastfmConfig,
+    geniusConfig,
+    spotifyConfig,
+    openaiConfig,
+    replicateConfig,
+    githubConfig,
+    serverConfig,
+    instagramConfig,
+    ffConfig
+  }
+  for (const config in allConfig) {
+    for (const key in allConfig[config]) {
+      if (allConfig[config][key] === '' || allConfig[config][key] === undefined) {
+        throw new Error(`Config ${config} key ${key} is empty!`)
+      }
+    }
+  }
+}
+checkConfig()
