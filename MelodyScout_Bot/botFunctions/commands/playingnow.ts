@@ -114,7 +114,7 @@ export async function runPlayingnowCommand (msPrismaDbApi: MsPrismaDbApi, ctx: C
   const inlineKeyboard = new InlineKeyboard()
   inlineKeyboard.text(lang(ctxLang, { key: 'iaExplanationButton', value: '[✨] - Explicação' }), getCallbackKey(['TLE', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
   inlineKeyboard.row()
-  if (trackPreviewUrl !== undefined) {
+  if (trackPreviewUrl === undefined) {
     inlineKeyboard.text(lang(ctxLang, { key: 'trackPreviewButton', value: '[📥] - Visualizar' }), getCallbackKey(['TP', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
     inlineKeyboard.row()
   }
