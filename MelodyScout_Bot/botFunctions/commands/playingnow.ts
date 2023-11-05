@@ -114,6 +114,10 @@ export async function runPlayingnowCommand (msPrismaDbApi: MsPrismaDbApi, ctx: C
   const inlineKeyboard = new InlineKeyboard()
   inlineKeyboard.text(lang(ctxLang, { key: 'iaExplanationButton', value: '[✨] - Explicação' }), getCallbackKey(['TLE', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
   inlineKeyboard.row()
+  if (trackPreviewUrl !== undefined) {
+    inlineKeyboard.text(lang(ctxLang, { key: 'trackPreviewButton', value: '[📥] - Visualizar' }), getCallbackKey(['TP', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
+    inlineKeyboard.row()
+  }
   inlineKeyboard.url(lang(ctxLang, { key: 'spotifyButton', value: '[🎧] - Spotify' }), spotifyTrackInfo.data[0].external_urls.spotify)
   if (deezerTrack !== undefined) inlineKeyboard.url(lang(ctxLang, { key: 'deezerButton', value: '[🎧] - Deezer' }), deezerTrack.link)
   inlineKeyboard.row()
@@ -121,7 +125,6 @@ export async function runPlayingnowCommand (msPrismaDbApi: MsPrismaDbApi, ctx: C
   if (youtubeTrackInfo.success) inlineKeyboard.url(lang(ctxLang, { key: 'youtubeMusicButton', value: '[🎶] - YT Music' }), youtubeTrackInfo.videoMusicUrl)
   inlineKeyboard.row()
   inlineKeyboard.text(lang(ctxLang, { key: 'lyricsButton', value: '[🧾] - Letra' }), getCallbackKey(['TL', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
-  // inlineKeyboard.text(lang(ctxLang, { key: 'trackPreviewButton', value: '[📥] - Visualizar' }), getCallbackKey(['TP', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
   inlineKeyboard.text(lang(ctxLang, { key: 'trackDownloadButton', value: '[📥] - Baixar' }), getCallbackKey(['TD', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
   await ctxReply(ctx, undefined, getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], deezerTrack, mainTrack.nowPlaying, trackPreviewUrl), { reply_markup: inlineKeyboard })
 }

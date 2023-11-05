@@ -44,7 +44,7 @@ export const githubConfig = {
 }
 
 export const serverConfig = {
-  port: process.env.PORT ?? '9019',
+  port: process.env.PORT ?? '9000',
   host: process.env.HOST ?? '0.0.0.0'
 }
 

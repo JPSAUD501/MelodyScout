@@ -16,6 +16,11 @@ export async function getTelegramPreviewUrl (ctx: Context, previewUrl: string, t
     advError(`GetTrackPreview - Error on sending cache track preview to Telegram: Track (${trackName} - ${trackArtist}) - Track preview url: ${previewUrl} - Error: ${audioMessage.message}`)
     return previewUrl
   }
+  void setTimeout(() => {
+    void ctx.api.deleteMessage(audioMessage.chat.id, audioMessage.message_id).catch((err) => {
+      advError(`GetTrackPreview - Error on deleting cache track preview from Telegram: Track (${trackName} - ${trackArtist}) - Track preview url: ${previewUrl} - Error: ${err}`)
+    })
+  }, 10000)
   if (audioMessage.chat.type !== 'channel') {
     advError(`GetTrackPreview - Error on sending cache track preview to Telegram: Track (${trackName} - ${trackArtist}) - Track preview url: ${previewUrl} - Error: Audio message chat type is not channel`)
     return previewUrl
