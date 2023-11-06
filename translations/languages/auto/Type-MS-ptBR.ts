@@ -106,7 +106,6 @@ export type BaseLang =
   { key: 'trackLyricsExplanationTTSHeader', value: 'Explicação da música "{{track}}" de "{{artist}}" pelo MelodyScout.' } |
   { key: 'errorOnCreatingLyricsExplanationTTSInformMessage', value: 'Ocorreu um erro ao tentar gerar o áudio da explicação da letra dessa música, por favor tente novamente mais tarde.' } |
   { key: 'lastfmTrackOrArtistDataNotFoundedErrorCallback', value: '⚠ - Nome da música ou do artista não encontrado!' } |
-  { key: 'spotifyTrackPreviewUrlNotFoundedErrorCallback', value: '⚠ - Ocorreu um erro ao tentar obter a URL de pré-visualização da música' } |
   { key: 'sendingTrackPreviewInformCallback', value: '🎵 - Enviando preview da música' } |
   { key: 'unableToGetMessageIdFromButtonInformMessage', value: 'Algo deu errado ao buscar a mensagem que você clicou, por favor tente novamente mais tarde ou entre em contato através do comando /contact.' } |
   { key: 'unableToTranslateLyricsErrorMessage', value: 'Não foi possível traduzir a letra dessa música, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' } |
@@ -252,4 +251,5 @@ export type BaseLang =
   { key: 'tfPntrackShareOnX', value: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>' } |
   { key: 'tfPostimageSuccessMessage', value: 'Imagem compartilhada com sucesso nos stories da conta do MelodyScout no Instagram!\n\n<b><a href="{{postUrl}}">Ver publicação</a></b>\n\nSolicitado por: <b><a href=\'tg://user?id={{requesterId}}\'>{{requesterName}}</a></b>' } |
   { key: 'tfStartMessage', value: 'Oie! Eu sou o MelodyScout! Sou um bot feito para ser seu companheiro musical aqui no Telegram!\n\nEstou muito feliz em te conhecer!\n\nUtilize o comando <code>/myuser</code> para definir seu nome de usuário do Last.fm!\n\nEm seguida, utilize o comando <code>/help</code> para descobrir tudo que eu posso fazer! 😏' } |
-  { key: 'tfMashupMessage', value: 'Mashup criado! Espero que goste!\n\n<b><a href="{{mashupUrl}}">{{mashupTitle}} por RaveDJ</a></b>\n\nVocê pode também fazer o download do vídeo ou audio do mashup clicando nos botões abaixo!' }
+  { key: 'tfMashupMessage', value: 'Mashup criado! Espero que goste!\n\n<b><a href="{{mashupUrl}}">{{mashupTitle}} por RaveDJ</a></b>\n\nVocê pode também fazer o download do vídeo ou audio do mashup clicando nos botões abaixo!' } |
+  { key: 'trackPreviewUrlNotFoundedErrorCallback', value: '⚠ - Não encontrei o preview dessa musica!' }

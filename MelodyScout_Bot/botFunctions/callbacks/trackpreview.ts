@@ -18,7 +18,7 @@ export async function runTrackpreviewCallback (ctx: CallbackQueryContext<Context
   }
   const trackPreview = await getTrackPreview(track, artist, undefined)
   if (!trackPreview.success) {
-    await ctxAnswerCallbackQuery(ctx, lang(ctxLang, { key: 'spotifyTrackPreviewUrlNotFoundedErrorCallback', value: '⚠ - Ocorreu um erro ao tentar obter a URL de pré-visualização da música' }))
+    await ctxAnswerCallbackQuery(ctx, lang(ctxLang, { key: 'trackPreviewUrlNotFoundedErrorCallback', value: '⚠ - Não encontrei o preview dessa musica!' }))
     return
   }
   void ctxAnswerCallbackQuery(ctx, lang(ctxLang, { key: 'sendingTrackPreviewInformCallback', value: '🎵 - Enviando preview da música' }))
