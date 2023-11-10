@@ -11,7 +11,7 @@ export function getHistoryText (ctxLang: string | undefined, userInfo: UserInfo,
   const textArray: string[] = []
 
   // textArray.push(`<b><a href="${recenttracks.track[0].image[recenttracks.track[0].image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.userImgUrl}">️️</a>Histórico de reprodução de <a href="${urlLimiter(user.url)}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a></b>`)
-  textArray.push(`<b><a href="${recenttracks.track[0].image[recenttracks.track[0].image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.userImgUrl}">️️</a>${lang(ctxLang, { key: 'tfHistoryTitle', value: '<b>Histórico de reprodução de <a href="{{userUrl}}">{{userName}}</a></b>' }, {
+  textArray.push(`<a href="${recenttracks.track[0].image[recenttracks.track[0].image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.userImgUrl}">️️</a>${lang(ctxLang, { key: 'tfHistoryTitle', value: '<b>Histórico de reprodução de <a href="{{userUrl}}">{{userName}}</a></b>' }, {
     userUrl: urlLimiter(user.url),
     userName: user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)
   })}`)
