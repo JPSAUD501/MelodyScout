@@ -11,6 +11,7 @@ import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { MsDeezerApi } from '../../../api/msDeezerApi/base'
 import { type DeezerTrack } from '../../../api/msDeezerApi/types/zodSearchTrack'
 import { getTrackPreview } from '../../../functions/getTrackPreview'
+import { type Track } from '@soundify/web-api'
 
 export async function runPlayingnowCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
@@ -105,10 +106,11 @@ export async function runPlayingnowCommand (msPrismaDbApi: MsPrismaDbApi, ctx: C
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'lastfmTrackDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações da música que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
     return
   }
-  if (!spotifyTrackInfo.success) {
-    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'spotifyTrackDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do Spotify da música que você está ouvindo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
-    return
-  }
+  // if (!spotifyTrackInfo.success) {
+  //   void ctxReply(ctx, undefined, lang(ctxLang, { key: 'spotifyTrackDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do Spotify da música que você está ouvindo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
+  //   return
+  // }
+  const spotifyTrack: Track | undefined = spotifyTrackInfo.success && spotifyTrackInfo.data.length > 0 ? spotifyTrackInfo.data[0] : undefined
   const deezerTrack: DeezerTrack | undefined = deezerTrackInfo.success && deezerTrackInfo.data.data.length > 0 ? deezerTrackInfo.data.data[0] : undefined
   const trackPreviewUrl = trackPreview.success ? trackPreview.telegramPreviewUrl : undefined
   const inlineKeyboard = new InlineKeyboard()
@@ -118,7 +120,7 @@ export async function runPlayingnowCommand (msPrismaDbApi: MsPrismaDbApi, ctx: C
     inlineKeyboard.text(lang(ctxLang, { key: 'trackPreviewButton', value: '[📥] - Visualizar' }), getCallbackKey(['TP', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
     inlineKeyboard.row()
   }
-  inlineKeyboard.url(lang(ctxLang, { key: 'spotifyButton', value: '[🎧] - Spotify' }), spotifyTrackInfo.data[0].external_urls.spotify)
+  if (spotifyTrack !== undefined) inlineKeyboard.url(lang(ctxLang, { key: 'spotifyButton', value: '[🎧] - Spotify' }), spotifyTrack.external_urls.spotify)
   if (deezerTrack !== undefined) inlineKeyboard.url(lang(ctxLang, { key: 'deezerButton', value: '[🎧] - Deezer' }), deezerTrack.link)
   inlineKeyboard.row()
   if (youtubeTrackInfo.success) inlineKeyboard.url(lang(ctxLang, { key: 'youtubeButton', value: '[🎥] - YouTube' }), youtubeTrackInfo.videoUrl)
@@ -126,5 +128,5 @@ export async function runPlayingnowCommand (msPrismaDbApi: MsPrismaDbApi, ctx: C
   inlineKeyboard.row()
   inlineKeyboard.text(lang(ctxLang, { key: 'lyricsButton', value: '[🧾] - Letra' }), getCallbackKey(['TL', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
   inlineKeyboard.text(lang(ctxLang, { key: 'trackDownloadButton', value: '[📥] - Baixar' }), getCallbackKey(['TD', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
-  await ctxReply(ctx, undefined, getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrackInfo.data[0], deezerTrack, mainTrack.nowPlaying, trackPreviewUrl), { reply_markup: inlineKeyboard })
+  await ctxReply(ctx, undefined, getPlayingnowText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, trackInfo.data, spotifyTrack, deezerTrack, mainTrack.nowPlaying, trackPreviewUrl), { reply_markup: inlineKeyboard })
 }

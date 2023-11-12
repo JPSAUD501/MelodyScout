@@ -9,7 +9,7 @@ import { urlLimiter } from '../../functions/urlLimiter'
 import { type DeezerTrack } from '../../api/msDeezerApi/types/zodSearchTrack'
 import { lang } from '../../translations/base'
 
-export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track, deezerTrackInfo: DeezerTrack | undefined, nowPlaying: boolean, previewUrl: string | undefined): string {
+export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track | undefined, deezerTrackInfo: DeezerTrack | undefined, nowPlaying: boolean, previewUrl: string | undefined): string {
   const { user } = userInfo
   const { artist } = artistInfo
   const { album } = albumInfo
@@ -21,7 +21,7 @@ export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo,
         trackDuration = Number(track.duration) / 1000
         break
       }
-      if (spotifyTrackInfo.duration_ms > 0) {
+      if (spotifyTrackInfo !== undefined && spotifyTrackInfo.duration_ms > 0) {
         trackDuration = spotifyTrackInfo.duration_ms / 1000
         break
       }
@@ -37,7 +37,7 @@ export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo,
   postTextArray.push(lang(ctxLang, { key: 'tfPntrackPostUserAtMelodyScoutBot', value: '{{userRealname}} no @MelodyScoutBot' }, { userRealname: user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name) }))
   postTextArray.push('')
   // postTextArray.push(`[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] ${sanitizeText(track.name)}`)
-  postTextArray.push(lang(ctxLang, { key: 'tfPntrackPostTrackHeader', value: '[🎧{{badge}}] {{trackName}}' }, { badge: spotifyTrackInfo.explicit ? '-🅴' : '', trackName: sanitizeText(track.name) }))
+  postTextArray.push(lang(ctxLang, { key: 'tfPntrackPostTrackHeader', value: '[🎧{{badge}}] {{trackName}}' }, { badge: spotifyTrackInfo?.explicit === true ? '-🅴' : '', trackName: sanitizeText(track.name) }))
   // postTextArray.push(`- Artista: ${sanitizeText(artist.name)}`)
   postTextArray.push(lang(ctxLang, { key: 'tfPntrackPostArtist', value: '- Artista: {{artistName}}' }, { artistName: sanitizeText(artist.name) }))
   postTextArray.push('')
@@ -51,7 +51,7 @@ export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo,
     postInfoArray.push(lang(ctxLang, { key: 'tfPntrackPostTrackTotalPlaytime', value: 'Já ouviu essa música por {{hours}} horas e {{minutes}} minutos.' }, { hours: playedHours.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })), minutes: playedMinutes }))
   }
   // if (spotifyTrackInfo.popularity !== undefined) postInfoArray.push(`- A popularidade atual dessa música é: [${spotifyTrackInfo.popularity}][${'★'.repeat(Math.floor(spotifyTrackInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyTrackInfo.popularity / 20))}]`)
-  if (spotifyTrackInfo.popularity !== undefined) {
+  if (spotifyTrackInfo?.popularity !== undefined) {
     postInfoArray.push(lang(ctxLang, { key: 'tfPntrackPostTrackPopularity', value: '- A popularidade atual dessa música é: [{{trackPopularity}}][{{trackPopularityStars}}]' }, {
       trackPopularity: spotifyTrackInfo.popularity,
       trackPopularityStars: '★'.repeat(Math.floor(spotifyTrackInfo.popularity / 20)) + '☆'.repeat(5 - Math.floor(spotifyTrackInfo.popularity / 20))
@@ -78,7 +78,19 @@ export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo,
     }
   }
   postTextArray.push('')
-  postTextArray.push(`${spotifyTrackInfo.external_urls.spotify}`)
+  switch (true) {
+    default: {
+      if (spotifyTrackInfo?.external_urls.spotify !== undefined) {
+        postTextArray.push(`${spotifyTrackInfo.external_urls.spotify}`)
+        break
+      }
+      if (deezerTrackInfo?.link !== undefined) {
+        postTextArray.push(`${deezerTrackInfo.link}`)
+        break
+      }
+      postTextArray.push(`${track.url}`)
+    }
+  }
   const postUrl = `https://x.com/intent/tweet?text=${postTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
 
   const textArray: string[] = []
@@ -95,11 +107,11 @@ export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo,
   switch (nowPlaying) {
     case true:
       // textArray.push(`<b>[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] Ouvindo a música</b>`)
-      textArray.push(lang(ctxLang, { key: 'tfPntrackHeaderNowPlayingTrack', value: '<b>[🎧{{badge}}] Ouvindo a música</b>' }, { badge: spotifyTrackInfo.explicit ? '-🅴' : '' }))
+      textArray.push(lang(ctxLang, { key: 'tfPntrackHeaderNowPlayingTrack', value: '<b>[🎧{{badge}}] Ouvindo a música</b>' }, { badge: spotifyTrackInfo?.explicit === true ? '-🅴' : '' }))
       break
     case false:
       // textArray.push(`<b>[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] Última música ouvida</b>`)
-      textArray.push(lang(ctxLang, { key: 'tfPntrackHeaderLastPlayedTrack', value: '<b>[🎧{{badge}}] Última música ouvida</b>' }, { badge: spotifyTrackInfo.explicit ? '-🅴' : '' }))
+      textArray.push(lang(ctxLang, { key: 'tfPntrackHeaderLastPlayedTrack', value: '<b>[🎧{{badge}}] Última música ouvida</b>' }, { badge: spotifyTrackInfo?.explicit === true ? '-🅴' : '' }))
       break
   }
   // textArray.push(`- Música: <b><a href="${urlLimiter(track.url)}">${sanitizeText(track.name)}</a></b>`)
@@ -116,7 +128,7 @@ export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo,
     infoArray.push(lang(ctxLang, { key: 'tfPntrackInfoTotalPlaytime', value: '- Você já ouviu essa música por <b>{{hours}} horas</b> e <b>{{minutes}} minutos</b>.' }, { hours: playedHours.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })), minutes: playedMinutes }))
   }
   // if (spotifyTrackInfo.popularity !== undefined) infoArray.push(`- A <a href="${melodyScoutConfig.popularityImgUrl}">popularidade</a> atual dessa música é: <b>[${spotifyTrackInfo.popularity}][${'★'.repeat(Math.floor(spotifyTrackInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyTrackInfo.popularity / 20))}]</b>`)
-  if (spotifyTrackInfo.popularity !== undefined) {
+  if (spotifyTrackInfo?.popularity !== undefined) {
     infoArray.push(lang(ctxLang, { key: 'tfPntrackInfoPopularity', value: '- A <a href="{{popularityHelpImgUrl}}">popularidade</a> atual dessa música é: <b>[{{trackPopularity}}][{{trackPopularityStars}}]</b>' }, {
       popularityHelpImgUrl: melodyScoutConfig.popularityImgUrl,
       trackPopularity: spotifyTrackInfo.popularity,

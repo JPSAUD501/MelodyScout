@@ -8,7 +8,7 @@ import { type TracksTotalPlaytime } from '../../functions/getTracksTotalPlaytime
 import { type UserFilteredTopTracks } from '../../functions/getUserFilteredTopTracks'
 import { lang } from '../../translations/base'
 
-export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, userArtistTopTracks: UserFilteredTopTracks, userArtistTotalPlaytime: TracksTotalPlaytime, spotifyArtistInfo: Artist, nowPlaying: boolean): string {
+export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, userArtistTopTracks: UserFilteredTopTracks, userArtistTotalPlaytime: TracksTotalPlaytime, spotifyArtistInfo: Artist | undefined, nowPlaying: boolean): string {
   const { user } = userInfo
   const { artist } = artistInfo
 
@@ -34,7 +34,7 @@ export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo
     }))
   }
   // if (spotifyArtistInfo.popularity !== undefined) postInfoArray.push(`A popularidade atual desse artista é: [${spotifyArtistInfo.popularity}][${'★'.repeat(Math.floor(spotifyArtistInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyArtistInfo.popularity / 20))}]`)
-  if (spotifyArtistInfo.popularity !== undefined) {
+  if (spotifyArtistInfo?.popularity !== undefined) {
     postInfoArray.push(lang(ctxLang, { key: 'tfPnartistPostArtistPopularity', value: '- A popularidade atual desse artista é: [{{artistPopularity}}][{{artistPopularityStars}}]' }, {
       artistPopularity: spotifyArtistInfo.popularity,
       artistPopularityStars: '★'.repeat(Math.floor(spotifyArtistInfo.popularity / 20)) + '☆'.repeat(5 - Math.floor(spotifyArtistInfo.popularity / 20))
@@ -61,17 +61,25 @@ export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo
     }
   }
   postTextArray.push('')
-  postTextArray.push(`${spotifyArtistInfo.external_urls.spotify}`)
+  switch (true) {
+    default: {
+      if (spotifyArtistInfo?.external_urls.spotify !== undefined) {
+        postTextArray.push(`${spotifyArtistInfo.external_urls.spotify}`)
+        break
+      }
+      postTextArray.push(`${artist.url}`)
+    }
+  }
   const postUrl = `https://x.com/intent/tweet?text=${postTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
 
   const textArray: string[] = []
   // textArray.push(`<a href="${spotifyArtistInfo.images?.[0]?.url ?? ''}">️️</a><a href="${artist.image[artist.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.userImgUrl}">️️</a><b><a href="${urlLimiter(user.url)}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}</b>`)
   switch (nowPlaying) {
     case true:
-      textArray.push(`<a href="${spotifyArtistInfo.images?.[0]?.url ?? ''}">️️</a><a href="${artist.image[artist.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.userImgUrl}">️️</a>${lang(ctxLang, { key: 'tfPnartistHeaderNowPlaying', value: '<b><a href="{{userUrl}}">{{username}}</a> está ouvindo</b>' }, { userUrl: urlLimiter(user.url), username: user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name) })}`)
+      textArray.push(`<a href="${spotifyArtistInfo?.images?.[0]?.url ?? ''}">️️</a><a href="${artist.image[artist.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.userImgUrl}">️️</a>${lang(ctxLang, { key: 'tfPnartistHeaderNowPlaying', value: '<b><a href="{{userUrl}}">{{username}}</a> está ouvindo</b>' }, { userUrl: urlLimiter(user.url), username: user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name) })}`)
       break
     case false:
-      textArray.push(`<a href="${spotifyArtistInfo.images?.[0]?.url ?? ''}">️️</a><a href="${artist.image[artist.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.userImgUrl}">️️</a>${lang(ctxLang, { key: 'tfPnartistHeaderLastPlayed', value: '<b><a href="{{userUrl}}">{{username}}</a> estava ouvindo</b>' }, { userUrl: urlLimiter(user.url), username: user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name) })}`)
+      textArray.push(`<a href="${spotifyArtistInfo?.images?.[0]?.url ?? ''}">️️</a><a href="${artist.image[artist.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.userImgUrl}">️️</a>${lang(ctxLang, { key: 'tfPnartistHeaderLastPlayed', value: '<b><a href="{{userUrl}}">{{username}}</a> estava ouvindo</b>' }, { userUrl: urlLimiter(user.url), username: user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name) })}`)
       break
   }
   textArray.push('')
@@ -112,7 +120,7 @@ export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo
     }
   }
   // if (spotifyArtistInfo.popularity !== undefined) infoArray.push(`- A <a href="${melodyScoutConfig.popularityImgUrl}">popularidade</a> atual desse artista é: <b>[${spotifyArtistInfo.popularity}][${'★'.repeat(Math.floor(spotifyArtistInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyArtistInfo.popularity / 20))}]</b>`)
-  if (spotifyArtistInfo.popularity !== undefined) {
+  if (spotifyArtistInfo?.popularity !== undefined) {
     infoArray.push(lang(ctxLang, { key: 'tfPnartistInfoPopularity', value: '- A <a href="{{popularityHelpImgUrl}}">popularidade</a> atual desse artista é: <b>[{{artistPopularity}}][{{artistPopularityStars}}]</b>' }, {
       popularityHelpImgUrl: melodyScoutConfig.popularityImgUrl,
       artistPopularity: spotifyArtistInfo.popularity,

@@ -9,7 +9,7 @@ import { type TracksTotalPlaytime } from '../../functions/getTracksTotalPlaytime
 import { type UserFilteredTopTracks } from '../../functions/getUserFilteredTopTracks'
 import { lang } from '../../translations/base'
 
-export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, userAlbumTopTracks: UserFilteredTopTracks, userAlbumTotalPlaytime: TracksTotalPlaytime, spotifyAlbumInfo: AlbumSimplified, nowPlaying: boolean): string {
+export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, userAlbumTopTracks: UserFilteredTopTracks, userAlbumTotalPlaytime: TracksTotalPlaytime, spotifyAlbumInfo: AlbumSimplified | undefined, nowPlaying: boolean): string {
   const { user } = userInfo
   const { artist } = artistInfo
   const { album } = albumInfo
@@ -36,7 +36,7 @@ export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo,
       playedMinutes
     }))
   }
-  if (spotifyAlbumInfo.popularity !== undefined) {
+  if (spotifyAlbumInfo?.popularity !== undefined) {
     // postInfoArray.push(`A popularidade atual desse album é: [${spotifyAlbumInfo.popularity}][${'★'.repeat(Math.floor(spotifyAlbumInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyAlbumInfo.popularity / 20))}]`)
     postInfoArray.push(lang(ctxLang, { key: 'tfPnalbumPostInfoPopularity', value: '- A popularidade atual desse album é: [{{spotifyAlbumPopularity}}][{{spotifyAlbumPopularityStars}}]' }, {
       spotifyAlbumPopularity: spotifyAlbumInfo.popularity,
@@ -64,7 +64,15 @@ export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo,
     }
   }
   postTextArray.push('')
-  postTextArray.push(`${spotifyAlbumInfo.external_urls.spotify}`)
+  switch (true) {
+    default: {
+      if (spotifyAlbumInfo?.external_urls.spotify !== undefined) {
+        postTextArray.push(`${spotifyAlbumInfo.external_urls.spotify}`)
+        break
+      }
+      postTextArray.push(`${album.url}`)
+    }
+  }
   const postUrl = `https://x.com/intent/tweet?text=${postTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
 
   const textArray: string[] = []
@@ -117,7 +125,7 @@ export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo,
     }
   }
   // if (spotifyAlbumInfo.popularity !== undefined) infoArray.push(`- A <a href="${melodyScoutConfig.popularityImgUrl}">popularidade</a> atual desse album é: <b>[${spotifyAlbumInfo.popularity}][${'★'.repeat(Math.floor(spotifyAlbumInfo.popularity / 20))}${'☆'.repeat(5 - Math.floor(spotifyAlbumInfo.popularity / 20))}]</b>`)
-  if (spotifyAlbumInfo.popularity !== undefined) {
+  if (spotifyAlbumInfo?.popularity !== undefined) {
     infoArray.push(lang(ctxLang, { key: 'tfPnalbumInfoPopularity', value: '- A <a href="{{popularityHelpImgUrl}}">popularidade</a> atual desse album é: <b>[{{spotifyAlbumPopularity}}][{{spotifyAlbumPopularityStars}}]</b>' }, {
       popularityHelpImgUrl: melodyScoutConfig.popularityImgUrl,
       spotifyAlbumPopularity: spotifyAlbumInfo.popularity,

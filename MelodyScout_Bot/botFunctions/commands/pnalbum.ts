@@ -10,6 +10,8 @@ import { MsDeezerApi } from '../../../api/msDeezerApi/base'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { type UserFilteredTopTracks, getUserFilteredTopTracks } from '../../../functions/getUserFilteredTopTracks'
 import { getTracksTotalPlaytime, type TracksTotalPlaytime } from '../../../functions/getTracksTotalPlaytime'
+import { type DeezerAlbum } from '../../../api/msDeezerApi/types/zodSearchAlbum'
+import { type AlbumSimplified } from '@soundify/web-api'
 
 export async function runPnalbumCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context> | CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
@@ -78,10 +80,10 @@ export async function runPnalbumCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comm
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'lastfmAlbumDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
     return
   }
-  if (!spotifyAlbumInfo.success) {
-    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'spotifyAlbumDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Spotify! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
-    return
-  }
+  // if (!spotifyAlbumInfo.success) {
+  //   void ctxReply(ctx, undefined, lang(ctxLang, { key: 'spotifyAlbumDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Spotify! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
+  //   return
+  // }
   const userAlbumTopTracksRequest = getUserFilteredTopTracks(lastfmUser, mainTrack.artistName, albumInfo.data.album)
   const defaultUserAlbumTopTracksRequest: UserFilteredTopTracks = {
     status: 'loading',
@@ -90,14 +92,16 @@ export async function runPnalbumCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comm
   const defaultUserAlbumTotalPlaytime: TracksTotalPlaytime = {
     status: 'loading'
   }
+  const spotifyAlbum: AlbumSimplified | undefined = spotifyAlbumInfo.success && spotifyAlbumInfo.data.length > 0 ? spotifyAlbumInfo.data[0] : undefined
+  const deezerAlbum: DeezerAlbum | undefined = deezerAlbumInfo.success && deezerAlbumInfo.data.data.length > 0 ? deezerAlbumInfo.data.data[0] : undefined
   const inlineKeyboard = new InlineKeyboard()
-  inlineKeyboard.url(lang(ctxLang, { key: 'spotifyButton', value: '[🎧] - Spotify' }), spotifyAlbumInfo.data[0].external_urls.spotify)
-  if (deezerAlbumInfo.success && deezerAlbumInfo.data.data.length > 0) inlineKeyboard.url(lang(ctxLang, { key: 'deezerButton', value: '[🎧] - Deezer' }), deezerAlbumInfo.data.data[0].link)
-  const response = await ctxReply(ctx, undefined, getPnalbumText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, defaultUserAlbumTopTracksRequest, defaultUserAlbumTotalPlaytime, spotifyAlbumInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+  if (spotifyAlbum !== undefined) inlineKeyboard.url(lang(ctxLang, { key: 'spotifyButton', value: '[🎧] - Spotify' }), spotifyAlbum.external_urls.spotify)
+  if (deezerAlbum !== undefined) inlineKeyboard.url(lang(ctxLang, { key: 'deezerButton', value: '[🎧] - Deezer' }), deezerAlbum.link)
+  const response = await ctxReply(ctx, undefined, getPnalbumText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, defaultUserAlbumTopTracksRequest, defaultUserAlbumTotalPlaytime, spotifyAlbum, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   if (response === undefined) return
   const userAlbumTopTracks = await userAlbumTopTracksRequest
   const userAlbumTotalPlaytimeRequest = getTracksTotalPlaytime(userAlbumTopTracks.data)
-  await ctxEditMessage(ctx, { chatId: response.chat.id, messageId: response.message_id }, getPnalbumText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, userAlbumTopTracks, defaultUserAlbumTotalPlaytime, spotifyAlbumInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+  await ctxEditMessage(ctx, { chatId: response.chat.id, messageId: response.message_id }, getPnalbumText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, userAlbumTopTracks, defaultUserAlbumTotalPlaytime, spotifyAlbum, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   const userAlbumTotalPlaytime = await userAlbumTotalPlaytimeRequest
-  await ctxEditMessage(ctx, { chatId: response.chat.id, messageId: response.message_id }, getPnalbumText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, userAlbumTopTracks, userAlbumTotalPlaytime, spotifyAlbumInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+  await ctxEditMessage(ctx, { chatId: response.chat.id, messageId: response.message_id }, getPnalbumText(ctxLang, userInfo.data, artistInfo.data, albumInfo.data, userAlbumTopTracks, userAlbumTotalPlaytime, spotifyAlbum, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
 }

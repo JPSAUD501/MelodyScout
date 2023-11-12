@@ -9,6 +9,8 @@ import { MsDeezerApi } from '../../../api/msDeezerApi/base'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { type TracksTotalPlaytime, getTracksTotalPlaytime } from '../../../functions/getTracksTotalPlaytime'
 import { getUserFilteredTopTracks, type UserFilteredTopTracks } from '../../../functions/getUserFilteredTopTracks'
+import { type DeezerArtist } from '../../../api/msDeezerApi/types/zodSearchArtist'
+import { type Artist } from '@soundify/web-api'
 
 export async function runPnartistCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context> | CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
@@ -71,10 +73,12 @@ export async function runPnartistCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Com
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'lastfmArtistDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
     return
   }
-  if (!spotifyArtistInfo.success) {
-    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'spotifyArtistDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Spotify! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
-    return
-  }
+  // if (!spotifyArtistInfo.success) {
+  //   void ctxReply(ctx, undefined, lang(ctxLang, { key: 'spotifyArtistDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Spotify! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
+  //   return
+  // }
+  const spotifyArtist: Artist | undefined = spotifyArtistInfo.success && spotifyArtistInfo.data.length > 0 ? spotifyArtistInfo.data[0] : undefined
+  const deezerArtist: DeezerArtist | undefined = deezerArtistInfo.success && deezerArtistInfo.data.data.length > 0 ? deezerArtistInfo.data.data[0] : undefined
   const defaultUserArtistTopTracks: UserFilteredTopTracks = {
     status: 'loading',
     data: []
@@ -83,18 +87,13 @@ export async function runPnartistCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Com
     status: 'loading'
   }
   const inlineKeyboard = new InlineKeyboard()
-  inlineKeyboard.url(lang(ctxLang, { key: 'spotifyButton', value: '[🎧] - Spotify' }), spotifyArtistInfo.data[0].external_urls.spotify)
-  if (
-    deezerArtistInfo.success &&
-    deezerArtistInfo.data.data.length > 0
-  ) {
-    inlineKeyboard.url(lang(ctxLang, { key: 'deezerButton', value: '[🎧] - Deezer' }), deezerArtistInfo.data.data[0].link)
-  }
-  const response = await ctxReply(ctx, undefined, getPnartistText(ctxLang, userInfo.data, artistInfo.data, defaultUserArtistTopTracks, defaultUserArtistTotalPlaytime, spotifyArtistInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+  if (spotifyArtist !== undefined) inlineKeyboard.url(lang(ctxLang, { key: 'spotifyButton', value: '[🎧] - Spotify' }), spotifyArtist.external_urls.spotify)
+  if (deezerArtist !== undefined) inlineKeyboard.url(lang(ctxLang, { key: 'deezerButton', value: '[🎧] - Deezer' }), deezerArtist.link)
+  const response = await ctxReply(ctx, undefined, getPnartistText(ctxLang, userInfo.data, artistInfo.data, defaultUserArtistTopTracks, defaultUserArtistTotalPlaytime, spotifyArtist, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   if (response === undefined) return
   const userArtistTopTracks = await userArtistTopTracksRequest
   const userArtistTotalPlaytimeRequest = getTracksTotalPlaytime(userArtistTopTracks.data)
-  await ctxEditMessage(ctx, { chatId: response.chat.id, messageId: response.message_id }, getPnartistText(ctxLang, userInfo.data, artistInfo.data, userArtistTopTracks, defaultUserArtistTotalPlaytime, spotifyArtistInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+  await ctxEditMessage(ctx, { chatId: response.chat.id, messageId: response.message_id }, getPnartistText(ctxLang, userInfo.data, artistInfo.data, userArtistTopTracks, defaultUserArtistTotalPlaytime, spotifyArtist, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
   const userArtistTotalPlaytime = await userArtistTotalPlaytimeRequest
-  await ctxEditMessage(ctx, { chatId: response.chat.id, messageId: response.message_id }, getPnartistText(ctxLang, userInfo.data, artistInfo.data, userArtistTopTracks, userArtistTotalPlaytime, spotifyArtistInfo.data[0], mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
+  await ctxEditMessage(ctx, { chatId: response.chat.id, messageId: response.message_id }, getPnartistText(ctxLang, userInfo.data, artistInfo.data, userArtistTopTracks, userArtistTotalPlaytime, spotifyArtist, mainTrack.nowPlaying), { reply_markup: inlineKeyboard })
 }

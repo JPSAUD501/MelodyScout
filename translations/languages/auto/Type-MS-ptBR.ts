@@ -83,7 +83,6 @@ export type BaseLang =
   { key: 'lastfmArtistDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' } |
   { key: 'lastfmAlbumDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' } |
   { key: 'lastfmTrackDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações da música que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' } |
-  { key: 'spotifyTrackDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do Spotify da música que você está ouvindo! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' } |
   { key: 'spotifyButton', value: '[🎧] - Spotify' } |
   { key: 'deezerButton', value: '[🎧] - Deezer' } |
   { key: 'youtubeButton', value: '[🎥] - YouTube' } |
@@ -148,8 +147,6 @@ export type BaseLang =
   { key: 'myuserLastfmUserDatabaseUpdateErrorMessage', value: 'Ops! Eu não consegui registrar o seu nome de usuário do Last.fm! Por favor, tente novamente mais tarde ou entre em contato com o desenvolvedor do bot utilizando o comando /contact!' } |
   { key: 'playingNowButton', value: 'Tocando Agora' } |
   { key: 'errorSendingMessage', value: 'Parece que algo deu errado ao enviar a mensagem, por favor tente novamente!' } |
-  { key: 'spotifyAlbumDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do álbum que você está ouvindo no Spotify! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' } |
-  { key: 'spotifyArtistDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Spotify! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' } |
   { key: 'messageLengthGreater4096ErrorMessage', value: 'Ocorreu um erro ao tentar responder ao seu comando pois por algum motivo a mensagem ficou maior que 4096 caracteres. Nossa equipe já foi notificada e está trabalhando para resolver o problema o mais rápido possível. Desculpe pelo transtorno. Por favor, tente novamente!' } |
   { key: 'cantPinMessageErrorMessage', value: '[⚠] Não foi possível fixar a mensagem automaticamente. Caso queira você ainda pode fixa-la manualmente. Para isso, clique na mensagem acima e em seguida em "Fixar".\n\nEssa mensagem de aviso será apagada em 15 segundos.' } |
   { key: 'messageLengthGreater1024ErrorMessage', value: 'Ocorreu um erro ao enviar a resposta pois o tamanho da mensagem ficou maior que 1024 caracteres! Nossa equipe já foi notificada e irá corrigir o problema o mais rápido possível! Por favor tente novamente mais tarde!' } |
