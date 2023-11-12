@@ -26,7 +26,7 @@ export class MsReplicateApi {
   async getSdxlImage (imageDescription: string): Promise<MsReplicateGetSdxlImageResponse> {
     try {
       advLog(`MsReplicateApi - getSdxlImage - imageDescription: ${imageDescription}`)
-      const model = 'stability-ai/sdxl:af1a68a271597604546c09c64aabcd7782c114a63539a4a8d14d1eeda5630c33'
+      const model = 'stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b'
       const output = await this.replicate.run(
         model,
         {
