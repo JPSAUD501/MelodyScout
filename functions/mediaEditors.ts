@@ -178,7 +178,7 @@ export async function composeStoryImage (image: Buffer): Promise<{
 }
 
 const videoProcessingQueue: string[] = []
-export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, imageMetadata: AIImageMetadata): Promise<{
+export async function createStoriesVideo (storiesImage: Buffer, trackPreview: Buffer, imageMetadata: AIImageMetadata): Promise<{
   success: true
   data: {
     video: Buffer
@@ -200,20 +200,13 @@ export async function createStoriesVideo (image: Buffer, trackPreview: Buffer, i
   videoProcessingQueue.shift()
   advLog(`MediaEditor - CreateStoriesVideo - Start process (${processUuid}) - Track: ${imageMetadata.trackName} - Artist: ${imageMetadata.artistName} - New queue length: ${videoProcessingQueue.length}`)
   try {
-    const storiesImage = await composeStoryImage(image)
-    if (!storiesImage.success) {
-      return {
-        success: false,
-        error: storiesImage.error
-      }
-    }
     const output: {
       video: Buffer | undefined
     } = {
       video: undefined
     }
     const tempDir = getTempDir()
-    fs.writeFileSync(path.join(tempDir, 'image.jpg'), storiesImage.storiesImage)
+    fs.writeFileSync(path.join(tempDir, 'image.jpg'), storiesImage)
     fs.writeFileSync(path.join(tempDir, 'trackPreview.mp3'), trackPreview)
     const getVideo = async (): Promise<Buffer> => {
       return await new Promise((resolve, reject) => {
