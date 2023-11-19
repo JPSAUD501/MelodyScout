@@ -99,7 +99,7 @@ export class MsOpenAiApi {
     const response = await this.openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [
-        { role: 'system', content: 'Describe an simple image that best represents the song. Your description must have up to 60 words.' },
+        { role: 'system', content: 'Describe an simple and creative image that best represents the song. Your description must have up to 60 words.' },
         { role: 'user', content: prompt }
       ],
       max_tokens: 100,

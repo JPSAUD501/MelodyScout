@@ -110,7 +110,7 @@ export class MsLyricsApi {
       success: true,
       data: {
         lyrics: safeParse.data.lyrics,
-        url: `https://www.google.com/search?q=${encodeURIComponent(`Lyrics ${track} ${artist}`)}`,
+        url: `https://google.com/search?q=${encodeURIComponent(`Lyrics ${track} ${artist}`)}`,
         provider: 'Google'
       }
     }
@@ -146,7 +146,7 @@ export class MsLyricsApi {
       success: true,
       data: {
         lyrics: safeParse.data.lyrics,
-        url: `https://www.musixmatch.com/search/${encodeURIComponent(`Lyrics ${track} ${artist}`)}`,
+        url: `https://musixmatch.com/search/${encodeURIComponent(`Lyrics ${track} ${artist}`)}`,
         provider: 'Musixmatch'
       }
     }

@@ -1,5 +1,5 @@
 import { type CallbackQueryContext, type Context } from 'grammy'
-import { githubConfig, instagramConfig, melodyScoutConfig, spotifyConfig } from '../../../config'
+import { githubConfig, melodyScoutConfig, spotifyConfig } from '../../../config'
 import { ctxAnswerCallbackQuery, ctxEditMessageReplyMarkup, ctxReply, ctxTempReply } from '../../../functions/grammyFunctions'
 import { lang } from '../../../translations/base'
 import { MsGithubApi } from '../../../api/msGithubApi/base'
@@ -100,7 +100,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
     })
     return
   }
-  const publishStoryResponse = await new MsInstagramApi(instagramConfig.username, instagramConfig.password).postStory({
+  const publishStoryResponse = await new MsInstagramApi().postStory({
     video: storiesVideoResponse.data.video,
     coverImage: storiesImageResponse.storiesImage
   })

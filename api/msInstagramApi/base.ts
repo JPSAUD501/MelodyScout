@@ -1,6 +1,7 @@
 import { advError } from '../../functions/advancedConsole'
-import { IgApiClient, type PostingStoryPhotoOptions, type PostingStoryVideoOptions } from 'instagram-private-api'
+import { type AccountRepositoryLoginResponseLogged_in_user, IgApiClient, type PostingStoryPhotoOptions, type PostingStoryVideoOptions } from 'instagram-private-api'
 import { zodPostStory } from './types/zodPostStory'
+import { instagramConfig } from '../../config'
 
 interface MsInstagramApiError {
   success: false
@@ -12,34 +13,65 @@ type MsInstagramPostStoryResponse = {
   postUrl: string
 } | MsInstagramApiError
 
-export class MsInstagramApi {
-  private readonly igClient: IgApiClient
-  private readonly username: string
-  private readonly password: string
-
-  constructor (username: string, password: string) {
-    this.username = username
-    this.password = password
-    this.igClient = new IgApiClient()
-    this.igClient.state.generateDevice(username)
+const igBaseClient: {
+  client: IgApiClient
+  loggedInUser: AccountRepositoryLoginResponseLogged_in_user | undefined
+} = {
+  client: new IgApiClient(),
+  loggedInUser: undefined
+}
+async function getIgClient (): Promise<{
+  success: true
+  igClient: {
+    client: IgApiClient
+    loggedInUser: AccountRepositoryLoginResponseLogged_in_user
   }
+} | MsInstagramApiError> {
+  if (igBaseClient.loggedInUser !== undefined) {
+    return {
+      success: true,
+      igClient: {
+        client: igBaseClient.client,
+        loggedInUser: igBaseClient.loggedInUser
+      }
+    }
+  }
+  igBaseClient.client.state.generateDevice(instagramConfig.username)
+  await igBaseClient.client.simulate.preLoginFlow().catch((err) => {
+    return new Error(err)
+  })
+  const loginResponse = await igBaseClient.client.account.login(instagramConfig.username, instagramConfig.password).catch((err) => {
+    return new Error(err)
+  })
+  if (loginResponse instanceof Error) {
+    advError(`MsInstagramApi - getIgLoggedInUser - Error on login: ${loginResponse.message}`)
+    return {
+      success: false,
+      error: loginResponse.message
+    }
+  }
+  igBaseClient.loggedInUser = loginResponse
+  return {
+    success: true,
+    igClient: {
+      client: igBaseClient.client,
+      loggedInUser: igBaseClient.loggedInUser
+    }
+  }
+}
 
+export class MsInstagramApi {
   async postStory (options: PostingStoryPhotoOptions | PostingStoryVideoOptions): Promise<MsInstagramPostStoryResponse> {
     try {
-      await this.igClient.simulate.preLoginFlow().catch((err) => {
-        return new Error(err)
-      })
-      const loginResponse = await this.igClient.account.login(this.username, this.password).catch((err) => {
-        return new Error(err)
-      })
-      if (loginResponse instanceof Error) {
-        advError(`MsInstagramApi - postStory - Error on login: ${loginResponse.message}`)
+      const igClientResponse = await getIgClient()
+      if (!igClientResponse.success) {
         return {
           success: false,
-          error: loginResponse.message
+          error: igClientResponse.error
         }
       }
-      const publishResponse = await this.igClient.publish.story(options).catch((err) => {
+      const igClient = igClientResponse.igClient
+      const publishResponse = await igClient.client.publish.story(options).catch((err) => {
         return new Error(err)
       })
       if (publishResponse instanceof Error) {
@@ -49,10 +81,10 @@ export class MsInstagramApi {
           error: publishResponse.message
         }
       }
-      let postUrl = `https://instagram.com/stories/${this.username}/`
+      let postUrl = `https://instagram.com/stories/${igClient.loggedInUser.username}/`
       const postStoryResponseParsed = zodPostStory.safeParse(publishResponse)
       if (postStoryResponseParsed.success) {
-        postUrl = `https://instagram.com/stories/${this.username}/${postStoryResponseParsed.data.media.pk}`
+        postUrl = `https://instagram.com/stories/${igClient.loggedInUser.username}/${postStoryResponseParsed.data.media.pk}`
       }
       return {
         success: true,
