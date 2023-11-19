@@ -158,11 +158,11 @@ export class MsLyricsApi {
     const musicxmatchLyricsPromise = this.getMusicxmatchLyrics(track, artist)
     const [geniusLyrics, googleLyrics, musicxmatchLyrics] = await Promise.all([geniusLyricsPromise, googleLyricsPromise, musicxmatchLyricsPromise])
     const validLyrics: MsLyricsData[] = []
-    if (musicxmatchLyrics.success) {
-      validLyrics.push(musicxmatchLyrics.data)
-    }
     if (googleLyrics.success) {
       validLyrics.push(googleLyrics.data)
+    }
+    if (musicxmatchLyrics.success) {
+      validLyrics.push(musicxmatchLyrics.data)
     }
     if (geniusLyrics.success) {
       validLyrics.push(geniusLyrics.data)
