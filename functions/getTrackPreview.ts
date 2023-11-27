@@ -3,6 +3,7 @@ import { MsDeezerApi } from '../api/msDeezerApi/base'
 import { MsMusicApi } from '../api/msMusicApi/base'
 import { melodyScoutConfig, spotifyConfig } from '../config'
 import { advError, advLog } from './advancedConsole'
+import { MsSoundcloudApi } from '../api/msSoundcloudApi/base'
 
 export async function getTelegramPreviewUrl (ctx: Context, previewUrl: string, trackName: string, trackArtist: string): Promise<string> {
   const audioMessage = await ctx.api.sendAudio(melodyScoutConfig.filesChannelId, new InputFile({ url: previewUrl }, trackName), {
@@ -44,7 +45,8 @@ export async function getTrackPreview (trackName: string, trackArtist: string, g
 }> {
   const spotifyTrackInfoPromise = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret).getSpotifyTrackInfo(trackName, trackArtist)
   const deezerSearchTrackPromise = new MsDeezerApi().search.track(trackName, trackArtist, 1)
-  const [spotifyTrackInfo, deezerSearchTrack] = await Promise.all([spotifyTrackInfoPromise, deezerSearchTrackPromise])
+  const soundcloudSearchTrackPromise = new MsSoundcloudApi().preview.getFrom(trackName, trackArtist)
+  const [spotifyTrackInfo, deezerSearchTrack, soundcloudSearchTrack] = await Promise.all([spotifyTrackInfoPromise, deezerSearchTrackPromise, soundcloudSearchTrackPromise])
   const previewUrls: string[] = []
   if (spotifyTrackInfo.success) {
     if (spotifyTrackInfo.data.length >= 1) {
@@ -53,8 +55,11 @@ export async function getTrackPreview (trackName: string, trackArtist: string, g
   }
   if (deezerSearchTrack.success) {
     if (deezerSearchTrack.data.data.length >= 1) {
-      if (deezerSearchTrack.data.data[0].preview !== null) previewUrls.push(deezerSearchTrack.data.data[0].preview)
+      // if (deezerSearchTrack.data.data[0].preview !== null) previewUrls.push(deezerSearchTrack.data.data[0].preview)
     }
+  }
+  if (soundcloudSearchTrack.success) {
+    if (soundcloudSearchTrack.data.tempSmallPreviewUrl !== null) previewUrls.push(soundcloudSearchTrack.data.tempSmallPreviewUrl)
   }
   if (previewUrls.length <= 0) {
     advError(`GetTrackPreview - No one preview url founded for track (${trackName} - ${trackArtist})`)
