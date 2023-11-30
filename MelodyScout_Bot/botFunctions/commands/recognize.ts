@@ -9,6 +9,7 @@ import { acrCloudConfig } from '../../../config'
 import config from '../../config'
 
 export async function runRecognizeCommand (ctx: CommandContext<Context>): Promise<void> {
+  await ctx.reply('Esse recurso ainda está em desenvolvimento e por isso pode não funcionar corretamente!')
   const ctxLang = ctx.from?.language_code
   if (ctx.chat?.type === 'channel') {
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'dontWorkOnChannelsInformMessage', value: 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!' }))
