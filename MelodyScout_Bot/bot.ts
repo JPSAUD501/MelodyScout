@@ -31,6 +31,7 @@ import { inlineDefault } from './composers/defaults/inline'
 import { messageDefault } from './composers/defaults/message'
 import { type GetBotInfoResponse } from '../types'
 import { postimageCallback } from './composers/callbacks/postimage'
+import { recognizeCommand } from './composers/commands/recognize'
 
 export const maintenanceMode = {
   active: false
@@ -56,6 +57,7 @@ export async function startMelodyScoutBot (): Promise<{
   bot.use(allusersCommand)
   bot.use(mashupCommand)
   bot.use(briefCommand)
+  bot.use(recognizeCommand)
   bot.use(trackpreviewCallback)
   bot.use(tracklyricsCallback)
   bot.use(translatedtrackCallback)
@@ -93,7 +95,8 @@ export async function startMelodyScoutBot (): Promise<{
     { command: 'pin', description: 'Pin a shortcut to the /playingnow command' },
     { command: 'pntrack', description: 'Show information about the currently playing track' },
     { command: 'pnalbum', description: 'Show information about the album of the currently playing track' },
-    { command: 'pnartist', description: 'Show information about the artist of the currently playing track' }
+    { command: 'pnartist', description: 'Show information about the artist of the currently playing track' },
+    { command: 'r', description: '(BETA) Identify a song by replying to an audio message' }
   ]).catch((err) => {
     advError(`MelodyScout_Bot - Error: ${String(err)}`)
   })

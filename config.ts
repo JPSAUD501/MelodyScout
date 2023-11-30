@@ -57,6 +57,11 @@ export const ffConfig = {
   ffmpegPath: pathToFfmpeg ?? ''
 }
 
+export const acrCloudConfig = {
+  accessKey: process.env.ACR_ACCESS_KEY ?? '',
+  secretKey: process.env.ACR_SECRET_KEY ?? ''
+}
+
 function checkConfig (): void {
   const allConfig = {
     melodyScoutConfig,
@@ -68,7 +73,8 @@ function checkConfig (): void {
     githubConfig,
     serverConfig,
     instagramConfig,
-    ffConfig
+    ffConfig,
+    acrCloudConfig
   }
   for (const config in allConfig) {
     for (const key in allConfig[config]) {
