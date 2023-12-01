@@ -152,7 +152,7 @@ export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo
       }
       if (userArtistTopTracks.status === 'success') {
         if (userArtistTopTracks.data.length <= 0) {
-          // textArray.push('- Nenhuma musica encontrada.')
+          // textArray.push('- Nenhuma músicaencontrada.')
           textArray.push(lang(ctxLang, { key: 'tfPnartistNoTopTracks', value: '- Nenhuma música encontrada.' }))
           break
         }

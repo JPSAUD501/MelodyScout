@@ -28,10 +28,10 @@ export async function runTracksearchInline (ctx: InlineQueryContext<Context>): P
   if (!deezerSearchTrack.success) {
     const inlineQueryResultError = InlineQueryResultBuilder
       .article('ERROR', 'An error occurred!', {
-        description: 'Ocorreu um erro ao procurar pela musica',
+        description: 'Ocorreu um erro ao procurar pela música',
         thumbnail_url: melodyScoutConfig.logoImgUrl
       })
-      .text('Ocorreu um erro ao procurar pela musica', { parse_mode: 'HTML' })
+      .text('Ocorreu um erro ao procurar pela música', { parse_mode: 'HTML' })
     void ctxAnswerInlineQuery(ctx, [inlineQueryResultError], { cache_time: 0 })
     return
   }

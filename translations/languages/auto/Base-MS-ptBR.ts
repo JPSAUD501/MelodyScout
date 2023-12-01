@@ -165,7 +165,7 @@ export const baseLang = {
   tfBriefInfosLoadingPlaytime: '- Carregando tempo de reprodução...',
   tfBriefInfosErrorLoadingPlaytime: '- Erro ao carregar tempo de reprodução.',
   tfBriefInfosTotalPlaytime: '- Você já ouviu <b>{{playedHours}} horas</b> e <b>{{playedMinutes}} minutos</b> de música.',
-  tfHelpInform: 'Bem vindo ao MelodyScout! Todos os meus comandos aparecerão ao digitar "/" no chat. Para começar use por exemplo o comando /playingnow para ver o que está ouvindo agora! Se quiser depois gerar uma imagem que represente a musica usando o MelodyScoutAI utilize o botão com o emoji "✨" que irá aparecer!',
+  tfHelpInform: 'Bem vindo ao MelodyScout! Todos os meus comandos aparecerão ao digitar "/" no chat. Para começar use por exemplo o comando /playingnow para ver o que está ouvindo agora! Se quiser depois gerar uma imagem que represente a músicausando o MelodyScoutAI utilize o botão com o emoji "✨" que irá aparecer!',
   tfHistoryTitle: '<b>Histórico de reprodução de <a href="{{userUrl}}">{{userName}}</a></b>',
   tfHistoryNowPlayingHeader: '<b>[🎧] Ouvindo agora <a href="{{trackUrl}}">{{trackName}} de {{trackArtist}}</a></b>',
   tfHistoryHeader: '<b>[📒] Histórico de reprodução</b>',
@@ -249,5 +249,5 @@ export const baseLang = {
   tfPostimageSuccessMessage: 'Imagem compartilhada com sucesso nos stories da conta do MelodyScout no Instagram!\n\n<b><a href="{{postUrl}}">Ver publicação</a></b>\n\nSolicitado por: <b><a href=\'tg://user?id={{requesterId}}\'>{{requesterName}}</a></b>',
   tfStartMessage: 'Oie! Eu sou o MelodyScout! Sou um bot feito para ser seu companheiro musical aqui no Telegram!\n\nEstou muito feliz em te conhecer!\n\nUtilize o comando <code>/myuser</code> para definir seu nome de usuário do Last.fm!\n\nEm seguida, utilize o comando <code>/help</code> para descobrir tudo que eu posso fazer! 😏',
   tfMashupMessage: 'Mashup criado! Espero que goste!\n\n<b><a href="{{mashupUrl}}">{{mashupTitle}} por RaveDJ</a></b>\n\nVocê pode também fazer o download do vídeo ou audio do mashup clicando nos botões abaixo!',
-  trackPreviewUrlNotFoundedErrorCallback: '⚠ - Não encontrei o preview dessa musica!'
+  trackPreviewUrlNotFoundedErrorCallback: '⚠ - Não encontrei o preview dessa música!'
 }

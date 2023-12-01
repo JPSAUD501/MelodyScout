@@ -158,7 +158,7 @@ export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo,
       }
       if (userAlbumTopTracks.status === 'success') {
         if (userAlbumTopTracks.data.length <= 0) {
-          // textArray.push('- Nenhuma musica encontrada.')
+          // textArray.push('- Nenhuma músicaencontrada.')
           textArray.push(lang(ctxLang, { key: 'tfPnalbumNoTopTracks', value: '- Nenhuma música encontrada.' }))
           break
         }
