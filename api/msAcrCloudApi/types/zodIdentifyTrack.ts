@@ -17,7 +17,7 @@ export const zodAcrCloudTrack = z.object({
   play_offset_ms: z.number(),
   result_from: z.number(),
   acrid: z.string(),
-  db_begin_time_offset_ms: z.number()
+  db_begin_time_offset_ms: z.number().optional()
 })
 export type AcrCloudTrack = z.infer<typeof zodAcrCloudTrack>
 
