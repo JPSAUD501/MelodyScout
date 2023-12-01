@@ -19,7 +19,7 @@ export function getRecognizeText (ctxLang: string | undefined, recognizeType: 'm
         break
       }
       if (recognizeType === 'humming') {
-        textArray.push(`- Música cantarolada identificada com ${recognizeTrack.score}% de certeza!`)
+        textArray.push(`- Música cantarolada identificada com ${(recognizeTrack.score * 100).toFixed(0)}% de certeza!`)
         break
       }
     }
