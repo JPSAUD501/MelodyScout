@@ -44,7 +44,7 @@ export async function runRecognizeCommand (ctx: CommandContext<Context>): Promis
     await ctxReply(ctx, undefined, `A duração do áudio deve estar entre ${minSampleTime} e ${maxSampleTime} segundos para que eu possa identificar a música!`)
     return
   }
-  void ctxTempReply(ctx, '⏳ - Procurando musicas parecidas! Aguarde um momento...', 5000, { reply_to_message_id: messageId, allow_sending_without_reply: true, disable_notification: true })
+  void ctxTempReply(ctx, '⏳ - Procurando musicas parecidas! Aguarde um momento...', 8000, { reply_to_message_id: messageId, allow_sending_without_reply: true, disable_notification: true })
   const telegramFile = await ctx.api.getFile(file.file_id).catch((err) => { return new Error(err) })
   if (telegramFile instanceof Error) {
     await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar obter o audio que você enviou, por favor tente novamente mais tarde!')
