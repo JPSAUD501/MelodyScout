@@ -2,6 +2,7 @@ import { type ZodUnion, type ZodAny, type ZodObject, type ZodString } from 'zod'
 import { type ApiErrors } from '../types/errors/ApiErrors'
 import axios from 'axios'
 import { zodAcrCloudApiError } from '../types/errors/zodAcrCloudApiError'
+import { advLog } from '../../../functions/advancedConsole'
 
 type MsApiFetchResponse = {
   success: true
@@ -56,6 +57,7 @@ export const msApiFetch = async (url: string, method: string | undefined, header
         errorData: acrcloudApiError.data
       }
     }
+    advLog(`MsAcrCloudApi - msApiFetch - ${url} - ${JSON.stringify(jsonResponse, null, 2)}`)
     const expectedData = expectedZod.safeParse(jsonResponse)
     if (!expectedData.success) {
       return {

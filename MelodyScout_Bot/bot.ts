@@ -96,7 +96,7 @@ export async function startMelodyScoutBot (): Promise<{
     { command: 'pntrack', description: 'Show information about the currently playing track' },
     { command: 'pnalbum', description: 'Show information about the album of the currently playing track' },
     { command: 'pnartist', description: 'Show information about the artist of the currently playing track' },
-    { command: 'r', description: '(BETA) Identify a song by replying to an audio message' }
+    { command: 'recognize', description: '(BETA) Identify a song by replying to an audio message' }
   ]).catch((err) => {
     advError(`MelodyScout_Bot - Error: ${String(err)}`)
   })
