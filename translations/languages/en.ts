@@ -153,7 +153,6 @@ export const en = {
   tfBriefInfosLoadingPlaytime: '- Loading playtime...',
   tfBriefInfosErrorLoadingPlaytime: '- Error loading playtime.',
   tfBriefInfosTotalPlaytime: "- You've listened <b>{{playedHours}} hours</b> and <b>{{playedMinutes}} minutes</b> of music.",
-  tfHelpInform: 'Welcome to MelodyScout! All my commands will appear when typing "/" in chat. To get started, use the /playingnow command for example to see what you\'re listening to right now! Then, if you want to generate an image that represents the track using MelodyScoutAI, use the button with the "✨" emoji that will appear!',
   tfHistoryTitle: '<b>Playback history of <a href="{{userUrl}}">{{userName}}</a></b>',
   tfHistoryNowPlayingHeader: '<b>[🎧] Listening now <a href="{{trackUrl}}">{{trackName}} by {{trackArtist}}</a></b>',
   tfHistoryHeader: '<b>[📒] Playback history</b>',

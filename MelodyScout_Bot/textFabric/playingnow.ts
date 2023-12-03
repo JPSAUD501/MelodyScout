@@ -9,7 +9,7 @@ import { urlLimiter } from '../../functions/urlLimiter'
 import { lang } from '../../translations/base'
 import { type DeezerTrack } from '../../api/msDeezerApi/types/zodSearchTrack'
 
-export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track | undefined, deezerTrackInfo: DeezerTrack | undefined, nowPlaying: boolean, previewUrl: string | undefined): string { // todo
+export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track | undefined, deezerTrackInfo: DeezerTrack | undefined, nowPlaying: boolean | undefined, previewUrl: string | undefined): string {
   const { user } = userInfo
   const { artist } = artistInfo
   const { album } = albumInfo
@@ -93,23 +93,28 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
 
   const textArray: string[] = []
   // textArray.push(`<b><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.trackImgUrl}">️️</a><a href="${urlLimiter(user.url)}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}</b>`)
+  const linksHeader = `<a href="${previewUrl}">️️</a><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.trackImgUrl}">️️</a>`
   switch (nowPlaying) {
+    case (undefined): {
+      break
+    }
     case (true): {
-      textArray.push(`<a href="${previewUrl}">️️</a><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.trackImgUrl}">️️</a>${lang(ctxLang, { key: 'tfPlayingnowHeaderNowPlaying', value: '<b><a href="{{userUrl}}">{{username}}</a> está ouvindo</b>' }, {
+      textArray.push(`${linksHeader}${lang(ctxLang, { key: 'tfPlayingnowHeaderNowPlaying', value: '<b><a href="{{userUrl}}">{{username}}</a> está ouvindo</b>' }, {
         userUrl: urlLimiter(user.url),
         username: sanitizeText(user.realname.length > 0 ? user.realname : user.name)
       })}`)
+      textArray.push('')
       break
     }
     case (false): {
-      textArray.push(`<a href="${previewUrl}">️️</a><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.trackImgUrl}">️️</a>${lang(ctxLang, { key: 'tfPlayingnowHeaderLastTrack', value: '<b><a href="{{userUrl}}">{{username}}</a> estava ouvindo</b>' }, {
+      textArray.push(`${linksHeader}${lang(ctxLang, { key: 'tfPlayingnowHeaderLastTrack', value: '<b><a href="{{userUrl}}">{{username}}</a> estava ouvindo</b>' }, {
         userUrl: urlLimiter(user.url),
         username: sanitizeText(user.realname.length > 0 ? user.realname : user.name)
       })}`)
+      textArray.push('')
       break
     }
   }
-  textArray.push('')
   // switch (nowPlaying) {
   //   case true:
   //     textArray.push(`<b>[🎧${spotifyTrackInfo.explicit ? '-🅴' : ''}] Ouvindo <a href="${urlLimiter(track.url)}">${sanitizeText(track.name)}</a></b>`)
@@ -119,11 +124,11 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
   //     textArray.push(`- Música: <b><a href="${urlLimiter(track.url)}">${sanitizeText(track.name)}</a></b>`)
   //     break
   // }
-  textArray.push(lang(ctxLang, { key: 'tfPlayingnowTrackInfo', value: '<b>[🎧{{badge}}] <a href="{{trackUrl}}">{{trackName}}</a></b>' }, {
+  textArray.push(`${nowPlaying === undefined ? linksHeader : ''}${lang(ctxLang, { key: 'tfPlayingnowTrackInfo', value: '<b>[🎧{{badge}}] <a href="{{trackUrl}}">{{trackName}}</a></b>' }, {
     badge: spotifyTrackInfo?.explicit === true ? '-🅴' : '',
     trackUrl: urlLimiter(track.url),
     trackName: sanitizeText(track.name)
-  }))
+  })}`)
   // textArray.push(`- Álbum: <b><a href="${urlLimiter(album.url)}">${sanitizeText(album.name)}</a></b>`)
   textArray.push(lang(ctxLang, { key: 'tfPlayingnowAlbumName', value: '- Álbum: <b><a href="{{albumUrl}}">{{albumName}}</a></b>' }, {
     albumUrl: urlLimiter(album.url),
