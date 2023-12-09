@@ -169,7 +169,7 @@ export type BaseLang =
   { key: 'tfHistoryTitle', value: '<b>Histórico de reprodução de <a href="{{userUrl}}">{{userName}}</a></b>' } |
   { key: 'tfHistoryNowPlayingHeader', value: '<b>[🎧] Ouvindo agora <a href="{{trackUrl}}">{{trackName}} de {{trackArtist}}</a></b>' } |
   { key: 'tfHistoryHeader', value: '<b>[📒] Histórico de reprodução</b>' } |
-  { key: 'tfHistoryTrack', value: '- <a href="{{trackUrl}}"><b>{{trackName}}</b> de <b>{{trackArtist}}</b></a>' } |
+  { key: 'tfHistoryTrack', value: '- ({{playCount}}x) <a href="{{trackUrl}}"><b>{{trackName}}</b> de <b>{{trackArtist}}</b></a>' } |
   { key: 'tfLyricsTranslatedHeader', value: '<b>[📝] Letra de "{{track}}" por "{{artist}}" fornecida por <a href="{{lyricsUrl}}">{{lyricsProvider}}</a> traduzida para ({{translatedLanguageCode}}) solicitada por {{requestedBy}}</b>' } |
   { key: 'tfLyricsHeader', value: '<b>[📝] Letra de "{{track}}" por "{{artist}}" fornecida por <a href="{{lyricsUrl}}">{{lyricsProvider}}</a> solicitada por {{requestedBy}}</b>' } |
   { key: 'tfLyricsFull', value: '<a href="{{lyricsUrl}}">(Para ver a letra completa, clique aqui)</a>' } |
