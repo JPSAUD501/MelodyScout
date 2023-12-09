@@ -153,10 +153,11 @@ export const en = {
   tfBriefInfosLoadingPlaytime: '- Loading playtime...',
   tfBriefInfosErrorLoadingPlaytime: '- Error loading playtime.',
   tfBriefInfosTotalPlaytime: "- You've listened <b>{{playedHours}} hours</b> and <b>{{playedMinutes}} minutes</b> of music.",
+  tfHelpInform: "Welcome to MelodyScout! All my commands will appear when you type '/' in the chat. To get started, use, for example, the /playingnow command to see what you're currently listening to! If you want to generate an image representing the music using MelodyScoutAI, use the button with the '✨' emoji that will appear!",
   tfHistoryTitle: '<b>Playback history of <a href="{{userUrl}}">{{userName}}</a></b>',
   tfHistoryNowPlayingHeader: '<b>[🎧] Listening now <a href="{{trackUrl}}">{{trackName}} by {{trackArtist}}</a></b>',
   tfHistoryHeader: '<b>[📒] Playback history</b>',
-  tfHistoryTrack: '- <a href="{{trackUrl}}"><b>{{trackName}}</b> by <b>{{trackArtist}}</b></a>',
+  tfHistoryTrack: '- ({{playCount}}x) <a href="{{trackUrl}}"><b>{{trackName}}</b> by <b>{{trackArtist}}</b></a>',
   tfLyricsTranslatedHeader: '<b>[📝] Lyrics for "{{track}}" by "{{artist}}" provided by <a href="{{lyricsUrl}}">{{lyricsProvider}}</a> translated to ({{translatedLanguageCode}}) requested by {{requestedBy}}</b>',
   tfLyricsHeader: '<b>[📝] Lyrics for "{{track}}" by "{{artist}}" provided by <a href="{{lyricsUrl}}">{{lyricsProvider}}</a> requested by {{requestedBy}}</b>',
   tfLyricsFull: '<a href="{{lyricsUrl}}">(To see the full lyrics, click here)</a>',
@@ -223,5 +224,6 @@ export const en = {
   tfPntrackShareOnX: '- <a href="{{postUrl}}">Share on 𝕏!</a>',
   tfPostimageSuccessMessage: 'Image successfully shared on MelodyScout\'s Instagram stories!\n\n<b><a href="{{postUrl}}">See post</a></b>\n\nRequested by: <b><a href=\'tg://user?id={{requesterId}}\'>{{requesterName}}</a></b>',
   tfStartMessage: "Hi, I'm MelodyScout! I'm a bot designed to be your musical companion here on Telegram!\n\nI'm very happy to meet you!\n\nUse the <code>/myuser</code> command to set your Last.fm username!\n\nThen use the <code>/help</code> command to find out everything I can do! 😏",
-  tfMashupMessage: 'Mashup created! I hope you like it!\n\n<b><a href="{{mashupUrl}}">{{mashupTitle}} by RaveDJ</a></b>\n\nYou can also download the video or audio of the mashup by clicking on the buttons below!'
+  tfMashupMessage: 'Mashup created! I hope you like it!\n\n<b><a href="{{mashupUrl}}">{{mashupTitle}} by RaveDJ</a></b>\n\nYou can also download the video or audio of the mashup by clicking on the buttons below!',
+  trackPreviewUrlNotFoundedErrorCallback: "⚠ - I couldn't find the preview of this track!"
 }
