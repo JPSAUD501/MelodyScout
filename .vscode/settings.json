@@ -1,5 +1,6 @@
 {
   "cSpell.words": [
+    "acodec",
     "acrcloud",
     "allusers",
     "Allusers",
@@ -73,6 +74,8 @@
     "realname",
     "recenttracks",
     "reposts",
+    "rtmp",
+    "rtmps",
     "Scrobble",
     "Scrobbles",
     "sdxl",
@@ -121,6 +124,7 @@
     "userartisttoptracks",
     "userloved",
     "userplaycount",
+    "vcodec",
     "vitalets",
     "Wemash",
     "Wemesh",
