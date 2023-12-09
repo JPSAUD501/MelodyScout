@@ -1,7 +1,7 @@
 import { type CommandContext, type Context } from 'grammy'
 import { ctxReply } from '../../../functions/grammyFunctions'
 import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
-import { getHistoryText } from '../../textFabric/history'
+import { type TrackHistory, getHistoryText } from '../../textFabric/history'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { lastfmConfig } from '../../../config'
 import { lang } from '../../../translations/base'
@@ -38,7 +38,7 @@ export async function runHistoryCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comm
   }
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
   const userInfoRequest = msLastfmApi.user.getInfo(lastfmUser)
-  const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 20, 1)
+  const userRecentTracksRequest = msLastfmApi.user.getRecentTracks(lastfmUser, 1000, 1)
   const [userInfo, userRecentTracks] = await Promise.all([userInfoRequest, userRecentTracksRequest])
   if (!userInfo.success) {
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'lastfmUserDataNotFoundedError', value: 'Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>{{lastfmUser}}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }, { lastfmUser }))
@@ -52,5 +52,22 @@ export async function runHistoryCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comm
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'noRecentTracksError', value: 'Parece que você nunca ouviu nada no Last.fm, que tal começar a ouvir algo agora? Se isso não for verdade entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
     return
   }
-  await ctxReply(ctx, undefined, getHistoryText(ctxLang, userInfo.data, userRecentTracks.data))
+  const trackHistory: TrackHistory = []
+  for (const track of userRecentTracks.data.recenttracks.track) {
+    if (track['@attr']?.nowplaying === 'true') continue
+    if (trackHistory.length > 0) {
+      const lastTrackHistory = trackHistory[trackHistory.length - 1]
+      if (lastTrackHistory.trackUrl === track.url) {
+        lastTrackHistory.playCount++
+        continue
+      }
+    }
+    trackHistory.push({
+      trackUrl: track.url,
+      trackName: track.name,
+      trackArtist: track.artist.name,
+      playCount: 1
+    })
+  }
+  await ctxReply(ctx, undefined, getHistoryText(ctxLang, userInfo.data, userRecentTracks.data, trackHistory, 20))
 }
