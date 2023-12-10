@@ -55,7 +55,7 @@ export async function getTrackPreview (trackName: string, trackArtist: string, g
   }
   if (deezerSearchTrack.success) {
     if (deezerSearchTrack.data.data.length >= 1) {
-      // if (deezerSearchTrack.data.data[0].preview !== null) previewUrls.push(deezerSearchTrack.data.data[0].preview)
+      if (deezerSearchTrack.data.data[0].preview !== null) previewUrls.push(deezerSearchTrack.data.data[0].preview)
     }
   }
   if (soundcloudSearchTrack.success) {
