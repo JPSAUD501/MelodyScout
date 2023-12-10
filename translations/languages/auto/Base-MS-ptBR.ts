@@ -249,5 +249,7 @@ export const baseLang = {
   tfPostimageSuccessMessage: 'Imagem compartilhada com sucesso nos stories da conta do MelodyScout no Instagram!\n\n<b><a href="{{postUrl}}">Ver publicação</a></b>\n\nSolicitado por: <b><a href=\'tg://user?id={{requesterId}}\'>{{requesterName}}</a></b>',
   tfStartMessage: 'Oie! Eu sou o MelodyScout! Sou um bot feito para ser seu companheiro musical aqui no Telegram!\n\nEstou muito feliz em te conhecer!\n\nUtilize o comando <code>/myuser</code> para definir seu nome de usuário do Last.fm!\n\nEm seguida, utilize o comando <code>/help</code> para descobrir tudo que eu posso fazer! 😏',
   tfMashupMessage: 'Mashup criado! Espero que goste!\n\n<b><a href="{{mashupUrl}}">{{mashupTitle}} por RaveDJ</a></b>\n\nVocê pode também fazer o download do vídeo ou audio do mashup clicando nos botões abaixo!',
-  trackPreviewUrlNotFoundedErrorCallback: '⚠ - Não encontrei o preview dessa música!'
+  trackPreviewUrlNotFoundedErrorCallback: '⚠ - Não encontrei o preview dessa música!',
+  tfHistoryTrackItemSingle: '- <a href="{{trackUrl}}"><b>{{trackName}}</b> de <b>{{trackArtist}}</b></a>',
+  tfHistoryTrackItemMultiple: '- ({{playCount}}x) <a href="{{trackUrl}}"><b>{{trackName}}</b> de <b>{{trackArtist}}</b></a>'
 }
