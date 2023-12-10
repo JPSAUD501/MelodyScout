@@ -37,12 +37,25 @@ export function getHistoryText (ctxLang: string | undefined, userInfo: UserInfo,
       const track = trackHistory[i]
       if (track['@attr']?.nowplaying === 'true') continue
       if (i >= maxItens) break
-      textArray.push(lang(ctxLang, { key: 'tfHistoryTrack', value: '- ({{playCount}}x) <a href="{{trackUrl}}"><b>{{trackName}}</b> de <b>{{trackArtist}}</b></a>' }, {
-        playCount: Number(track.playCount).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })),
-        trackUrl: urlLimiter(track.trackUrl),
-        trackName: sanitizeText(track.trackName),
-        trackArtist: sanitizeText(track.trackArtist)
-      }))
+      switch (true) {
+        case (track.playCount <= 1): {
+          textArray.push(lang(ctxLang, { key: 'tfHistoryTrackItemSingle', value: '- <a href="{{trackUrl}}"><b>{{trackName}}</b> de <b>{{trackArtist}}</b></a>' }, {
+            trackUrl: urlLimiter(track.trackUrl),
+            trackName: sanitizeText(track.trackName),
+            trackArtist: sanitizeText(track.trackArtist)
+          }))
+          break
+        }
+        case (track.playCount > 1): {
+          textArray.push(lang(ctxLang, { key: 'tfHistoryTrackItemMultiple', value: '- ({{playCount}}x) <a href="{{trackUrl}}"><b>{{trackName}}</b> de <b>{{trackArtist}}</b></a>' }, {
+            playCount: Number(track.playCount).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })),
+            trackUrl: urlLimiter(track.trackUrl),
+            trackName: sanitizeText(track.trackName),
+            trackArtist: sanitizeText(track.trackArtist)
+          }))
+          break
+        }
+      }
     }
     textArray.push('')
   }
