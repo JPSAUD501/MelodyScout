@@ -169,7 +169,6 @@
   "tfHistoryTitle": "<b>Histórico de reprodução de <a href=\"{{userUrl}}\">{{userName}}</a></b>",
   "tfHistoryNowPlayingHeader": "<b>[🎧] Ouvindo agora <a href=\"{{trackUrl}}\">{{trackName}} de {{trackArtist}}</a></b>",
   "tfHistoryHeader": "<b>[📒] Histórico de reprodução</b>",
-  "tfHistoryTrack": "- ({{playCount}}x) <a href=\"{{trackUrl}}\"><b>{{trackName}}</b> de <b>{{trackArtist}}</b></a>",
   "tfLyricsTranslatedHeader": "<b>[📝] Letra de \"{{track}}\" por \"{{artist}}\" fornecida por <a href=\"{{lyricsUrl}}\">{{lyricsProvider}}</a> traduzida para ({{translatedLanguageCode}}) solicitada por {{requestedBy}}</b>",
   "tfLyricsHeader": "<b>[📝] Letra de \"{{track}}\" por \"{{artist}}\" fornecida por <a href=\"{{lyricsUrl}}\">{{lyricsProvider}}</a> solicitada por {{requestedBy}}</b>",
   "tfLyricsFull": "<a href=\"{{lyricsUrl}}\">(Para ver a letra completa, clique aqui)</a>",
