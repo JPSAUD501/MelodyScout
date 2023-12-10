@@ -225,5 +225,7 @@ export const en = {
   tfPostimageSuccessMessage: 'Image successfully shared on MelodyScout\'s Instagram stories!\n\n<b><a href="{{postUrl}}">See post</a></b>\n\nRequested by: <b><a href=\'tg://user?id={{requesterId}}\'>{{requesterName}}</a></b>',
   tfStartMessage: "Hi, I'm MelodyScout! I'm a bot designed to be your musical companion here on Telegram!\n\nI'm very happy to meet you!\n\nUse the <code>/myuser</code> command to set your Last.fm username!\n\nThen use the <code>/help</code> command to find out everything I can do! 😏",
   tfMashupMessage: 'Mashup created! I hope you like it!\n\n<b><a href="{{mashupUrl}}">{{mashupTitle}} by RaveDJ</a></b>\n\nYou can also download the video or audio of the mashup by clicking on the buttons below!',
-  trackPreviewUrlNotFoundedErrorCallback: "⚠ - I couldn't find the preview of this track!"
+  trackPreviewUrlNotFoundedErrorCallback: "⚠ - I couldn't find the preview of this track!",
+  tfHistoryTrackItemSingle: '- <a href="{{trackUrl}}"><b>{{trackName}}</b> by <b>{{trackArtist}}</b></a>',
+  tfHistoryTrackItemMultiple: '- ({{playCount}}x) <a href="{{trackUrl}}"><b>{{trackName}}</b> by <b>{{trackArtist}}</b></a>'
 }
