@@ -14,8 +14,8 @@ import { getCallbackKey } from '../../../functions/callbackMaker'
 import { type DeezerTrack } from '../../../api/msDeezerApi/types/zodSearchTrack'
 import { type Track } from '@soundify/web-api'
 
-const minSampleTime = 10
-const maxSampleTime = 60
+const minSampleTime = 5
+const maxSampleTime = 120
 
 export async function runRecognizeCommand (ctx: CommandContext<Context>): Promise<void> {
   await ctx.reply('Esse recurso ainda está em desenvolvimento e por isso pode não funcionar corretamente!')
