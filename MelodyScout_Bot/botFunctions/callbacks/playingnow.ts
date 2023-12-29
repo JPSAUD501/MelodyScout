@@ -106,7 +106,7 @@ export async function runPlayingnowCallback (msPrismaDbApi: MsPrismaDbApi, ctx: 
   const deezerTrack: DeezerTrack | undefined = deezerTrackInfo.success && deezerTrackInfo.data.data.length > 0 ? deezerTrackInfo.data.data[0] : undefined
   const trackPreviewUrl = trackPreview.success ? trackPreview.telegramPreviewUrl : undefined
   const inlineKeyboard = new InlineKeyboard()
-  inlineKeyboard.text(lang(ctxLang, { key: 'iaExplanationButton', value: '[✨] - Explicação' }), getCallbackKey(['TLE', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
+  inlineKeyboard.text(lang(ctxLang, { key: 'iaExplanationButton', value: '[✨] - Explicação' }), getCallbackKey(['TE', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))
   inlineKeyboard.row()
   if (trackPreviewUrl === undefined) {
     inlineKeyboard.text(lang(ctxLang, { key: 'trackPreviewButton', value: '[📥] - Visualizar' }), getCallbackKey(['TP', mainTrack.trackName.replace(/  +/g, ' '), mainTrack.artistName.replace(/  +/g, ' ')]))

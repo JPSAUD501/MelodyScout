@@ -7,6 +7,16 @@ import { logNewCallbackQuery } from '../../logFunctions'
 
 export const tracklyricsexplanationCallback = new Composer()
 
+tracklyricsexplanationCallback.callbackQuery(new RegExp(`^TE${melodyScoutConfig.divider}`), async (ctx) => {
+  logNewCallbackQuery(ctx)
+  if (maintenanceMode.active) {
+    void runMaintenanceinformCallback(ctx)
+    return
+  }
+  void runTracklyricsexplanationCallback(ctx)
+})
+
+// Deprecated callback (Use TE instead)
 tracklyricsexplanationCallback.callbackQuery(new RegExp(`^TLE${melodyScoutConfig.divider}`), async (ctx) => {
   logNewCallbackQuery(ctx)
   if (maintenanceMode.active) {
