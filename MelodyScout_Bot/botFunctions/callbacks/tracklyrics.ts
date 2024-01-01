@@ -20,10 +20,18 @@ export async function runTracklyricsCallback (ctx: CallbackQueryContext<Context>
   const msLyricsApi = new MsLyricsApi(geniusConfig.accessToken)
   const songLyricsData = await msLyricsApi.getLyrics(track, artist)
   if (!songLyricsData.success) {
-    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'trackLyricsNotFoundedError', value: 'Infelizmente não foi possível encontrar a letra dessa música em nenhuma de nossas fontes.' }), { reply_to_message_id: messageId, allow_sending_without_reply: true })
+    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'trackLyricsNotFoundedError', value: 'Infelizmente não foi possível encontrar a letra dessa música em nenhuma de nossas fontes.' }), {
+      reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined
+    })
     return
   }
   const inlineKeyboard = new InlineKeyboard()
   inlineKeyboard.text(lang(ctxLang, { key: 'trackLyricsTranslateButton', value: '[💬] - Traduzir' }), getCallbackKey(['TTL', track, artist]))
-  await ctxReply(ctx, undefined, getLyricsText(ctxLang, track, artist, songLyricsData.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), { reply_to_message_id: messageId, allow_sending_without_reply: true, reply_markup: inlineKeyboard, disable_web_page_preview: true })
+  await ctxReply(ctx, undefined, getLyricsText(ctxLang, track, artist, songLyricsData.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`), {
+    reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined,
+    reply_markup: inlineKeyboard,
+    link_preview_options: {
+      is_disabled: true
+    }
+  })
 }

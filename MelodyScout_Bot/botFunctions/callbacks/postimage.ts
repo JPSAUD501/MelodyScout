@@ -23,15 +23,13 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   }
   if (postedImages[imageId]) {
     void ctxTempReply(ctx, 'Opa! Parece que essa imagem que você me pediu para compartilhar já está sendo compartilhada!', 15000, {
-      reply_to_message_id: messageId,
-      allow_sending_without_reply: true
+      reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined
     })
     return
   }
   postedImages[imageId] = true
   const loadingReply = await ctxReply(ctx, undefined, 'Que legal! Vou compartilhar essa imagem nos stories do MelodyScout no Instagram!\nAssim que estiver pronto, eu te aviso!', {
-    reply_to_message_id: messageId,
-    allow_sending_without_reply: true
+    reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined
   })
   const getGithubImagePromise = new MsGithubApi(githubConfig.token).files.getFile(`${imageId}.jpg`)
   const metadataVersion = zodAIImageMetadata.shape.version.value
@@ -40,16 +38,14 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   if (!getGithubImage.success) {
     postedImages[imageId] = false
     await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! A imagem não foi encontrada no sistema!', {
-      reply_to_message_id: loadingReply?.message_id,
-      allow_sending_without_reply: true
+      reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
     })
     return
   }
   if (!getGithubMetadata.success) {
     postedImages[imageId] = false
     await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! A imagem não foi encontrada ou versão dela não é mais suportada!', {
-      reply_to_message_id: loadingReply?.message_id,
-      allow_sending_without_reply: true
+      reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
     })
     return
   }
@@ -59,8 +55,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   if (!parsedMetadata.success) {
     postedImages[imageId] = false
     await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! As informações da imagem são invalidas!', {
-      reply_to_message_id: loadingReply?.message_id,
-      allow_sending_without_reply: true
+      reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
     })
     return
   }
@@ -68,8 +63,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   if (!trackPreview.success) {
     postedImages[imageId] = false
     await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar buscar informações da música!', {
-      reply_to_message_id: loadingReply?.message_id,
-      allow_sending_without_reply: true
+      reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
     })
     return
   }
@@ -77,8 +71,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   if (!trackPreviewData.success) {
     postedImages[imageId] = false
     await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao recuperar o preview da música!', {
-      reply_to_message_id: loadingReply?.message_id,
-      allow_sending_without_reply: true
+      reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
     })
     return
   }
@@ -86,8 +79,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   if (!storiesImageResponse.success) {
     postedImages[imageId] = false
     await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar criar a imagem para o Instagram!', {
-      reply_to_message_id: loadingReply?.message_id,
-      allow_sending_without_reply: true
+      reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
     })
     return
   }
@@ -95,8 +87,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   if (!storiesVideoResponse.success) {
     postedImages[imageId] = false
     await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar criar o vídeo para o Instagram!', {
-      reply_to_message_id: loadingReply?.message_id,
-      allow_sending_without_reply: true
+      reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
     })
     return
   }
@@ -107,8 +98,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   if (!publishStoryResponse.success) {
     postedImages[imageId] = false
     await ctxReply(ctx, undefined, 'Ocorreu um erro ao tentar compartilhar a imagem', {
-      reply_to_message_id: loadingReply?.message_id,
-      allow_sending_without_reply: true
+      reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
     })
     return
   }
@@ -116,13 +106,11 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   if (editMessageReplyMarkupResponse instanceof Error) {
     postedImages[imageId] = false
     await ctxReply(ctx, undefined, 'Ocorreu um erro ao tentar compartilhar a imagem', {
-      reply_to_message_id: loadingReply?.message_id,
-      allow_sending_without_reply: true
+      reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
     })
     return
   }
   await ctxReply(ctx, undefined, getPostimageText(ctxLang, publishStoryResponse.postUrl, String(ctx.from.id), ctx.from.first_name), {
-    reply_to_message_id: loadingReply?.message_id ?? messageId,
-    allow_sending_without_reply: true
+    reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined
   })
 }

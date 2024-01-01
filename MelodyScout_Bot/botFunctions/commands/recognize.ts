@@ -1,11 +1,9 @@
 import { type CommandContext, type Context, InlineKeyboard } from 'grammy'
 import { ctxReply, ctxTempReply } from '../../../functions/grammyFunctions'
 import { lang } from '../../../translations/base'
-import axios from 'axios'
 import { getTrackPreview } from '../../../functions/getTrackPreview'
 import { MsAcrCloudApi } from '../../../api/msAcrCloudApi/base'
 import { acrCloudConfig, spotifyConfig } from '../../../config'
-import config from '../../config'
 import { getRecognizeText } from '../../textFabric/recognize'
 import { MsDeezerApi } from '../../../api/msDeezerApi/base'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
@@ -44,22 +42,21 @@ export async function runRecognizeCommand (ctx: CommandContext<Context>): Promis
     await ctxReply(ctx, undefined, `A duração do áudio deve estar entre ${minSampleTime} e ${maxSampleTime} segundos para que eu possa identificar a música!`)
     return
   }
-  void ctxTempReply(ctx, '⏳ - Procurando musicas parecidas! Aguarde um momento...', 8000, { reply_to_message_id: messageId, allow_sending_without_reply: true, disable_notification: true })
+  void ctxTempReply(ctx, '⏳ - Procurando musicas parecidas! Aguarde um momento...', 8000, {
+    reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined,
+    disable_notification: true
+  })
   const telegramFile = await ctx.api.getFile(file.file_id).catch((err) => { return new Error(err) })
   if (telegramFile instanceof Error) {
     await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar obter o audio que você enviou, por favor tente novamente mais tarde!')
     return
   }
-  const audioFile = await axios.get(`https://api.telegram.org/file/bot${config.telegram.token}/${telegramFile.file_path}`, { responseType: 'arraybuffer' }).catch((err) => { return new Error(err) })
+  const audioFile = await telegramFile.arrayBuffer().catch((err) => { return new Error(err) })
   if (audioFile instanceof Error) {
     await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar baixar o audio que você enviou, por favor tente novamente mais tarde!')
     return
   }
-  if (!(audioFile.data instanceof Buffer)) {
-    await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar ouvir o audio que você enviou, por favor tente novamente mais tarde!')
-    return
-  }
-  const identifyResponse = await new MsAcrCloudApi(acrCloudConfig.accessKey, acrCloudConfig.secretKey).identify.track(audioFile.data)
+  const identifyResponse = await new MsAcrCloudApi(acrCloudConfig.accessKey, acrCloudConfig.secretKey).identify.track(Buffer.from(audioFile))
   if (!identifyResponse.success) {
     await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar identificar o audio que você enviou, por favor tente novamente mais tarde!')
     return
@@ -110,5 +107,11 @@ export async function runRecognizeCommand (ctx: CommandContext<Context>): Promis
   if (youtubeTrackInfo.success) inlineKeyboard.url(lang(ctxLang, { key: 'youtubeButton', value: '[🎥] - YouTube' }), youtubeTrackInfo.videoUrl)
   if (youtubeTrackInfo.success) inlineKeyboard.url(lang(ctxLang, { key: 'youtubeMusicButton', value: '[🎶] - YT Music' }), youtubeTrackInfo.videoMusicUrl)
   inlineKeyboard.row()
-  await ctxReply(ctx, undefined, getRecognizeText(ctxLang, recognizedTrack.recognizeType, recognizedTrack.track, trackPreviewUrl, ctx.from.id.toString(), ctx.from.first_name), { reply_to_message_id: messageReplyToMessage.message_id, allow_sending_without_reply: true, reply_markup: inlineKeyboard })
+  await ctxReply(ctx, undefined, getRecognizeText(ctxLang, recognizedTrack.recognizeType, recognizedTrack.track, trackPreviewUrl, ctx.from.id.toString(), ctx.from.first_name), {
+    reply_parameters: {
+      message_id: messageReplyToMessage.message_id,
+      allow_sending_without_reply: true
+    },
+    reply_markup: inlineKeyboard
+  })
 }

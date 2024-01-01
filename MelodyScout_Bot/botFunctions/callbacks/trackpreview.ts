@@ -26,7 +26,6 @@ export async function runTrackpreviewCallback (ctx: CallbackQueryContext<Context
     title: track,
     performer: artist,
     caption: getTrackpreviewText(ctxLang, track, artist, ctx.from.id.toString(), ctx.from.first_name),
-    reply_to_message_id: messageId,
-    allow_sending_without_reply: true
+    reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined
   })
 }

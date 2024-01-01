@@ -23,7 +23,10 @@ export async function runTrackAudioDownloadCallback (ctx: CallbackQueryContext<C
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'youtubeTrackDataNotFoundedErrorMessage', value: 'Algo deu errado ao buscar a música, por favor tente novamente mais tarde ou entre em contato através do comando /contact.' }))
     return
   }
-  const loadingMessage = await ctxTempReply(ctx, lang(ctxLang, { key: 'downloadingTrackInformMessage', value: '⏳ - Fazendo download da música…' }), 10000, { reply_to_message_id: messageReplyId, allow_sending_without_reply: true, disable_notification: true })
+  const loadingMessage = await ctxTempReply(ctx, lang(ctxLang, { key: 'downloadingTrackInformMessage', value: '⏳ - Fazendo download da música…' }), 10000, {
+    reply_parameters: (messageReplyId !== undefined) ? { message_id: messageReplyId, allow_sending_without_reply: true } : undefined,
+    disable_notification: true
+  })
   if (loadingMessage === undefined) {
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'errorOnSendLoadingMessageInformMessage', value: 'Algo deu errado ao enviar a mensagem de carregamento, por favor tente novamente mais tarde ou entre em contato através do comando /contact.' }))
     return
@@ -39,7 +42,6 @@ export async function runTrackAudioDownloadCallback (ctx: CallbackQueryContext<C
     title: track,
     performer: artist,
     caption: getTrackaudiodownloadText(ctxLang, track, artist, ctx.from.id.toString(), ctx.from.first_name),
-    reply_to_message_id: messageReplyId,
-    allow_sending_without_reply: true
+    reply_parameters: (messageReplyId !== undefined) ? { message_id: messageReplyId, allow_sending_without_reply: true } : undefined
   })
 }

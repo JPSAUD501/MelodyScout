@@ -22,8 +22,7 @@ export async function runTrackDownloadCallback (ctx: CallbackQueryContext<Contex
   inlineKeyboard.text(lang(ctxLang, { key: 'trackDownloadVideoButton', value: '[📥] - Vídeo' }), getCallbackKey(['TVD', track.replace(/  +/g, ' '), artist.replace(/  +/g, ' ')]))
   await ctxReply(ctx, undefined, getTrackdownloadText(ctxLang, track, artist, ctx.from.id.toString(), ctx.from.first_name), {
     reply_markup: inlineKeyboard,
-    reply_to_message_id: messageId,
-    allow_sending_without_reply: true,
+    reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined,
     disable_notification: true
   })
 }
