@@ -62,6 +62,10 @@ export const acrCloudConfig = {
   secretKey: process.env.ACR_SECRET_KEY ?? ''
 }
 
+export const googleAiConfig = {
+  apiKey: process.env.GOOGLE_AI_KEY ?? ''
+}
+
 function checkConfig (): void {
   const allConfig = {
     melodyScoutConfig,
@@ -74,7 +78,8 @@ function checkConfig (): void {
     serverConfig,
     instagramConfig,
     ffConfig,
-    acrCloudConfig
+    acrCloudConfig,
+    googleAiConfig
   }
   for (const config in allConfig) {
     for (const key in allConfig[config]) {
