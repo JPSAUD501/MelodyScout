@@ -34,5 +34,9 @@ export async function runTranslatedtracklyricsCallback (ctx: CallbackQueryContex
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'unableToTranslateLyricsErrorMessage', value: 'Não foi possível traduzir a letra dessa música, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
     return
   }
-  await ctxEditMessage(ctx, undefined, getLyricsText(ctxLang, track, artist, songLyricsData.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, translatedTrackLyrics.text), { disable_web_page_preview: true })
+  await ctxEditMessage(ctx, undefined, getLyricsText(ctxLang, track, artist, songLyricsData.data, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, translatedTrackLyrics.text), {
+    link_preview_options: {
+      is_disabled: true
+    }
+  })
 }
