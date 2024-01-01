@@ -184,7 +184,7 @@ export class MsLyricsApi {
       advError(`MsLyricsApi - Error while searching lyrics from lyricsfind! Track: ${track} Artist: ${artist} - Error: Score is less than 5`)
       return {
         success: false,
-        error: 'Score is less than 5'
+        error: `Score is less than 5 (${mainTrack.score})`
       }
     }
     const lyricsData = await this.lyricfind.getLyrics(mainTrack.slug)
