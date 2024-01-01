@@ -33,8 +33,10 @@ export class MsReplicateApi {
           input: {
             prompt: imageDescription,
             negative_prompt: '(worst quality, low quality), tooth, open mouth,bad hand, bad fingers, lowres, bad anatomy, bad hands, error, missing fingers, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, blurry, long neck, out of frame, extra fingers, mutated hands, ((poorly drawn hands)), ((poorly drawn face)), (((mutation))), (((deformed))), ((ugly)), blurry, ((bad anatomy)), (((bad proportions))), ((extra limbs)), cloned face, glitchy, (((long neck))), ((flat chested)), ((((visible hand)))), ((((ugly)))), (((duplicate))), ((morbid)), ((mutilated)), [out of frame], extra fingers, mutated hands, ((poorly drawn hands)), ((poorly drawn face)), (((mutation))), (((deformed))), ((ugly)), blurry, ((bad anatomy)), (((bad proportions))), ((extra limbs)), cloned face, (((disfigured))), out of frame, ugly, extra limbs, (bad anatomy), gross proportions, (malformed limbs), ((missing arms)), ((missing legs)), (((extra arms))), (((extra legs))), mutated hands, (fused fingers), (too many fingers), (((long neck))), extra heads',
-            apply_watermark: true,
             num_inference_steps: 50,
+            height: 1024,
+            width: 1024,
+            apply_watermark: true,
             disable_safety_checker: true
           }
         }
@@ -104,26 +106,28 @@ export class MsReplicateApi {
     }
   }
 
-  async getKandinskyImage (imageDescription: string): Promise<MsReplicateGetSdxlImageResponse> {
+  async getRealvisxlImage (imageDescription: string): Promise<MsReplicateGetSdxlImageResponse> {
     try {
-      advLog(`MsReplicateApi - getKandinskyImage - imageDescription: ${imageDescription}`)
-      const model = 'ai-forever/kandinsky-2.2:ea1addaab376f4dc227f5368bbd8eff901820fd1cc14ed8cad63b29249e9d463'
+      advLog(`MsReplicateApi - getRealvisxlImage - imageDescription: ${imageDescription}`)
+      const model = 'adirik/realvisxl-v3.0-turbo:6e941e7fe46955afc031f35e84312a792d546b0f434f9008d457eb9deb24575c'
       const output = await this.replicate.run(
         model,
         {
           input: {
             prompt: imageDescription,
             negative_prompt: '(worst quality, low quality), tooth, open mouth,bad hand, bad fingers, lowres, bad anatomy, bad hands, error, missing fingers, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, blurry, long neck, out of frame, extra fingers, mutated hands, ((poorly drawn hands)), ((poorly drawn face)), (((mutation))), (((deformed))), ((ugly)), blurry, ((bad anatomy)), (((bad proportions))), ((extra limbs)), cloned face, glitchy, (((long neck))), ((flat chested)), ((((visible hand)))), ((((ugly)))), (((duplicate))), ((morbid)), ((mutilated)), [out of frame], extra fingers, mutated hands, ((poorly drawn hands)), ((poorly drawn face)), (((mutation))), (((deformed))), ((ugly)), blurry, ((bad anatomy)), (((bad proportions))), ((extra limbs)), cloned face, (((disfigured))), out of frame, ugly, extra limbs, (bad anatomy), gross proportions, (malformed limbs), ((missing arms)), ((missing legs)), (((extra arms))), (((extra legs))), mutated hands, (fused fingers), (too many fingers), (((long neck))), extra heads',
-            num_inference_steps: 100,
+            num_inference_steps: 40,
             height: 1024,
-            width: 1024
+            width: 1024,
+            apply_watermark: true,
+            disable_safety_checker: true
           }
         }
       ).catch((err) => {
         return new Error(String(err))
       })
       if (output instanceof Error) {
-        advError(`MsReplicateApi - getKandinskyImage - Error on running model: ${output.message}`)
+        advError(`MsReplicateApi - getRealvisxlImage - Error on running model: ${output.message}`)
         return {
           success: false,
           error: output.message
@@ -131,14 +135,14 @@ export class MsReplicateApi {
       }
       const safeParseOutput = z.array(z.string()).safeParse(output)
       if (!safeParseOutput.success) {
-        advError(`MsReplicateApi - getKandinskyImage - Error on parsing output: ${JSON.stringify(safeParseOutput.error)}`)
+        advError(`MsReplicateApi - getRealvisxlImage - Error on parsing output: ${JSON.stringify(safeParseOutput.error)}`)
         return {
           success: false,
           error: 'Error on parsing output'
         }
       }
       if (safeParseOutput.data.length <= 0) {
-        advError('MsReplicateApi - getKandinskyImage - Output URL not found, length <= 0')
+        advError('MsReplicateApi - getRealvisxlImage - Output URL not found, length <= 0')
         return {
           success: false,
           error: 'Output URL not found'
@@ -146,7 +150,7 @@ export class MsReplicateApi {
       }
       const outputUrl = safeParseOutput.data[0]
       if (outputUrl.length <= 0) {
-        advError('MsReplicateApi - getKandinskyImage - Output URL not found, length <= 0')
+        advError('MsReplicateApi - getRealvisxlImage - Output URL not found, length <= 0')
         return {
           success: false,
           error: 'Output URL not found, length <= 0'
@@ -156,7 +160,7 @@ export class MsReplicateApi {
         return new Error(String(err))
       })
       if (image instanceof Error) {
-        advError(`MsReplicateApi - getKandinskyImage - Error on getting image: ${image.message}`)
+        advError(`MsReplicateApi - getRealvisxlImage - Error on getting image: ${image.message}`)
         return {
           success: false,
           error: image.message
@@ -164,20 +168,20 @@ export class MsReplicateApi {
       }
       const imageBufferSafeParse = z.instanceof(Buffer).safeParse(image.data)
       if (!imageBufferSafeParse.success) {
-        advError(`MsReplicateApi - getKandinskyImage - Error on parsing image buffer: ${JSON.stringify(imageBufferSafeParse.error)}`)
+        advError(`MsReplicateApi - getRealvisxlImage - Error on parsing image buffer: ${JSON.stringify(imageBufferSafeParse.error)}`)
         return {
           success: false,
           error: 'Error on parsing image buffer'
         }
       }
-      advLog(`MsReplicateApi - getKandinskyImage - Success! Image URL: ${outputUrl}`)
+      advLog(`MsReplicateApi - getRealvisxlImage - Success! Image URL: ${outputUrl}`)
       return {
         success: true,
         imageUrl: outputUrl,
         image: imageBufferSafeParse.data
       }
     } catch (err) {
-      advError(`MsReplicateApi - getKandinskyImage - Error Try Catch: ${String(err)}`)
+      advError(`MsReplicateApi - getRealvisxlImage - Error Try Catch: ${String(err)}`)
       return {
         success: false,
         error: `Error Try Catch: ${String(err)}`
