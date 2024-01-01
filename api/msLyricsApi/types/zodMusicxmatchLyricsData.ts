@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const zodLyricsFinderData = z.object({
+export const zodMusicxmatchLyricsData = z.object({
   songwriters: z.string().optional(),
   title: z.string().optional(),
   artist: z.string().optional(),
@@ -9,4 +9,4 @@ export const zodLyricsFinderData = z.object({
   lyrics: z.string()
 })
 
-export type LyricsFinderData = z.infer<typeof zodLyricsFinderData>
+export type MusicxmatchLyricsData = z.infer<typeof zodMusicxmatchLyricsData>

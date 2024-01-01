@@ -1,7 +1,9 @@
 import { Client } from 'genius-lyrics/dist/client'
 import { advError, advLog } from '../../functions/advancedConsole'
 import { Google, Musixmatch } from '@flytri/lyrics-finder'
-import { zodLyricsFinderData } from './types/zodLyricsFinderData'
+import { zodGoogleLyricsData } from './types/zodGoogleLyricsData'
+import { zodMusicxmatchLyricsData } from './types/zodMusicxmatchLyricsData'
+import { LyricsFind } from './classes/lyricsfind'
 
 interface MsLyricsApiError {
   success: false
@@ -29,6 +31,11 @@ type MsLyricsApiGetMusicxmatchLyricsResponse = {
   data: MsLyricsData
 } | MsLyricsApiError
 
+type MsLyricsApiGetLyricsFindLyricsResponse = {
+  success: true
+  data: MsLyricsData
+} | MsLyricsApiError
+
 type MsLyricsApiGetLyricsResponse = {
   success: true
   data: MsLyricsData
@@ -37,8 +44,12 @@ type MsLyricsApiGetLyricsResponse = {
 export class MsLyricsApi {
   private readonly accessToken: string
 
+  public lyricfind: LyricsFind
+
   constructor (accessToken: string) {
     this.accessToken = accessToken
+
+    this.lyricfind = new LyricsFind()
   }
 
   private async getGeniusLyrics (track: string, artist: string): Promise<MsLyricsApiGetGeniusLyricsResponse> {
@@ -91,7 +102,7 @@ export class MsLyricsApi {
         error: lyrics.message
       }
     }
-    const safeParse = zodLyricsFinderData.safeParse(lyrics)
+    const safeParse = zodGoogleLyricsData.safeParse(lyrics)
     if (!safeParse.success) {
       advError(`MsLyricsApi - Error while parsing lyrics from lyrics-finder-google! Track: ${track} Artist: ${artist} - Error: ${safeParse.error.message}`)
       return {
@@ -127,7 +138,7 @@ export class MsLyricsApi {
         error: lyrics.message
       }
     }
-    const safeParse = zodLyricsFinderData.safeParse(lyrics)
+    const safeParse = zodMusicxmatchLyricsData.safeParse(lyrics)
     if (!safeParse.success) {
       advError(`MsLyricsApi - Error while parsing lyrics from lyrics-finder-musixmatch! Track: ${track} Artist: ${artist} - Error: ${safeParse.error.message}`)
       return {
@@ -152,17 +163,71 @@ export class MsLyricsApi {
     }
   }
 
+  private async getLyricsFindLyrics (track: string, artist: string): Promise<MsLyricsApiGetLyricsFindLyricsResponse> {
+    const searchResult = await this.lyricfind.search(track, artist)
+    if (!searchResult.success) {
+      advError(`MsLyricsApi - Error while searching lyrics from lyricsfind! Track: ${track} Artist: ${artist} - Error: ${searchResult.errorData.status.msg}`)
+      return {
+        success: false,
+        error: searchResult.errorData.status.msg
+      }
+    }
+    if (searchResult.data.tracks.length <= 0) {
+      advError(`MsLyricsApi - Error while searching lyrics from lyricsfind! Track: ${track} Artist: ${artist} - Error: No tracks found`)
+      return {
+        success: false,
+        error: 'No tracks found'
+      }
+    }
+    const mainTrack = searchResult.data.tracks[0]
+    if (mainTrack.score < 5) {
+      advError(`MsLyricsApi - Error while searching lyrics from lyricsfind! Track: ${track} Artist: ${artist} - Error: Score is less than 5`)
+      return {
+        success: false,
+        error: 'Score is less than 5'
+      }
+    }
+    const lyricsData = await this.lyricfind.getLyrics(mainTrack.slug)
+    if (!lyricsData.success) {
+      advError(`MsLyricsApi - Error while getting lyrics from lyricsfind! Track: ${track} Artist: ${artist} - Error: ${lyricsData.errorData.status.msg}`)
+      return {
+        success: false,
+        error: lyricsData.errorData.status.msg
+      }
+    }
+    const lyrics = lyricsData.data.pageProps.songData.track.lyrics
+    if (lyrics.length <= 0) {
+      advError(`MsLyricsApi - Error while getting lyrics from lyricsfind! Track: ${track} Artist: ${artist} - Error: Lyrics length is 0`)
+      return {
+        success: false,
+        error: 'Lyrics length is 0'
+      }
+    }
+    return {
+      success: true,
+      data: {
+        lyrics,
+        url: `https://lyrics.lyricfind.com/lyrics/${mainTrack.slug}`,
+        provider: 'LyricsFind'
+      }
+    }
+  }
+
   async getLyrics (track: string, artist: string): Promise<MsLyricsApiGetLyricsResponse> {
     const geniusLyricsPromise = this.getGeniusLyrics(track, artist)
     const googleLyricsPromise = this.getGoogleLyrics(track, artist)
     const musicxmatchLyricsPromise = this.getMusicxmatchLyrics(track, artist)
-    const [geniusLyrics, googleLyrics, musicxmatchLyrics] = await Promise.all([geniusLyricsPromise, googleLyricsPromise, musicxmatchLyricsPromise])
+    const lyricsFindLyricsPromise = this.getLyricsFindLyrics(track, artist)
+    const [geniusLyrics, googleLyrics, musicxmatchLyrics, lyricsFindLyrics] = await Promise.all([geniusLyricsPromise, googleLyricsPromise, musicxmatchLyricsPromise, lyricsFindLyricsPromise])
     const validLyrics: MsLyricsData[] = []
     if (googleLyrics.success) {
       validLyrics.push(googleLyrics.data)
     }
     if (musicxmatchLyrics.success) {
       validLyrics.push(musicxmatchLyrics.data)
+    }
+    if (lyricsFindLyrics.success) {
+      validLyrics.push(lyricsFindLyrics.data)
     }
     if (geniusLyrics.success) {
       validLyrics.push(geniusLyrics.data)
