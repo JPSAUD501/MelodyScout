@@ -2,10 +2,11 @@ import { randomUUID } from 'crypto'
 import { MsGithubApi } from '../api/msGithubApi/base'
 import { MsOpenAiApi } from '../api/msOpenAiApi/base'
 import { MsReplicateApi } from '../api/msReplicateApi/base'
-import { githubConfig, openaiConfig, replicateConfig } from '../config'
+import { githubConfig, googleAiConfig, replicateConfig, openaiConfig } from '../config'
 import { type AIImageMetadata } from '../types'
 import { advError, advLog } from './advancedConsole'
 import { composeImage } from './mediaEditors'
+import { MsGoogleAiApi } from '../api/msGoogleAiApi/base'
 
 async function uploadMetadata (imageMetadata: AIImageMetadata): Promise<{
   success: true
@@ -46,15 +47,26 @@ export async function getAiImageByLyrics (ctxLang: string | undefined, lyrics: s
   error: string
 }> {
   const msOpenAiApi = new MsOpenAiApi(openaiConfig.apiKey)
-  const lyricsImageDescription = await msOpenAiApi.getLyricsImageDescription(lyrics)
-  if (!lyricsImageDescription.success) {
+  const openAiLyricsImageDescription = await msOpenAiApi.getLyricsImageDescription(lyrics)
+  const googleAiApi = new MsGoogleAiApi(googleAiConfig.apiKey)
+  const googleAiLyricsImageDescription = await googleAiApi.getLyricsImageDescription(lyrics)
+  if (!openAiLyricsImageDescription.success) {
     return {
       success: false,
-      error: `Error on getting image description: ${lyricsImageDescription.error}`
+      error: `Error on getting image description by lyrics from OpenAi: ${openAiLyricsImageDescription.error}`
     }
   }
+  if (!googleAiLyricsImageDescription.success) {
+    return {
+      success: false,
+      error: `Error on getting image description by lyrics from GoogleAi: ${googleAiLyricsImageDescription.error}`
+    }
+  }
+  advLog(`Image description by lyrics:\n\nOpenAi: ${openAiLyricsImageDescription.description}\n\nGoogleAi: ${googleAiLyricsImageDescription.description}`)
+  const lyricsImageDescription = googleAiLyricsImageDescription
   const msReplicateApi = new MsReplicateApi(replicateConfig.token)
   const imageByDescription = await msReplicateApi.getSdxlImage(lyricsImageDescription.description)
+  // const imageByDescription = await msReplicateApi.getRealvisxlImage(lyricsImageDescription.description)
   if (!imageByDescription.success) {
     return {
       success: false,
