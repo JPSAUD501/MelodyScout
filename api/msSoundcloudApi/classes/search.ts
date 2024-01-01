@@ -23,7 +23,7 @@ export class Search {
       }
     }
     const query = queryArray.join(' ')
-    const url = `https://api-v2.soundcloud.com/search?q=${encodeURIComponent(query)}&client_id=1ZRkRXa5klyxfeCePlMbkWl1xNzz1Bu3&limit=${limit}`
+    const url = `https://api-v2.soundcloud.com/search?q=${encodeURIComponent(query)}&client_id=LmmVZwefK62ND2LQUPTngSkRFEqOsG2X&limit=${limit}`
     const zodObject = zodSearchTrack
     console.log(`Search track: query: ${query}`)
     console.log(`Search track: url: ${url}`)

@@ -56,7 +56,7 @@ export class Preview {
       const mediaUrl = track.media.transcodings[0].url
       const mediaUrlResponse = await axios({
         method: 'GET',
-        url: `${mediaUrl}?client_id=1ZRkRXa5klyxfeCePlMbkWl1xNzz1Bu3`
+        url: `${mediaUrl}?client_id=LmmVZwefK62ND2LQUPTngSkRFEqOsG2X`
       }).catch((err) => {
         return new Error(err)
       })
