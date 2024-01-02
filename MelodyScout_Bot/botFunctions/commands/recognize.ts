@@ -1,9 +1,11 @@
 import { type CommandContext, type Context, InlineKeyboard } from 'grammy'
 import { ctxReply, ctxTempReply } from '../../../functions/grammyFunctions'
 import { lang } from '../../../translations/base'
+import axios from 'axios'
 import { getTrackPreview } from '../../../functions/getTrackPreview'
 import { MsAcrCloudApi } from '../../../api/msAcrCloudApi/base'
 import { acrCloudConfig, spotifyConfig } from '../../../config'
+import config from '../../config'
 import { getRecognizeText } from '../../textFabric/recognize'
 import { MsDeezerApi } from '../../../api/msDeezerApi/base'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
@@ -11,6 +13,7 @@ import { type AcrCloudTrack } from '../../../api/msAcrCloudApi/types/zodIdentify
 import { getCallbackKey } from '../../../functions/callbackMaker'
 import { type DeezerTrack } from '../../../api/msDeezerApi/types/zodSearchTrack'
 import { type Track } from '@soundify/web-api'
+import z from 'zod'
 
 const minSampleTime = 5
 const maxSampleTime = 120
@@ -51,12 +54,24 @@ export async function runRecognizeCommand (ctx: CommandContext<Context>): Promis
     await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar obter o audio que você enviou, por favor tente novamente mais tarde!')
     return
   }
-  const audioFile = await telegramFile.arrayBuffer().catch((err) => { return new Error(err) })
+  const zodTelegramFile = z.object({
+    file_path: z.string()
+  }).safeParse(telegramFile)
+  if (!zodTelegramFile.success) {
+    await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar obter o audio que você enviou, por favor tente novamente mais tarde!')
+    return
+  }
+  const telegramFilePath = zodTelegramFile.data.file_path
+  const audioFile = await axios.get(`https://api.telegram.org/file/bot${config.telegram.token}/${telegramFilePath}`, { responseType: 'arraybuffer' }).catch((err) => { return new Error(err) })
   if (audioFile instanceof Error) {
     await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar baixar o audio que você enviou, por favor tente novamente mais tarde!')
     return
   }
-  const identifyResponse = await new MsAcrCloudApi(acrCloudConfig.accessKey, acrCloudConfig.secretKey).identify.track(Buffer.from(audioFile))
+  if (!(audioFile.data instanceof Buffer)) {
+    await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar ouvir o audio que você enviou, por favor tente novamente mais tarde!')
+    return
+  }
+  const identifyResponse = await new MsAcrCloudApi(acrCloudConfig.accessKey, acrCloudConfig.secretKey).identify.track(audioFile.data)
   if (!identifyResponse.success) {
     await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar identificar o audio que você enviou, por favor tente novamente mais tarde!')
     return
