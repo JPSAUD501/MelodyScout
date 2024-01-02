@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const zodSoundcloudTrack = z.object({
   artwork_url: z.string().nullable().optional(),
-  caption: z.null().optional(),
+  caption: z.string().nullable().optional(),
   commentable: z.boolean().nullable().optional(),
   comment_count: z.number().nullable().optional(),
   created_at: z.string().nullable().optional(),
