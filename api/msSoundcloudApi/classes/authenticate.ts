@@ -4,6 +4,15 @@ import { msApiFetch } from '../functions/msApiFetch'
 import { type ApiErrors } from '../types/errors/ApiErrors'
 import PromisePool from '@supercharge/promise-pool'
 
+const clientIdCacheExpiration = 1000 * 60 * 60 * 1
+const clientIdCache: {
+  clientId: string
+  expiration: number
+} = {
+  clientId: '',
+  expiration: 0
+}
+
 type AuthenticateGetClientIdResponse = {
   success: true
   data: {
@@ -13,6 +22,14 @@ type AuthenticateGetClientIdResponse = {
 
 export class Authenticate {
   async getClientId (): Promise<AuthenticateGetClientIdResponse> {
+    if (clientIdCache.clientId.length > 0 && clientIdCache.expiration > Date.now()) {
+      return {
+        success: true,
+        data: {
+          clientId: clientIdCache.clientId
+        }
+      }
+    }
     const url = 'https://soundcloud.com/search?q=melodyscout'
     const zodObject = z.string()
     const msApiFetchResponse = await msApiFetch(url, zodObject)
@@ -30,19 +47,27 @@ export class Authenticate {
       .withConcurrency(10)
       .process(async (scriptSourceUrl) => {
         const response = await msApiFetch(scriptSourceUrl, zodObject)
-        if (!response.success) {
-          return response
+        if (response.success) {
+          scripts.push(response.data)
         }
-        scripts.push(response.data)
       })
+    let finalClientId = ''
     for (const script of scripts) {
       if (script.includes('client_id:"')) {
         const clientId = script.split('client_id:"')[1].split('"')[0]
-        return {
-          success: true,
-          data: {
-            clientId
-          }
+        if (clientId.length > 0) {
+          finalClientId = clientId
+          break
+        }
+      }
+    }
+    if (finalClientId.length > 0) {
+      clientIdCache.clientId = finalClientId
+      clientIdCache.expiration = Date.now() + clientIdCacheExpiration
+      return {
+        success: true,
+        data: {
+          clientId: finalClientId
         }
       }
     }
