@@ -1,4 +1,4 @@
-import { type ZodObject } from 'zod'
+import { type ZodString, type ZodObject } from 'zod'
 import { zodSoundcloudApiError } from '../types/errors/zodSoundcloudApiError'
 import { type ApiErrors } from '../types/errors/ApiErrors'
 import axios from 'axios'
@@ -8,7 +8,7 @@ type MsApiFetchResponse = {
   data: any
 } | ApiErrors
 
-export const msApiFetch = async (url: string, expectedZodObject: ZodObject<any>): Promise<MsApiFetchResponse> => {
+export const msApiFetch = async (url: string, expectedZodObject: ZodObject<any> | ZodString): Promise<MsApiFetchResponse> => {
   try {
     const response = await axios({
       url,

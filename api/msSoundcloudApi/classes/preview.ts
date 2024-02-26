@@ -2,6 +2,7 @@ import axios from 'axios'
 import { advError } from '../../../functions/advancedConsole'
 import { type Search } from './search'
 import z from 'zod'
+import { type Authenticate } from './authenticate'
 
 type PreviewTrackResponse = {
   success: true
@@ -15,9 +16,11 @@ type PreviewTrackResponse = {
 }
 
 export class Preview {
+  private readonly authenticate: Authenticate
   private readonly search: Search
 
-  constructor (search: Search) {
+  constructor (authenticate: Authenticate, search: Search) {
+    this.authenticate = authenticate
     this.search = search
   }
 
@@ -53,10 +56,18 @@ export class Preview {
           error: 'Track preview url not founded'
         }
       }
+      const getClientIdResponse = await this.authenticate.getClientId()
+      if (!getClientIdResponse.success) {
+        advError(`(MsSoundcloudApi) Error while fetching preview track! Track: ${trackName} - ${artistName} - Error: ${JSON.stringify(getClientIdResponse.errorData)}`)
+        return {
+          success: false,
+          error: 'Error while getting client id'
+        }
+      }
       const mediaUrl = track.media.transcodings[0].url
       const mediaUrlResponse = await axios({
         method: 'GET',
-        url: `${mediaUrl}?client_id=ijES9ACCAxntrQj4MN4wKRlluii0I`
+        url: `${mediaUrl}?client_id=${getClientIdResponse.data.clientId}`
       }).catch((err) => {
         return new Error(err)
       })
