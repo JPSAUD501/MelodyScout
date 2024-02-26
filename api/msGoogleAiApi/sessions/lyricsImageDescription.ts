@@ -1,8 +1,8 @@
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold, type ChatSession } from '@google/generative-ai'
 
-export function getLyricsImageDescriptionModel (googleAiApiKey: string): ChatSession {
+export function getLyricsImageDescriptionSession (googleAiApiKey: string): ChatSession {
   const genAI = new GoogleGenerativeAI(googleAiApiKey)
-  const model = genAI.getGenerativeModel({ model: 'gemini-pro' })
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.0-pro' })
   const chat = model.startChat({
     generationConfig: {
       temperature: 0.9,

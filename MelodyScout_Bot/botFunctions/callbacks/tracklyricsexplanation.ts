@@ -1,14 +1,14 @@
 import { type CallbackQueryContext, type Context, InputFile, InlineKeyboard } from 'grammy'
 import { ctxAnswerCallbackQuery, ctxEditMessage, ctxReply, ctxReplyWithVoice, ctxTempReply } from '../../../functions/grammyFunctions'
 import { getTracklyricsexplanationText } from '../../textFabric/tracklyricsexplanation'
-import { geniusConfig, melodyScoutConfig, openaiConfig } from '../../../config'
+import { geniusConfig, googleAiConfig, melodyScoutConfig } from '../../../config'
 import { advLog } from '../../../functions/advancedConsole'
 import { MsLyricsApi } from '../../../api/msLyricsApi/base'
-import { MsOpenAiApi } from '../../../api/msOpenAiApi/base'
 import { MsTextToSpeechApi } from '../../../api/msTextToSpeechApi/base'
 import { lang } from '../../../translations/base'
 import { getCallbackKey } from '../../../functions/callbackMaker'
 import { getAiImageByLyrics } from '../../../functions/trackAiFunctions'
+import { MsGoogleAiApi } from '../../../api/msGoogleAiApi/base'
 
 export async function runTracklyricsexplanationCallback (ctx: CallbackQueryContext<Context>): Promise<void> {
   const ctxLang = ctx.from.language_code
@@ -34,9 +34,12 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
     return
   }
   const imageByLyricsRequest = getAiImageByLyrics(ctxLang, songLyricsData.data.lyrics, track, artist)
-  const msOpenAiApi = new MsOpenAiApi(openaiConfig.apiKey)
-  const lyricsExplanationRequest = msOpenAiApi.getLyricsExplanation(ctxLang, songLyricsData.data.lyrics)
-  const lyricsEmojisRequest = msOpenAiApi.getLyricsEmojis(songLyricsData.data.lyrics)
+  // const msOpenAiApi = new MsOpenAiApi(openaiConfig.apiKey)
+  // const lyricsExplanationRequest = msOpenAiApi.getLyricsExplanation(ctxLang, songLyricsData.data.lyrics)
+  // const lyricsEmojisRequest = msOpenAiApi.getLyricsEmojis(songLyricsData.data.lyrics)
+  const msGoogleAiAPi = new MsGoogleAiApi(googleAiConfig.apiKey)
+  const lyricsExplanationRequest = msGoogleAiAPi.getLyricsExplanation(ctxLang, songLyricsData.data.lyrics)
+  const lyricsEmojisRequest = msGoogleAiAPi.getLyricsEmojis(songLyricsData.data.lyrics)
   const [lyricsExplanation, lyricsEmojis] = await Promise.all([lyricsExplanationRequest, lyricsEmojisRequest])
   if (!lyricsExplanation.success) {
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'errorOnCreatingLyricsExplanationInformMessage', value: 'Ocorreu um erro ao tentar gerar a explicação da letra dessa música, por favor tente novamente mais tarde.' }), {
