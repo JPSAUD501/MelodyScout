@@ -250,5 +250,8 @@ export const baseLang = {
   tfMashupMessage: 'Mashup criado! Espero que goste!\n\n<b><a href="{{mashupUrl}}">{{mashupTitle}} por RaveDJ</a></b>\n\nVocê pode também fazer o download do vídeo ou audio do mashup clicando nos botões abaixo!',
   trackPreviewUrlNotFoundedErrorCallback: '⚠ - Não encontrei o preview dessa música!',
   tfHistoryTrackItemSingle: '- <a href="{{trackUrl}}"><b>{{trackName}}</b> de <b>{{trackArtist}}</b></a>',
-  tfHistoryTrackItemMultiple: '- ({{playCount}}x) <a href="{{trackUrl}}"><b>{{trackName}}</b> de <b>{{trackArtist}}</b></a>'
+  tfHistoryTrackItemMultiple: '- ({{playCount}}x) <a href="{{trackUrl}}"><b>{{trackName}}</b> de <b>{{trackArtist}}</b></a>',
+  tfBriefInfosLoadingTracksMediumDuration: '- Carregando duração média das músicas...',
+  tfBriefInfosErrorLoadingTracksMediumDuration: '- Erro ao carregar duração média das músicas.',
+  tfBriefInfosTracksMediumDuration: '- A duração média das músicas que você ouve é de <b>{{medianMinutes}} minutos</b> e <b>{{medianSeconds}} segundos</b>.'
 }

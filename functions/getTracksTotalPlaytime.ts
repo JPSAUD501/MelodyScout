@@ -12,6 +12,7 @@ export type TracksTotalPlaytime = {
 } | {
   status: 'success'
   totalPlaytime: number
+  medianTrackDuration: number
 }
 
 interface Track {
@@ -194,9 +195,10 @@ export async function getTracksTotalPlaytime (tracks: Array<UserTopTracks['toptr
       }
     }
   }
-  advLog(`GetTracksTotalPlaytime - Success!\n\nTracks length: ${allTracks.tracks.length}\nTotal playcount: ${allTracks.totalPlaycount()}\nTotal playtime: ${(allTracks.totalPlaytime() / 36000).toFixed(2)}h\n\nEstimated tracks length: ${allTracks.type.estimated.tracks().length}\nEstimated total playcount: ${allTracks.type.estimated.totalPlaycount()}\n\nMedium track duration per play: ${(allTracks.mediumTrackDurationPerPlay() / 60).toFixed(2)}\n(Using this) Medium track duration per track: ${(allTracks.mediumTrackDurationPerTrack() / 60).toFixed(2)}\n\nEstimated tracks percentage: ${((allTracks.type.estimated.totalPlaycount() / allTracks.totalPlaycount()) * 100).toFixed(2)}%`)
+  advLog(`GetTracksTotalPlaytime - Success!\n\nTracks length: ${allTracks.tracks.length}\nTotal playcount: ${allTracks.totalPlaycount()}\nTotal playtime: ${(allTracks.totalPlaytime() / 3600).toFixed(2)}h\n\nEstimated tracks length: ${allTracks.type.estimated.tracks().length}\nEstimated total playcount: ${allTracks.type.estimated.totalPlaycount()}\n\nMedium track duration per play: ${(allTracks.mediumTrackDurationPerPlay() / 60).toFixed(2)}\n(Using this) Medium track duration per track: ${(allTracks.mediumTrackDurationPerTrack() / 60).toFixed(2)}\n\nEstimated tracks percentage: ${((allTracks.type.estimated.totalPlaycount() / allTracks.totalPlaycount()) * 100).toFixed(2)}%`)
   return {
     status: 'success',
-    totalPlaytime: allTracks.totalPlaytime()
+    totalPlaytime: allTracks.totalPlaytime(),
+    medianTrackDuration: allTracks.mediumTrackDurationPerPlay()
   }
 }

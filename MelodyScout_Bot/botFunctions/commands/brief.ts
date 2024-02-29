@@ -69,8 +69,16 @@ export async function runBriefCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comman
   const defaultUserTotalPlaytime: TracksTotalPlaytime = {
     status: 'loading'
   }
-  const response = await ctxReply(ctx, undefined, getBriefText(ctxLang, userInfo.data, userTopTracks.data, userTopAlbums.data, userTopArtists.data, defaultUserTotalPlaytime))
+  const response = await ctxReply(ctx, undefined, getBriefText(ctxLang, userInfo.data, userTopTracks.data, userTopAlbums.data, userTopArtists.data, defaultUserTotalPlaytime), {
+    link_preview_options: {
+      prefer_small_media: true
+    }
+  })
   if (response === undefined) return
   const userTotalPlaytime = await userTotalPlaytimeRequest
-  await ctxEditMessage(ctx, { chatId: response.chat.id, messageId: response.message_id }, getBriefText(ctxLang, userInfo.data, userTopTracks.data, userTopAlbums.data, userTopArtists.data, userTotalPlaytime))
+  await ctxEditMessage(ctx, { chatId: response.chat.id, messageId: response.message_id }, getBriefText(ctxLang, userInfo.data, userTopTracks.data, userTopAlbums.data, userTopArtists.data, userTotalPlaytime), {
+    link_preview_options: {
+      prefer_small_media: true
+    }
+  })
 }
