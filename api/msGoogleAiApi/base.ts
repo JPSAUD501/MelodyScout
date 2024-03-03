@@ -32,7 +32,7 @@ export class MsGoogleAiApi {
   }
 
   async getLyricsImageDescription (lyrics: string): Promise<MsGoogleAiApiGetLyricsImageDescriptionResponse> {
-    const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
+    const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{1,}/g, '').trim()
     const generator = getLyricsImageDescriptionGenerator(this.googleAiApiKey, lyricsParsed)
     const result = await generator.catch((err) => {
       return new Error(String(err))
@@ -53,7 +53,7 @@ export class MsGoogleAiApi {
   }
 
   async getLyricsExplanation (ctxLang: string | undefined, lyrics: string): Promise<MsGoogleAiApiGetLyricsExplanationResponse> {
-    const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
+    const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{1,}/g, '').trim()
     const generator = getLyricsExplanationGenerator(this.googleAiApiKey, lyricsParsed, lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
     const result = await generator.catch((err) => {
       return new Error(String(err))
@@ -74,7 +74,7 @@ export class MsGoogleAiApi {
   }
 
   async getLyricsEmojis (lyrics: string): Promise<MsGoogleAiApiGetLyricsEmojisResponse> {
-    const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
+    const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{1,}/g, '').trim()
     const generator = getLyricsEmojisGenerator(this.googleAiApiKey, lyricsParsed)
     const result = await generator.catch((err) => {
       return new Error(String(err))
