@@ -8,7 +8,7 @@ export async function getLyricsEmojisGenerator (googleAiApiKey: string, lyrics: 
       temperature: 0.7,
       topK: 1,
       topP: 1,
-      maxOutputTokens: 150,
+      maxOutputTokens: 200,
       stopSequences: ['---']
     },
     safetySettings: [
