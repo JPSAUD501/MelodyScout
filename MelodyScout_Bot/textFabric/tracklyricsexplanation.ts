@@ -29,7 +29,6 @@ export function getTracklyricsexplanationText (ctxLang: string | undefined, trac
   textArray.push(`${lyricsExplanation}`)
   if (lyricsEmojis !== undefined) {
     textArray.push('')
-    // textArray.push(`Em emojis: ${lyricsEmojis}`)
     textArray.push(lang(ctxLang, { key: 'tfTracklyricsexplanationInEmojis', value: 'Em emojis: {{lyricsEmojis}}' }, { lyricsEmojis }))
   }
 

@@ -8,7 +8,6 @@ export async function getLyricsExplanationGenerator (googleAiApiKey: string, lyr
       temperature: 0.9,
       topK: 1,
       topP: 1,
-      maxOutputTokens: 150,
       stopSequences: ['---']
     },
     safetySettings: [

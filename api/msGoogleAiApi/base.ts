@@ -46,6 +46,12 @@ export class MsGoogleAiApi {
     }
     const explanation = result.response
     const lyricsImageDescription = explanation.text()
+    if (lyricsImageDescription.length <= 0) {
+      return {
+        success: false,
+        error: 'Lyrics image description is empty'
+      }
+    }
     return {
       success: true,
       description: lyricsImageDescription
@@ -67,6 +73,12 @@ export class MsGoogleAiApi {
     }
     const explanation = result.response
     const lyricsExplanation = explanation.text()
+    if (lyricsExplanation.length <= 0) {
+      return {
+        success: false,
+        error: 'Lyrics explanation is empty'
+      }
+    }
     return {
       success: true,
       explanation: lyricsExplanation
@@ -88,6 +100,12 @@ export class MsGoogleAiApi {
     }
     const explanation = result.response
     const lyricsEmojis = explanation.text()
+    if (lyricsEmojis.length <= 0) {
+      return {
+        success: false,
+        error: 'Lyrics emojis is empty'
+      }
+    }
     return {
       success: true,
       emojis: lyricsEmojis

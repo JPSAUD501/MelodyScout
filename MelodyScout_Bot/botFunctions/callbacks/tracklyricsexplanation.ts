@@ -66,7 +66,11 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
     imageUrl: ''
   }
   const commandResponse = await ctxReply(ctx, undefined, getTracklyricsexplanationText(ctxLang, track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, aiImageStatus), {
-    reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined
+    reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined,
+    link_preview_options: {
+      prefer_large_media: true,
+      url: melodyScoutConfig.artificialIntelligenceImgUrl
+    }
   })
   if (commandResponse === undefined) {
     return
@@ -81,7 +85,12 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
   const imageByLyrics = await imageByLyricsRequest
   if (!imageByLyrics.success) {
     aiImageStatus.status = 'error'
-    await ctxEditMessage(ctx, { chatId: commandResponse.chat.id, messageId: commandResponse.message_id }, getTracklyricsexplanationText(ctxLang, track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, aiImageStatus))
+    await ctxEditMessage(ctx, { chatId: commandResponse.chat.id, messageId: commandResponse.message_id }, getTracklyricsexplanationText(ctxLang, track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, aiImageStatus), {
+      link_preview_options: {
+        prefer_large_media: true,
+        url: aiImageStatus.imageUrl
+      }
+    })
     return
   }
   aiImageStatus.status = 'success'
@@ -94,7 +103,11 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
       const inlineKeyboard = new InlineKeyboard()
       inlineKeyboard.text('[📸] - Postar no insta do MS!', getCallbackKey(['PI', imageByLyrics.result.imageId]))
       await ctxEditMessage(ctx, { chatId: editedMessage.chat.id, messageId: editedMessage.message_id }, getTracklyricsexplanationText(ctxLang, track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, aiImageStatus), {
-        reply_markup: inlineKeyboard
+        reply_markup: inlineKeyboard,
+        link_preview_options: {
+          prefer_large_media: true,
+          url: aiImageStatus.imageUrl
+        }
       })
     }
   }
