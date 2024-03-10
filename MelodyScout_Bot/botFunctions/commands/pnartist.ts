@@ -73,10 +73,6 @@ export async function runPnartistCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Com
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'lastfmArtistDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Last.fm! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
     return
   }
-  // if (!spotifyArtistInfo.success) {
-  //   void ctxReply(ctx, undefined, lang(ctxLang, { key: 'spotifyArtistDataNotFoundedError', value: 'Não entendi o que aconteceu, não foi possível resgatar as informações do artista que você está ouvindo no Spotify! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }))
-  //   return
-  // }
   const spotifyArtist: Artist | undefined = spotifyArtistInfo.success && spotifyArtistInfo.data.length > 0 ? spotifyArtistInfo.data[0] : undefined
   const deezerArtist: DeezerArtist | undefined = deezerArtistInfo.success && deezerArtistInfo.data.data.length > 0 ? deezerArtistInfo.data.data[0] : undefined
   const defaultUserArtistTopTracks: UserFilteredTopTracks = {
