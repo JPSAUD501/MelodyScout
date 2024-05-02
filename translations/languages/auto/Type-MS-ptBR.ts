@@ -165,7 +165,7 @@ export type BaseLang =
   { key: 'tfBriefInfosLoadingPlaytime', value: '- Carregando tempo de reprodução...' } |
   { key: 'tfBriefInfosErrorLoadingPlaytime', value: '- Erro ao carregar tempo de reprodução.' } |
   { key: 'tfBriefInfosTotalPlaytime', value: '- Você já ouviu <b>{{playedHours}} horas</b> e <b>{{playedMinutes}} minutos</b> de música.' } |
-  { key: 'tfHelpInform', value: 'Bem vindo ao MelodyScout! Todos os meus comandos aparecerão ao digitar "/" no chat. Para começar use por exemplo o comando /playingnow para ver o que está ouvindo agora! Se quiser depois gerar uma imagem que represente a músicausando o MelodyScoutAI utilize o botão com o emoji "✨" que irá aparecer!' } |
+  { key: 'tfHelpInform', value: 'Bem vindo ao MelodyScout! Todos os meus comandos aparecerão ao digitar "/" no chat. Para começar use por exemplo o comando /playingnow para ver o que está ouvindo agora! Se quiser depois gerar uma imagem que represente a música usando o MelodyScoutAI utilize o botão com o emoji "✨" que irá aparecer!' } |
   { key: 'tfHistoryTitle', value: '<b>Histórico de reprodução de <a href="{{userUrl}}">{{userName}}</a></b>' } |
   { key: 'tfHistoryNowPlayingHeader', value: '<b>[🎧] Ouvindo agora <a href="{{trackUrl}}">{{trackName}} de {{trackArtist}}</a></b>' } |
   { key: 'tfHistoryHeader', value: '<b>[📒] Histórico de reprodução</b>' } |

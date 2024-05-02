@@ -165,7 +165,7 @@ export const baseLang = {
   tfBriefInfosLoadingPlaytime: '- Carregando tempo de reprodução...',
   tfBriefInfosErrorLoadingPlaytime: '- Erro ao carregar tempo de reprodução.',
   tfBriefInfosTotalPlaytime: '- Você já ouviu <b>{{playedHours}} horas</b> e <b>{{playedMinutes}} minutos</b> de música.',
-  tfHelpInform: 'Bem vindo ao MelodyScout! Todos os meus comandos aparecerão ao digitar "/" no chat. Para começar use por exemplo o comando /playingnow para ver o que está ouvindo agora! Se quiser depois gerar uma imagem que represente a músicausando o MelodyScoutAI utilize o botão com o emoji "✨" que irá aparecer!',
+  tfHelpInform: 'Bem vindo ao MelodyScout! Todos os meus comandos aparecerão ao digitar "/" no chat. Para começar use por exemplo o comando /playingnow para ver o que está ouvindo agora! Se quiser depois gerar uma imagem que represente a música usando o MelodyScoutAI utilize o botão com o emoji "✨" que irá aparecer!',
   tfHistoryTitle: '<b>Histórico de reprodução de <a href="{{userUrl}}">{{userName}}</a></b>',
   tfHistoryNowPlayingHeader: '<b>[🎧] Ouvindo agora <a href="{{trackUrl}}">{{trackName}} de {{trackArtist}}</a></b>',
   tfHistoryHeader: '<b>[📒] Histórico de reprodução</b>',
