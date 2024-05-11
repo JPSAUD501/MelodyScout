@@ -1,12 +1,12 @@
+# Exported from Render on 2024-05-11T23:11:10Z
 services:
 - type: web
-  name: MelodyScout
+  name: MelodyScout Ohio
   runtime: node
   repo: https://github.com/JPSAUD501/MelodyScout
   plan: free
   envVars:
-  - key: .env
-    sync: false
+  - fromGroup: MELODY SCOUT ENV
   region: ohio
   buildCommand: yarn install --production
   startCommand: yarn start:prod
