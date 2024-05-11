@@ -3,7 +3,7 @@ import { type ApiErrors } from '../types/errors/ApiErrors'
 import { zodIdentifyTrack, type IdentifyTrack } from '../types/zodIdentifyTrack'
 import FormData from 'form-data'
 import crypto from 'crypto'
-import { advError, advLog } from '../../../functions/advancedConsole'
+import { advError } from '../../../functions/advancedConsole'
 
 type IdentifyTrackResponse = {
   success: true
@@ -51,7 +51,6 @@ export class Identify {
       advError(`MsAcrCloudApi - Identify - Track - Error while searching for track: ${msApiFetchResponse.errorData.status.msg}`)
       return msApiFetchResponse
     }
-    advLog(`MsAcrCloudApi - Identify - Track - Track found full data: ${JSON.stringify(msApiFetchResponse.data, null, 2)}`)
     return {
       success: true,
       data: msApiFetchResponse.data
