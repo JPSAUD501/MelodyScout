@@ -253,5 +253,18 @@ export const baseLang = {
   tfHistoryTrackItemMultiple: '- ({{playCount}}x) <a href="{{trackUrl}}"><b>{{trackName}}</b> de <b>{{trackArtist}}</b></a>',
   tfBriefInfosLoadingTracksMediumDuration: '- Carregando duração média das músicas...',
   tfBriefInfosErrorLoadingTracksMediumDuration: '- Erro ao carregar duração média das músicas.',
-  tfBriefInfosTracksMediumDuration: '- A duração média das músicas que você ouve é de <b>{{medianMinutes}} minutos</b> e <b>{{medianSeconds}} segundos</b>.'
+  tfBriefInfosTracksMediumDuration: '- A duração média das músicas que você ouve é de <b>{{medianMinutes}} minutos</b> e <b>{{medianSeconds}} segundos</b>.',
+  replyToAudioToRecognizeInformMessage: 'Envie um áudio com duração entre {{minSampleTime}} e {{maxSampleTime}} segundos e responda ele com o comando /recognize para que eu possa identificar a música!',
+  sampleAudioDurationOutOfRangeToRecognizeInformMessage: 'A duração do áudio deve estar entre {{minSampleTime}} e {{maxSampleTime}} segundos para que eu possa identificar a música!',
+  recognizingAudioLoadingMessage: '⏳ - Procurando musicas parecidas! Aguarde um momento...',
+  errorGettingAudioToRecognizeInformMessage: 'Ocorreu um erro interno ao tentar obter o audio que você enviou, por favor tente novamente mais tarde!',
+  errorDownloadingAudioToRecognizeInformMessage: 'Ocorreu um erro ao baixar o audio que você enviou, por favor tente novamente mais tarde!',
+  errorRecognizingAudioInformMessage: 'Ocorreu um erro ao identificar o audio que você enviou, por favor tente novamente mais tarde!',
+  noMusicRecognizedInformMessage: 'Infelizmente não consegui identificar nenhuma música no áudio que você enviou!',
+  tfRecognizePreviewHeader: '<a href="{{previewUrl}}">️️</a><b>[🎵] Pré-visualização de "{{recognizeTrackTitle}}" por "{{recognizeTrackArtistName}}"</b>',
+  tfRecognizeTrackInfo: '<b>[🎵] "{{recognizeTrackTitle}}" por "{{recognizeTrackArtistName}}"</b>',
+  tfRecognizeTrackScoreByTrackSample: '- Música identificada com {{recognizeTrackScore}}% de certeza!',
+  tfRecognizeTrackScoreByHummingSample: '- Música cantarolada identificada com {{recognizeTrackScore}}% de certeza!',
+  tfRecognizeTrackOffset: '- O trecho enviado parece começar por volta de {{minutes}} minutos e {{seconds}} segundos da música original.',
+  tfRecognizeRequestedBy: "Solicitado por: <b><a href='tg://user?id={{requesterId}}'>{{requesterName}}</a></b>"
 }

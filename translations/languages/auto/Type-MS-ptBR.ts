@@ -253,4 +253,17 @@ export type BaseLang =
   { key: 'tfHistoryTrackItemMultiple', value: '- ({{playCount}}x) <a href="{{trackUrl}}"><b>{{trackName}}</b> de <b>{{trackArtist}}</b></a>' } |
   { key: 'tfBriefInfosLoadingTracksMediumDuration', value: '- Carregando duração média das músicas...' } |
   { key: 'tfBriefInfosErrorLoadingTracksMediumDuration', value: '- Erro ao carregar duração média das músicas.' } |
-  { key: 'tfBriefInfosTracksMediumDuration', value: '- A duração média das músicas que você ouve é de <b>{{medianMinutes}} minutos</b> e <b>{{medianSeconds}} segundos</b>.' }
+  { key: 'tfBriefInfosTracksMediumDuration', value: '- A duração média das músicas que você ouve é de <b>{{medianMinutes}} minutos</b> e <b>{{medianSeconds}} segundos</b>.' } |
+  { key: 'replyToAudioToRecognizeInformMessage', value: 'Envie um áudio com duração entre {{minSampleTime}} e {{maxSampleTime}} segundos e responda ele com o comando /recognize para que eu possa identificar a música!' } |
+  { key: 'sampleAudioDurationOutOfRangeToRecognizeInformMessage', value: 'A duração do áudio deve estar entre {{minSampleTime}} e {{maxSampleTime}} segundos para que eu possa identificar a música!' } |
+  { key: 'recognizingAudioLoadingMessage', value: '⏳ - Procurando musicas parecidas! Aguarde um momento...' } |
+  { key: 'errorGettingAudioToRecognizeInformMessage', value: 'Ocorreu um erro interno ao tentar obter o audio que você enviou, por favor tente novamente mais tarde!' } |
+  { key: 'errorDownloadingAudioToRecognizeInformMessage', value: 'Ocorreu um erro ao baixar o audio que você enviou, por favor tente novamente mais tarde!' } |
+  { key: 'errorRecognizingAudioInformMessage', value: 'Ocorreu um erro ao identificar o audio que você enviou, por favor tente novamente mais tarde!' } |
+  { key: 'noMusicRecognizedInformMessage', value: 'Infelizmente não consegui identificar nenhuma música no áudio que você enviou!' } |
+  { key: 'tfRecognizePreviewHeader', value: '<a href="{{previewUrl}}">️️</a><b>[🎵] Pré-visualização de "{{recognizeTrackTitle}}" por "{{recognizeTrackArtistName}}"</b>' } |
+  { key: 'tfRecognizeTrackInfo', value: '<b>[🎵] "{{recognizeTrackTitle}}" por "{{recognizeTrackArtistName}}"</b>' } |
+  { key: 'tfRecognizeTrackScoreByTrackSample', value: '- Música identificada com {{recognizeTrackScore}}% de certeza!' } |
+  { key: 'tfRecognizeTrackScoreByHummingSample', value: '- Música cantarolada identificada com {{recognizeTrackScore}}% de certeza!' } |
+  { key: 'tfRecognizeTrackOffset', value: '- O trecho enviado parece começar por volta de {{minutes}} minutos e {{seconds}} segundos da música original.' } |
+  { key: 'tfRecognizeRequestedBy', value: "Solicitado por: <b><a href='tg://user?id={{requesterId}}'>{{requesterName}}</a></b>" }

@@ -19,7 +19,6 @@ const minSampleTime = 5
 const maxSampleTime = 120
 
 export async function runRecognizeCommand (ctx: CommandContext<Context>): Promise<void> {
-  await ctx.reply('Esse recurso ainda está em desenvolvimento e por isso pode não funcionar corretamente!')
   const ctxLang = ctx.from?.language_code
   if (ctx.chat?.type === 'channel') {
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'dontWorkOnChannelsInformMessage', value: 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!' }))
@@ -33,47 +32,56 @@ export async function runRecognizeCommand (ctx: CommandContext<Context>): Promis
   const messageId = ctx.message?.message_id
   const messageReplyToMessage = ctx.message?.reply_to_message
   if (messageReplyToMessage === undefined) {
-    void ctxReply(ctx, undefined, `Envie um áudio com duração entre ${minSampleTime} e ${maxSampleTime} segundos e responda ele com o comando /recognize para que eu possa identificar a música!`)
+    // void ctxReply(ctx, undefined, `Envie um áudio com duração entre ${minSampleTime} e ${maxSampleTime} segundos e responda ele com o comando /recognize para que eu possa identificar a música!`)
+    await ctxReply(ctx, undefined, lang(ctxLang, { key: 'replyToAudioToRecognizeInformMessage', value: 'Envie um áudio com duração entre {{minSampleTime}} e {{maxSampleTime}} segundos e responda ele com o comando /recognize para que eu possa identificar a música!' }, { minSampleTime, maxSampleTime }))
     return
   }
   const file = messageReplyToMessage.voice ?? messageReplyToMessage.audio
   if (file === undefined) {
-    void ctxReply(ctx, undefined, `Envie um áudio com duração entre ${minSampleTime} e ${maxSampleTime} segundos e responda ele com o comando /recognize para que eu possa identificar a música!`)
+    // void ctxReply(ctx, undefined, `Envie um áudio com duração entre ${minSampleTime} e ${maxSampleTime} segundos e responda ele com o comando /recognize para que eu possa identificar a música!`)
+    await ctxReply(ctx, undefined, lang(ctxLang, { key: 'replyToAudioToRecognizeInformMessage', value: 'Envie um áudio com duração entre {{minSampleTime}} e {{maxSampleTime}} segundos e responda ele com o comando /recognize para que eu possa identificar a música!' }, { minSampleTime, maxSampleTime }))
     return
   }
   if (file.duration > maxSampleTime || file.duration < minSampleTime) {
-    await ctxReply(ctx, undefined, `A duração do áudio deve estar entre ${minSampleTime} e ${maxSampleTime} segundos para que eu possa identificar a música!`)
+    // await ctxReply(ctx, undefined, `A duração do áudio deve estar entre ${minSampleTime} e ${maxSampleTime} segundos para que eu possa identificar a música!`)
+    await ctxReply(ctx, undefined, lang(ctxLang, { key: 'sampleAudioDurationOutOfRangeToRecognizeInformMessage', value: 'A duração do áudio deve estar entre {{minSampleTime}} e {{maxSampleTime}} segundos para que eu possa identificar a música!' }, { minSampleTime, maxSampleTime }))
     return
   }
-  void ctxTempReply(ctx, '⏳ - Procurando musicas parecidas! Aguarde um momento...', 8000, {
+  // void ctxTempReply(ctx, '⏳ - Procurando musicas parecidas! Aguarde um momento...', 8000, {
+  void ctxTempReply(ctx, lang(ctxLang, { key: 'recognizingAudioLoadingMessage', value: '⏳ - Procurando musicas parecidas! Aguarde um momento...' }), 8000, {
     reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined,
     disable_notification: true
   })
   const telegramFile = await ctx.api.getFile(file.file_id).catch((err) => { return new Error(err) })
   if (telegramFile instanceof Error) {
-    await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar obter o audio que você enviou, por favor tente novamente mais tarde!')
+    // await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar obter o audio que você enviou, por favor tente novamente mais tarde!')
+    await ctxReply(ctx, undefined, lang(ctxLang, { key: 'errorGettingAudioToRecognizeInformMessage', value: 'Ocorreu um erro interno ao tentar obter o audio que você enviou, por favor tente novamente mais tarde!' }))
     return
   }
   const zodTelegramFile = z.object({
     file_path: z.string()
   }).safeParse(telegramFile)
   if (!zodTelegramFile.success) {
-    await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar obter o audio que você enviou, por favor tente novamente mais tarde!')
+    // await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar obter o audio que você enviou, por favor tente novamente mais tarde!')
+    await ctxReply(ctx, undefined, lang(ctxLang, { key: 'errorGettingAudioToRecognizeInformMessage', value: 'Ocorreu um erro interno ao tentar obter o audio que você enviou, por favor tente novamente mais tarde!' }))
     return
   }
   const telegramFilePath = zodTelegramFile.data.file_path
   const audioFile = await axios.get(`https://api.telegram.org/file/bot${config.telegram.token}/${telegramFilePath}`, { responseType: 'arraybuffer' }).catch((err) => { return new Error(err) })
   if (audioFile instanceof Error) {
-    await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar baixar o audio que você enviou, por favor tente novamente mais tarde!')
+    // await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar baixar o audio que você enviou, por favor tente novamente mais tarde!')
+    await ctxReply(ctx, undefined, lang(ctxLang, { key: 'errorDownloadingAudioToRecognizeInformMessage', value: 'Ocorreu um erro ao baixar o audio que você enviou, por favor tente novamente mais tarde!' }))
     return
   }
   if (!(audioFile.data instanceof Buffer)) {
-    await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar ouvir o audio que você enviou, por favor tente novamente mais tarde!')
+    // await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar ouvir o audio que você enviou, por favor tente novamente mais tarde!')
+    await ctxReply(ctx, undefined, lang(ctxLang, { key: 'errorDownloadingAudioToRecognizeInformMessage', value: 'Ocorreu um erro ao baixar o audio que você enviou, por favor tente novamente mais tarde!' }))
     return
   }
   const identifyResponse = await new MsAcrCloudApi(acrCloudConfig.accessKey, acrCloudConfig.secretKey).identify.track(audioFile.data)
   if (!identifyResponse.success) {
-    await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar identificar o audio que você enviou, por favor tente novamente mais tarde!')
+    // await ctxReply(ctx, undefined, 'Ocorreu um erro interno ao tentar identificar o audio que você enviou, por favor tente novamente mais tarde!')
+    await ctxReply(ctx, undefined, lang(ctxLang, { key: 'errorRecognizingAudioInformMessage', value: 'Ocorreu um erro ao identificar o audio que você enviou, por favor tente novamente mais tarde!' }))
     return
   }
   const recognizedTracks: Array<{
@@ -98,7 +106,8 @@ export async function runRecognizeCommand (ctx: CommandContext<Context>): Promis
   }
   recognizedTracks.sort((a, b) => b.track.score - a.track.score)
   if (recognizedTracks.length <= 0) {
-    await ctxReply(ctx, undefined, 'Infelizmente não consegui identificar nenhuma música no áudio que você enviou!')
+    // await ctxReply(ctx, undefined, 'Infelizmente não consegui identificar nenhuma música no áudio que você enviou!')
+    await ctxReply(ctx, undefined, lang(ctxLang, { key: 'noMusicRecognizedInformMessage', value: 'Infelizmente não consegui identificar nenhuma música no áudio que você enviou!' }))
     return
   }
   const recognizedTrack = recognizedTracks[0]

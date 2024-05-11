@@ -1,0 +1,14 @@
+services:
+- type: web
+  name: MelodyScout
+  runtime: node
+  repo: https://github.com/JPSAUD501/MelodyScout
+  plan: free
+  envVars:
+  - key: .env
+    sync: false
+  region: ohio
+  buildCommand: yarn install --production
+  startCommand: yarn start:prod
+  healthCheckPath: /health
+version: "1"
