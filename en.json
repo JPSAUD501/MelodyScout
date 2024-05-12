@@ -261,6 +261,7 @@
   "errorDownloadingAudioToRecognizeInformMessage": "An error occurred while downloading the audio you sent, please try again later!",
   "errorRecognizingAudioInformMessage": "An error occurred while identifying the audio you sent, please try again later!",
   "noMusicRecognizedInformMessage": "Unfortunately, I couldn't identify any track in the audio you sent!",
+  "tfRecognizePreviewHeader": "<b>[🎵] Preview of \"{{recognizeTrackTitle}}\" by \"{{recognizeTrackArtistName}}\"</b>",
   "tfRecognizeTrackInfo": "<b>[🎵] \"{{recognizeTrackTitle}}\" by \"{{recognizeTrackArtistName}}\"</b>",
   "tfRecognizeTrackScoreByTrackSample": "- Track identified with {{recognizeTrackScore}}% certainty!",
   "tfRecognizeTrackScoreByHummingSample": "- Hummed track identified with {{recognizeTrackScore}}% certainty!",
