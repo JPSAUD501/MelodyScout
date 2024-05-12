@@ -261,7 +261,7 @@
   "errorDownloadingAudioToRecognizeInformMessage": "Ocorreu um erro ao baixar o audio que você enviou, por favor tente novamente mais tarde!",
   "errorRecognizingAudioInformMessage": "Ocorreu um erro ao identificar o audio que você enviou, por favor tente novamente mais tarde!",
   "noMusicRecognizedInformMessage": "Infelizmente não consegui identificar nenhuma música no áudio que você enviou!",
-  "tfRecognizePreviewHeader": "<a href=\"{{previewUrl}}\">️️</a><b>[🎵] Pré-visualização de \"{{recognizeTrackTitle}}\" por \"{{recognizeTrackArtistName}}\"</b>",
+  "tfRecognizePreviewHeader": "<b>[🎵] Pré-visualização de \"{{recognizeTrackTitle}}\" por \"{{recognizeTrackArtistName}}\"</b>",
   "tfRecognizeTrackInfo": "<b>[🎵] \"{{recognizeTrackTitle}}\" por \"{{recognizeTrackArtistName}}\"</b>",
   "tfRecognizeTrackScoreByTrackSample": "- Música identificada com {{recognizeTrackScore}}% de certeza!",
   "tfRecognizeTrackScoreByHummingSample": "- Música cantarolada identificada com {{recognizeTrackScore}}% de certeza!",

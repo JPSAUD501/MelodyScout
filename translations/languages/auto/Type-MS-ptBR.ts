@@ -261,7 +261,7 @@ export type BaseLang =
   { key: 'errorDownloadingAudioToRecognizeInformMessage', value: 'Ocorreu um erro ao baixar o audio que você enviou, por favor tente novamente mais tarde!' } |
   { key: 'errorRecognizingAudioInformMessage', value: 'Ocorreu um erro ao identificar o audio que você enviou, por favor tente novamente mais tarde!' } |
   { key: 'noMusicRecognizedInformMessage', value: 'Infelizmente não consegui identificar nenhuma música no áudio que você enviou!' } |
-  { key: 'tfRecognizePreviewHeader', value: '<a href="{{previewUrl}}">️️</a><b>[🎵] Pré-visualização de "{{recognizeTrackTitle}}" por "{{recognizeTrackArtistName}}"</b>' } |
+  { key: 'tfRecognizePreviewHeader', value: '<b>[🎵] Pré-visualização de "{{recognizeTrackTitle}}" por "{{recognizeTrackArtistName}}"</b>' } |
   { key: 'tfRecognizeTrackInfo', value: '<b>[🎵] "{{recognizeTrackTitle}}" por "{{recognizeTrackArtistName}}"</b>' } |
   { key: 'tfRecognizeTrackScoreByTrackSample', value: '- Música identificada com {{recognizeTrackScore}}% de certeza!' } |
   { key: 'tfRecognizeTrackScoreByHummingSample', value: '- Música cantarolada identificada com {{recognizeTrackScore}}% de certeza!' } |

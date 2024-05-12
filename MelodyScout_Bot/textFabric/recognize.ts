@@ -5,9 +5,11 @@ export function getRecognizeText (ctxLang: string | undefined, recognizeType: 'm
   const textArray: string[] = []
   switch (true) {
     default: {
+      const linkHeader = `<a href="${previewUrl}">️️</a>`
       if (previewUrl !== undefined) {
-        // textArray.push(`<a href="${previewUrl}">️️</a><b>[🎵] Pré-visualização de "${recognizeTrack.title}" por "${recognizeTrack.artists[0].name}"</b>`)
-        textArray.push(lang(ctxLang, { key: 'tfRecognizePreviewHeader', value: '<a href="{{previewUrl}}">️️</a><b>[🎵] Pré-visualização de "{{recognizeTrackTitle}}" por "{{recognizeTrackArtistName}}"</b>' }, { previewUrl, recognizeTrackTitle: recognizeTrack.title, recognizeTrackArtistName: recognizeTrack.artists[0].name }))
+        // textArray.push(`<b>[🎵] Pré-visualização de "${recognizeTrack.title}" por "${recognizeTrack.artists[0].name}"</b>`)
+        // textArray.push()
+        textArray.push(`${linkHeader}${lang(ctxLang, { key: 'tfRecognizePreviewHeader', value: '<b>[🎵] Pré-visualização de "{{recognizeTrackTitle}}" por "{{recognizeTrackArtistName}}"</b>' }, { previewUrl, recognizeTrackTitle: recognizeTrack.title, recognizeTrackArtistName: recognizeTrack.artists[0].name })}`)
         break
       }
       // textArray.push(`<b>[🎵] "${recognizeTrack.title}" por "${recognizeTrack.artists[0].name}"</b>`)
