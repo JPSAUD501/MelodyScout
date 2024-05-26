@@ -45,7 +45,7 @@ export class MsGoogleAiApi {
       }
     }
     const explanation = result.response
-    const lyricsImageDescription = explanation.text()
+    const lyricsImageDescription = explanation.text().trim()
     if (lyricsImageDescription.length <= 0) {
       return {
         success: false,
@@ -72,7 +72,7 @@ export class MsGoogleAiApi {
       }
     }
     const explanation = result.response
-    const lyricsExplanation = explanation.text()
+    const lyricsExplanation = explanation.text().trim()
     if (lyricsExplanation.length <= 0) {
       return {
         success: false,
@@ -99,7 +99,7 @@ export class MsGoogleAiApi {
       }
     }
     const explanation = result.response
-    const lyricsEmojis = explanation.text()
+    const lyricsEmojis = explanation.text().trim()
     if (lyricsEmojis.length <= 0) {
       return {
         success: false,
