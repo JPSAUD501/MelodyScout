@@ -2,7 +2,7 @@ import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold, type GenerateCont
 
 export async function getLyricsEmojisGenerator (googleAiApiKey: string, lyrics: string): Promise<GenerateContentResult> {
   const genAI = new GoogleGenerativeAI(googleAiApiKey)
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.0-pro' })
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' })
   const contentResult = model.generateContent({
     generationConfig: {
       temperature: 0.7,

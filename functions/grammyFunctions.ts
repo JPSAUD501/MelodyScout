@@ -3,7 +3,7 @@ import { advError } from './advancedConsole'
 import { type Message } from '@grammyjs/types'
 import { type Other } from 'grammy/out/core/api'
 import { lang } from '../translations/base'
-import { type Update, type InlineQueryResult } from 'grammy/types'
+import { type Update, type InlineQueryResult, type ReactionTypeEmoji, type ReactionType } from 'grammy/types'
 
 export async function ctxReply (ctx: Context, messageToSend: { chatId: number } | undefined, message: string, options?: Other<RawApi, 'sendMessage', 'text' | 'chat_id'>): Promise<Message.TextMessage | undefined> {
   try {
@@ -31,6 +31,16 @@ export async function ctxReply (ctx: Context, messageToSend: { chatId: number } 
       return undefined
     }
     return sendedMessage
+  } catch (error) {
+    advError(`GrammyFunctions - Error: ${String(error)}`)
+  }
+}
+
+export async function ctxReact (ctx: Context, reaction: ReactionTypeEmoji['emoji'] | ReactionType): Promise<void> {
+  try {
+    await ctx.react(reaction).catch((err) => {
+      advError(`MelodyScout_Bot - Error: ${String(err)}`)
+    })
   } catch (error) {
     advError(`GrammyFunctions - Error: ${String(error)}`)
   }
