@@ -131,7 +131,7 @@ export async function runRecognizeCommand (ctx: CommandContext<Context>): Promis
   if (youtubeTrackInfo.success) inlineKeyboard.url(lang(ctxLang, { key: 'youtubeButton', value: '[🎥] - YouTube' }), youtubeTrackInfo.videoUrl)
   if (youtubeTrackInfo.success) inlineKeyboard.url(lang(ctxLang, { key: 'youtubeMusicButton', value: '[🎶] - YT Music' }), youtubeTrackInfo.videoMusicUrl)
   inlineKeyboard.row()
-  await ctxReply(ctx, undefined, getRecognizeText(ctxLang, recognizedTrack.recognizeType, recognizedTrack.track, trackPreviewUrl, ctx.from.id.toString(), ctx.from.first_name), {
+  await ctxReply(ctx, undefined, getRecognizeText(ctxLang, recognizedTrack.recognizeType, recognizedTrack.track, trackPreviewUrl, ctxFrom.id.toString(), ctxFrom.first_name), {
     reply_parameters: {
       message_id: messageReplyToMessage.message_id,
       allow_sending_without_reply: true
