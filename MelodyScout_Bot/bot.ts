@@ -32,11 +32,14 @@ import { messageDefault } from './composers/defaults/message'
 import { type GetBotInfoResponse } from '../types'
 import { postimageCallback } from './composers/callbacks/postimage'
 import { recognizeCommand } from './composers/commands/recognize'
+import { MsFirebaseApi } from '../api/msFirebaseApi/base'
+import { firebaseConfig } from '../config'
 
 export const maintenanceMode = {
   active: false
 }
 export const msPrismaDbApi = new MsPrismaDbApi()
+export const msFirebaseApi = new MsFirebaseApi(firebaseConfig.serviceAccountBase64, 'melodyscout')
 
 export async function startMelodyScoutBot (): Promise<{
   getBotInfo: () => Promise<GetBotInfoResponse>

@@ -1,29 +1,30 @@
 import { randomUUID } from 'crypto'
-import { MsGithubApi } from '../api/msGithubApi/base'
+// import { MsGithubApi } from '../api/msGithubApi/base'
 import { MsReplicateApi } from '../api/msReplicateApi/base'
-import { githubConfig, googleAiConfig, replicateConfig } from '../config'
+import { googleAiConfig, replicateConfig } from '../config'
 import { type AIImageMetadata } from '../types'
 import { advError, advLog } from './advancedConsole'
 import { composeImage } from './mediaEditors'
 import { MsGoogleAiApi } from '../api/msGoogleAiApi/base'
+import { msFirebaseApi } from '../MelodyScout_Bot/bot'
 
-async function uploadMetadata (imageMetadata: AIImageMetadata): Promise<{
-  success: true
-} | {
-  success: false
-  error: string
-}> {
-  const uploadMetadataToGithub = await new MsGithubApi(githubConfig.token).files.putFile(`${imageMetadata.imageId}-${imageMetadata.version}.json`, Buffer.from(JSON.stringify(imageMetadata, null, 2)).toString('base64'))
-  if (!uploadMetadataToGithub.success) {
-    return {
-      success: false,
-      error: `Error on uploading metadata to github: ${uploadMetadataToGithub.errorData.message}`
-    }
-  }
-  return {
-    success: true
-  }
-}
+// async function uploadMetadata (imageMetadata: AIImageMetadata): Promise<{
+//   success: true
+// } | {
+//   success: false
+//   error: string
+// }> {
+//   const uploadMetadataToGithub = await new MsGithubApi(githubConfig.token).files.putFile(`${imageMetadata.imageId}-${imageMetadata.version}.json`, Buffer.from(JSON.stringify(imageMetadata, null, 2)).toString('base64'))
+//   if (!uploadMetadataToGithub.success) {
+//     return {
+//       success: false,
+//       error: `Error on uploading metadata to github: ${uploadMetadataToGithub.errorData.message}`
+//     }
+//   }
+//   return {
+//     success: true
+//   }
+// }
 
 export async function getAiImageByLyrics (ctxLang: string | undefined, lyrics: string, trackName: string, artistName: string): Promise<{
   success: true
@@ -34,12 +35,12 @@ export async function getAiImageByLyrics (ctxLang: string | undefined, lyrics: s
     withLayout: true
     imageUrl: string
     imageId: string
-    uploadMetadataPromise: Promise<{
-      success: true
-    } | {
-      success: false
-      error: string
-    }>
+    // uploadMetadataPromise: Promise<{
+    //   success: true
+    // } | {
+    //   success: false
+    //   error: string
+    // }>
   }
 } | {
   success: false
@@ -83,11 +84,31 @@ export async function getAiImageByLyrics (ctxLang: string | undefined, lyrics: s
       }
     }
   }
-  const githubApi = new MsGithubApi(githubConfig.token)
+  // const githubApi = new MsGithubApi(githubConfig.token)
   const imageId = randomUUID()
-  const uploadToGithub = await githubApi.files.putFile(`${imageId}.jpg`, finalImage.image.toString('base64'))
-  if (!uploadToGithub.success) {
-    advError(`Error on uploading image to github: ${uploadToGithub.errorData.message}`)
+  // const uploadToGithub = await githubApi.files.putFile(`${imageId}.jpg`, finalImage.image.toString('base64'))
+  // if (!uploadToGithub.success) {
+  //   advError(`Error on uploading image to github: ${uploadToGithub.errorData.message}`)
+  //   return {
+  //     success: true,
+  //     result: {
+  //       withLayout: false,
+  //       imageUrl: imageByDescription.imageUrl
+  //     }
+  //   }
+  // }
+  const finalImageMetadata: AIImageMetadata = {
+    version: 'v1',
+    imageId,
+    trackName,
+    artistName,
+    lyrics,
+    imageDescription: lyricsImageDescription.description,
+    baseImageUrl: imageByDescription.imageUrl
+  }
+  const uploadToFirebase = await msFirebaseApi.putFile('images/ai', `${imageId}.jpg`, finalImage.image, finalImageMetadata)
+  if (!uploadToFirebase.success) {
+    advError(`Error on uploading image to firebase: ${uploadToFirebase.error}`)
     return {
       success: true,
       result: {
@@ -96,22 +117,24 @@ export async function getAiImageByLyrics (ctxLang: string | undefined, lyrics: s
       }
     }
   }
-  advLog(`New image generated for ${trackName} by ${artistName}: ${uploadToGithub.data.content.download_url}`)
+  // advLog(`New image generated for ${trackName} by ${artistName}: ${uploadToGithub.data.content.download_url}`)
+  advLog(`New image generated for ${trackName} by ${artistName}: ${uploadToFirebase.publicUrl}`)
   return {
     success: true,
     result: {
       withLayout: true,
-      imageUrl: uploadToGithub.data.content.download_url,
-      imageId,
-      uploadMetadataPromise: uploadMetadata({
-        version: 'v1',
-        imageId,
-        trackName,
-        artistName,
-        lyrics,
-        imageDescription: lyricsImageDescription.description,
-        baseImageUrl: imageByDescription.imageUrl
-      })
+      // imageUrl: uploadToGithub.data.content.download_url,
+      imageUrl: uploadToFirebase.publicUrl,
+      imageId
+      // uploadMetadataPromise: uploadMetadata({
+      //   version: 'v1',
+      //   imageId,
+      //   trackName,
+      //   artistName,
+      //   lyrics,
+      //   imageDescription: lyricsImageDescription.description,
+      //   baseImageUrl: imageByDescription.imageUrl
+      // })
     }
   }
 }

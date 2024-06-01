@@ -1,14 +1,15 @@
 import { type CallbackQueryContext, type Context } from 'grammy'
-import { githubConfig, melodyScoutConfig, spotifyConfig } from '../../../config'
+import { melodyScoutConfig, spotifyConfig } from '../../../config'
 import { ctxAnswerCallbackQuery, ctxEditMessageReplyMarkup, ctxReply, ctxTempReply } from '../../../functions/grammyFunctions'
 import { lang } from '../../../translations/base'
-import { MsGithubApi } from '../../../api/msGithubApi/base'
+// import { MsGithubApi } from '../../../api/msGithubApi/base'
 import { zodAIImageMetadata } from '../../../types'
 import { MsInstagramApi } from '../../../api/msInstagramApi/base'
 import { composeStoryImage, createStoriesVideo } from '../../../functions/mediaEditors'
 import { getTrackPreview } from '../../../functions/getTrackPreview'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { getPostimageText } from '../../textFabric/postimage'
+import { msFirebaseApi } from '../../bot'
 
 const postedImages: Record<string, boolean> = {}
 
@@ -31,26 +32,36 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   const loadingReply = await ctxReply(ctx, undefined, 'Que legal! Vou compartilhar essa imagem nos stories do MelodyScout no Instagram!\nAssim que estiver pronto, eu te aviso!', {
     reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined
   })
-  const getGithubImagePromise = new MsGithubApi(githubConfig.token).files.getFile(`${imageId}.jpg`)
-  const metadataVersion = zodAIImageMetadata.shape.version.value
-  const getGithubMetadataPromise = new MsGithubApi(githubConfig.token).files.getFile(`${imageId}-${metadataVersion}.json`)
-  const [getGithubImage, getGithubMetadata] = await Promise.all([getGithubImagePromise, getGithubMetadataPromise])
-  if (!getGithubImage.success) {
+  // const getGithubImagePromise = new MsGithubApi(githubConfig.token).files.getFile(`${imageId}.jpg`)
+  const geFirebaseImagePromise = msFirebaseApi.getFile('images/ai', `${imageId}.jpg`)
+  // const metadataVersion = zodAIImageMetadata.shape.version.value
+  // const getGithubMetadataPromise = new MsGithubApi(githubConfig.token).files.getFile(`${imageId}-${metadataVersion}.json`)
+  // const [getGithubImage, getGithubMetadata] = await Promise.all([getGithubImagePromise, getGithubMetadataPromise])
+  const [getFirebaseImage] = await Promise.all([geFirebaseImagePromise])
+  // if (!getGithubImage.success) {
+  //   postedImages[imageId] = false
+  //   await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! A imagem não foi encontrada no sistema!', {
+  //     reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
+  //   })
+  //   return
+  // }
+  // if (!getGithubMetadata.success) {
+  //   postedImages[imageId] = false
+  //   await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! A imagem não foi encontrada ou versão dela não é mais suportada!', {
+  //     reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
+  //   })
+  //   return
+  // }
+  if (!getFirebaseImage.success) {
     postedImages[imageId] = false
     await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! A imagem não foi encontrada no sistema!', {
       reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
     })
     return
   }
-  if (!getGithubMetadata.success) {
-    postedImages[imageId] = false
-    await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! A imagem não foi encontrada ou versão dela não é mais suportada!', {
-      reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
-    })
-    return
-  }
-  const image = Buffer.from(getGithubImage.data.content, 'base64')
-  const metadata = JSON.parse(Buffer.from(getGithubMetadata.data.content, 'base64').toString())
+  // const image = Buffer.from(getGithubImage.data.content, 'base64')
+  // const metadata = JSON.parse(Buffer.from(getGithubMetadata.data.content, 'base64').toString())
+  const metadata = getFirebaseImage.metadata
   const parsedMetadata = zodAIImageMetadata.safeParse(metadata)
   if (!parsedMetadata.success) {
     postedImages[imageId] = false
@@ -75,7 +86,8 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
     })
     return
   }
-  const storiesImageResponse = await composeStoryImage(image)
+  // const storiesImageResponse = await composeStoryImage(image)
+  const storiesImageResponse = await composeStoryImage(getFirebaseImage.file)
   if (!storiesImageResponse.success) {
     postedImages[imageId] = false
     await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar criar a imagem para o Instagram!', {

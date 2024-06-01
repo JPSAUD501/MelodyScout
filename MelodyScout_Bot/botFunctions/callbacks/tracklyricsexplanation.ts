@@ -95,15 +95,21 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
   }
   aiImageStatus.status = 'success'
   aiImageStatus.imageUrl = imageByLyrics.result.imageUrl
-  const editedMessage = await ctxEditMessage(ctx, { chatId: commandResponse.chat.id, messageId: commandResponse.message_id }, getTracklyricsexplanationText(ctxLang, track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, aiImageStatus))
-  if (editedMessage === undefined) return
-  if (imageByLyrics.result.withLayout) {
-    const uploadedMetadata = await imageByLyrics.result.uploadMetadataPromise
-    if (uploadedMetadata.success) {
+  switch (true) {
+    case (imageByLyrics.result.withLayout): {
       const inlineKeyboard = new InlineKeyboard()
       inlineKeyboard.text('[📸] - Postar no insta do MS!', getCallbackKey(['PI', imageByLyrics.result.imageId]))
-      await ctxEditMessage(ctx, { chatId: editedMessage.chat.id, messageId: editedMessage.message_id }, getTracklyricsexplanationText(ctxLang, track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, aiImageStatus), {
+      await ctxEditMessage(ctx, { chatId: commandResponse.chat.id, messageId: commandResponse.message_id }, getTracklyricsexplanationText(ctxLang, track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, aiImageStatus), {
         reply_markup: inlineKeyboard,
+        link_preview_options: {
+          prefer_large_media: true,
+          url: aiImageStatus.imageUrl
+        }
+      })
+      break
+    }
+    default: {
+      await ctxEditMessage(ctx, { chatId: commandResponse.chat.id, messageId: commandResponse.message_id }, getTracklyricsexplanationText(ctxLang, track, artist, lyricsExplanation.explanation, lyricsEmojis.success ? lyricsEmojis.emojis : undefined, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, aiImageStatus), {
         link_preview_options: {
           prefer_large_media: true,
           url: aiImageStatus.imageUrl
