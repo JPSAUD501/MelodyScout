@@ -6,13 +6,9 @@ export interface MsFirebaseApiError {
   error: string
 }
 
-export type MsFirebaseApiPutFileResponse = {
-  success: true
-  publicUrl: string
-} | MsFirebaseApiError
-
 export type MsFirebaseApiGetFileResponse = {
   success: true
+  publicUrl: string
   metadata: Record<string, any>
   file: Buffer
 } | MsFirebaseApiError
@@ -35,7 +31,7 @@ export class MsFirebaseApi {
     return getStorage(this.client)
   }
 
-  async putFile (filePath: string, fileName: string, fileData: Buffer, fileMetadata: Record<string, string>): Promise<MsFirebaseApiPutFileResponse> {
+  async putFile (filePath: string, fileName: string, fileData: Buffer, fileMetadata: Record<string, string>): Promise<MsFirebaseApiGetFileResponse> {
     const parsedFileName = `${filePath}/${fileName}`
     await this.getStorage().bucket().file(parsedFileName).save(fileData)
     const fileRef = this.getStorage().bucket().file(parsedFileName)
@@ -45,30 +41,23 @@ export class MsFirebaseApi {
       }
     })
     await fileRef.makePublic()
-    const file = await fileRef.get()
-    if (file.length <= 0) {
-      return {
-        success: false,
-        error: 'File not found'
-      }
-    }
-    return {
-      success: true,
-      publicUrl: file[0].publicUrl()
-    }
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    return await this.getFile(filePath, fileName)
   }
 
   async getFile (filePath: string, fileName: string): Promise<MsFirebaseApiGetFileResponse> {
     const parsedFileName = `${filePath}/${fileName}`
-    const metadata = await this.getStorage().bucket().file(parsedFileName).getMetadata()
-    const customMetadata = metadata[0].metadata
-    if (customMetadata === undefined) {
+    const fileRef = this.getStorage().bucket().file(parsedFileName)
+    const publicUrl = fileRef.publicUrl()
+    const allMetadata = await fileRef.getMetadata()
+    const metadata = allMetadata[0].metadata
+    if (metadata === undefined) {
       return {
         success: false,
         error: 'File metadata not found'
       }
     }
-    const file = await this.getStorage().bucket().file(parsedFileName).download()
+    const file = await fileRef.download()
     if (file.length <= 0) {
       return {
         success: false,
@@ -77,7 +66,8 @@ export class MsFirebaseApi {
     }
     return {
       success: true,
-      metadata: customMetadata,
+      publicUrl,
+      metadata,
       file: file[0]
     }
   }
