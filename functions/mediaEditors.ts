@@ -79,7 +79,7 @@ export async function newComposeImage (ctxLang: string | undefined, image: Buffe
       image: image.toString('base64')
     },
     puppeteerArgs: {
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      args: ['--no-sandbox', '--disable-gpu']
     }
   }).catch((error) => {
     return new Error(error)
