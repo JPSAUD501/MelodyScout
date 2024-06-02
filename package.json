@@ -74,6 +74,7 @@
     "luxon": "^3.0.1",
     "node-html-to-image": "^4.0.0",
     "openai": "^4.12.4",
+    "puppeteer": "^22.10.0",
     "replicate": "^0.20.0",
     "sanitize-html": "^2.10.0",
     "scrape-youtube": "^2.3.2",
