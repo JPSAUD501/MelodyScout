@@ -5,7 +5,7 @@ import { lang } from '../translations/base'
 import { type AIImageMetadata } from '../types'
 import ffmpeg from 'fluent-ffmpeg'
 import { deleteTempDir, getTempDir } from './tempy'
-import { ffConfig } from '../config'
+import { converterApiConfig, ffConfig } from '../config'
 import { advError, advLog } from './advancedConsole'
 import { randomUUID } from 'crypto'
 import * as materialUtilities from '@material/material-color-utilities'
@@ -73,7 +73,7 @@ export async function newComposeImage (ctxLang: string | undefined, image: Buffe
     .replace(/#007989/g, backgroundColor)
     .replace(/#000000/g, textColor)
     .replace(/#ffffff/g, headsetColor)
-  const finalImage = await new MsConverterApi().convertHtmlToImage(htmlWithText)
+  const finalImage = await new MsConverterApi(converterApiConfig.apiKey).convertHtmlToImage(htmlWithText)
   if (!finalImage.success) {
     advError(`MediaEditor - ComposeImage - Error on creating final image: ${finalImage.error}`)
     return {

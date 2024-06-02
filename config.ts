@@ -4,7 +4,7 @@ dotenv.config()
 
 export const melodyScoutConfig = {
   divider: '️️',
-  admins: process.env.ADMINS !== undefined ? process.env.ADMINS.split(',') : [],
+  admins: process.env['ADMINS'] !== undefined ? process.env['ADMINS'].split(',') : [],
   logoImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/logo.png',
   userImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/user.png',
   trackImgUrl: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/track.png',
@@ -15,47 +15,50 @@ export const melodyScoutConfig = {
   aboutMelodyScoutAi: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/ms-ai.png',
   urltoolong: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/urlLong.png',
   msAndRaveDj: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/master/public/v2/ms-rdj.png',
-  filesChannelId: Number(process.env.MSB_FC_TELEGRAM_CHAT_ID ?? '')
+  filesChannelId: Number(process.env['MSB_FC_TELEGRAM_CHAT_ID'] ?? '')
 }
 
 export const lastfmConfig = {
-  apiKey: process.env.LASTFM_API_KEY ?? ''
+  apiKey: process.env['LASTFM_API_KEY'] ?? ''
 }
 
 export const geniusConfig = {
-  accessToken: process.env.GENIUS_ACCESS_TOKEN ?? ''
+  accessToken: process.env['GENIUS_ACCESS_TOKEN'] ?? ''
 }
 
 export const spotifyConfig = {
-  clientID: process.env.SPOTIFY_CLIENT_ID ?? '',
-  clientSecret: process.env.SPOTIFY_CLIENT_SECRET ?? ''
+  clientID: process.env['SPOTIFY_CLIENT_ID'] ?? '',
+  clientSecret: process.env['SPOTIFY_CLIENT_SECRET'] ?? ''
 }
 
 export const openaiConfig = {
-  apiKey: process.env.OPENAI_API_KEY ?? ''
+  apiKey: process.env['OPENAI_API_KEY'] ?? ''
 }
 
 export const replicateConfig = {
-  token: process.env.REPLICATE_TOKEN ?? ''
+  token: process.env['REPLICATE_TOKEN'] ?? ''
 }
 
 export const githubConfig = {
-  token: process.env.GH_TOKEN ?? ''
+  token: process.env['GH_TOKEN'] ?? ''
 }
 
 export const firebaseConfig = {
-  serviceAccountBase64: process.env.FIREBASE_SERVICE_ACCOUNT_BASE64 ?? ''
+  serviceAccountBase64: process.env['FIREBASE_SERVICE_ACCOUNT_BASE64'] ?? ''
+}
 
+export const converterApiConfig = {
+  apiKey: process.env['CONVERTER_API_KEY'] ?? ''
 }
 
 export const serverConfig = {
-  port: process.env.PORT ?? Math.floor(Math.random() * 10000).toString(),
-  host: process.env.HOST ?? '0.0.0.0'
+  port: process.env['PORT'] ?? Math.floor(Math.random() * 10000).toString(),
+  host: process.env['HOST'] ?? '0.0.0.0'
 }
 
 export const instagramConfig = {
-  username: process.env.IG_USERNAME ?? '',
-  password: process.env.IG_PASSWORD ?? ''
+  username: process.env['IG_USERNAME'] ?? '',
+  password: process.env['IG_PASSWORD'] ?? ''
 }
 
 export const ffConfig = {
@@ -63,35 +66,10 @@ export const ffConfig = {
 }
 
 export const acrCloudConfig = {
-  accessKey: process.env.ACR_ACCESS_KEY ?? '',
-  secretKey: process.env.ACR_SECRET_KEY ?? ''
+  accessKey: process.env['ACR_ACCESS_KEY'] ?? '',
+  secretKey: process.env['ACR_SECRET_KEY'] ?? ''
 }
 
 export const googleAiConfig = {
-  apiKey: process.env.GOOGLE_AI_KEY ?? ''
+  apiKey: process.env['GOOGLE_AI_KEY'] ?? ''
 }
-
-function checkConfig (): void {
-  const allConfig = {
-    melodyScoutConfig,
-    lastfmConfig,
-    geniusConfig,
-    spotifyConfig,
-    openaiConfig,
-    replicateConfig,
-    githubConfig,
-    serverConfig,
-    instagramConfig,
-    ffConfig,
-    acrCloudConfig,
-    googleAiConfig
-  }
-  for (const config in allConfig) {
-    for (const key in allConfig[config]) {
-      if (allConfig[config][key] === '' || allConfig[config][key] === undefined) {
-        throw new Error(`Config ${config} key ${key} is empty!`)
-      }
-    }
-  }
-}
-checkConfig()

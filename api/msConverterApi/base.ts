@@ -13,11 +13,15 @@ type MsConverterConvertHtmlToImageResponse = {
 } | MsConverterApiError
 
 export class MsConverterApi {
-  constructor () {}
+  private readonly apiKey: string
+
+  constructor (apiKey: string) {
+    this.apiKey = apiKey
+  }
 
   async convertHtmlToImage (html: string): Promise<MsConverterConvertHtmlToImageResponse> {
     try {
-      advLog(`MsConverterApi - convertHtmlToImage - Converting HTML to image...`)
+      advLog('MsConverterApi - convertHtmlToImage - Converting HTML to image...')
       const requestResponse = await axios.post('https://us-central1-melodyscout.cloudfunctions.net/api/v1/convert/html/to/image', {
         html
       }, {
@@ -43,7 +47,7 @@ export class MsConverterApi {
         }
       }
       const image = Buffer.from(safeParseResponse.data.data, 'base64')
-      advLog(`MsConverterApi - convertHtmlToImage - Success!`)
+      advLog('MsConverterApi - convertHtmlToImage - Success!')
       return {
         success: true,
         image

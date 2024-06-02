@@ -153,6 +153,5 @@
     "youtube",
     "youtubedl"
   ],
-  "todo-tree.tree.disableCompactFolders": false,
-  "jest.runMode": "on-demand"
+  "todo-tree.tree.disableCompactFolders": false
 }
