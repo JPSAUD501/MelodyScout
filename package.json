@@ -4,14 +4,15 @@
   "description": "Last.fm Telegram Tracker bot",
   "main": "app.ts",
   "scripts": {
-    "start:prod": "bun run deploy && bun start",
+    "start:prod": "bun run puppeteer:postinstall && bun run deploy && bun start",
     "start": "bun run ./app.ts",
     "start:dev": "bun run ./app.ts",
     "deploy": "bunx prisma migrate deploy",
     "dev": "bun run translate:dev && bun run start:dev",
     "translate:dev": "bun run ./translations/runModule.ts",
     "translate": "bun run ./translations/runModule.ts",
-    "test": "bunx vitest"
+    "test": "bunx vitest",
+    "puppeteer:postinstall": "bunx puppeteer browsers install chrome"
   },
   "repository": {
     "type": "git",
