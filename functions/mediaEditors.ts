@@ -45,7 +45,11 @@ export async function newComposeImage (ctxLang: string | undefined, image: Buffe
       error: `Error on getting pixels: ${pixels.message}`
     }
   }
-  const colors = await extractColors(pixels).catch((error) => {
+  const colors = await extractColors({
+    data: new Uint8ClampedArray(pixels.data),
+    width: pixels.width,
+    height: pixels.height
+  }).catch((error) => {
     return new Error(error)
   })
   if (colors instanceof Error) {
@@ -61,18 +65,21 @@ export async function newComposeImage (ctxLang: string | undefined, image: Buffe
   const headsetColor = materialUtilities.hexFromArgb(theme.schemes.light.onPrimaryContainer)
   const html = fs.readFileSync(path.join(__dirname, '../public/v2/imageFrame.html'), 'utf8')
   const htmlWithText = html
-    .replaceAll('{{header}}', lang(ctxLang, { key: 'composeImageTitle', value: '<b>{{trackName}}</b> por <b>{{artistName}}</b>' }, {
-      trackName: trackName.replaceAll('&', '').replaceAll('  ', ' '),
-      artistName: artistName.replaceAll('&', '').replaceAll('  ', ' ')
+    .replace(/{{header}}/g, lang(ctxLang, { key: 'composeImageTitle', value: '<b>{{trackName}}</b> por <b>{{artistName}}</b>' }, {
+      trackName: trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
+      artistName: artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
     }))
-    .replaceAll('{{image}}', `data:image/jpeg;base64,${image.toString('base64')}`)
-    .replaceAll('#007989', backgroundColor)
-    .replaceAll('#000000', textColor)
-    .replaceAll('#ffffff', headsetColor)
+    .replace(/{{image}}/g, `data:image/jpeg;base64,${image.toString('base64')}`)
+    .replace(/#007989/g, backgroundColor)
+    .replace(/#000000/g, textColor)
+    .replace(/#ffffff/g, headsetColor)
   const finalImage = await nodeHtmlToImage({
     html: htmlWithText,
     content: {
       image: image.toString('base64')
+    },
+    puppeteerArgs: {
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
     }
   }).catch((error) => {
     return new Error(error)
@@ -110,8 +117,8 @@ export async function composeImage (ctxLang: string | undefined, image: Buffer, 
   const textOverlay = await sharp({
     text: {
       text: lang(ctxLang, { key: 'composeImageTitle', value: '<b>{{trackName}}</b> por <b>{{artistName}}</b>' }, {
-        trackName: trackName.replaceAll('&', '').replaceAll('  ', ' '),
-        artistName: artistName.replaceAll('&', '').replaceAll('  ', ' ')
+        trackName: trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
+        artistName: artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
       }),
       fontfile: fontFilePath,
       font: 'Poppins',
