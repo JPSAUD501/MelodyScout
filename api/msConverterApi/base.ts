@@ -26,8 +26,7 @@ export class MsConverterApi {
         html
       }, {
         headers: {
-          Authorization: `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${this.apiKey}`
         },
         responseType: 'json'
       }).catch((err) => {
