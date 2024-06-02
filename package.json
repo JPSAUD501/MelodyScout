@@ -82,5 +82,8 @@
     "youtube-dl-exec": "2.4.15",
     "youtube-stream-url": "^2.4.1",
     "zod": "^3.20.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }
