@@ -9,9 +9,8 @@ import { converterApiConfig, ffConfig } from '../config'
 import { advError, advLog } from './advancedConsole'
 import { randomUUID } from 'crypto'
 import * as materialUtilities from '@material/material-color-utilities'
-import getPixels from 'get-pixels'
-import { extractColors } from 'extract-colors'
 import { MsConverterApi } from '../api/msConverterApi/base'
+import { getAverageColor } from 'fast-average-color-node'
 
 export async function newComposeImage (ctxLang: string | undefined, image: Buffer, trackName: string, artistName: string): Promise<{
   success: true
@@ -20,46 +19,17 @@ export async function newComposeImage (ctxLang: string | undefined, image: Buffe
   success: false
   error: string
 }> {
-  const getPixelsFunction = async (image: Buffer): Promise<{ data: Uint8Array, width: number, height: number }> => {
-    return await new Promise((resolve, reject) => {
-      getPixels(image, 'image/png', (err, pixels) => {
-        if (err !== null) {
-          reject(err)
-          return
-        }
-        resolve({
-          data: pixels.data,
-          width: pixels.shape[0],
-          height: pixels.shape[1]
-        })
-      })
-    })
-  }
-  const pixels = await getPixelsFunction(image).catch((error) => {
+  const averageColor = await getAverageColor(image).catch((error) => {
     return new Error(error)
   })
-  if (pixels instanceof Error) {
-    advError(`MediaEditor - ComposeImage - Error on getting pixels: ${pixels.message}`)
+  if (averageColor instanceof Error) {
+    advError(`MediaEditor - ComposeImage - Error on getting average color: ${averageColor.message}`)
     return {
       success: false,
-      error: `Error on getting pixels: ${pixels.message}`
+      error: `Error on getting average color: ${averageColor.message}`
     }
   }
-  const colors = await extractColors({
-    data: new Uint8ClampedArray(pixels.data),
-    width: pixels.width,
-    height: pixels.height
-  }).catch((error) => {
-    return new Error(error)
-  })
-  if (colors instanceof Error) {
-    advError(`MediaEditor - ComposeImage - Error on extracting colors: ${colors.message}`)
-    return {
-      success: false,
-      error: `Error on extracting colors: ${colors.message}`
-    }
-  }
-  const theme = materialUtilities.themeFromSourceColor(materialUtilities.argbFromHex(colors[0].hex))
+  const theme = materialUtilities.themeFromSourceColor(materialUtilities.argbFromHex(averageColor.hex))
   const backgroundColor = materialUtilities.hexFromArgb(theme.schemes.light.primaryContainer)
   const textColor = materialUtilities.hexFromArgb(theme.schemes.light.onPrimaryContainer)
   const headsetColor = materialUtilities.hexFromArgb(theme.schemes.light.onPrimaryContainer)

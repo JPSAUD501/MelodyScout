@@ -10,8 +10,7 @@
     "deploy": "bunx prisma migrate deploy",
     "dev": "bun run translate:dev && bun run start:dev",
     "translate:dev": "bun run ./translations/runModule.ts",
-    "translate": "bun run ./translations/runModule.ts",
-    "test": "bunx vitest"
+    "translate": "bun run ./translations/runModule.ts"
   },
   "repository": {
     "type": "git",
@@ -27,7 +26,6 @@
     "@swc/cli": "^0.1.62",
     "@types/ffprobe-static": "^2.0.2",
     "@types/fluent-ffmpeg": "^2.1.22",
-    "@types/get-pixels": "^3.3.4",
     "@types/google-translate-api": "^2.3.2",
     "@types/luxon": "^3.0.0",
     "@types/node": "^20.8.2",
@@ -41,7 +39,7 @@
     "eslint-plugin-promise": "^6.1.1",
     "prisma": "^5.9.0",
     "typescript": "^5.2.2",
-    "vitest": "^1.6.0"
+    "@types/bun": "latest"
   },
   "dependencies": {
     "@flytri/lyrics-finder": "^1.0.7",
@@ -55,11 +53,12 @@
     "@types/esprima": "^4.0.5",
     "@vitalets/google-translate-api": "^9.0.0",
     "axios": "^1.2.1",
+    "bun-types": "^1.1.12",
     "cli-progress": "^3.12.0",
     "dotenv": "^16.0.1",
     "esbuild": "^0.19.5",
     "esprima-next": "^5.8.4",
-    "extract-colors": "^4.0.6",
+    "fast-average-color-node": "^3.0.0",
     "fastify": "^4.4.0",
     "ffmpeg-static": "^5.2.0",
     "firebase": "^10.12.2",
@@ -67,7 +66,6 @@
     "fluent-ffmpeg": "^2.1.2",
     "fs": "^0.0.1-security",
     "genius-lyrics": "^4.4.6",
-    "get-pixels": "^3.3.3",
     "google-tts-api": "^2.0.2",
     "grammy": "^1.20.2",
     "instagram-private-api": "^1.45.3",
@@ -76,7 +74,7 @@
     "replicate": "^0.20.0",
     "sanitize-html": "^2.10.0",
     "scrape-youtube": "^2.3.2",
-    "sharp": "^0.32.6",
+    "sharp": "^0.33.4",
     "youtube-dl-exec": "2.4.15",
     "youtube-stream-url": "^2.4.1",
     "zod": "^3.20.2"

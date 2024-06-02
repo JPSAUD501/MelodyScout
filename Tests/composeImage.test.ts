@@ -1,4 +1,4 @@
-import { expect, test } from 'vitest'
+import { expect, test } from 'bun:test'
 import fs from 'fs'
 import path from 'path'
 import { composeImage, newComposeImage } from '../functions/mediaEditors'

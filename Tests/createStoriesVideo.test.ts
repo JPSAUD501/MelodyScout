@@ -1,4 +1,4 @@
-import { expect, test } from 'vitest'
+import { expect, test } from 'bun:test'
 import { createStoriesVideo } from '../functions/mediaEditors'
 import fs from 'fs'
 import { type AIImageMetadata } from '../types'

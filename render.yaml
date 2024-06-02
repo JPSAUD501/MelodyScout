@@ -7,7 +7,7 @@ services:
   envVars:
   - fromGroup: MELODY SCOUT ENV
   region: ohio
-  buildCommand: yarn install --production
-  startCommand: yarn start:prod
+  buildCommand: bun install --production
+  startCommand: bun run start:prod
   healthCheckPath: /health
 version: "1"

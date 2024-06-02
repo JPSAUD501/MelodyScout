@@ -88,6 +88,7 @@
     "postimage",
     "PTBR",
     "Punct",
+    "qrsl",
     "realname",
     "realvisxl",
     "Realvisxl",
@@ -153,5 +154,6 @@
     "youtube",
     "youtubedl"
   ],
-  "todo-tree.tree.disableCompactFolders": false
+  "todo-tree.tree.disableCompactFolders": false,
+  "bun.debugTerminal.enabled": true
 }

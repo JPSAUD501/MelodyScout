@@ -1,4 +1,4 @@
-import { expect, test } from 'vitest'
+import { expect, test } from 'bun:test'
 import youtubedl from 'youtube-dl-exec'
 import ffmpeg from 'fluent-ffmpeg'
 import { ffConfig } from '../config'
@@ -23,7 +23,7 @@ test('test', async () => {
   }
   console.log(videoWithAudioUrlRequest.stdout)
   const getVideo = async (): Promise<void> => {
-    await new Promise((resolve, reject) => {
+    await new Promise((_resolve, _reject) => {
       const startTime = Date.now()
       ffmpeg()
         .setFfmpegPath(ffConfig.ffmpegPath)
@@ -37,7 +37,7 @@ test('test', async () => {
         .addOption('-threads', '1')
         .addOption('-strict', 'experimental')
         .save('rtmps://dc1-1.rtmp.t.me/s/1955599407:lRO3AH3qrsl95TTpT6H5sg')
-        .on('start', (commandLine) => {
+        .on('start', (_commandLine) => {
           console.log(' > ffmpeg process started!')
         })
         .on('end', () => {
