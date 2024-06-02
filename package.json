@@ -12,7 +12,7 @@
     "translate:dev": "bun run ./translations/runModule.ts",
     "translate": "bun run ./translations/runModule.ts",
     "test": "bunx vitest",
-    "postinstall": "bunx puppeteer browsers install chrome"
+    "puppeteer:postinstall": "bunx puppeteer browsers install chrome"
   },
   "repository": {
     "type": "git",
