@@ -4,15 +4,14 @@
   "description": "Last.fm Telegram Tracker bot",
   "main": "app.ts",
   "scripts": {
-    "start:prod": "bun run puppeteer:postinstall && bun run deploy && bun start",
+    "start:prod": "bun run deploy && bun start",
     "start": "bun run ./app.ts",
     "start:dev": "bun run ./app.ts",
     "deploy": "bunx prisma migrate deploy",
     "dev": "bun run translate:dev && bun run start:dev",
     "translate:dev": "bun run ./translations/runModule.ts",
     "translate": "bun run ./translations/runModule.ts",
-    "test": "bunx vitest",
-    "puppeteer:postinstall": "bunx puppeteer browsers install chrome"
+    "test": "bunx vitest"
   },
   "repository": {
     "type": "git",
@@ -73,9 +72,7 @@
     "grammy": "^1.20.2",
     "instagram-private-api": "^1.45.3",
     "luxon": "^3.0.1",
-    "node-html-to-image": "^4.0.0",
     "openai": "^4.12.4",
-    "puppeteer": "21.11.0",
     "replicate": "^0.20.0",
     "sanitize-html": "^2.10.0",
     "scrape-youtube": "^2.3.2",

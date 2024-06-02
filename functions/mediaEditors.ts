@@ -8,10 +8,10 @@ import { deleteTempDir, getTempDir } from './tempy'
 import { ffConfig } from '../config'
 import { advError, advLog } from './advancedConsole'
 import { randomUUID } from 'crypto'
-import nodeHtmlToImage from 'node-html-to-image'
 import * as materialUtilities from '@material/material-color-utilities'
 import getPixels from 'get-pixels'
 import { extractColors } from 'extract-colors'
+import { MsConverterApi } from '../api/msConverterApi/base'
 
 export async function newComposeImage (ctxLang: string | undefined, image: Buffer, trackName: string, artistName: string): Promise<{
   success: true
@@ -73,34 +73,17 @@ export async function newComposeImage (ctxLang: string | undefined, image: Buffe
     .replace(/#007989/g, backgroundColor)
     .replace(/#000000/g, textColor)
     .replace(/#ffffff/g, headsetColor)
-  const finalImage = await nodeHtmlToImage({
-    html: htmlWithText,
-    content: {
-      image: image.toString('base64')
-    },
-    puppeteerArgs: {
-      args: ['--no-sandbox', '--disable-gpu']
-    }
-  }).catch((error) => {
-    return new Error(error)
-  })
-  if (finalImage instanceof Error) {
-    advError(`MediaEditor - ComposeImage - Error on creating text overlay: ${finalImage.message}`)
+  const finalImage = await new MsConverterApi().convertHtmlToImage(htmlWithText)
+  if (!finalImage.success) {
+    advError(`MediaEditor - ComposeImage - Error on creating final image: ${finalImage.error}`)
     return {
       success: false,
-      error: `Error on creating text overlay: ${finalImage.message}`
-    }
-  }
-  if (!Buffer.isBuffer(finalImage)) {
-    advError('MediaEditor - ComposeImage - Error on creating text overlay: finalImage is not a buffer')
-    return {
-      success: false,
-      error: 'Error on creating text overlay: finalImage is not a buffer'
+      error: `Error on creating final image: ${finalImage.error}`
     }
   }
   return {
     success: true,
-    image: finalImage
+    image: finalImage.image
   }
 }
 
