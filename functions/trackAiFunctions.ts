@@ -4,7 +4,7 @@ import { MsReplicateApi } from '../api/msReplicateApi/base'
 import { googleAiConfig, replicateConfig } from '../config'
 import { type AIImageMetadata } from '../types'
 import { advError, advLog } from './advancedConsole'
-import { composeImage } from './mediaEditors'
+import { newComposeImage } from './mediaEditors'
 import { MsGoogleAiApi } from '../api/msGoogleAiApi/base'
 import { msFirebaseApi } from '../MelodyScout_Bot/bot'
 
@@ -73,7 +73,7 @@ export async function getAiImageByLyrics (ctxLang: string | undefined, lyrics: s
       error: `Error on getting image by description: ${imageByDescription.error}`
     }
   }
-  const finalImage = await composeImage(ctxLang, imageByDescription.image, trackName, artistName)
+  const finalImage = await newComposeImage(ctxLang, imageByDescription.image, trackName, artistName)
   if (!finalImage.success) {
     advError(`Error on composing image: ${finalImage.error}`)
     return {

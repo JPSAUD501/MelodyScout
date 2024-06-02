@@ -8,6 +8,94 @@ import { deleteTempDir, getTempDir } from './tempy'
 import { ffConfig } from '../config'
 import { advError, advLog } from './advancedConsole'
 import { randomUUID } from 'crypto'
+import nodeHtmlToImage from 'node-html-to-image'
+import * as materialUtilities from '@material/material-color-utilities'
+import getPixels from 'get-pixels'
+import { extractColors } from 'extract-colors'
+
+export async function newComposeImage (ctxLang: string | undefined, image: Buffer, trackName: string, artistName: string): Promise<{
+  success: true
+  image: Buffer
+} | {
+  success: false
+  error: string
+}> {
+  const getPixelsFunction = async (image: Buffer): Promise<{ data: Uint8Array, width: number, height: number }> => {
+    return await new Promise((resolve, reject) => {
+      getPixels(image, 'image/png', (err, pixels) => {
+        if (err !== null) {
+          reject(err)
+          return
+        }
+        resolve({
+          data: pixels.data,
+          width: pixels.shape[0],
+          height: pixels.shape[1]
+        })
+      })
+    })
+  }
+  const pixels = await getPixelsFunction(image).catch((error) => {
+    return new Error(error)
+  })
+  if (pixels instanceof Error) {
+    advError(`MediaEditor - ComposeImage - Error on getting pixels: ${pixels.message}`)
+    return {
+      success: false,
+      error: `Error on getting pixels: ${pixels.message}`
+    }
+  }
+  const colors = await extractColors(pixels).catch((error) => {
+    return new Error(error)
+  })
+  if (colors instanceof Error) {
+    advError(`MediaEditor - ComposeImage - Error on extracting colors: ${colors.message}`)
+    return {
+      success: false,
+      error: `Error on extracting colors: ${colors.message}`
+    }
+  }
+  const theme = materialUtilities.themeFromSourceColor(materialUtilities.argbFromHex(colors[0].hex))
+  const backgroundColor = materialUtilities.hexFromArgb(theme.schemes.light.primaryContainer)
+  const textColor = materialUtilities.hexFromArgb(theme.schemes.light.onPrimaryContainer)
+  const headsetColor = materialUtilities.hexFromArgb(theme.schemes.light.onPrimaryContainer)
+  const html = fs.readFileSync(path.join(__dirname, '../public/v2/imageFrame.html'), 'utf8')
+  const htmlWithText = html
+    .replaceAll('{{header}}', lang(ctxLang, { key: 'composeImageTitle', value: '<b>{{trackName}}</b> por <b>{{artistName}}</b>' }, {
+      trackName: trackName.replaceAll('&', '').replaceAll('  ', ' '),
+      artistName: artistName.replaceAll('&', '').replaceAll('  ', ' ')
+    }))
+    .replaceAll('{{image}}', `data:image/jpeg;base64,${image.toString('base64')}`)
+    .replaceAll('#007989', backgroundColor)
+    .replaceAll('#000000', textColor)
+    .replaceAll('#ffffff', headsetColor)
+  const finalImage = await nodeHtmlToImage({
+    html: htmlWithText,
+    content: {
+      image: image.toString('base64')
+    }
+  }).catch((error) => {
+    return new Error(error)
+  })
+  if (finalImage instanceof Error) {
+    advError(`MediaEditor - ComposeImage - Error on creating text overlay: ${finalImage.message}`)
+    return {
+      success: false,
+      error: `Error on creating text overlay: ${finalImage.message}`
+    }
+  }
+  if (!Buffer.isBuffer(finalImage)) {
+    advError('MediaEditor - ComposeImage - Error on creating text overlay: finalImage is not a buffer')
+    return {
+      success: false,
+      error: 'Error on creating text overlay: finalImage is not a buffer'
+    }
+  }
+  return {
+    success: true,
+    image: finalImage
+  }
+}
 
 export async function composeImage (ctxLang: string | undefined, image: Buffer, trackName: string, artistName: string): Promise<{
   success: true

@@ -1,4 +1,4 @@
-import { test, expect } from '@jest/globals'
+import { expect, test } from 'vitest'
 import { createStoriesVideo } from '../functions/mediaEditors'
 import fs from 'fs'
 import { type AIImageMetadata } from '../types'

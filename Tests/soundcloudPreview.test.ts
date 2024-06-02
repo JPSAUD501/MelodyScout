@@ -1,4 +1,4 @@
-import { test, expect } from '@jest/globals'
+import { expect, test } from 'vitest'
 import fs from 'fs'
 import { MsSoundcloudApi } from '../api/msSoundcloudApi/base'
 

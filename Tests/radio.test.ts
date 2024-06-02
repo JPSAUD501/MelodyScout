@@ -1,4 +1,4 @@
-import { test, expect } from '@jest/globals'
+import { expect, test } from 'vitest'
 import youtubedl from 'youtube-dl-exec'
 import ffmpeg from 'fluent-ffmpeg'
 import { ffConfig } from '../config'
