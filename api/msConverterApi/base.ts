@@ -25,6 +25,10 @@ export class MsConverterApi {
       const requestResponse = await axios.post('https://us-central1-melodyscout.cloudfunctions.net/api/v1/convert/html/to/image', {
         html
       }, {
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`,
+          'Content-Type': 'application/json'
+        },
         responseType: 'json'
       }).catch((err) => {
         return new Error(String(err))
