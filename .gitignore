@@ -109,3 +109,4 @@ dist
 dist/
 temp/
 Tests/resources/results/*.*
+/.cache
