@@ -266,5 +266,8 @@ export const baseLang = {
   tfRecognizeTrackScoreByTrackSample: '- Música identificada com {{recognizeTrackScore}}% de certeza!',
   tfRecognizeTrackScoreByHummingSample: '- Música cantarolada identificada com {{recognizeTrackScore}}% de certeza!',
   tfRecognizeTrackOffset: '- O trecho enviado parece começar por volta de {{minutes}} minutos e {{seconds}} segundos da música original.',
-  tfRecognizeRequestedBy: "Solicitado por: <b><a href='tg://user?id={{requesterId}}'>{{requesterName}}</a></b>"
+  tfRecognizeRequestedBy: "Solicitado por: <b><a href='tg://user?id={{requesterId}}'>{{requesterName}}</a></b>",
+  tfPlayingnowAlbumAndArtistName: '- Álbum: <a href="{{albumUrl}}"><b>{{albumName}}</b> de </a><a href="{{artistUrl}}"><b>{{artistName}}</b></a>',
+  tfPlayingnowTrackWithArtistInfo: '<b>[🎧{{badge}}]</b> <a href="{{trackUrl}}"><b>{{trackName}}</b> por </a><a href="{{artistUrl}}"><b>{{artistName}}</b></a>',
+  tfPlayingnowPostTrackWithArtistName: '[🎧{{badge}}] {{trackName}} por {{artistName}}'
 }

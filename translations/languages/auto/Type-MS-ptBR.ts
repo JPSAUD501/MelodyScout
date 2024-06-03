@@ -266,4 +266,7 @@ export type BaseLang =
   { key: 'tfRecognizeTrackScoreByTrackSample', value: '- Música identificada com {{recognizeTrackScore}}% de certeza!' } |
   { key: 'tfRecognizeTrackScoreByHummingSample', value: '- Música cantarolada identificada com {{recognizeTrackScore}}% de certeza!' } |
   { key: 'tfRecognizeTrackOffset', value: '- O trecho enviado parece começar por volta de {{minutes}} minutos e {{seconds}} segundos da música original.' } |
-  { key: 'tfRecognizeRequestedBy', value: "Solicitado por: <b><a href='tg://user?id={{requesterId}}'>{{requesterName}}</a></b>" }
+  { key: 'tfRecognizeRequestedBy', value: "Solicitado por: <b><a href='tg://user?id={{requesterId}}'>{{requesterName}}</a></b>" } |
+  { key: 'tfPlayingnowAlbumAndArtistName', value: '- Álbum: <a href="{{albumUrl}}"><b>{{albumName}}</b> de </a><a href="{{artistUrl}}"><b>{{artistName}}</b></a>' } |
+  { key: 'tfPlayingnowTrackWithArtistInfo', value: '<b>[🎧{{badge}}]</b> <a href="{{trackUrl}}"><b>{{trackName}}</b> por </a><a href="{{artistUrl}}"><b>{{artistName}}</b></a>' } |
+  { key: 'tfPlayingnowPostTrackWithArtistName', value: '[🎧{{badge}}] {{trackName}} por {{artistName}}' }
