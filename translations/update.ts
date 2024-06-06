@@ -12,7 +12,7 @@ export async function updateTranslations (): Promise<{
   error: string
 }> {
   try {
-    const urls = {
+    const urls: Record<string, string> = {
       en: 'https://raw.githubusercontent.com/JPSAUD501/MelodyScout/Crowdin/en.json'
     }
 
@@ -31,7 +31,8 @@ export async function updateTranslations (): Promise<{
       textArray.push(`export const ${lang} = {`)
       for (const key in json) {
         let value: string = json[key]
-        if (baseLang[key] === value) continue
+        const parsedBaseLang: Record<string, string> = baseLang
+        if (parsedBaseLang[key] === value) continue
         value = value.replaceAll('\n', '\\n')
         switch (true) {
           case (value.includes("'") && value.includes('"')):

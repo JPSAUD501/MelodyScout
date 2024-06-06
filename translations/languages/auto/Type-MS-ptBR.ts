@@ -269,4 +269,8 @@ export type BaseLang =
   { key: 'tfRecognizeRequestedBy', value: "Solicitado por: <b><a href='tg://user?id={{requesterId}}'>{{requesterName}}</a></b>" } |
   { key: 'tfPlayingnowAlbumAndArtistName', value: '- Álbum: <a href="{{albumUrl}}"><b>{{albumName}}</b> de </a><a href="{{artistUrl}}"><b>{{artistName}}</b></a>' } |
   { key: 'tfPlayingnowTrackWithArtistInfo', value: '<b>[🎧{{badge}}]</b> <a href="{{trackUrl}}"><b>{{trackName}}</b> por </a><a href="{{artistUrl}}"><b>{{artistName}}</b></a>' } |
-  { key: 'tfPlayingnowPostTrackWithArtistName', value: '[🎧{{badge}}] {{trackName}} por {{artistName}}' }
+  { key: 'tfPlayingnowPostTrackWithArtistName', value: '[🎧{{badge}}] {{trackName}} por {{artistName}}' } |
+  { key: 'tfPlayingnowShareOnXTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>' } |
+  { key: 'tfPnalbumShareOnXTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>' } |
+  { key: 'tfPnartistShareOnXTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>' } |
+  { key: 'tfPntrackShareOnXTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>' }

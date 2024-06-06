@@ -145,10 +145,7 @@ export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo,
   // textArray.push(`<b>[📊] ${Number(track.userplaycount).toLocaleString('pt-BR')} Scrobbles</b>`)
   textArray.push(lang(ctxLang, { key: 'tfPntrackScrobbles', value: '<b>[📊] {{trackScrobbles}} Scrobbles</b>' }, { trackScrobbles: Number(track.userplaycount).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })) }))
   textArray.push('')
-  // textArray.push('<b>[🔗] Compartilhe</b>')
-  textArray.push(lang(ctxLang, { key: 'tfPntrackShareHeader', value: '<b>[🔗] Compartilhe</b>' }))
-  // textArray.push(`- <a href="${postUrl}">Compartilhar no 𝕏!</a>`)
-  textArray.push(lang(ctxLang, { key: 'tfPntrackShareOnX', value: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>' }, { postUrl }))
+  textArray.push(lang(ctxLang, { key: 'tfPntrackShareOnXTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>' }, { postUrl }))
   if (previewUrl !== undefined) textArray.push('️️')
 
   const text = textArray.join('\n')

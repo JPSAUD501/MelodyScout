@@ -175,10 +175,7 @@ export function getPnalbumText (ctxLang: string | undefined, userInfo: UserInfo,
     }
   }
   textArray.push('')
-  // textArray.push('<b>[🔗] Compartilhe</b>')
-  textArray.push(lang(ctxLang, { key: 'tfPnalbumShareHeader', value: '<b>[🔗] Compartilhe</b>' }))
-  // textArray.push(`- <a href="${postUrl}">Compartilhar no 𝕏!</a>`)
-  textArray.push(lang(ctxLang, { key: 'tfPnalbumShareOnX', value: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>' }, { postUrl }))
+  textArray.push(lang(ctxLang, { key: 'tfPnalbumShareOnXTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>' }, { postUrl }))
 
   const text = textArray.join('\n')
   return text

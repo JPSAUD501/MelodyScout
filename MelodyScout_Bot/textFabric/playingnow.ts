@@ -178,8 +178,7 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
     textArray.push(...infoArray)
   }
   textArray.push('')
-  textArray.push(lang(ctxLang, { key: 'tfPlayingnowShareTitle', value: '<b>[🔗] Compartilhe</b>' }))
-  textArray.push(lang(ctxLang, { key: 'tfPlayingnowShareLink', value: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>' }, { postUrl }))
+  textArray.push(lang(ctxLang, { key: 'tfPlayingnowShareOnXTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>' }, { postUrl }))
   if (previewUrl !== undefined) textArray.push('️️')
 
   const text = textArray.join('\n')

@@ -269,5 +269,9 @@
   "tfRecognizeRequestedBy": "Solicitado por: <b><a href='tg://user?id={{requesterId}}'>{{requesterName}}</a></b>",
   "tfPlayingnowAlbumAndArtistName": "- Álbum: <a href=\"{{albumUrl}}\"><b>{{albumName}}</b> de </a><a href=\"{{artistUrl}}\"><b>{{artistName}}</b></a>",
   "tfPlayingnowTrackWithArtistInfo": "<b>[🎧{{badge}}]</b> <a href=\"{{trackUrl}}\"><b>{{trackName}}</b> por </a><a href=\"{{artistUrl}}\"><b>{{artistName}}</b></a>",
-  "tfPlayingnowPostTrackWithArtistName": "[🎧{{badge}}] {{trackName}} por {{artistName}}"
+  "tfPlayingnowPostTrackWithArtistName": "[🎧{{badge}}] {{trackName}} por {{artistName}}",
+  "tfPlayingnowShareOnXTitle": "<b>[🔗] <a href=\"{{postUrl}}\">Compartilhe no 𝕏!</a></b>",
+  "tfPnalbumShareOnXTitle": "<b>[🔗] <a href=\"{{postUrl}}\">Compartilhe no 𝕏!</a></b>",
+  "tfPnartistShareOnXTitle": "<b>[🔗] <a href=\"{{postUrl}}\">Compartilhe no 𝕏!</a></b>",
+  "tfPntrackShareOnXTitle": "<b>[🔗] <a href=\"{{postUrl}}\">Compartilhe no 𝕏!</a></b>"
 }
