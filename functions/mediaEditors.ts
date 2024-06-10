@@ -12,14 +12,17 @@ import * as materialUtilities from '@material/material-color-utilities'
 import { MsConverterApi } from '../api/msConverterApi/base'
 import { getAverageColor } from 'fast-average-color-node'
 
-export async function newComposeImage (ctxLang: string | undefined, image: Buffer, trackName: string, artistName: string): Promise<{
+export async function getMaterialYouColorThemeFromImage (image: Buffer): Promise<{
   success: true
-  image: Buffer
+  theme: materialUtilities.Theme
 } | {
   success: false
   error: string
 }> {
-  const averageColor = await getAverageColor(image).catch((error) => {
+  const averageColor = await getAverageColor(image, {
+    mode: 'precision',
+    algorithm: 'sqrt'
+  }).catch((error) => {
     return new Error(error)
   })
   if (averageColor instanceof Error) {
@@ -30,6 +33,27 @@ export async function newComposeImage (ctxLang: string | undefined, image: Buffe
     }
   }
   const theme = materialUtilities.themeFromSourceColor(materialUtilities.argbFromHex(averageColor.hex))
+  return {
+    success: true,
+    theme
+  }
+}
+
+export async function newComposeImage (ctxLang: string | undefined, image: Buffer, trackName: string, artistName: string): Promise<{
+  success: true
+  image: Buffer
+} | {
+  success: false
+  error: string
+}> {
+  const themeResponse = await getMaterialYouColorThemeFromImage(image)
+  if (!themeResponse.success) {
+    return {
+      success: false,
+      error: themeResponse.error
+    }
+  }
+  const theme = themeResponse.theme
   const backgroundColor = materialUtilities.hexFromArgb(theme.schemes.light.primaryContainer)
   const textColor = materialUtilities.hexFromArgb(theme.schemes.light.onPrimaryContainer)
   const headsetColor = materialUtilities.hexFromArgb(theme.schemes.light.onPrimaryContainer)
