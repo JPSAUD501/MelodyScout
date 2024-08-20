@@ -1,12 +1,11 @@
 import { randomUUID } from 'crypto'
-// import { MsGithubApi } from '../api/msGithubApi/base'
 import { MsReplicateApi } from '../api/msReplicateApi/base'
-import { googleAiConfig, replicateConfig } from '../config'
+import { openaiConfig, replicateConfig } from '../config'
 import { type AIImageMetadata } from '../types'
 import { advError, advLog } from './advancedConsole'
 import { newComposeImage } from './mediaEditors'
-import { MsGoogleAiApi } from '../api/msGoogleAiApi/base'
 import { msFirebaseApi } from '../MelodyScout_Bot/bot'
+import { MsOpenAiApi } from '../api/msOpenAiApi/base'
 
 // async function uploadMetadata (imageMetadata: AIImageMetadata): Promise<{
 //   success: true
@@ -46,24 +45,24 @@ export async function getAiImageByLyrics (ctxLang: string | undefined, lyrics: s
   success: false
   error: string
 }> {
-  // const msOpenAiApi = new MsOpenAiApi(openaiConfig.apiKey)
-  // const openAiLyricsImageDescription = await msOpenAiApi.getLyricsImageDescription(lyrics)
-  const googleAiApi = new MsGoogleAiApi(googleAiConfig.apiKey)
-  const googleAiLyricsImageDescription = await googleAiApi.getLyricsImageDescription(lyrics)
-  // if (!openAiLyricsImageDescription.success) {
-  //   return {
-  //     success: false,
-  //     error: `Error on getting image description by lyrics from OpenAi: ${openAiLyricsImageDescription.error}`
-  //   }
-  // }
-  if (!googleAiLyricsImageDescription.success) {
+  const msOpenAiApi = new MsOpenAiApi(openaiConfig.apiKey)
+  const openAiLyricsImageDescription = await msOpenAiApi.getLyricsImageDescription(lyrics)
+  // const googleAiApi = new MsGoogleAiApi(googleAiConfig.apiKey)
+  // const googleAiLyricsImageDescription = await googleAiApi.getLyricsImageDescription(lyrics)
+  if (!openAiLyricsImageDescription.success) {
     return {
       success: false,
-      error: `Error on getting image description by lyrics from GoogleAi: ${googleAiLyricsImageDescription.error}`
+      error: `Error on getting image description by lyrics from OpenAi: ${openAiLyricsImageDescription.error}`
     }
   }
-  advLog(`Image description by lyrics:\nGoogleAi: ${googleAiLyricsImageDescription.description}`)
-  const lyricsImageDescription = googleAiLyricsImageDescription
+  // if (!googleAiLyricsImageDescription.success) {
+  //   return {
+  //     success: false,
+  //     error: `Error on getting image description by lyrics from GoogleAi: ${googleAiLyricsImageDescription.error}`
+  //   }
+  // }
+  advLog(`Image description by lyrics:\nOpenAI: ${openAiLyricsImageDescription.description}`)
+  const lyricsImageDescription = openAiLyricsImageDescription
   const msReplicateApi = new MsReplicateApi(replicateConfig.token)
   const imageByDescription = await msReplicateApi.getFluxImage(lyricsImageDescription.description)
   // const imageByDescription = await msReplicateApi.getRealvisxlImage(lyricsImageDescription.description)

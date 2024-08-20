@@ -97,13 +97,13 @@ export class MsOpenAiApi {
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
     const prompt = `Lyrics:\n\n${lyricsParsed}`
     const response = await this.openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4o-mini',
       messages: [
-        { role: 'system', content: 'Describe an simple and creative image that best represents the song. Your description must have up to 60 words.' },
+        { role: 'system', content: 'You are an AI that converts song lyrics into prompts for image generation. Your goal is to create detailed and creative descriptions for another AI, based on the provided song lyrics. Use keywords and themes from the lyrics to construct a visual prompt that incorporates specific characters, artistic styles, colors, and atmospheres. Be sure to include varied elements such as stylized characters, objects, animals, emotions, and predominant colors.\nExample Input (song lyrics):\n"Hey girl, open the walls\nPlay with your dolls\nWe\'ll be a perfect family\nWhen you walk away is when we really play\nYou don\'t hear me when I say\n\'Mom, please wake up\nDad\'s with a slut\nAnd your son is smoking cannabis\'"\nExample Output (image prompt):\n"A surreal family portrait set inside a vintage dollhouse, with unsettlingly perfect doll-like characters. The mother, with a plastered smile, holds a sparkling flask behind her back, her eyes cold and distant. The father stands beside her, with a shadowy figure lurking just out of frame. A teenage boy, slightly disheveled, stands next to a young girl, who is holding a cracked porcelain doll. The background features wallpaper that seems to shimmer unnervingly, hiding the darkness behind it. The scene is lit with eerie, muted tones of pale pinks and greys, giving a sense of hidden dysfunction and forced perfection. The overall style is a mix of gothic and hyper-realistic art, with detailed textures and a haunting, almost cinematic quality."\nAdditional Output Examples (image prompts):\n"Overwhelmingly beautiful eagle framed with vector flowers, long shiny wavy flowing hair, polished, ultra detailed vector floral illustration mixed with hyper realism, muted pastel colors, vector floral details in background, muted colors, hyper detailed ultra intricate overwhelming realism in detailed complex scene with magical fantasy atmosphere, no signature, no watermark."\n"Hot dark hair girl, looking at viewer, portrait, photography, detailed skin, realistic, photo-realistic, 8k, highly detailed, full length frame, High detail RAW color art, piercing, diffused soft lighting, shallow depth of field, sharp focus, hyperrealism, cinematic lighting."\nAlways use this style to transform song lyrics into image prompts. Avoid directly copying words from the lyrics, but capture the essence and visual images that the song conveys. This prompt should ensure that the AI produces highly detailed and evocative image descriptions, using the provided examples as a reference for the expected complexity and quality.' },
         { role: 'user', content: prompt }
       ],
-      max_tokens: 100,
-      temperature: 0.7
+      max_tokens: 1500,
+      temperature: 1
     }).catch((err) => {
       return new Error(String(err))
     })
