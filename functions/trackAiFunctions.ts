@@ -65,7 +65,7 @@ export async function getAiImageByLyrics (ctxLang: string | undefined, lyrics: s
   advLog(`Image description by lyrics:\nGoogleAi: ${googleAiLyricsImageDescription.description}`)
   const lyricsImageDescription = googleAiLyricsImageDescription
   const msReplicateApi = new MsReplicateApi(replicateConfig.token)
-  const imageByDescription = await msReplicateApi.getSdxlImage(lyricsImageDescription.description)
+  const imageByDescription = await msReplicateApi.getFluxImage(lyricsImageDescription.description)
   // const imageByDescription = await msReplicateApi.getRealvisxlImage(lyricsImageDescription.description)
   if (!imageByDescription.success) {
     return {
