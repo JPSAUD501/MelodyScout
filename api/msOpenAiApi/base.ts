@@ -17,11 +17,6 @@ type MsOpenAiApiGetLyricsImageDescriptionResponse = {
   description: string
 } | MsOpenAiApiError
 
-type MsOpenAiApiGetLyricsEmojisResponse = {
-  success: true
-  emojis: string
-} | MsOpenAiApiError
-
 export class MsOpenAiApi {
   private readonly openai: OpenAI
 
@@ -31,17 +26,36 @@ export class MsOpenAiApi {
     })
   }
 
-  async getLyricsExplanation (ctxLang: string | undefined, lyrics: string): Promise<MsOpenAiApiGetLyricsExplanationResponse> {
+  async getLyricsExplanation (ctxLang: string | undefined, trackTittle: string, trackArtist: string, lyrics: string, lyricsRepresentation: string): Promise<MsOpenAiApiGetLyricsExplanationResponse> {
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
-    const prompt = `${lyricsParsed}\n\n${lang(ctxLang, { key: 'lyricsExplanationAiPrompt', value: 'Explicação resumida da letra da música:' })}`
     const response = await this.openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4o-mini',
       messages: [
-        { role: 'system', content: 'You help users understand the lyrics of the tracks they listened.' },
-        { role: 'user', content: prompt }
+        {
+          role: 'system',
+          content:
+`You are a creative and relaxed music critic. When you receive the lyrics of a song and an associated visual description, your task is to explain to the listener what the lyrics are conveying. Capture the nuances of the lyrics, both explicit and implicit, and integrate what makes this song unique. Use the provided image description as inspiration without mentioning it explicitly.
+
+Response Language: ${lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })}
+
+Rules:
+- Focus on the Lyrics: Analyze the song's lyrics to explore their meaning, emotions, and intentions.
+- Capture the Nuances: Identify and explain subtle details, metaphors, and implied feelings in the lyrics.
+- Integrate Visual Ideas: Use ideas inspired by the provided image description in your explanation without mentioning the image.
+- Highlight the Uniqueness: Seamlessly integrate what differentiates the song from others with similar themes into your explanation.
+- Casual Tone: Use a casual and fun tone. Avoid suggesting or encouraging sharing, and do not use hashtags.
+- Brevity with Depth: Limit the explanation to 2 paragraphs, ensuring clarity and depth.
+- No Markdown: Avoid markdown formatting in the response.
+- Add More Emojis: Include a generous amount of emojis at the end that represent the song, lyrics, or explanation in a fun and engaging way.
+
+Objective: Produce a concise and vivid explanation in 2 paragraphs that captures the essence of the song, subtly inspired by the visual description and ending with plenty of emojis to complement the interpretation.`
+        },
+        {
+          role: 'user',
+          content: `Track: ${trackTittle} by ${trackArtist}\n\nLyrics: ${lyricsParsed}\n\nLyrics image representation: ${lyricsRepresentation}`
+        }
       ],
-      max_tokens: 425,
-      temperature: 0.7
+      max_tokens: 1500
     }).catch((err) => {
       return new Error(String(err))
     })
@@ -53,7 +67,6 @@ export class MsOpenAiApi {
       }
     }
     const explanation = response.choices[0]
-    // console.log(explanation)
     if (explanation === undefined) {
       advError(`MsOpenAiAPi - No choices explanation generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
       return {
@@ -93,9 +106,9 @@ export class MsOpenAiApi {
     }
   }
 
-  async getLyricsImageDescription (lyrics: string): Promise<MsOpenAiApiGetLyricsImageDescriptionResponse> {
+  async getLyricsImageDescription (trackTittle: string, trackArtist: string, lyrics: string): Promise<MsOpenAiApiGetLyricsImageDescriptionResponse> {
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
-    const prompt = `Lyrics:\n\n${lyricsParsed}`
+    const prompt = `Track: ${trackTittle} by ${trackArtist}\n\nLyrics:\n\n${lyricsParsed}`
     const response = await this.openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
@@ -118,7 +131,7 @@ Avoid descriptions that could lead to a cluttered or disordered representation.
 
 Output Format:
 
-Input: Song lyrics
+Input: Track Tittle and Track Lyrics
 Output: Only the representation generation prompt.
 Reference Prompts: Here are some example prompts you can use for inspiration:
 
@@ -138,8 +151,7 @@ Use these examples as a guide to create detailed prompts that result in powerful
         },
         { role: 'user', content: prompt }
       ],
-      max_tokens: 2000,
-      temperature: 1
+      max_tokens: 2000
     }).catch((err) => {
       return new Error(String(err))
     })
@@ -186,67 +198,6 @@ Use these examples as a guide to create detailed prompts that result in powerful
     return {
       success: true,
       description: imageDescription
-    }
-  }
-
-  async getLyricsEmojis (lyrics: string): Promise<MsOpenAiApiGetLyricsEmojisResponse> {
-    const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
-    const prompt = `Lyrics:\n\n${lyricsParsed}`
-    const response = await this.openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [
-        { role: 'system', content: 'Using the lyrics received, create a selection of emojis that best represent the song. The answer must only contain emojis. The answer must have up to 40 emojis.' },
-        { role: 'user', content: prompt }
-      ],
-      max_tokens: 100,
-      temperature: 0.7
-    }).catch((err) => {
-      return new Error(String(err))
-    })
-    if (response instanceof Error) {
-      advError(`MsOpenAiAPi - Error while generating emojis for lyrics: ${lyricsParsed.substring(0, 40)}... - ${response.message} - ${response.stack ?? 'No STACK'} - ${response.name}`)
-      return {
-        success: false,
-        error: response.message
-      }
-    }
-    const explanation = response.choices[0]
-    if (explanation === undefined) {
-      advError(`MsOpenAiAPi - No choices emojis generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
-      return {
-        success: false,
-        error: 'No choices generated'
-      }
-    }
-    // Remove new line, letters and numbers
-    const emojisText: string | undefined = explanation.message?.content?.replace(/\n/g, '').replace(/[a-zA-Z0-9]/g, '').trim()
-    if (emojisText === undefined) {
-      advError(`MsOpenAiAPi - No emojis text generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
-      return {
-        success: false,
-        error: 'No emojis text generated'
-      }
-    }
-    if (explanation.finish_reason !== 'stop') {
-      switch (explanation.finish_reason) {
-        case undefined: {
-          advError(`MsOpenAiAPi - Emojis for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: undefined`)
-          break
-        }
-        case null: {
-          advError(`MsOpenAiAPi - Emojis for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: null`)
-          break
-        }
-        default: {
-          advError(`MsOpenAiAPi - Emojis for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: ${JSON.stringify(explanation.finish_reason, null, 2)}`)
-          break
-        }
-      }
-    }
-
-    return {
-      success: true,
-      emojis: emojisText
     }
   }
 }

@@ -1,13 +1,12 @@
 import { randomUUID } from 'crypto'
 import { MsReplicateApi } from '../api/msReplicateApi/base'
-import { openaiConfig, replicateConfig } from '../config'
+import { replicateConfig } from '../config'
 import { type AIImageMetadata } from '../types'
 import { advError, advLog } from './advancedConsole'
 import { composeImage } from './mediaEditors'
 import { msFirebaseApi } from '../MelodyScout_Bot/bot'
-import { MsOpenAiApi } from '../api/msOpenAiApi/base'
 
-export async function getAiImageByLyrics (ctxLang: string | undefined, lyrics: string, trackName: string, artistName: string): Promise<{
+export async function getAiImageByLyrics (ctxLang: string | undefined, lyrics: string, lyricsRepresentationImageDescription: string, trackName: string, artistName: string): Promise<{
   success: true
   result: {
     withLayout: false
@@ -21,18 +20,8 @@ export async function getAiImageByLyrics (ctxLang: string | undefined, lyrics: s
   success: false
   error: string
 }> {
-  const msOpenAiApi = new MsOpenAiApi(openaiConfig.apiKey)
-  const openAiLyricsImageDescription = await msOpenAiApi.getLyricsImageDescription(lyrics)
-  if (!openAiLyricsImageDescription.success) {
-    return {
-      success: false,
-      error: `Error on getting image description by lyrics from OpenAi: ${openAiLyricsImageDescription.error}`
-    }
-  }
-  advLog(`Image description by lyrics:\nOpenAI: ${openAiLyricsImageDescription.description}`)
-  const lyricsImageDescription = openAiLyricsImageDescription
   const msReplicateApi = new MsReplicateApi(replicateConfig.token)
-  const imageByDescription = await msReplicateApi.getFluxImage(lyricsImageDescription.description)
+  const imageByDescription = await msReplicateApi.getFluxImage(lyricsRepresentationImageDescription)
   if (!imageByDescription.success) {
     return {
       success: false,
@@ -57,7 +46,7 @@ export async function getAiImageByLyrics (ctxLang: string | undefined, lyrics: s
     trackName,
     artistName,
     lyrics,
-    imageDescription: lyricsImageDescription.description,
+    imageDescription: lyricsRepresentationImageDescription,
     baseImageUrl: imageByDescription.imageUrl
   }
   const uploadToFirebase = await msFirebaseApi.putFile('images/ai', `${imageId}.jpg`, finalImage.image, finalImageMetadata)
