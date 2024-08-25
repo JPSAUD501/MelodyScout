@@ -121,7 +121,7 @@ export async function runCollageCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comm
     return
   }
   const inlineKeyboard = new InlineKeyboard()
-  inlineKeyboard.text(lang(ctxLang, { key: 'collageOverallButton', value: '[🧓] - Desde sempre' }), getCallbackKey(['CLG', 'overall']))
+  inlineKeyboard.text(lang(ctxLang, { key: 'collageOverallButton', value: '[📆] - Desde sempre' }), getCallbackKey(['CLG', 'overall']))
   inlineKeyboard.text(lang(ctxLang, { key: 'collage7dayButton', value: '[📆] - Últimos 7d' }), getCallbackKey(['CLG', '7day']))
   inlineKeyboard.row()
   inlineKeyboard.text(lang(ctxLang, { key: 'collage1monthButton', value: '[📆] - Último mês' }), getCallbackKey(['CLG', '1month']))
