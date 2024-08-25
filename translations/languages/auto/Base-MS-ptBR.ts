@@ -277,10 +277,16 @@ export const baseLang = {
   tfCollageHeader: '<b>[🖼] Colagem criada!</b>',
   unableToGetUserTopTracks: 'Não foi possível resgatar suas músicas mais ouvidas no Last.fm, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.',
   errorOnCreatingCollageInformMessage: 'Ocorreu um erro ao tentar gerar a imagem da sua colagem de músicas mais ouvidas, por favor tente novamente mais tarde.',
-  composeImageCounter: '{{playcount}}x Scrobbles',
+  composeImageCounter: '<b>{{playcount}}</b> Scrobbles',
   errorOnGettingTopTracksAlbumsInformMessage: 'Ocorreu um erro ao tentar resgatar as informações dos álbuns das suas músicas mais ouvidas, por favor tente novamente mais tarde.',
   notEnoughTopTracksError: 'Ouça pelo menos 9 músicas no período de tempo selecionado para gerar a colagem!',
   tfCollageTittle: '<b>Colagem musical de <a href="{{userUrl}}">{{username}}</a></b>',
   tfCollageTopTracksHeader: '<b>[🎵] Músicas mais ouvidas:</b>',
-  creatingCollageInformMessage: '⏳ - Sua colagem estará pronta em alguns segundos…'
+  creatingCollageInformMessage: '⏳ - Sua colagem estará pronta em alguns segundos…',
+  tfCollageTopTracksOverallHeader: '<b>[🎵] Músicas mais ouvidas desde sempre:</b>',
+  tfCollageTopTracks7dayHeader: '<b>[🎵] Músicas mais ouvidas nos últimos 7 dias:</b>',
+  tfCollageTopTracks1monthHeader: '<b>[🎵] Músicas mais ouvidas no último mês:</b>',
+  tfCollageTopTracks3monthHeader: '<b>[🎵] Músicas mais ouvidas nos últimos 3 meses:</b>',
+  tfCollageTopTracks6monthHeader: '<b>[🎵] Músicas mais ouvidas nos últimos 6 meses:</b>',
+  tfCollageTopTracks12monthHeader: '<b>[🎵] Músicas mais ouvidas no último ano:</b>'
 }

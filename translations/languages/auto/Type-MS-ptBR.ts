@@ -277,9 +277,15 @@ export type BaseLang =
   { key: 'tfCollageHeader', value: '<b>[🖼] Colagem criada!</b>' } |
   { key: 'unableToGetUserTopTracks', value: 'Não foi possível resgatar suas músicas mais ouvidas no Last.fm, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' } |
   { key: 'errorOnCreatingCollageInformMessage', value: 'Ocorreu um erro ao tentar gerar a imagem da sua colagem de músicas mais ouvidas, por favor tente novamente mais tarde.' } |
-  { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' } |
+  { key: 'composeImageCounter', value: '<b>{{playcount}}</b> Scrobbles' } |
   { key: 'errorOnGettingTopTracksAlbumsInformMessage', value: 'Ocorreu um erro ao tentar resgatar as informações dos álbuns das suas músicas mais ouvidas, por favor tente novamente mais tarde.' } |
   { key: 'notEnoughTopTracksError', value: 'Ouça pelo menos 9 músicas no período de tempo selecionado para gerar a colagem!' } |
   { key: 'tfCollageTittle', value: '<b>Colagem musical de <a href="{{userUrl}}">{{username}}</a></b>' } |
   { key: 'tfCollageTopTracksHeader', value: '<b>[🎵] Músicas mais ouvidas:</b>' } |
-  { key: 'creatingCollageInformMessage', value: '⏳ - Sua colagem estará pronta em alguns segundos…' }
+  { key: 'creatingCollageInformMessage', value: '⏳ - Sua colagem estará pronta em alguns segundos…' } |
+  { key: 'tfCollageTopTracksOverallHeader', value: '<b>[🎵] Músicas mais ouvidas desde sempre:</b>' } |
+  { key: 'tfCollageTopTracks7dayHeader', value: '<b>[🎵] Músicas mais ouvidas nos últimos 7 dias:</b>' } |
+  { key: 'tfCollageTopTracks1monthHeader', value: '<b>[🎵] Músicas mais ouvidas no último mês:</b>' } |
+  { key: 'tfCollageTopTracks3monthHeader', value: '<b>[🎵] Músicas mais ouvidas nos últimos 3 meses:</b>' } |
+  { key: 'tfCollageTopTracks6monthHeader', value: '<b>[🎵] Músicas mais ouvidas nos últimos 6 meses:</b>' } |
+  { key: 'tfCollageTopTracks12monthHeader', value: '<b>[🎵] Músicas mais ouvidas no último ano:</b>' }

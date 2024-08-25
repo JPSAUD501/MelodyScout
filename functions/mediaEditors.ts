@@ -84,7 +84,7 @@ export async function composeCollageImage (ctxLang: string | undefined, tracks: 
       trackName: collageTracksImages[0].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
       artistName: collageTracksImages[0].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
     }))
-    .replace(/{{counter1}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' }, {
+    .replace(/{{counter1}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '<b>{{playcount}}</b> Scrobbles' }, {
       playcount: collageTracksImages[0].playcount.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
     }))
     .replace(/\/\* {{image1}} \*\//g, `background-image: url("${collageTracksImages[0].trackImageUrl}");`)
@@ -94,7 +94,7 @@ export async function composeCollageImage (ctxLang: string | undefined, tracks: 
       trackName: collageTracksImages[1].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
       artistName: collageTracksImages[1].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
     }))
-    .replace(/{{counter2}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' }, {
+    .replace(/{{counter2}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '<b>{{playcount}}</b> Scrobbles' }, {
       playcount: collageTracksImages[1].playcount.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
     }))
     .replace(/\/\* {{image2}} \*\//g, `background-image: url("${collageTracksImages[1].trackImageUrl}");`)
@@ -104,7 +104,7 @@ export async function composeCollageImage (ctxLang: string | undefined, tracks: 
       trackName: collageTracksImages[2].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
       artistName: collageTracksImages[2].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
     }))
-    .replace(/{{counter3}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' }, {
+    .replace(/{{counter3}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '<b>{{playcount}}</b> Scrobbles' }, {
       playcount: collageTracksImages[2].playcount.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
     }))
     .replace(/\/\* {{image3}} \*\//g, `background-image: url("${collageTracksImages[2].trackImageUrl}");`)
@@ -114,7 +114,7 @@ export async function composeCollageImage (ctxLang: string | undefined, tracks: 
       trackName: collageTracksImages[3].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
       artistName: collageTracksImages[3].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
     }))
-    .replace(/{{counter4}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' }, {
+    .replace(/{{counter4}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '<b>{{playcount}}</b> Scrobbles' }, {
       playcount: collageTracksImages[3].playcount.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
     }))
     .replace(/\/\* {{image4}} \*\//g, `background-image: url("${collageTracksImages[3].trackImageUrl}");`)
@@ -124,7 +124,7 @@ export async function composeCollageImage (ctxLang: string | undefined, tracks: 
       trackName: collageTracksImages[4].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
       artistName: collageTracksImages[4].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
     }))
-    .replace(/{{counter5}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' }, {
+    .replace(/{{counter5}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '<b>{{playcount}}</b> Scrobbles' }, {
       playcount: collageTracksImages[4].playcount.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
     }))
     .replace(/\/\* {{image5}} \*\//g, `background-image: url("${collageTracksImages[4].trackImageUrl}");`)
@@ -134,7 +134,7 @@ export async function composeCollageImage (ctxLang: string | undefined, tracks: 
       trackName: collageTracksImages[5].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
       artistName: collageTracksImages[5].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
     }))
-    .replace(/{{counter6}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' }, {
+    .replace(/{{counter6}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '<b>{{playcount}}</b> Scrobbles' }, {
       playcount: collageTracksImages[5].playcount.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
     }))
     .replace(/\/\* {{image6}} \*\//g, `background-image: url("${collageTracksImages[5].trackImageUrl}");`)
@@ -144,7 +144,7 @@ export async function composeCollageImage (ctxLang: string | undefined, tracks: 
       trackName: collageTracksImages[6].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
       artistName: collageTracksImages[6].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
     }))
-    .replace(/{{counter7}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' }, {
+    .replace(/{{counter7}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '<b>{{playcount}}</b> Scrobbles' }, {
       playcount: collageTracksImages[6].playcount.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
     }))
     .replace(/\/\* {{image7}} \*\//g, `background-image: url("${collageTracksImages[6].trackImageUrl}");`)
@@ -154,7 +154,7 @@ export async function composeCollageImage (ctxLang: string | undefined, tracks: 
       trackName: collageTracksImages[7].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
       artistName: collageTracksImages[7].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
     }))
-    .replace(/{{counter8}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' }, {
+    .replace(/{{counter8}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '<b>{{playcount}}</b> Scrobbles' }, {
       playcount: collageTracksImages[7].playcount.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
     }))
     .replace(/\/\* {{image8}} \*\//g, `background-image: url("${collageTracksImages[7].trackImageUrl}");`)
@@ -164,7 +164,7 @@ export async function composeCollageImage (ctxLang: string | undefined, tracks: 
       trackName: collageTracksImages[8].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
       artistName: collageTracksImages[8].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
     }))
-    .replace(/{{counter9}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' }, {
+    .replace(/{{counter9}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '<b>{{playcount}}</b> Scrobbles' }, {
       playcount: collageTracksImages[8].playcount.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
     }))
     .replace(/\/\* {{image9}} \*\//g, `background-image: url("${collageTracksImages[8].trackImageUrl}");`)

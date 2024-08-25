@@ -119,7 +119,7 @@ export async function runCollageCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comm
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'errorOnCreatingCollageInformMessage', value: 'Ocorreu um erro ao tentar gerar a imagem da sua colagem de músicas mais ouvidas, por favor tente novamente mais tarde.' }))
     return
   }
-  await ctxReply(ctx, undefined, getCollageText(ctxLang, userInfo.data, collageImage.result.imageUrl, orderedUserTopTracksAllInfo), {
+  await ctxReply(ctx, undefined, getCollageText(ctxLang, userInfo.data, collageImage.result.imageUrl, orderedUserTopTracksAllInfo, 'overall'), {
     link_preview_options: {
       show_above_text: true
     }
