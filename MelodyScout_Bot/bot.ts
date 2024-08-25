@@ -34,6 +34,7 @@ import { postimageCallback } from './composers/callbacks/postimage'
 import { recognizeCommand } from './composers/commands/recognize'
 import { MsFirebaseApi } from '../api/msFirebaseApi/base'
 import { firebaseConfig } from '../config'
+import { collageCommand } from './composers/commands/collage'
 
 export const maintenanceMode = {
   active: false
@@ -61,6 +62,7 @@ export async function startMelodyScoutBot (): Promise<{
   bot.use(mashupCommand)
   bot.use(briefCommand)
   bot.use(recognizeCommand)
+  bot.use(collageCommand)
   bot.use(trackpreviewCallback)
   bot.use(tracklyricsCallback)
   bot.use(translatedtrackCallback)
@@ -99,7 +101,8 @@ export async function startMelodyScoutBot (): Promise<{
     { command: 'pntrack', description: 'Show information about the currently playing track' },
     { command: 'pnalbum', description: 'Show information about the album of the currently playing track' },
     { command: 'pnartist', description: 'Show information about the artist of the currently playing track' },
-    { command: 'recognize', description: 'Identify a song by replying to an audio message' }
+    { command: 'recognize', description: 'Identify a song by replying to an audio message' },
+    { command: 'collage', description: 'Create a collage of your top tracks' }
   ]).catch((err) => {
     advError(`MelodyScout_Bot - Error: ${String(err)}`)
   })

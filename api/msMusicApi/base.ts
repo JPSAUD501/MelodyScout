@@ -4,7 +4,7 @@ import fs, { type ReadStream } from 'fs'
 import path from 'path'
 import { advError } from '../../functions/advancedConsole'
 import * as Soundify from '@soundify/web-api'
-import { type SearchEndpoint } from '@soundify/web-api/types/api/search/search.endpoints'
+import { type SearchEndpoint } from '../../node_modules/@soundify/web-api/types/api/search/search.endpoints'
 import axios from 'axios'
 import { deleteTempDir, getTempDir } from '../../functions/tempy'
 import { randomUUID } from 'crypto'
@@ -157,52 +157,9 @@ export class MsMusicApi {
     const ytSearchResult = await youtube.search(`${track} - ${artist}`)
     if (ytSearchResult.videos.length <= 0) return { success: false, error: 'No videos found!' }
     const video = ytSearchResult.videos[0]
-    // const videoWithAudioUrlRequestPromise = youtubedl.exec(video.link, {
-    //   format: 'best',
-    //   skipDownload: true,
-    //   getUrl: true,
-    //   noWarnings: true,
-    //   callHome: false,
-    //   noCheckCertificates: true,
-    //   noPart: true,
-    //   noPlaylist: true
-    // }).catch((err) => {
-    //   return new Error(String(err))
-    // })
-    // const audioUrlRequestPromise = youtubedl.exec(video.link, {
-    //   format: 'ba',
-    //   skipDownload: true,
-    //   getUrl: true,
-    //   noWarnings: true,
-    //   callHome: false,
-    //   noCheckCertificates: true,
-    //   noPart: true,
-    //   noPlaylist: true
-    // }).catch((err) => {
-    //   return new Error(String(err))
-    // })
-    // const [videoWithAudioUrlRequest, audioUrlRequest] = await Promise.all([videoWithAudioUrlRequestPromise, audioUrlRequestPromise])
-    // if (videoWithAudioUrlRequest instanceof Error) {
-    //   advError(`Error while getting video info from Youtube! Url: ${video.link} - Error: ${videoWithAudioUrlRequest.message}`)
-    //   return { success: false, error: videoWithAudioUrlRequest.message }
-    // }
-    // if (audioUrlRequest instanceof Error) {
-    //   advError(`Error while getting video info from Youtube! Url: ${video.link} - Error: ${audioUrlRequest.message}`)
-    //   return { success: false, error: audioUrlRequest.message }
-    // }
-    // if (videoWithAudioUrlRequest.stdout.length <= 0) {
-    //   advError(`Error while getting video info from Youtube! Url: ${video.link} - Error: No video with audio found!`)
-    //   return { success: false, error: 'No video with audio found!' }
-    // }
-    // if (audioUrlRequest.stdout.length <= 0) {
-    //   advError(`Error while getting video info from Youtube! Url: ${video.link} - Error: No audio found!`)
-    //   return { success: false, error: 'No audio found!' }
-    // }
 
     return {
       success: true,
-      // videoWithAudioRawUrl: videoWithAudioUrlRequest.stdout,
-      // audioRawUrl: audioUrlRequest.stdout,
       videoUrl: video.link,
       videoMusicUrl: `https://music.youtube.com/watch?v=${video.id}`,
       videoId: video.id

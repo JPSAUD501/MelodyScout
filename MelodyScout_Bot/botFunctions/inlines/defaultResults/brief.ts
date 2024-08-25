@@ -13,7 +13,7 @@ export async function briefInlineResult (ctxLang: string | undefined, lastfmUser
   const resultName = 'Your musical brief!'
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
   const userInfoRequest = msLastfmApi.user.getInfo(lastfmUser)
-  const userTopTracksRequest = msLastfmApi.user.getTopTracks(lastfmUser, 5, 1)
+  const userTopTracksRequest = msLastfmApi.user.getTopTracks(lastfmUser, 'overall', 5, 1)
   const userTopAlbumsRequest = msLastfmApi.user.getTopAlbums(lastfmUser, 5)
   const userTopArtistsRequest = msLastfmApi.user.getTopArtists(lastfmUser, 5)
   const [userInfo, userTopTracks, userTopAlbums, userTopArtists] = await Promise.all([userInfoRequest, userTopTracksRequest, userTopAlbumsRequest, userTopArtistsRequest])

@@ -25,10 +25,10 @@ export class Album {
       advError(`Error while fetching album info! Artist: ${artist}, Album: ${album}, mbid: ${mbid}, username: ${username} - Error: ${JSON.stringify(msApiFetchResponse.errorData)}`)
       return msApiFetchResponse
     }
-    const userInfo = zodObject.parse(msApiFetchResponse.data)
+    const albumInfo = zodObject.parse(msApiFetchResponse.data)
     return {
       success: true,
-      data: userInfo
+      data: albumInfo
     }
   }
 }

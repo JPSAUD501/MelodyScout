@@ -273,4 +273,13 @@ export type BaseLang =
   { key: 'tfPlayingnowShareOnXTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>' } |
   { key: 'tfPnalbumShareOnXTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>' } |
   { key: 'tfPnartistShareOnXTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>' } |
-  { key: 'tfPntrackShareOnXTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>' }
+  { key: 'tfPntrackShareOnXTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>' } |
+  { key: 'tfCollageHeader', value: '<b>[🖼] Colagem criada!</b>' } |
+  { key: 'unableToGetUserTopTracks', value: 'Não foi possível resgatar suas músicas mais ouvidas no Last.fm, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' } |
+  { key: 'errorOnCreatingCollageInformMessage', value: 'Ocorreu um erro ao tentar gerar a imagem da sua colagem de músicas mais ouvidas, por favor tente novamente mais tarde.' } |
+  { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' } |
+  { key: 'errorOnGettingTopTracksAlbumsInformMessage', value: 'Ocorreu um erro ao tentar resgatar as informações dos álbuns das suas músicas mais ouvidas, por favor tente novamente mais tarde.' } |
+  { key: 'notEnoughTopTracksError', value: 'Ouça pelo menos 9 músicas no período de tempo selecionado para gerar a colagem!' } |
+  { key: 'tfCollageTittle', value: '<b>Colagem musical de <a href="{{userUrl}}">{{username}}</a></b>' } |
+  { key: 'tfCollageTopTracksHeader', value: '<b>[🎵] Músicas mais ouvidas:</b>' } |
+  { key: 'creatingCollageInformMessage', value: '⏳ - Sua colagem estará pronta em alguns segundos…' }

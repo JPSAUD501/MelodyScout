@@ -14,7 +14,7 @@ export async function getUserFilteredTopTracks (lastfmUser: string, artistName: 
     data: []
   }
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
-  const userTopTracks = await msLastfmApi.user.getTopTracks(lastfmUser, 1, 1)
+  const userTopTracks = await msLastfmApi.user.getTopTracks(lastfmUser, 'overall', 1, 1)
   if (!userTopTracks.success) {
     userFilteredTopTracks.status = 'error'
     return userFilteredTopTracks
@@ -23,7 +23,7 @@ export async function getUserFilteredTopTracks (lastfmUser: string, artistName: 
   const allUserFilteredTopTracksResponses = await PromisePool.for(
     Array.from({ length: userTopTracksPageLength }, (_, index) => index + 1)
   ).withConcurrency(2).useCorrespondingResults().process(async (page, _index, pool) => {
-    const userPartialTopTracksRequest = msLastfmApi.user.getTopTracks(lastfmUser, 1000, page)
+    const userPartialTopTracksRequest = msLastfmApi.user.getTopTracks(lastfmUser, 'overall', 1000, page)
     const userTopTracks = await userPartialTopTracksRequest
     if (!userTopTracks.success) {
       pool.stop()

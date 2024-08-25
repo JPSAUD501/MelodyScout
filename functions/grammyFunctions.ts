@@ -1,7 +1,7 @@
 import { type CallbackQueryContext, type Context, type InputFile, type RawApi } from 'grammy'
 import { advError } from './advancedConsole'
 import { type Message } from '@grammyjs/types'
-import { type Other } from 'grammy/out/core/api'
+import { type Other } from '../node_modules/grammy/out/core/api'
 import { lang } from '../translations/base'
 import { type Update, type InlineQueryResult, type ReactionTypeEmoji, type ReactionType } from 'grammy/types'
 

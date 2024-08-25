@@ -18,7 +18,7 @@ export class Server {
     })
 
     server.get('/health/process', async (_request, reply) => {
-      const formatMemoryUsage = (data): string => `${Math.round(data / 1024 / 1024 * 100) / 100} MB`
+      const formatMemoryUsage = (data: any): string => `${Math.round(data / 1024 / 1024 * 100) / 100} MB`
       const memoryData = process.memoryUsage()
       const memoryUsage = {
         rss: `${formatMemoryUsage(memoryData.rss)} -> Resident Set Size - total memory allocated for the process execution`,

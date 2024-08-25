@@ -11,6 +11,7 @@ import { randomUUID } from 'crypto'
 import * as materialUtilities from '@material/material-color-utilities'
 import { MsConverterApi } from '../api/msConverterApi/base'
 import { getAverageColor } from 'fast-average-color-node'
+import { downloadImage } from './downloadImage'
 
 export async function getMaterialYouColorThemeFromImage (image: Buffer): Promise<{
   success: true
@@ -39,7 +40,161 @@ export async function getMaterialYouColorThemeFromImage (image: Buffer): Promise
   }
 }
 
-export async function newComposeImage (ctxLang: string | undefined, image: Buffer, trackName: string, artistName: string): Promise<{
+export async function composeCollageImage (ctxLang: string | undefined, tracks: Array<{
+  trackName: string
+  artistName: string
+  trackImageUrl: string
+  playcount: number
+}>): Promise<{
+    success: true
+    image: Buffer
+  } | {
+    success: false
+    error: string
+  }> {
+  const collageTracksImages: Array<{
+    trackName: string
+    artistName: string
+    trackImageUrl: string
+    fontColor: string
+    containerColor: string
+    playcount: number
+  }> = []
+  for (const track of tracks) {
+    const trackImage = await downloadImage(track.trackImageUrl)
+    if (!trackImage.success) {
+      return {
+        success: false,
+        error: trackImage.error
+      }
+    }
+    const themeResponse = await getMaterialYouColorThemeFromImage(trackImage.image)
+    if (!themeResponse.success) {
+      return {
+        success: false,
+        error: themeResponse.error
+      }
+    }
+    const theme = themeResponse.theme
+    const containerColor = materialUtilities.hexFromArgb(theme.schemes.light.primaryContainer)
+    const fontColor = materialUtilities.hexFromArgb(theme.schemes.light.onPrimaryContainer)
+    collageTracksImages.push({
+      trackName: track.trackName,
+      artistName: track.artistName,
+      trackImageUrl: track.trackImageUrl,
+      fontColor,
+      containerColor,
+      playcount: track.playcount
+    })
+  }
+  const html = fs.readFileSync(path.join(__dirname, '../public/v2/collageFrame.html'), 'utf8')
+  const htmlWithText = html
+    .replace(/\/\* {{backgroundColor}} \*\//g, `background-color: ${collageTracksImages[4].fontColor};`)
+    .replace(/{{tittle1}}/g, lang(ctxLang, { key: 'composeImageTitle', value: '<b>{{trackName}}</b> por <b>{{artistName}}</b>' }, {
+      trackName: collageTracksImages[0].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
+      artistName: collageTracksImages[0].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
+    }))
+    .replace(/{{counter1}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' }, {
+      playcount: collageTracksImages[0].playcount.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
+    }))
+    .replace(/\/\* {{image1}} \*\//g, `background-image: url("${collageTracksImages[0].trackImageUrl}");`)
+    .replace(/\/\* {{containerColor1}} \*\//g, `background-color: ${collageTracksImages[0].containerColor};`)
+    .replace(/\/\* {{fontColor1}} \*\//g, `color: ${collageTracksImages[0].fontColor};`)
+    .replace(/{{tittle2}}/g, lang(ctxLang, { key: 'composeImageTitle', value: '<b>{{trackName}}</b> por <b>{{artistName}}</b>' }, {
+      trackName: collageTracksImages[1].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
+      artistName: collageTracksImages[1].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
+    }))
+    .replace(/{{counter2}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' }, {
+      playcount: collageTracksImages[1].playcount.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
+    }))
+    .replace(/\/\* {{image2}} \*\//g, `background-image: url("${collageTracksImages[1].trackImageUrl}");`)
+    .replace(/\/\* {{containerColor2}} \*\//g, `background-color: ${collageTracksImages[1].containerColor};`)
+    .replace(/\/\* {{fontColor2}} \*\//g, `color: ${collageTracksImages[1].fontColor};`)
+    .replace(/{{tittle3}}/g, lang(ctxLang, { key: 'composeImageTitle', value: '<b>{{trackName}}</b> por <b>{{artistName}}</b>' }, {
+      trackName: collageTracksImages[2].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
+      artistName: collageTracksImages[2].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
+    }))
+    .replace(/{{counter3}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' }, {
+      playcount: collageTracksImages[2].playcount.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
+    }))
+    .replace(/\/\* {{image3}} \*\//g, `background-image: url("${collageTracksImages[2].trackImageUrl}");`)
+    .replace(/\/\* {{containerColor3}} \*\//g, `background-color: ${collageTracksImages[2].containerColor};`)
+    .replace(/\/\* {{fontColor3}} \*\//g, `color: ${collageTracksImages[2].fontColor};`)
+    .replace(/{{tittle4}}/g, lang(ctxLang, { key: 'composeImageTitle', value: '<b>{{trackName}}</b> por <b>{{artistName}}</b>' }, {
+      trackName: collageTracksImages[3].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
+      artistName: collageTracksImages[3].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
+    }))
+    .replace(/{{counter4}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' }, {
+      playcount: collageTracksImages[3].playcount.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
+    }))
+    .replace(/\/\* {{image4}} \*\//g, `background-image: url("${collageTracksImages[3].trackImageUrl}");`)
+    .replace(/\/\* {{containerColor4}} \*\//g, `background-color: ${collageTracksImages[3].containerColor};`)
+    .replace(/\/\* {{fontColor4}} \*\//g, `color: ${collageTracksImages[3].fontColor};`)
+    .replace(/{{tittle5}}/g, lang(ctxLang, { key: 'composeImageTitle', value: '<b>{{trackName}}</b> por <b>{{artistName}}</b>' }, {
+      trackName: collageTracksImages[4].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
+      artistName: collageTracksImages[4].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
+    }))
+    .replace(/{{counter5}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' }, {
+      playcount: collageTracksImages[4].playcount.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
+    }))
+    .replace(/\/\* {{image5}} \*\//g, `background-image: url("${collageTracksImages[4].trackImageUrl}");`)
+    .replace(/\/\* {{containerColor5}} \*\//g, `background-color: ${collageTracksImages[4].containerColor};`)
+    .replace(/\/\* {{fontColor5}} \*\//g, `color: ${collageTracksImages[4].fontColor};`)
+    .replace(/{{tittle6}}/g, lang(ctxLang, { key: 'composeImageTitle', value: '<b>{{trackName}}</b> por <b>{{artistName}}</b>' }, {
+      trackName: collageTracksImages[5].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
+      artistName: collageTracksImages[5].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
+    }))
+    .replace(/{{counter6}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' }, {
+      playcount: collageTracksImages[5].playcount.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
+    }))
+    .replace(/\/\* {{image6}} \*\//g, `background-image: url("${collageTracksImages[5].trackImageUrl}");`)
+    .replace(/\/\* {{containerColor6}} \*\//g, `background-color: ${collageTracksImages[5].containerColor};`)
+    .replace(/\/\* {{fontColor6}} \*\//g, `color: ${collageTracksImages[5].fontColor};`)
+    .replace(/{{tittle7}}/g, lang(ctxLang, { key: 'composeImageTitle', value: '<b>{{trackName}}</b> por <b>{{artistName}}</b>' }, {
+      trackName: collageTracksImages[6].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
+      artistName: collageTracksImages[6].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
+    }))
+    .replace(/{{counter7}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' }, {
+      playcount: collageTracksImages[6].playcount.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
+    }))
+    .replace(/\/\* {{image7}} \*\//g, `background-image: url("${collageTracksImages[6].trackImageUrl}");`)
+    .replace(/\/\* {{containerColor7}} \*\//g, `background-color: ${collageTracksImages[6].containerColor};`)
+    .replace(/\/\* {{fontColor7}} \*\//g, `color: ${collageTracksImages[6].fontColor};`)
+    .replace(/{{tittle8}}/g, lang(ctxLang, { key: 'composeImageTitle', value: '<b>{{trackName}}</b> por <b>{{artistName}}</b>' }, {
+      trackName: collageTracksImages[7].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
+      artistName: collageTracksImages[7].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
+    }))
+    .replace(/{{counter8}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' }, {
+      playcount: collageTracksImages[7].playcount.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
+    }))
+    .replace(/\/\* {{image8}} \*\//g, `background-image: url("${collageTracksImages[7].trackImageUrl}");`)
+    .replace(/\/\* {{containerColor8}} \*\//g, `background-color: ${collageTracksImages[7].containerColor};`)
+    .replace(/\/\* {{fontColor8}} \*\//g, `color: ${collageTracksImages[7].fontColor};`)
+    .replace(/{{tittle9}}/g, lang(ctxLang, { key: 'composeImageTitle', value: '<b>{{trackName}}</b> por <b>{{artistName}}</b>' }, {
+      trackName: collageTracksImages[8].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
+      artistName: collageTracksImages[8].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
+    }))
+    .replace(/{{counter9}}/g, lang(ctxLang, { key: 'composeImageCounter', value: '{{playcount}}x Scrobbles' }, {
+      playcount: collageTracksImages[8].playcount.toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' }))
+    }))
+    .replace(/\/\* {{image9}} \*\//g, `background-image: url("${collageTracksImages[8].trackImageUrl}");`)
+    .replace(/\/\* {{containerColor9}} \*\//g, `background-color: ${collageTracksImages[8].containerColor};`)
+    .replace(/\/\* {{fontColor9}} \*\//g, `color: ${collageTracksImages[8].fontColor};`)
+  const finalImage = await new MsConverterApi(converterApiConfig.apiKey).convertHtmlToImage(htmlWithText)
+  if (!finalImage.success) {
+    advError(`MediaEditor - ComposeImage - Error on creating final image: ${finalImage.error}`)
+    return {
+      success: false,
+      error: `Error on creating final image: ${finalImage.error}`
+    }
+  }
+  return {
+    success: true,
+    image: finalImage.image
+  }
+}
+
+export async function composeImage (ctxLang: string | undefined, image: Buffer, trackName: string, artistName: string): Promise<{
   success: true
   image: Buffer
 } | {
@@ -78,84 +233,6 @@ export async function newComposeImage (ctxLang: string | undefined, image: Buffe
   return {
     success: true,
     image: finalImage.image
-  }
-}
-
-export async function composeImage (ctxLang: string | undefined, image: Buffer, trackName: string, artistName: string): Promise<{
-  success: true
-  image: Buffer
-} | {
-  success: false
-  error: string
-}> {
-  const fontFilePath = path.join(__dirname, '../public/fonts/Poppins/Poppins-Regular.ttf')
-  const imageFramePath = path.join(__dirname, '../public/v2/imageFrame.png')
-  const startTimeTextOverlay = Date.now()
-  const textOverlay = await sharp({
-    text: {
-      text: lang(ctxLang, { key: 'composeImageTitle', value: '<b>{{trackName}}</b> por <b>{{artistName}}</b>' }, {
-        trackName: trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
-        artistName: artistName.replace(/&/g, '').replace(/ {2}/g, ' ')
-      }),
-      fontfile: fontFilePath,
-      font: 'Poppins',
-      height: 27,
-      width: 906,
-      rgba: true,
-      wrap: 'none'
-    }
-  }).resize({
-    height: 27,
-    width: 906,
-    fit: 'contain',
-    background: {
-      r: 0,
-      g: 0,
-      b: 0,
-      alpha: 0
-    }
-  }).webp().toBuffer().catch((error) => {
-    return new Error(error)
-  })
-  if (textOverlay instanceof Error) {
-    advError(`MediaEditor - ComposeImage - Error on creating text overlay: ${textOverlay.message}`)
-    return {
-      success: false,
-      error: `Error on creating text overlay: ${textOverlay.message}`
-    }
-  }
-  const endTimeTextOverlay = Date.now()
-  advLog(`MediaEditor - ComposeImage - Text overlay created in ${(endTimeTextOverlay - startTimeTextOverlay) / 1000}s`)
-  const startTimeFinalImage = Date.now()
-  const finalImage = await sharp(image)
-    .resize(1000, 1000)
-    .composite([
-      { input: fs.readFileSync(imageFramePath) },
-      {
-        input: textOverlay,
-        top: 45,
-        left: (1000 - 906) / 2
-      }
-    ])
-    .jpeg({
-      mozjpeg: true
-    })
-    .toBuffer()
-    .catch((error) => {
-      return new Error(error)
-    })
-  if (finalImage instanceof Error) {
-    advError(`MediaEditor - ComposeImage - Error on creating final image: ${finalImage.message}`)
-    return {
-      success: false,
-      error: `Error on creating final image: ${finalImage.message}`
-    }
-  }
-  const endTimeFinalImage = Date.now()
-  advLog(`MediaEditor - ComposeImage - Final image created in ${(endTimeFinalImage - startTimeFinalImage) / 1000}s`)
-  return {
-    success: true,
-    image: finalImage
   }
 }
 

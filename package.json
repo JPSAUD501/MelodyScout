@@ -6,11 +6,12 @@
   "scripts": {
     "start:prod": "bun run deploy && bun start",
     "start": "bun run ./app.ts",
-    "start:dev": "bun run ./app.ts",
+    "start:dev": "bun run typecheck && bun run start",
     "deploy": "bunx prisma migrate deploy",
     "dev": "bun run translate:dev && bun run start:dev",
     "translate:dev": "bun run ./translations/runModule.ts",
-    "translate": "bun run ./translations/runModule.ts"
+    "translate": "bun run ./translations/runModule.ts",
+    "typecheck": "bunx tsc --noEmit --skipLibCheck"
   },
   "repository": {
     "type": "git",
@@ -66,7 +67,7 @@
     "fs": "^0.0.1-security",
     "genius-lyrics": "^4.4.7",
     "google-tts-api": "^2.0.2",
-    "grammy": "^1.24.0",
+    "grammy": "^1.29.0",
     "instagram-private-api": "^1.46.1",
     "luxon": "^3.4.4",
     "openai": "^4.47.3",

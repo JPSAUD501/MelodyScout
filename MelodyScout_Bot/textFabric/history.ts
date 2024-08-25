@@ -35,7 +35,6 @@ export function getHistoryText (ctxLang: string | undefined, userInfo: UserInfo,
   if (trackHistory.length > 0) {
     for (let i = 0; i < trackHistory.length; i++) {
       const track = trackHistory[i]
-      if (track['@attr']?.nowplaying === 'true') continue
       if (i >= maxItens) break
       switch (true) {
         case (track.playCount <= 1): {

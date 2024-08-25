@@ -1,4 +1,4 @@
-import { Composer } from 'grammy'
+import { Composer, type Context, type InlineQueryContext } from 'grammy'
 import { msPrismaDbApi } from '../../bot'
 import { runDefaultInline } from '../../botFunctions/inlines/default'
 import { logNewInlineQuery } from '../../logFunctions'
@@ -6,8 +6,8 @@ import { logNewInlineQuery } from '../../logFunctions'
 export const inlineDefault = new Composer()
 
 inlineDefault.on('inline_query', async (ctx) => {
-  logNewInlineQuery(ctx)
-  void runDefaultInline(msPrismaDbApi, ctx)
+  logNewInlineQuery(ctx as InlineQueryContext<Context>)
+  void runDefaultInline(msPrismaDbApi, ctx as InlineQueryContext<Context>)
 })
 
 inlineDefault.errorBoundary((err) => {

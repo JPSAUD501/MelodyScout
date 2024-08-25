@@ -139,6 +139,7 @@
     "tryin'a",
     "tryna",
     "Tryna",
+    "typecheck",
     "udey",
     "ultrabold",
     "ultrafast",
@@ -156,5 +157,6 @@
     "youtubedl"
   ],
   "todo-tree.tree.disableCompactFolders": false,
-  "bun.debugTerminal.enabled": true
+  "bun.debugTerminal.enabled": true,
+  "bun.debugTerminal.stopOnEntry": false
 }

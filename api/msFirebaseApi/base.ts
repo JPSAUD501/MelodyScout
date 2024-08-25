@@ -9,7 +9,7 @@ export interface MsFirebaseApiError {
 export type MsFirebaseApiGetFileResponse = {
   success: true
   publicUrl: string
-  metadata: Record<string, any>
+  metadata: Record<string, any> | undefined
   file: Buffer
 } | MsFirebaseApiError
 
@@ -31,7 +31,7 @@ export class MsFirebaseApi {
     return getStorage(this.client)
   }
 
-  async putFile (filePath: string, fileName: string, fileData: Buffer, fileMetadata: Record<string, string>): Promise<MsFirebaseApiGetFileResponse> {
+  async putFile (filePath: string, fileName: string, fileData: Buffer, fileMetadata?: Record<string, string>): Promise<MsFirebaseApiGetFileResponse> {
     const parsedFileName = `${filePath}/${fileName}`
     await this.getStorage().bucket().file(parsedFileName).save(fileData)
     const fileRef = this.getStorage().bucket().file(parsedFileName)
@@ -51,12 +51,6 @@ export class MsFirebaseApi {
     const publicUrl = fileRef.publicUrl()
     const allMetadata = await fileRef.getMetadata()
     const metadata = allMetadata[0].metadata
-    if (metadata === undefined) {
-      return {
-        success: false,
-        error: 'File metadata not found'
-      }
-    }
     const file = await fileRef.download()
     if (file.length <= 0) {
       return {

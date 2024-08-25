@@ -273,5 +273,14 @@ export const baseLang = {
   tfPlayingnowShareOnXTitle: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>',
   tfPnalbumShareOnXTitle: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>',
   tfPnartistShareOnXTitle: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>',
-  tfPntrackShareOnXTitle: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>'
+  tfPntrackShareOnXTitle: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>',
+  tfCollageHeader: '<b>[🖼] Colagem criada!</b>',
+  unableToGetUserTopTracks: 'Não foi possível resgatar suas músicas mais ouvidas no Last.fm, tente novamente mais tarde! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.',
+  errorOnCreatingCollageInformMessage: 'Ocorreu um erro ao tentar gerar a imagem da sua colagem de músicas mais ouvidas, por favor tente novamente mais tarde.',
+  composeImageCounter: '{{playcount}}x Scrobbles',
+  errorOnGettingTopTracksAlbumsInformMessage: 'Ocorreu um erro ao tentar resgatar as informações dos álbuns das suas músicas mais ouvidas, por favor tente novamente mais tarde.',
+  notEnoughTopTracksError: 'Ouça pelo menos 9 músicas no período de tempo selecionado para gerar a colagem!',
+  tfCollageTittle: '<b>Colagem musical de <a href="{{userUrl}}">{{username}}</a></b>',
+  tfCollageTopTracksHeader: '<b>[🎵] Músicas mais ouvidas:</b>',
+  creatingCollageInformMessage: '⏳ - Sua colagem estará pronta em alguns segundos…'
 }
