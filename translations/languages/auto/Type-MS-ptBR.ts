@@ -289,7 +289,7 @@ export type BaseLang =
   { key: 'tfCollageTopTracks3monthHeader', value: '<b>[🎵] Mais ouvidas nos últimos 3 meses:</b>' } |
   { key: 'tfCollageTopTracks6monthHeader', value: '<b>[🎵] Mais ouvidas nos últimos 6 meses:</b>' } |
   { key: 'tfCollageTopTracks12monthHeader', value: '<b>[🎵] Mais ouvidas no último ano:</b>' } |
-  { key: 'collageOverallButton', value: '[📆] - Desde sempre' } |
+  { key: 'collageOverallButton', value: '[📆] - Vida toda' } |
   { key: 'collage7dayButton', value: '[📆] - Últimos 7d' } |
   { key: 'collage1monthButton', value: '[📆] - Último mês' } |
   { key: 'collage3monthButton', value: '[📆] - Últimos 3m' } |

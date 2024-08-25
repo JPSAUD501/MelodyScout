@@ -103,7 +103,7 @@ export async function runCollageCallback (msPrismaDbApi: MsPrismaDbApi, ctx: Cal
         trackName: track.name,
         artistName: track.artist.name,
         imageBase64: trackImageBase64,
-        playcount: Number(trackInfo.data.track.userplaycount)
+        playcount: Number(track.playcount)
       })
     })
   const orderedUserTopTracksAllInfo = userTopTracksAllInfo.sort((a, b) => {
@@ -120,7 +120,7 @@ export async function runCollageCallback (msPrismaDbApi: MsPrismaDbApi, ctx: Cal
     return
   }
   const inlineKeyboard = new InlineKeyboard()
-  inlineKeyboard.text(lang(ctxLang, { key: 'collageOverallButton', value: '[📆] - Desde sempre' }), getCallbackKey(['CLG', 'overall']))
+  inlineKeyboard.text(lang(ctxLang, { key: 'collageOverallButton', value: '[📆] - Vida toda' }), getCallbackKey(['CLG', 'overall']))
   inlineKeyboard.text(lang(ctxLang, { key: 'collage7dayButton', value: '[📆] - Últimos 7d' }), getCallbackKey(['CLG', '7day']))
   inlineKeyboard.row()
   inlineKeyboard.text(lang(ctxLang, { key: 'collage1monthButton', value: '[📆] - Último mês' }), getCallbackKey(['CLG', '1month']))
