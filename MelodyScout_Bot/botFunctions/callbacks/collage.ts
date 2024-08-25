@@ -107,7 +107,7 @@ export async function runCollageCallback (msPrismaDbApi: MsPrismaDbApi, ctx: Cal
       })
     })
   const orderedUserTopTracksAllInfo = userTopTracksAllInfo.sort((a, b) => {
-    return Number(b.trackInfo.track.userplaycount) - Number(a.trackInfo.track.userplaycount)
+    return Number(b.playcount) - Number(a.playcount)
   })
   if (getTopTracksErrors.length > 0) {
     console.error(getTopTracksErrors)
