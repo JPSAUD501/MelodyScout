@@ -35,6 +35,7 @@ import { recognizeCommand } from './composers/commands/recognize'
 import { MsFirebaseApi } from '../api/msFirebaseApi/base'
 import { firebaseConfig } from '../config'
 import { collageCommand } from './composers/commands/collage'
+import { collageCallback } from './composers/callbacks/collage'
 
 export const maintenanceMode = {
   active: false
@@ -72,6 +73,7 @@ export async function startMelodyScoutBot (): Promise<{
   bot.use(trackaudiodownloadCallback)
   bot.use(trackvideodownloadCallback)
   bot.use(postimageCallback)
+  bot.use(collageCallback)
   bot.use(tracksearchInline)
   bot.use(callbackDefault)
   bot.use(inlineDefault)

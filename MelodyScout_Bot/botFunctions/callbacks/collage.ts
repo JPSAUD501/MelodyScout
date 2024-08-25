@@ -1,5 +1,4 @@
-import { InlineKeyboard, type CommandContext, type Context } from 'grammy'
-import { ctxReply, ctxTempReply } from '../../../functions/grammyFunctions'
+import { ctxAnswerCallbackQuery, ctxReply, ctxTempReply } from '../../../functions/grammyFunctions'
 import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
 import { lastfmConfig, melodyScoutConfig, spotifyConfig } from '../../../config'
@@ -9,15 +8,15 @@ import { getCollageText } from '../../textFabric/collage'
 import PromisePool from '@supercharge/promise-pool'
 import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { downloadImage } from '../../../functions/downloadImage'
+import { InlineKeyboard, type CallbackQueryContext, type Context } from 'grammy'
 import { getCallbackKey } from '../../../functions/callbackMaker'
 
-export async function runCollageCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
-  const ctxLang = ctx.from?.language_code
-  const messageId = ctx.message?.message_id
-  if (ctx.chat?.type === 'channel') {
-    void ctxReply(ctx, undefined, lang(ctxLang, { key: 'dontWorkOnChannelsInformMessage', value: 'Infelizmente eu ainda não funciono em canais! Acompanhe minhas atualizações para saber quando novas funções estarão disponíveis!' }))
-    return
-  }
+export async function runCollageCallback (msPrismaDbApi: MsPrismaDbApi, ctx: CallbackQueryContext<Context>): Promise<void> {
+  const ctxLang = ctx.from.language_code
+  void ctxAnswerCallbackQuery(ctx, lang(ctxLang, { key: 'loadingInformCallback', value: '⏳ - Carregando…' }))
+  const messageId = ctx.callbackQuery.message?.message_id
+  const dataArray = ctx.callbackQuery.data.split(melodyScoutConfig.divider)
+  const period = dataArray[1] as 'overall' | '7day' | '1month' | '3month' | '6month' | '12month'
   const telegramUserId = ctx.from?.id
   if (telegramUserId === undefined) {
     await ctxReply(ctx, undefined, lang(ctxLang, { key: 'unableToGetUserIdErrorMessage', value: 'Infelizmente não foi possível identificar seu id, por favor tente novamente mais tarde!' }))
@@ -48,7 +47,7 @@ export async function runCollageCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comm
   })
   const msLastfmApi = new MsLastfmApi(lastfmConfig.apiKey)
   const userInfoRequest = msLastfmApi.user.getInfo(lastfmUser)
-  const userTopTracksRequest = msLastfmApi.user.getTopTracks(lastfmUser, 'overall', 9, 1)
+  const userTopTracksRequest = msLastfmApi.user.getTopTracks(lastfmUser, period, 9, 1)
   const [userInfo, userTopTracks] = await Promise.all([userInfoRequest, userTopTracksRequest])
   if (!userInfo.success) {
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'lastfmUserDataNotFoundedError', value: 'Não foi possível resgatar suas informações do Last.fm, caso o seu usuário não seja mais <code>{{lastfmUser}}</code> utilize o comando /forgetme e em seguida o /myuser para registrar seu novo perfil! Se o problema persistir entre em contato com o meu desenvolvedor utilizando o comando /contact.' }, { lastfmUser }))
@@ -129,7 +128,7 @@ export async function runCollageCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comm
   inlineKeyboard.row()
   inlineKeyboard.text(lang(ctxLang, { key: 'collage6monthButton', value: '[📆] - Últimos 6m' }), getCallbackKey(['CLG', '6month']))
   inlineKeyboard.text(lang(ctxLang, { key: 'collage12monthButton', value: '[📆] - Último ano' }), getCallbackKey(['CLG', '12month']))
-  await ctxReply(ctx, undefined, getCollageText(ctxLang, userInfo.data, collageImage.result.imageUrl, orderedUserTopTracksAllInfo, 'overall'), {
+  await ctxReply(ctx, undefined, getCollageText(ctxLang, userInfo.data, collageImage.result.imageUrl, orderedUserTopTracksAllInfo, period), {
     link_preview_options: {
       show_above_text: true
     },

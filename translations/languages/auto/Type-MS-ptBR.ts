@@ -281,11 +281,17 @@ export type BaseLang =
   { key: 'errorOnGettingTopTracksAlbumsInformMessage', value: 'Ocorreu um erro ao tentar resgatar as informações dos álbuns das suas músicas mais ouvidas, por favor tente novamente mais tarde.' } |
   { key: 'notEnoughTopTracksError', value: 'Ouça pelo menos 9 músicas no período de tempo selecionado para gerar a colagem!' } |
   { key: 'tfCollageTittle', value: '<b>Colagem musical de <a href="{{userUrl}}">{{username}}</a></b>' } |
-  { key: 'tfCollageTopTracksHeader', value: '<b>[🎵] Músicas mais ouvidas:</b>' } |
+  { key: 'tfCollageTopTracksHeader', value: '<b>[🎵] Mais ouvidas:</b>' } |
   { key: 'creatingCollageInformMessage', value: '⏳ - Sua colagem estará pronta em alguns segundos…' } |
-  { key: 'tfCollageTopTracksOverallHeader', value: '<b>[🎵] Músicas mais ouvidas desde sempre:</b>' } |
-  { key: 'tfCollageTopTracks7dayHeader', value: '<b>[🎵] Músicas mais ouvidas nos últimos 7 dias:</b>' } |
-  { key: 'tfCollageTopTracks1monthHeader', value: '<b>[🎵] Músicas mais ouvidas no último mês:</b>' } |
-  { key: 'tfCollageTopTracks3monthHeader', value: '<b>[🎵] Músicas mais ouvidas nos últimos 3 meses:</b>' } |
-  { key: 'tfCollageTopTracks6monthHeader', value: '<b>[🎵] Músicas mais ouvidas nos últimos 6 meses:</b>' } |
-  { key: 'tfCollageTopTracks12monthHeader', value: '<b>[🎵] Músicas mais ouvidas no último ano:</b>' }
+  { key: 'tfCollageTopTracksOverallHeader', value: '<b>[🎵] Mais ouvidas desde sempre:</b>' } |
+  { key: 'tfCollageTopTracks7dayHeader', value: '<b>[🎵] Mais ouvidas nos últimos 7 dias:</b>' } |
+  { key: 'tfCollageTopTracks1monthHeader', value: '<b>[🎵] Mais ouvidas no último mês:</b>' } |
+  { key: 'tfCollageTopTracks3monthHeader', value: '<b>[🎵] Mais ouvidas nos últimos 3 meses:</b>' } |
+  { key: 'tfCollageTopTracks6monthHeader', value: '<b>[🎵] Mais ouvidas nos últimos 6 meses:</b>' } |
+  { key: 'tfCollageTopTracks12monthHeader', value: '<b>[🎵] Mais ouvidas no último ano:</b>' } |
+  { key: 'collageOverallButton', value: '[🧓] - Desde sempre' } |
+  { key: 'collage7dayButton', value: '[📆] - Últimos 7d' } |
+  { key: 'collage1monthButton', value: '[📆] - Último mês' } |
+  { key: 'collage3monthButton', value: '[📆] - Últimos 3m' } |
+  { key: 'collage6monthButton', value: '[📆] - Últimos 6m' } |
+  { key: 'collage12monthButton', value: '[📆] - Último ano' }
