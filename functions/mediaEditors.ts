@@ -5,13 +5,14 @@ import { lang } from '../translations/base'
 import { type AIImageMetadata } from '../types'
 import ffmpeg from 'fluent-ffmpeg'
 import { deleteTempDir, getTempDir } from './tempy'
-import { converterApiConfig, ffConfig } from '../config'
+import { converterApiConfig, ffConfig, melodyScoutConfig } from '../config'
 import { advError, advLog } from './advancedConsole'
 import { randomUUID } from 'crypto'
 import * as materialUtilities from '@material/material-color-utilities'
 import { MsConverterApi } from '../api/msConverterApi/base'
 import { getAverageColor } from 'fast-average-color-node'
-import { downloadImage } from './downloadImage'
+import type { CollageTrackData } from './collage'
+import { getCallbackKey } from './callbackMaker'
 
 export async function getMaterialYouColorThemeFromImage (image: Buffer): Promise<{
   success: true
@@ -40,18 +41,13 @@ export async function getMaterialYouColorThemeFromImage (image: Buffer): Promise
   }
 }
 
-export async function composeCollageImage (ctxLang: string | undefined, tracks: Array<{
-  trackName: string
-  artistName: string
-  trackImageUrl: string
-  playcount: number
-}>): Promise<{
-    success: true
-    image: Buffer
-  } | {
-    success: false
-    error: string
-  }> {
+export async function composeCollageImage (ctxLang: string | undefined, tracks: CollageTrackData[]): Promise<{
+  success: true
+  image: Buffer
+} | {
+  success: false
+  error: string
+}> {
   const collageTracksImages: Array<{
     trackName: string
     artistName: string
@@ -61,14 +57,7 @@ export async function composeCollageImage (ctxLang: string | undefined, tracks: 
     playcount: number
   }> = []
   for (const track of tracks) {
-    const trackImage = await downloadImage(track.trackImageUrl)
-    if (!trackImage.success) {
-      return {
-        success: false,
-        error: trackImage.error
-      }
-    }
-    const themeResponse = await getMaterialYouColorThemeFromImage(trackImage.image)
+    const themeResponse = await getMaterialYouColorThemeFromImage(Buffer.from(track.imageBase64, 'base64'))
     if (!themeResponse.success) {
       return {
         success: false,
@@ -78,10 +67,11 @@ export async function composeCollageImage (ctxLang: string | undefined, tracks: 
     const theme = themeResponse.theme
     const containerColor = materialUtilities.hexFromArgb(theme.schemes.light.primaryContainer)
     const fontColor = materialUtilities.hexFromArgb(theme.schemes.light.onPrimaryContainer)
+    const trackAndArtistName = getCallbackKey([track.trackName.replace(/  +/g, ' '), track.artistName.replace(/  +/g, ' ')]).split(melodyScoutConfig.divider)
     collageTracksImages.push({
-      trackName: track.trackName,
-      artistName: track.artistName,
-      trackImageUrl: track.trackImageUrl,
+      trackName: trackAndArtistName[0],
+      artistName: trackAndArtistName[1],
+      trackImageUrl: `data:image/jpeg;base64,${track.imageBase64}`,
       fontColor,
       containerColor,
       playcount: track.playcount
@@ -89,7 +79,7 @@ export async function composeCollageImage (ctxLang: string | undefined, tracks: 
   }
   const html = fs.readFileSync(path.join(__dirname, '../public/v2/collageFrame.html'), 'utf8')
   const htmlWithText = html
-    .replace(/\/\* {{backgroundColor}} \*\//g, `background-color: ${collageTracksImages[4].fontColor};`)
+    .replace(/\/\* {{backgroundColor}} \*\//g, `background-color: ${collageTracksImages[Math.floor(Math.random() * collageTracksImages.length)].fontColor};`)
     .replace(/{{tittle1}}/g, lang(ctxLang, { key: 'composeImageTitle', value: '<b>{{trackName}}</b> por <b>{{artistName}}</b>' }, {
       trackName: collageTracksImages[0].trackName.replace(/&/g, '').replace(/ {2}/g, ' '),
       artistName: collageTracksImages[0].artistName.replace(/&/g, '').replace(/ {2}/g, ' ')

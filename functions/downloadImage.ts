@@ -7,8 +7,11 @@ export async function downloadImage (url: string): Promise<{
   success: false
   error: string
 }> {
+  console.log(`Downloading image from ${url}`)
   try {
-    const response = await axios.get(url, {
+    const response = await axios({
+      url,
+      method: 'GET',
       responseType: 'arraybuffer'
     })
     const imageBuffer = Buffer.from(response.data, 'binary')

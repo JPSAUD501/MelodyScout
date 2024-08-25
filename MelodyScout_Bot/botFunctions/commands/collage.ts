@@ -2,13 +2,13 @@ import { type CommandContext, type Context } from 'grammy'
 import { ctxReply, ctxTempReply } from '../../../functions/grammyFunctions'
 import { type MsPrismaDbApi } from '../../../api/msPrismaDbApi/base'
 import { MsLastfmApi } from '../../../api/msLastfmApi/base'
-import { lastfmConfig, melodyScoutConfig } from '../../../config'
+import { lastfmConfig, melodyScoutConfig, spotifyConfig } from '../../../config'
 import { lang } from '../../../translations/base'
-import { createCollage } from '../../../functions/collage'
+import { createCollage, type CollageTrackData } from '../../../functions/collage'
 import { getCollageText } from '../../textFabric/collage'
-import type { AlbumInfo } from '../../../api/msLastfmApi/types/zodAlbumInfo'
 import PromisePool from '@supercharge/promise-pool'
-import type { TrackInfo } from '../../../api/msLastfmApi/types/zodTrackInfo'
+import { MsMusicApi } from '../../../api/msMusicApi/base'
+import { downloadImage } from '../../../functions/downloadImage'
 
 export async function runCollageCommand (msPrismaDbApi: MsPrismaDbApi, ctx: CommandContext<Context>): Promise<void> {
   const ctxLang = ctx.from?.language_code
@@ -41,7 +41,7 @@ export async function runCollageCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comm
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'lastfmUserNoMoreRegisteredError', value: 'Parece que você me pediu para esquecer seu usuário do Last.fm e não me informou um novo usuário, para registrar o seu usuário do Last.fm envie o comando /myuser e seu usuário do lastfm, por exemplo: <code>/myuser MelodyScout</code>' }))
     return
   }
-  void ctxTempReply(ctx, lang(ctxLang, { key: 'creatingCollageInformMessage', value: '⏳ - Sua colagem estará pronta em alguns segundos…' }), 15000, {
+  void ctxTempReply(ctx, lang(ctxLang, { key: 'creatingCollageInformMessage', value: '⏳ - Sua colagem estará pronta em alguns segundos…' }), 20000, {
     reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined,
     disable_notification: true
   })
@@ -61,48 +61,60 @@ export async function runCollageCommand (msPrismaDbApi: MsPrismaDbApi, ctx: Comm
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'notEnoughTopTracksError', value: 'Ouça pelo menos 9 músicas no período de tempo selecionado para gerar a colagem!' }))
     return
   }
-  const userTopTracksAllInfo: Array<{
-    trackInfo: TrackInfo
-    albumInfo: AlbumInfo
-  }> = []
+  const msMusicApi = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret)
+  const userTopTracksAllInfo: CollageTrackData[] = []
   const getTopTracksErrors: string[] = []
   await PromisePool
     .for(userTopTracks.data.toptracks.track)
-    .withConcurrency(10)
-    .useCorrespondingResults()
+    .withConcurrency(5)
     .process(async (track) => {
       const trackInfoRequest = msLastfmApi.track.getInfo(track.artist.name, track.name, track.mbid, lastfmUser)
+      const spotifyTrackInfoRequest = msMusicApi.getSpotifyTrackInfo(track.artist.name, track.name)
       const albumInfoRequest = msLastfmApi.album.getInfo(track.artist.name, track.name, track.mbid, lastfmUser)
-      const [trackInfo, albumInfo] = await Promise.all([trackInfoRequest, albumInfoRequest])
+      const [trackInfo, albumInfo, spotifyTrackInfo] = await Promise.all([trackInfoRequest, albumInfoRequest, spotifyTrackInfoRequest])
       if (!trackInfo.success) {
         getTopTracksErrors.push(`Error while fetching track info! Artist: ${track.artist.name}, Track: ${track.name}, mbid: ${track.mbid}, username: ${lastfmUser} - Error: ${JSON.stringify(trackInfo.errorData)}`)
         return
       }
-      if (!albumInfo.success) {
-        getTopTracksErrors.push(`Error while fetching album info! Artist: ${track.artist.name}, Track: ${track.name}, mbid: ${track.mbid}, username: ${lastfmUser} - Error: ${JSON.stringify(albumInfo.errorData)}`)
+      const imageUrls: string[] = []
+      if (albumInfo.success) {
+        imageUrls.push(albumInfo.data.album.image[albumInfo.data.album.image.length - 1]['#text'])
+      }
+      if (spotifyTrackInfo.success) {
+        imageUrls.push(spotifyTrackInfo.data[0].album.images[0].url)
+      }
+      imageUrls.push(melodyScoutConfig.trackImgUrl)
+      let trackImageBase64: string | undefined
+      for (const imageUrl of imageUrls) {
+        if (trackImageBase64 !== undefined) continue
+        if (imageUrl.length <= 0) continue
+        const image = await downloadImage(imageUrl)
+        if (image.success) {
+          trackImageBase64 = image.image.toString('base64')
+          break
+        }
+      }
+      if (trackImageBase64 === undefined) {
+        getTopTracksErrors.push(`Error while downloading track image! Artist: ${track.artist.name}, Track: ${track.name}, mbid: ${track.mbid}, username: ${lastfmUser}`)
         return
       }
       userTopTracksAllInfo.push({
         trackInfo: trackInfo.data,
-        albumInfo: albumInfo.data
+        trackName: track.name,
+        artistName: track.artist.name,
+        imageBase64: trackImageBase64,
+        playcount: Number(trackInfo.data.track.userplaycount)
       })
     })
   const orderedUserTopTracksAllInfo = userTopTracksAllInfo.sort((a, b) => {
     return Number(b.trackInfo.track.userplaycount) - Number(a.trackInfo.track.userplaycount)
   })
   if (getTopTracksErrors.length > 0) {
+    console.error(getTopTracksErrors)
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'errorOnGettingTopTracksAlbumsInformMessage', value: 'Ocorreu um erro ao tentar resgatar as informações dos álbuns das suas músicas mais ouvidas, por favor tente novamente mais tarde.' }))
     return
   }
-  const collageImage = await createCollage(ctxLang, orderedUserTopTracksAllInfo.map((track) => {
-    const albumImageUrl = track.albumInfo.album.image[track.albumInfo.album.image.length - 1]['#text']
-    return {
-      artistName: track.trackInfo.track.artist.name,
-      trackName: track.trackInfo.track.name,
-      playcount: Number(track.trackInfo.track.userplaycount),
-      trackImageUrl: albumImageUrl !== '' ? albumImageUrl : melodyScoutConfig.trackImgUrl
-    }
-  }))
+  const collageImage = await createCollage(ctxLang, orderedUserTopTracksAllInfo)
   if (!collageImage.success) {
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'errorOnCreatingCollageInformMessage', value: 'Ocorreu um erro ao tentar gerar a imagem da sua colagem de músicas mais ouvidas, por favor tente novamente mais tarde.' }))
     return

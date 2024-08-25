@@ -2,13 +2,17 @@ import { randomUUID } from 'crypto'
 import { advError, advLog } from './advancedConsole'
 import { composeCollageImage } from './mediaEditors'
 import { msFirebaseApi } from '../MelodyScout_Bot/bot'
+import type { TrackInfo } from '../api/msLastfmApi/types/zodTrackInfo'
 
-export async function createCollage (ctxLang: string | undefined, tracks: Array<{
+export interface CollageTrackData {
+  trackInfo: TrackInfo
   trackName: string
   artistName: string
-  trackImageUrl: string
+  imageBase64: string
   playcount: number
-}>): Promise<{
+}
+
+export async function createCollage (ctxLang: string | undefined, tracks: CollageTrackData[]): Promise<{
     success: true
     result: {
       imageUrl: string
