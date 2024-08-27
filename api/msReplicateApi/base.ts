@@ -116,6 +116,7 @@ export class MsReplicateApi {
           input: {
             prompt: imageDescription,
             output_quality: 80,
+            output_format: 'jpg',
             disable_safety_checker: true
           }
         }
