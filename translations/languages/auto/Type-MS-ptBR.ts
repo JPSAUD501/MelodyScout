@@ -1,5 +1,5 @@
 export type BaseLang =
-  { key: 'tfBriefPostUserAtMelodyScoutBot', value: '{{username}} no @MelodyScoutBot' } |
+  { key: 'tfBriefPostUserAtMelodyScoutBot', value: '{{username}} no t.me/melodyscoutbot' } |
   { key: 'tfBriefPostMetricsTittle', value: '[📊] Métricas' } |
   { key: 'tfBriefPostMetricsTracksListened', value: '- Músicas ouvidas: {{tracksListenedLength}}' } |
   { key: 'localeLangCode', value: 'pt-BR' } |
@@ -17,7 +17,7 @@ export type BaseLang =
   { key: 'tfBriefPostMostPlayedArtistsListItem', value: '- ({{artistPlaycount}}x) {{artistName}}' } |
   { key: 'tfBriefUserMusicSummaryTittle', value: '<b>Resumo musical de <a href="{{userUrl}}">{{username}}</a></b>' } |
   { key: 'tfBriefMetricsTittle', value: '<b>[📊] Métricas</b>' } |
-  { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar 𝕏</a></i>)' } |
+  { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar</a></i>)' } |
   { key: 'tfBriefMetricsTracksListened', value: '- Músicas ouvidas: <b>{{tracksListenedLength}}</b>' } |
   { key: 'tfBriefMetricsTracksKnown', value: '- Músicas conhecidas: <b>{{tracksKnownLength}}</b>' } |
   { key: 'tfBriefMetricsRepeatedTracks', value: '- Músicas repetidas: <b>{{repeatedTracksLength}}</b>' } |
@@ -39,7 +39,7 @@ export type BaseLang =
   { key: 'maintenanceInformMessage', value: 'Não sei como me desculpar por isso, mas Infelizmente eu estou em manutenção! Sei que isso é muito chato, mas estou tentando resolver esse problema o mais rápido possível! Em breve estarei de volta! Aproveitando a oportunidade em nome do meu desenvolvedor eu gostaria de agradecer a todos os meus usuários! 💜\n\nSe você tiver alguma sugestão ou crítica, por favor entre em contato através do comando /contact! Eu ficarei muito feliz em ouvir o que você tem a dizer!' } |
   { key: 'myuserLastfmUserSuccessfullyRegisteredInformMessage', value: 'Pronto! Seu nome de usuário do Last.fm foi registrado com sucesso! Agradeço imensamente por isso e espero que você aproveite o bot!' } |
   { key: 'whatAreYouListeningNowPinMessage', value: 'O que vc está ouvindo?' } |
-  { key: 'tfPlayingnowPostUserAtMelodyScoutBot', value: '{{username}} no @MelodyScoutBot' } |
+  { key: 'tfPlayingnowPostUserAtMelodyScoutBot', value: '{{username}} no t.me/melodyscoutbot' } |
   { key: 'tfPlayingnowPostTrackName', value: '[🎧{{badge}}] {{trackName}}' } |
   { key: 'tfPlayingnowPostArtistName', value: '- Artista: {{artistName}}' } |
   { key: 'tfPlayingnowPostScrobblesTitle', value: '[📊] Scrobbles' } |
@@ -64,7 +64,7 @@ export type BaseLang =
   { key: 'tfPlayingnowInfoAlbumArtistPercentage', value: '- Esse álbum representa <b>{{percentage}}%</b> de todas suas reproduções desse artista.' } |
   { key: 'tfPlayingnowInfoArtistUserPercentage', value: '- Esse artista representa <b>{{percentage}}%</b> de todas suas reproduções.' } |
   { key: 'tfPlayingnowInfoTitle', value: '<b>[ℹ️] Informações</b>' } |
-  { key: 'tfPlayingnowShareTitle', value: '<b>[🔗] Compartilhe</b>' } |
+  { key: 'tfPlayingnowShareTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe!</a></b>' } |
   { key: 'tfPlayingnowShareLink', value: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>' } |
   { key: 'trackAudioDownloadCaption', value: '<b>[🎵] Download do áudio de "{{track}}" por "{{artist}}"</b>\n\nSolicitado por: <b><a href=\'tg://user?id={{requesterId}}\'>{{requesterName}}</a></b>' } |
   { key: 'chooseTrackDownloadOptionMessage', value: '<b>[📥] Download de "{{track}}" por "{{artist}}"</b>\n- Por favor escolha uma opção abaixo.\n\nSolicitado por: <b><a href=\'tg://user?id={{requesterId}}\'>{{requesterName}}</a></b>' } |
@@ -198,7 +198,7 @@ export type BaseLang =
   { key: 'tfPnalbumTopTrackItem', value: '- ({{trackPlaycount}}x) <a href="{{trackUrl}}">{{trackName}}</a>' } |
   { key: 'tfPnalbumShareHeader', value: '<b>[🔗] Compartilhe</b>' } |
   { key: 'tfPnalbumShareOnX', value: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>' } |
-  { key: 'tfPnartistPostUserAtMelodyScoutBot', value: '{{username}} no @MelodyScoutBot' } |
+  { key: 'tfPnartistPostUserAtMelodyScoutBot', value: '{{username}} no t.me/melodyscoutbot' } |
   { key: 'tfPnartistPostAboutArtistHeader', value: '[🎧] Sobre o artista' } |
   { key: 'tfPnartistPostAboutArtistArtist', value: '- Artista: {{artist}}' } |
   { key: 'tfPnartistPostScrobbles', value: '[📊] {{artistScrobbles}} Scrobbles' } |
@@ -224,7 +224,7 @@ export type BaseLang =
   { key: 'tfPnartistTopTracks', value: '- ({{trackPlaycount}}x) <a href="{{trackUrl}}">{{trackName}}</a>' } |
   { key: 'tfPnartistShareHeader', value: '<b>[🔗] Compartilhe</b>' } |
   { key: 'tfPnartistShareOnX', value: '- <a href="{{postUrl}}">Compartilhar no 𝕏!</a>' } |
-  { key: 'tfPntrackPostUserAtMelodyScoutBot', value: '{{userRealname}} no @MelodyScoutBot' } |
+  { key: 'tfPntrackPostUserAtMelodyScoutBot', value: '{{userRealname}} no t.me/melodyscoutbot' } |
   { key: 'tfPntrackPostTrackHeader', value: '[🎧{{badge}}] {{trackName}}' } |
   { key: 'tfPntrackPostArtist', value: '- Artista: {{artistName}}' } |
   { key: 'tfPntrackPostScrobbles', value: '[📊] {{trackScrobbles}} Scrobbles' } |
@@ -294,4 +294,7 @@ export type BaseLang =
   { key: 'collage1monthButton', value: '[📆] - Último mês' } |
   { key: 'collage3monthButton', value: '[📆] - Últimos 3m' } |
   { key: 'collage6monthButton', value: '[📆] - Últimos 6m' } |
-  { key: 'collage12monthButton', value: '[📆] - Último ano' }
+  { key: 'collage12monthButton', value: '[📆] - Último ano' } |
+  { key: 'tfPnalbumShareTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe!</a></b>' } |
+  { key: 'tfPnartistShareTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe!</a></b>' } |
+  { key: 'tfPntrackShareTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe!</a></b>' }

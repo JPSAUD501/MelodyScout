@@ -39,44 +39,45 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
     metrics: {
       textArray: [],
       postUrl: () => {
-        return `https://x.com/intent/tweet?text=${postText.metrics.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+        return `https://linkai.me/ms/post?text=${postText.metrics.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
       }
     },
     infos: {
       textArray: [],
       postUrl: () => {
-        return `https://x.com/intent/tweet?text=${postText.infos.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+        return `https://linkai.me/ms/post?text=${postText.infos.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
       }
     },
     mostPlayedTracks: {
       textArray: [],
       postUrl: () => {
-        return `https://x.com/intent/tweet?text=${postText.mostPlayedTracks.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+        return `https://linkai.me/ms/post?text=${postText.mostPlayedTracks.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
       }
     },
     mostPlayedAlbums: {
       textArray: [],
       postUrl: () => {
-        return `https://x.com/intent/tweet?text=${postText.mostPlayedAlbums.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+        return `https://linkai.me/ms/post?text=${postText.mostPlayedAlbums.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
       }
     },
     mostPlayedArtists: {
       textArray: [],
       postUrl: () => {
-        return `https://x.com/intent/tweet?text=${postText.mostPlayedArtists.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+        return `https://linkai.me/ms/post?text=${postText.mostPlayedArtists.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
       }
     }
   }
 
-  postText.metrics.textArray.push(lang(ctxLang, { key: 'tfBriefPostUserAtMelodyScoutBot', value: '{{username}} no @MelodyScoutBot' }, { username: sanitizeText(user.realname.length > 0 ? user.realname : user.name) }))
+  postText.metrics.textArray.push(lang(ctxLang, { key: 'tfBriefPostUserAtMelodyScoutBot', value: '{{username}} no t.me/melodyscoutbot' }, { username: sanitizeText(user.realname.length > 0 ? user.realname : user.name) }))
   postText.metrics.textArray.push('')
   postText.metrics.textArray.push(lang(ctxLang, { key: 'tfBriefPostMetricsTittle', value: '[📊] Métricas' }))
   postText.metrics.textArray.push(lang(ctxLang, { key: 'tfBriefPostMetricsTracksListened', value: '- Músicas ouvidas: {{tracksListenedLength}}' }, { tracksListenedLength: Number(user.playcount).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })) }))
   postText.metrics.textArray.push(lang(ctxLang, { key: 'tfBriefPostMetricsTracksKnown', value: '- Músicas conhecidas: {{tracksKnownLength}}' }, { tracksKnownLength: Number(user.track_count).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })) }))
   postText.metrics.textArray.push(lang(ctxLang, { key: 'tfBriefPostMetricsArtistsKnown', value: '- Artistas conhecidos: {{artistsKnownLength}}' }, { artistsKnownLength: Number(user.artist_count).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })) }))
   postText.metrics.textArray.push(lang(ctxLang, { key: 'tfBriefPostMetricsAlbumsKnown', value: '- Álbuns conhecidos: {{albumsKnownLength}}' }, { albumsKnownLength: Number(user.album_count).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })) }))
+  postText.metrics.textArray.push('')
 
-  postText.infos.textArray.push(lang(ctxLang, { key: 'tfBriefPostUserAtMelodyScoutBot', value: '{{username}} no @MelodyScoutBot' }, { username: user.realname.length > 0 ? user.realname : user.name }))
+  postText.infos.textArray.push(lang(ctxLang, { key: 'tfBriefPostUserAtMelodyScoutBot', value: '{{username}} no t.me/melodyscoutbot' }, { username: user.realname.length > 0 ? user.realname : user.name }))
   postText.infos.textArray.push('')
   postText.infos.textArray.push(lang(ctxLang, { key: 'tfBriefPostInfosTittle', value: '[ℹ️] Informações' }))
   if (userTotalPlaytime !== undefined && userTotalPlaytime.status === 'success') {
@@ -88,37 +89,41 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
     postText.infos.textArray.push(lang(ctxLang, { key: 'tfBriefPostInfosRepeatedTracks', value: '- {{repeatedTracksPercentage}}% das músicas ouvidas são repetidas.' }, { repeatedTracksPercentage: Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount) * 100).toFixed(2)).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })) }))
   }
   postText.infos.textArray.push(lang(ctxLang, { key: 'tfBriefPostInfosAverageRepeatTracks', value: '- Em média repete {{averageRepeatTracks}}x cada música que conhece.' }, { averageRepeatTracks: Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.track_count)).toFixed(2)).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })) }))
+  postText.infos.textArray.push('')
 
-  postText.mostPlayedTracks.textArray.push(lang(ctxLang, { key: 'tfBriefPostUserAtMelodyScoutBot', value: '{{username}} no @MelodyScoutBot' }, { username: sanitizeText(user.realname.length > 0 ? user.realname : user.name) }))
+  postText.mostPlayedTracks.textArray.push(lang(ctxLang, { key: 'tfBriefPostUserAtMelodyScoutBot', value: '{{username}} no t.me/melodyscoutbot' }, { username: sanitizeText(user.realname.length > 0 ? user.realname : user.name) }))
   postText.mostPlayedTracks.textArray.push('')
   postText.mostPlayedTracks.textArray.push(lang(ctxLang, { key: 'tfBriefPostMostPlayedTracksTittle', value: '[🎵] Músicas mais ouvidas' }))
   for (let i = 0; i < toptracks.track.length && i < 3; i++) {
     const track = toptracks.track[i]
     postText.mostPlayedTracks.textArray.push(lang(ctxLang, { key: 'tfBriefPostMostPlayedTracksListItem', value: '- ({{trackPlaycount}}x) {{trackName}} de {{trackArtistName}}' }, { trackPlaycount: Number(track.playcount).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })), trackName: sanitizeText(track.name), trackArtistName: sanitizeText(track.artist.name) }))
   }
+  postText.mostPlayedTracks.textArray.push('')
 
-  postText.mostPlayedAlbums.textArray.push(lang(ctxLang, { key: 'tfBriefPostUserAtMelodyScoutBot', value: '{{username}} no @MelodyScoutBot' }, { username: sanitizeText(user.realname.length > 0 ? user.realname : user.name) }))
+  postText.mostPlayedAlbums.textArray.push(lang(ctxLang, { key: 'tfBriefPostUserAtMelodyScoutBot', value: '{{username}} no t.me/melodyscoutbot' }, { username: sanitizeText(user.realname.length > 0 ? user.realname : user.name) }))
   postText.mostPlayedAlbums.textArray.push('')
   postText.mostPlayedAlbums.textArray.push(lang(ctxLang, { key: 'tfBriefPostMostPlayedAlbumsTittle', value: '[💿] Álbuns mais ouvidos' }))
   for (let i = 0; i < topalbums.album.length && i < 3; i++) {
     const album = topalbums.album[i]
     postText.mostPlayedAlbums.textArray.push(lang(ctxLang, { key: 'tfBriefPostMostPlayedAlbumsListItem', value: '- ({{albumPlaycount}}x) {{albumName}} de {{albumArtistName}}' }, { albumPlaycount: Number(album.playcount).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })), albumName: sanitizeText(album.name), albumArtistName: sanitizeText(album.artist.name) }))
   }
+  postText.mostPlayedAlbums.textArray.push('')
 
-  postText.mostPlayedArtists.textArray.push(lang(ctxLang, { key: 'tfBriefPostUserAtMelodyScoutBot', value: '{{username}} no @MelodyScoutBot' }, { username: sanitizeText(user.realname.length > 0 ? user.realname : user.name) }))
+  postText.mostPlayedArtists.textArray.push(lang(ctxLang, { key: 'tfBriefPostUserAtMelodyScoutBot', value: '{{username}} no t.me/melodyscoutbot' }, { username: sanitizeText(user.realname.length > 0 ? user.realname : user.name) }))
   postText.mostPlayedArtists.textArray.push('')
   postText.mostPlayedArtists.textArray.push(lang(ctxLang, { key: 'tfBriefPostMostPlayedArtistsTittle', value: '[👨‍🎤] Artistas mais ouvidos' }))
   for (let i = 0; i < topartists.artist.length && i < 3; i++) {
     const artist = topartists.artist[i]
     postText.mostPlayedArtists.textArray.push(lang(ctxLang, { key: 'tfBriefPostMostPlayedArtistsListItem', value: '- ({{artistPlaycount}}x) {{artistName}}' }, { artistPlaycount: Number(artist.playcount).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })), artistName: sanitizeText(artist.name) }))
   }
+  postText.mostPlayedArtists.textArray.push('')
 
   const textArray: string[] = []
   textArray.push(`<a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.userImgUrl}">️️</a>${lang(ctxLang, { key: 'tfBriefUserMusicSummaryTittle', value: '<b>Resumo musical de <a href="{{userUrl}}">{{username}}</a></b>' }, { userUrl: urlLimiter(user.url), username: sanitizeText(user.realname.length > 0 ? user.realname : user.name) })}`)
   textArray.push('')
   switch (true) {
     case (postText.metrics.postUrl().length < 300): {
-      textArray.push(`${lang(ctxLang, { key: 'tfBriefMetricsTittle', value: '<b>[📊] Métricas</b>' })} ${lang(ctxLang, { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar 𝕏</a></i>)' }, { postUrl: postText.metrics.postUrl() })}`)
+      textArray.push(`${lang(ctxLang, { key: 'tfBriefMetricsTittle', value: '<b>[📊] Métricas</b>' })} ${lang(ctxLang, { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar</a></i>)' }, { postUrl: postText.metrics.postUrl() })}`)
       break
     }
     default: {
@@ -132,7 +137,7 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
   textArray.push(lang(ctxLang, { key: 'tfBriefMetricsArtistsKnown', value: '- Artistas conhecidos: <b>{{artistsKnownLength}}</b>' }, { artistsKnownLength: Number(user.artist_count).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })) }))
   textArray.push(lang(ctxLang, { key: 'tfBriefMetricsAlbumsKnown', value: '- Álbuns conhecidos: <b>{{albumsKnownLength}}</b>' }, { albumsKnownLength: Number(user.album_count).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })) }))
   textArray.push('')
-  textArray.push(`${lang(ctxLang, { key: 'tfBriefInfosTittle', value: '<b>[ℹ️] Informações</b>' })} ${lang(ctxLang, { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar 𝕏</a></i>)' }, { postUrl: postText.infos.postUrl() })}`)
+  textArray.push(`${lang(ctxLang, { key: 'tfBriefInfosTittle', value: '<b>[ℹ️] Informações</b>' })} ${lang(ctxLang, { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar</a></i>)' }, { postUrl: postText.infos.postUrl() })}`)
   if (userTotalPlaytime !== undefined) {
     switch (true) {
       default: {
@@ -177,7 +182,7 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
   if (toptracks.track.length > 0) {
     switch (true) {
       case (postText.mostPlayedTracks.postUrl().length < 300): {
-        textArray.push(`${lang(ctxLang, { key: 'tfBriefMostPlayedTracksTittle', value: '<b>[🎵] Músicas mais tocadas</b>' })} ${lang(ctxLang, { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar 𝕏</a></i>)' }, { postUrl: postText.mostPlayedTracks.postUrl() })}`)
+        textArray.push(`${lang(ctxLang, { key: 'tfBriefMostPlayedTracksTittle', value: '<b>[🎵] Músicas mais tocadas</b>' })} ${lang(ctxLang, { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar</a></i>)' }, { postUrl: postText.mostPlayedTracks.postUrl() })}`)
         break
       }
       default: {
@@ -194,7 +199,7 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
   if (topalbums.album.length > 0) {
     switch (true) {
       case (postText.mostPlayedAlbums.postUrl().length < 300): {
-        textArray.push(`${lang(ctxLang, { key: 'tfBriefMostPlayedAlbumsTittle', value: '<b>[💿] Álbuns mais tocados</b>' })} ${lang(ctxLang, { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar 𝕏</a></i>)' }, { postUrl: postText.mostPlayedAlbums.postUrl() })}`)
+        textArray.push(`${lang(ctxLang, { key: 'tfBriefMostPlayedAlbumsTittle', value: '<b>[💿] Álbuns mais tocados</b>' })} ${lang(ctxLang, { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar</a></i>)' }, { postUrl: postText.mostPlayedAlbums.postUrl() })}`)
         break
       }
       default: {
@@ -211,7 +216,7 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
   if (topartists.artist.length > 0) {
     switch (true) {
       case (postText.mostPlayedArtists.postUrl().length < 300): {
-        textArray.push(`${lang(ctxLang, { key: 'tfBriefMostPlayedArtistsTittle', value: '<b>[👨‍🎤] Artistas mais tocados</b>' })} ${lang(ctxLang, { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar 𝕏</a></i>)' }, { postUrl: postText.mostPlayedArtists.postUrl() })}`)
+        textArray.push(`${lang(ctxLang, { key: 'tfBriefMostPlayedArtistsTittle', value: '<b>[👨‍🎤] Artistas mais tocados</b>' })} ${lang(ctxLang, { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar</a></i>)' }, { postUrl: postText.mostPlayedArtists.postUrl() })}`)
         break
       }
       default: {

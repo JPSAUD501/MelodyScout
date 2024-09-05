@@ -33,7 +33,7 @@ export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo,
   }
 
   const postTextArray: string[] = []
-  postTextArray.push(lang(ctxLang, { key: 'tfPntrackPostUserAtMelodyScoutBot', value: '{{userRealname}} no @MelodyScoutBot' }, { userRealname: user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name) }))
+  postTextArray.push(lang(ctxLang, { key: 'tfPntrackPostUserAtMelodyScoutBot', value: '{{userRealname}} no t.me/melodyscoutbot' }, { userRealname: user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name) }))
   postTextArray.push('')
   postTextArray.push(lang(ctxLang, { key: 'tfPntrackPostTrackHeader', value: '[🎧{{badge}}] {{trackName}}' }, { badge: spotifyTrackInfo?.explicit === true ? '-🅴' : '', trackName: sanitizeText(track.name) }))
   postTextArray.push(lang(ctxLang, { key: 'tfPntrackPostArtist', value: '- Artista: {{artistName}}' }, { artistName: sanitizeText(artist.name) }))
@@ -83,7 +83,8 @@ export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo,
       postTextArray.push(`${track.url}`)
     }
   }
-  const postUrl = `https://x.com/intent/tweet?text=${postTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+  postTextArray.push('')
+  const postUrl = `https://linkai.me/ms/post?text=${postTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
 
   const textArray: string[] = []
   switch (nowPlaying) {
@@ -127,7 +128,7 @@ export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo,
   textArray.push('')
   textArray.push(lang(ctxLang, { key: 'tfPntrackScrobbles', value: '<b>[📊] {{trackScrobbles}} Scrobbles</b>' }, { trackScrobbles: Number(track.userplaycount).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })) }))
   textArray.push('')
-  textArray.push(lang(ctxLang, { key: 'tfPntrackShareOnXTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>' }, { postUrl }))
+  textArray.push(lang(ctxLang, { key: 'tfPntrackShareTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe!</a></b>' }, { postUrl }))
   if (previewUrl !== undefined) textArray.push('️️')
 
   const text = textArray.join('\n')

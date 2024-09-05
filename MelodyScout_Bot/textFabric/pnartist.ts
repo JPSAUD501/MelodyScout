@@ -13,8 +13,8 @@ export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo
   const { artist } = artistInfo
 
   const postTextArray: string[] = []
-  // postTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no @MelodyScoutBot`)
-  postTextArray.push(lang(ctxLang, { key: 'tfPnartistPostUserAtMelodyScoutBot', value: '{{username}} no @MelodyScoutBot' }, { username: user.realname.length > 0 ? user.realname : user.name }))
+  // postTextArray.push(`${user.realname.length > 0 ? user.realname : user.name} no t.me/melodyscoutbot`)
+  postTextArray.push(lang(ctxLang, { key: 'tfPnartistPostUserAtMelodyScoutBot', value: '{{username}} no t.me/melodyscoutbot' }, { username: user.realname.length > 0 ? user.realname : user.name }))
   postTextArray.push('')
   // postTextArray.push('[🎧] Sobre o artista')
   postTextArray.push(lang(ctxLang, { key: 'tfPnartistPostAboutArtistHeader', value: '[🎧] Sobre o artista' }))
@@ -70,7 +70,8 @@ export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo
       postTextArray.push(`${artist.url}`)
     }
   }
-  const postUrl = `https://x.com/intent/tweet?text=${postTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+  postTextArray.push('')
+  const postUrl = `https://linkai.me/ms/post?text=${postTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
 
   const textArray: string[] = []
   // textArray.push(`<a href="${spotifyArtistInfo.images?.[0]?.url ?? ''}">️️</a><a href="${artist.image[artist.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.userImgUrl}">️️</a><b><a href="${urlLimiter(user.url)}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}</b>`)
@@ -169,7 +170,7 @@ export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo
     }
   }
   textArray.push('')
-  textArray.push(lang(ctxLang, { key: 'tfPnartistShareOnXTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>' }, { postUrl }))
+  textArray.push(lang(ctxLang, { key: 'tfPnartistShareTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe!</a></b>' }, { postUrl }))
 
   const text = textArray.join('\n')
   return text

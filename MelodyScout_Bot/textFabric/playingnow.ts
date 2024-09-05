@@ -33,7 +33,7 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
   }
 
   const postTextArray: string[] = []
-  postTextArray.push(lang(ctxLang, { key: 'tfPlayingnowPostUserAtMelodyScoutBot', value: '{{username}} no @MelodyScoutBot' }, { username: sanitizeText(user.realname.length > 0 ? user.realname : user.name) }))
+  postTextArray.push(lang(ctxLang, { key: 'tfPlayingnowPostUserAtMelodyScoutBot', value: '{{username}} no t.me/melodyscoutbot' }, { username: sanitizeText(user.realname.length > 0 ? user.realname : user.name) }))
   postTextArray.push('')
   // postTextArray.push(lang(ctxLang, { key: 'tfPlayingnowPostTrackName', value: '[🎧{{badge}}] {{trackName}}' }, { badge: spotifyTrackInfo?.explicit === true ? '-🅴' : '', trackName: sanitizeText(track.name) }))
   postTextArray.push(lang(ctxLang, { key: 'tfPlayingnowPostTrackWithArtistName', value: '[🎧{{badge}}] {{trackName}} por {{artistName}}' }, { badge: spotifyTrackInfo?.explicit === true ? '-🅴' : '', trackName: sanitizeText(track.name), artistName: sanitizeText(artist.name) }))
@@ -82,7 +82,8 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
       postTextArray.push(`${track.url}`)
     }
   }
-  const postUrl = `https://x.com/intent/tweet?text=${postTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+  postTextArray.push('')
+  const postUrl = `https://linkai.me/ms/post?text=${postTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
 
   const textArray: string[] = []
   const linksHeader = `<a href="${previewUrl}">️️</a><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.trackImgUrl}">️️</a>`
@@ -178,7 +179,7 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
     textArray.push(...infoArray)
   }
   textArray.push('')
-  textArray.push(lang(ctxLang, { key: 'tfPlayingnowShareOnXTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe no 𝕏!</a></b>' }, { postUrl }))
+  textArray.push(lang(ctxLang, { key: 'tfPlayingnowShareTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe!</a></b>' }, { postUrl }))
   if (previewUrl !== undefined) textArray.push('️️')
 
   const text = textArray.join('\n')
