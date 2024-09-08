@@ -8,6 +8,7 @@ import { sanitizeText } from '../../functions/sanitizeText'
 import { urlLimiter } from '../../functions/urlLimiter'
 import { type DeezerTrack } from '../../api/msDeezerApi/types/zodSearchTrack'
 import { lang } from '../../translations/base'
+import { brotliCompressSync } from 'zlib'
 
 export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track | undefined, deezerTrackInfo: DeezerTrack | undefined, nowPlaying: boolean, previewUrl: string | undefined): string {
   const { user } = userInfo
@@ -84,7 +85,9 @@ export function getPntrackText (ctxLang: string | undefined, userInfo: UserInfo,
     }
   }
   postTextArray.push('')
-  const postUrl = `https://linkai.me/ms/post?text=${postTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+  const postTextBuffer = Buffer.from(postTextArray.map((text) => encodeURIComponent(text)).join('%0A'))
+  const postText = encodeURIComponent(brotliCompressSync(postTextBuffer).toString('base64'))
+  const postUrl = `https://linkai.me/ms/post?t=${postText}`
 
   const textArray: string[] = []
   switch (nowPlaying) {

@@ -7,6 +7,7 @@ import { urlLimiter } from '../../functions/urlLimiter'
 import { type TracksTotalPlaytime } from '../../functions/getTracksTotalPlaytime'
 import { type UserFilteredTopTracks } from '../../functions/getUserFilteredTopTracks'
 import { lang } from '../../translations/base'
+import { brotliCompressSync } from 'zlib'
 
 export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, userArtistTopTracks: UserFilteredTopTracks, userArtistTotalPlaytime: TracksTotalPlaytime, spotifyArtistInfo: Artist | undefined, nowPlaying: boolean): string {
   const { user } = userInfo
@@ -71,7 +72,9 @@ export function getPnartistText (ctxLang: string | undefined, userInfo: UserInfo
     }
   }
   postTextArray.push('')
-  const postUrl = `https://linkai.me/ms/post?text=${postTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+  const postTextBuffer = Buffer.from(postTextArray.map((text) => encodeURIComponent(text)).join('%0A'))
+  const postText = encodeURIComponent(brotliCompressSync(postTextBuffer).toString('base64'))
+  const postUrl = `https://linkai.me/ms/post?t=${postText}`
 
   const textArray: string[] = []
   // textArray.push(`<a href="${spotifyArtistInfo.images?.[0]?.url ?? ''}">️️</a><a href="${artist.image[artist.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.userImgUrl}">️️</a><b><a href="${urlLimiter(user.url)}">${user.realname.length > 0 ? sanitizeText(user.realname) : sanitizeText(user.name)}</a> ${nowPlaying ? 'está ouvindo' : 'estava ouvindo'}</b>`)

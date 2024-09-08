@@ -8,6 +8,7 @@ import { sanitizeText } from '../../functions/sanitizeText'
 import { urlLimiter } from '../../functions/urlLimiter'
 import { lang } from '../../translations/base'
 import { type DeezerTrack } from '../../api/msDeezerApi/types/zodSearchTrack'
+import { brotliCompressSync } from 'zlib'
 
 export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserInfo, artistInfo: ArtistInfo, albumInfo: AlbumInfo, trackInfo: TrackInfo, spotifyTrackInfo: Track | undefined, deezerTrackInfo: DeezerTrack | undefined, nowPlaying: boolean | undefined, previewUrl: string | undefined): string {
   const { user } = userInfo
@@ -35,9 +36,7 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
   const postTextArray: string[] = []
   postTextArray.push(lang(ctxLang, { key: 'tfPlayingnowPostUserAtMelodyScoutBot', value: '{{username}} no t.me/melodyscoutbot' }, { username: sanitizeText(user.realname.length > 0 ? user.realname : user.name) }))
   postTextArray.push('')
-  // postTextArray.push(lang(ctxLang, { key: 'tfPlayingnowPostTrackName', value: '[🎧{{badge}}] {{trackName}}' }, { badge: spotifyTrackInfo?.explicit === true ? '-🅴' : '', trackName: sanitizeText(track.name) }))
   postTextArray.push(lang(ctxLang, { key: 'tfPlayingnowPostTrackWithArtistName', value: '[🎧{{badge}}] {{trackName}} por {{artistName}}' }, { badge: spotifyTrackInfo?.explicit === true ? '-🅴' : '', trackName: sanitizeText(track.name), artistName: sanitizeText(artist.name) }))
-  // postTextArray.push(lang(ctxLang, { key: 'tfPlayingnowPostArtistName', value: '- Artista: {{artistName}}' }, { artistName: sanitizeText(artist.name) }))
   postTextArray.push('')
   postTextArray.push(lang(ctxLang, { key: 'tfPlayingnowPostScrobblesTitle', value: '[📊] Scrobbles' }))
   postTextArray.push(lang(ctxLang, { key: 'tfPlayingnowPostTrackScrobbles', value: '- Música: {{trackPlaycount}}' }, { trackPlaycount: Number(track.userplaycount).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })) }))
@@ -83,7 +82,9 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
     }
   }
   postTextArray.push('')
-  const postUrl = `https://linkai.me/ms/post?text=${postTextArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+  const postTextBuffer = Buffer.from(postTextArray.map((text) => encodeURIComponent(text)).join('%0A'))
+  const postText = encodeURIComponent(brotliCompressSync(postTextBuffer).toString('base64'))
+  const postUrl = `https://linkai.me/ms/post?t=${postText}`
 
   const textArray: string[] = []
   const linksHeader = `<a href="${previewUrl}">️️</a><a href="${album.image[album.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.trackImgUrl}">️️</a>`
@@ -108,11 +109,6 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
       break
     }
   }
-  // textArray.push(`${nowPlaying === undefined ? linksHeader : ''}${lang(ctxLang, { key: 'tfPlayingnowTrackInfo', value: '<b>[🎧{{badge}}] <a href="{{trackUrl}}">{{trackName}}</a></b>' }, {
-  //   badge: spotifyTrackInfo?.explicit === true ? '-🅴' : '',
-  //   trackUrl: urlLimiter(track.url),
-  //   trackName: sanitizeText(track.name)
-  // })}`)
   textArray.push(`${nowPlaying === undefined ? linksHeader : ''}${lang(ctxLang, { key: 'tfPlayingnowTrackWithArtistInfo', value: '<b>[🎧{{badge}}]</b> <a href="{{trackUrl}}"><b>{{trackName}}</b> por </a><a href="{{artistUrl}}"><b>{{artistName}}</b></a>' }, {
     badge: spotifyTrackInfo?.explicit === true ? '-🅴' : '',
     trackUrl: urlLimiter(track.url),
@@ -124,10 +120,6 @@ export function getPlayingnowText (ctxLang: string | undefined, userInfo: UserIn
     albumUrl: urlLimiter(album.url),
     albumName: sanitizeText(album.name)
   }))
-  // textArray.push(lang(ctxLang, { key: 'tfPlayingnowArtistName', value: '- Artista: <b><a href="{{artistUrl}}">{{artistName}}</a></b>' }, {
-  //   artistUrl: urlLimiter(artist.url),
-  //   artistName: sanitizeText(artist.name)
-  // }))
   textArray.push('')
   textArray.push(lang(ctxLang, { key: 'tfPlayingnowScrobblesTitle', value: '<b>[📊] Scrobbles</b>' }))
   textArray.push(lang(ctxLang, { key: 'tfPlayingnowTrackScrobbles', value: '- Música: <b>{{trackPlaycount}}</b>' }, { trackPlaycount: Number(track.userplaycount).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })) }))

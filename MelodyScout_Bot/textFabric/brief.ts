@@ -7,6 +7,7 @@ import { type TracksTotalPlaytime } from '../../functions/getTracksTotalPlaytime
 import { sanitizeText } from '../../functions/sanitizeText'
 import { urlLimiter } from '../../functions/urlLimiter'
 import { lang } from '../../translations/base'
+import { brotliCompressSync } from 'zlib'
 
 export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, userTopTracks: UserTopTracks, userTopAlbums: UserTopAlbums, userTopArtists: UserTopArtists, userTotalPlaytime: TracksTotalPlaytime | undefined): string {
   const { user } = userInfo
@@ -39,31 +40,41 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
     metrics: {
       textArray: [],
       postUrl: () => {
-        return `https://linkai.me/ms/post?text=${postText.metrics.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+        const textBuffer = Buffer.from(postText.metrics.textArray.map((text) => encodeURIComponent(text)).join('%0A'))
+        const text = encodeURIComponent(brotliCompressSync(textBuffer).toString('base64'))
+        return `https://linkai.me/ms/post?t=${text}`
       }
     },
     infos: {
       textArray: [],
       postUrl: () => {
-        return `https://linkai.me/ms/post?text=${postText.infos.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+        const textBuffer = Buffer.from(postText.infos.textArray.map((text) => encodeURIComponent(text)).join('%0A'))
+        const text = encodeURIComponent(brotliCompressSync(textBuffer).toString('base64'))
+        return `https://linkai.me/ms/post?t=${text}`
       }
     },
     mostPlayedTracks: {
       textArray: [],
       postUrl: () => {
-        return `https://linkai.me/ms/post?text=${postText.mostPlayedTracks.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+        const textBuffer = Buffer.from(postText.mostPlayedTracks.textArray.map((text) => encodeURIComponent(text)).join('%0A'))
+        const text = encodeURIComponent(brotliCompressSync(textBuffer).toString('base64'))
+        return `https://linkai.me/ms/post?t=${text}`
       }
     },
     mostPlayedAlbums: {
       textArray: [],
       postUrl: () => {
-        return `https://linkai.me/ms/post?text=${postText.mostPlayedAlbums.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+        const textBuffer = Buffer.from(postText.mostPlayedAlbums.textArray.map((text) => encodeURIComponent(text)).join('%0A'))
+        const text = encodeURIComponent(brotliCompressSync(textBuffer).toString('base64'))
+        return `https://linkai.me/ms/post?t=${text}`
       }
     },
     mostPlayedArtists: {
       textArray: [],
       postUrl: () => {
-        return `https://linkai.me/ms/post?text=${postText.mostPlayedArtists.textArray.map((text) => encodeURIComponent(text)).join('%0A')}`
+        const textBuffer = Buffer.from(postText.mostPlayedArtists.textArray.map((text) => encodeURIComponent(text)).join('%0A'))
+        const text = encodeURIComponent(brotliCompressSync(textBuffer).toString('base64'))
+        return `https://linkai.me/ms/post?t=${text}`
       }
     }
   }
