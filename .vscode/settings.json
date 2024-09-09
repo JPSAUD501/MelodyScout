@@ -168,5 +168,7 @@
   ],
   "todo-tree.tree.disableCompactFolders": false,
   "bun.debugTerminal.enabled": true,
-  "bun.debugTerminal.stopOnEntry": false
+  "bun.debugTerminal.stopOnEntry": false,
+  "IDX.aI.enableInlineCompletion": true,
+  "IDX.aI.enableCodebaseIndexing": true
 }

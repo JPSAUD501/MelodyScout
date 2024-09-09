@@ -67,10 +67,10 @@ export async function composeCollageImage (ctxLang: string | undefined, tracks: 
     const theme = themeResponse.theme
     const containerColor = materialUtilities.hexFromArgb(theme.schemes.light.primaryContainer)
     const fontColor = materialUtilities.hexFromArgb(theme.schemes.light.onPrimaryContainer)
-    const trackAndArtistName = getCallbackKey([track.trackName.replace(/  +/g, ' '), track.artistName.replace(/  +/g, ' ')]).split(melodyScoutConfig.divider)
+    const trackAndArtistName = getCallbackKey(['JP', track.trackName.replace(/  +/g, ' '), track.artistName.replace(/  +/g, ' ')]).split(melodyScoutConfig.divider)
     collageTracksImages.push({
-      trackName: trackAndArtistName[0],
-      artistName: trackAndArtistName[1],
+      trackName: trackAndArtistName[1],
+      artistName: trackAndArtistName[2],
       trackImageUrl: `data:image/jpeg;base64,${track.imageBase64}`,
       fontColor,
       containerColor,
