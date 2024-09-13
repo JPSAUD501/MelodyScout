@@ -44,11 +44,11 @@ Rules:
 - Integrate Visual Ideas: Relate your explanation to the ideas conveyed in the provided image description without mentioning the image.
 - Highlight the Uniqueness: Integrate what differentiates the song from others with similar themes into your explanation.
 - Casual Tone: Use a casual and fun tone. Avoid suggesting or encouraging sharing, and do not use hashtags.
-- Brevity with Depth: Limit the explanation to 1 medium paragraph, ensuring clarity and depth.
+- Brevity with Depth: Limit the explanation to 1 short paragraph, ensuring clarity and depth.
 - No Markdown: Avoid markdown formatting in the response.
 - Add More Emojis: Include a generous amount of emojis at the end that represent the song, lyrics, or explanation in a fun and engaging way.
 
-Objective: Produce a concise and vivid explanation in 1 medium paragraph that captures the essence of the song, using the visual description as inspiration and ending with plenty of emojis to complement the interpretation.`
+Objective: Produce a concise and vivid explanation in 1 short paragraph that captures the essence of the song, using the visual description as inspiration and ending with plenty of emojis to complement the interpretation.`
         },
         {
           role: 'user',
