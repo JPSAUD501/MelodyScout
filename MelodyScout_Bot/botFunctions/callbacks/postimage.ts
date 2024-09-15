@@ -11,6 +11,7 @@ import { MsDeezerApi } from '../../../api/msDeezerApi/base'
 import type { Track } from '@soundify/web-api'
 import type { DeezerTrack } from '../../../api/msDeezerApi/types/zodSearchTrack'
 import { MsOpenAiApi } from '../../../api/msOpenAiApi/base'
+import sharp from 'sharp'
 
 const postedImages: Record<string, boolean> = {}
 
@@ -30,11 +31,23 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
     return
   }
   postedImages[imageId] = true
-  const geFirebaseImagePromise = msFirebaseApi.getFile('images/ai', `${imageId}.jpg`)
-  const [getFirebaseImage] = await Promise.all([geFirebaseImagePromise])
+  const getFirebaseImage = await msFirebaseApi.getFile('images/ai', `${imageId}.jpg`)
   if (!getFirebaseImage.success) {
     postedImages[imageId] = false
     await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! A imagem não foi encontrada no sistema!', {
+      reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined
+    })
+    return
+  }
+  const optimizedImage = await sharp(getFirebaseImage.file)
+    .jpeg({ mozjpeg: true })
+    .toBuffer()
+    .catch((err) => {
+      return new Error(err)
+    })
+  if (optimizedImage instanceof Error) {
+    postedImages[imageId] = false
+    await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar otimizar a imagem!', {
       reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined
     })
     return
@@ -67,7 +80,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   const postImageAlt = briefImageDescription.success ? briefImageDescription.description : parsedMetadata.data.imageDescription
   const msBlueskyApi = new MsBlueskyApi()
   const postText = `${parsedMetadata.data.trackName} by ${parsedMetadata.data.artistName}\n${mainTrackUrl}`
-  const postResponse = await msBlueskyApi.post(postText, getFirebaseImage.file, postImageAlt)
+  const postResponse = await msBlueskyApi.post(postText, optimizedImage, postImageAlt)
   if (!postResponse.success) {
     postedImages[imageId] = false
     await ctxReply(ctx, undefined, 'Ocorreu um erro ao tentar compartilhar a imagem', {
