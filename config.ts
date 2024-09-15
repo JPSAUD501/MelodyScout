@@ -61,6 +61,11 @@ export const instagramConfig = {
   password: process.env['IG_PASSWORD'] ?? ''
 }
 
+export const blueskyConfig = {
+  username: process.env['BLUESKY_USERNAME'] ?? '',
+  password: process.env['BLUESKY_PASSWORD'] ?? ''
+}
+
 export const ffConfig = {
   ffmpegPath: pathToFfmpeg ?? ''
 }

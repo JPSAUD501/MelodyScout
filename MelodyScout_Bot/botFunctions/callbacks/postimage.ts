@@ -1,15 +1,16 @@
 import { type CallbackQueryContext, type Context } from 'grammy'
-import { melodyScoutConfig, spotifyConfig } from '../../../config'
+import { melodyScoutConfig, openaiConfig, spotifyConfig } from '../../../config'
 import { ctxAnswerCallbackQuery, ctxEditMessageReplyMarkup, ctxReply, ctxTempReply } from '../../../functions/grammyFunctions'
 import { lang } from '../../../translations/base'
-// import { MsGithubApi } from '../../../api/msGithubApi/base'
 import { zodAIImageMetadata } from '../../../types'
-import { MsInstagramApi } from '../../../api/msInstagramApi/base'
-import { composeStoryImage, createStoriesVideo } from '../../../functions/mediaEditors'
-import { getTrackPreview } from '../../../functions/getTrackPreview'
-import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { getPostimageText } from '../../textFabric/postimage'
 import { msFirebaseApi } from '../../bot'
+import { MsBlueskyApi } from '../../../api/msBlueskyApi/base'
+import { MsMusicApi } from '../../../api/msMusicApi/base'
+import { MsDeezerApi } from '../../../api/msDeezerApi/base'
+import type { Track } from '@soundify/web-api'
+import type { DeezerTrack } from '../../../api/msDeezerApi/types/zodSearchTrack'
+import { MsOpenAiApi } from '../../../api/msOpenAiApi/base'
 
 const postedImages: Record<string, boolean> = {}
 
@@ -29,88 +30,48 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
     return
   }
   postedImages[imageId] = true
-  const loadingReply = await ctxReply(ctx, undefined, 'Que legal! Vou compartilhar essa imagem nos stories do MelodyScout no Instagram!\nAssim que estiver pronto, eu te aviso!', {
-    reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined
-  })
-  // const getGithubImagePromise = new MsGithubApi(githubConfig.token).files.getFile(`${imageId}.jpg`)
   const geFirebaseImagePromise = msFirebaseApi.getFile('images/ai', `${imageId}.jpg`)
-  // const metadataVersion = zodAIImageMetadata.shape.version.value
-  // const getGithubMetadataPromise = new MsGithubApi(githubConfig.token).files.getFile(`${imageId}-${metadataVersion}.json`)
-  // const [getGithubImage, getGithubMetadata] = await Promise.all([getGithubImagePromise, getGithubMetadataPromise])
   const [getFirebaseImage] = await Promise.all([geFirebaseImagePromise])
-  // if (!getGithubImage.success) {
-  //   postedImages[imageId] = false
-  //   await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! A imagem não foi encontrada no sistema!', {
-  //     reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
-  //   })
-  //   return
-  // }
-  // if (!getGithubMetadata.success) {
-  //   postedImages[imageId] = false
-  //   await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! A imagem não foi encontrada ou versão dela não é mais suportada!', {
-  //     reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
-  //   })
-  //   return
-  // }
   if (!getFirebaseImage.success) {
     postedImages[imageId] = false
     await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! A imagem não foi encontrada no sistema!', {
-      reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
+      reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined
     })
     return
   }
-  // const image = Buffer.from(getGithubImage.data.content, 'base64')
-  // const metadata = JSON.parse(Buffer.from(getGithubMetadata.data.content, 'base64').toString())
   const metadata = getFirebaseImage.metadata
   const parsedMetadata = zodAIImageMetadata.safeParse(metadata)
   if (!parsedMetadata.success) {
     postedImages[imageId] = false
     await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! As informações da imagem são invalidas!', {
-      reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
+      reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined
     })
     return
   }
-  const trackPreview = await getTrackPreview(parsedMetadata.data.trackName, parsedMetadata.data.artistName, undefined)
-  if (!trackPreview.success) {
+  const msMusicApi = new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret)
+  const spotifyTrackInfoRequest = msMusicApi.getSpotifyTrackInfo(parsedMetadata.data.trackName, parsedMetadata.data.artistName)
+  const youtubeTrackInfoRequest = msMusicApi.getYoutubeTrackInfo(parsedMetadata.data.trackName, parsedMetadata.data.artistName)
+  const deezerTrackInfoRequest = new MsDeezerApi().search.track(parsedMetadata.data.trackName, parsedMetadata.data.artistName, 1)
+  const [spotifyTrackInfo, youtubeTrackInfo, deezerTrackInfo] = await Promise.all([spotifyTrackInfoRequest, youtubeTrackInfoRequest, deezerTrackInfoRequest])
+  const spotifyTrack: Track | undefined = spotifyTrackInfo.success && spotifyTrackInfo.data.length > 0 ? spotifyTrackInfo.data[0] : undefined
+  const deezerTrack: DeezerTrack | undefined = deezerTrackInfo.success && deezerTrackInfo.data.data.length > 0 ? deezerTrackInfo.data.data[0] : undefined
+  const mainTrackUrl = spotifyTrack?.external_urls.spotify ?? (youtubeTrackInfo.success ? youtubeTrackInfo.videoUrl : undefined) ?? deezerTrack?.link
+  if (mainTrackUrl === undefined) {
     postedImages[imageId] = false
-    await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar buscar informações da música!', {
-      reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
+    await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! Não foi possível encontrar a música no Spotify, YouTube ou Deezer!', {
+      reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined
     })
     return
   }
-  const trackPreviewData = await new MsMusicApi(spotifyConfig.clientID, spotifyConfig.clientSecret).getTrackPreviewBuffer(trackPreview.previewUrl)
-  if (!trackPreviewData.success) {
-    postedImages[imageId] = false
-    await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao recuperar o preview da música!', {
-      reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
-    })
-    return
-  }
-  // const storiesImageResponse = await composeStoryImage(image)
-  const storiesImageResponse = await composeStoryImage(getFirebaseImage.file)
-  if (!storiesImageResponse.success) {
-    postedImages[imageId] = false
-    await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar criar a imagem para o Instagram!', {
-      reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
-    })
-    return
-  }
-  const storiesVideoResponse = await createStoriesVideo(storiesImageResponse.storiesImage, trackPreviewData.file.buffer, parsedMetadata.data)
-  if (!storiesVideoResponse.success) {
-    postedImages[imageId] = false
-    await ctxReply(ctx, undefined, 'Não foi possível compartilhar a imagem! Ocorreu um erro ao tentar criar o vídeo para o Instagram!', {
-      reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
-    })
-    return
-  }
-  const publishStoryResponse = await new MsInstagramApi().postStory({
-    video: storiesVideoResponse.data.video,
-    coverImage: storiesImageResponse.storiesImage
-  })
-  if (!publishStoryResponse.success) {
+  const briefImageDescription = await new MsOpenAiApi(openaiConfig.apiKey).getBriefImageDescription(parsedMetadata.data.imageDescription)
+  const postImageAlt = briefImageDescription.success ? briefImageDescription.description : parsedMetadata.data.imageDescription
+  const msBlueskyApi = new MsBlueskyApi()
+  const postText = `${parsedMetadata.data.trackName} by ${parsedMetadata.data.artistName}\n${mainTrackUrl}`
+  const postResponse = await msBlueskyApi.post(postText, getFirebaseImage.file, postImageAlt)
+  if (!postResponse.success) {
     postedImages[imageId] = false
     await ctxReply(ctx, undefined, 'Ocorreu um erro ao tentar compartilhar a imagem', {
-      reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
+      reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined
     })
     return
   }
@@ -118,11 +79,14 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
   if (editMessageReplyMarkupResponse instanceof Error) {
     postedImages[imageId] = false
     await ctxReply(ctx, undefined, 'Ocorreu um erro ao tentar compartilhar a imagem', {
-      reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : undefined
+      reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined
     })
     return
   }
-  await ctxReply(ctx, undefined, getPostimageText(ctxLang, publishStoryResponse.postUrl, String(ctx.from.id), ctx.from.first_name), {
-    reply_parameters: (loadingReply?.message_id !== undefined) ? { message_id: loadingReply?.message_id, allow_sending_without_reply: true } : (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined
+  await ctxReply(ctx, undefined, getPostimageText(ctxLang, postResponse.postUrl, String(ctx.from.id), ctx.from.first_name), {
+    reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined,
+    link_preview_options: {
+      show_above_text: true
+    }
   })
 }

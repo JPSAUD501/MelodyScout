@@ -212,17 +212,30 @@ export async function composeImage (ctxLang: string | undefined, image: Buffer, 
     .replace(/#007989/g, backgroundColor)
     .replace(/#000000/g, textColor)
     .replace(/#ffffff/g, headsetColor)
-  const finalImage = await new MsConverterApi(converterApiConfig.apiKey).convertHtmlToImage(htmlWithText)
-  if (!finalImage.success) {
-    advError(`MediaEditor - ComposeImage - Error on creating final image: ${finalImage.error}`)
+  const finalHtmlImage = await new MsConverterApi(converterApiConfig.apiKey).convertHtmlToImage(htmlWithText)
+  if (!finalHtmlImage.success) {
+    advError(`MediaEditor - ComposeImage - Error on creating final image: ${finalHtmlImage.error}`)
     return {
       success: false,
-      error: `Error on creating final image: ${finalImage.error}`
+      error: `Error on creating final image: ${finalHtmlImage.error}`
+    }
+  }
+  const finalImage = await sharp(finalHtmlImage.image)
+    .jpeg({ mozjpeg: true })
+    .toBuffer()
+    .catch((err) => {
+      return new Error(err)
+    })
+  if (finalImage instanceof Error) {
+    advError(`MediaEditor - ComposeImage - Error on optimizing final image: ${finalImage.message}`)
+    return {
+      success: false,
+      error: finalImage.message
     }
   }
   return {
     success: true,
-    image: finalImage.image
+    image: finalImage
   }
 }
 

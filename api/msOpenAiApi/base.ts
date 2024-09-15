@@ -17,6 +17,11 @@ type MsOpenAiApiGetLyricsImageDescriptionResponse = {
   description: string
 } | MsOpenAiApiError
 
+type MsOpenAiApiGetBriefImageDescriptionResponse = {
+  success: true
+  description: string
+} | MsOpenAiApiError
+
 export class MsOpenAiApi {
   private readonly openai: OpenAI
 
@@ -218,6 +223,67 @@ Your output should be a single, comprehensive image prompt without any bulletpoi
     return {
       success: true,
       description: imageDescription
+    }
+  }
+
+  async getBriefImageDescription (imageDescription: string): Promise<MsOpenAiApiGetBriefImageDescriptionResponse> {
+    const prompt = imageDescription
+    const response = await this.openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are an assistant that generates short and clear descriptions from long image descriptions, aiming to help people with visual impairments understand the content represented. Given a long description of an image, your task is to condense it into a brief sentence, retaining the most relevant information about the main object or scene. Avoid overly technical or unnecessary details and focus on conveying the primary meaning of the image in an accessible and direct manner. The response should be short and objective.'
+        },
+        { role: 'user', content: prompt }
+      ],
+      max_tokens: 100
+    }).catch((err) => {
+      return new Error(String(err))
+    })
+    if (response instanceof Error) {
+      advError(`MsOpenAiAPi - Error while generating brief image description for image description: ${imageDescription.substring(0, 40)}... - ${response.message} - ${response.stack ?? 'No STACK'} - ${response.name}`)
+      return {
+        success: false,
+        error: response.message
+      }
+    }
+    const explanation = response.choices[0]
+    if (explanation === undefined) {
+      advError(`MsOpenAiAPi - No choices brief image description generated for image description: ${imageDescription.substring(0, 40)}...`)
+      return {
+        success: false,
+        error: 'No choices generated'
+      }
+    }
+    const briefImageDescription: string | undefined = explanation.message?.content?.replace(/\n/g, '').trim()
+    if (briefImageDescription === undefined) {
+      advError(`MsOpenAiAPi - No brief image description text generated for image description: ${imageDescription.substring(0, 40)}...`)
+      return {
+        success: false,
+        error: 'No brief image description text generated'
+      }
+    }
+    if (explanation.finish_reason !== 'stop') {
+      switch (explanation.finish_reason) {
+        case undefined: {
+          advError(`MsOpenAiAPi - Brief image description for image description: ${imageDescription.substring(0, 40)}... - was not finished! Finish reason: undefined`)
+          break
+        }
+        case null: {
+          advError(`MsOpenAiAPi - Brief image description for for image description: ${imageDescription.substring(0, 40)}... - was not finished! Finish reason: null`)
+          break
+        }
+        default: {
+          advError(`MsOpenAiAPi - Brief image description for for image description: ${imageDescription.substring(0, 40)}... - was not finished! Finish reason: ${JSON.stringify(explanation.finish_reason, null, 2)}`)
+          break
+        }
+      }
+    }
+
+    return {
+      success: true,
+      description: briefImageDescription
     }
   }
 }

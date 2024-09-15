@@ -100,7 +100,7 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
   switch (true) {
     case (imageByLyrics.result.withLayout): {
       const inlineKeyboard = new InlineKeyboard()
-      inlineKeyboard.text('[📸] - Postar no insta do MS!', getCallbackKey(['PI', imageByLyrics.result.imageId]))
+      inlineKeyboard.text('[📸] - Postar!', getCallbackKey(['PI', imageByLyrics.result.imageId]))
       await ctxEditMessage(ctx, { chatId: commandResponse.chat.id, messageId: commandResponse.message_id }, getTracklyricsexplanationText(ctxLang, track, artist, lyricsExplanation.explanation, `<a href='tg://user?id=${ctx.from.id}'>${ctx.from.first_name}</a>`, aiImageStatus), {
         reply_markup: inlineKeyboard,
         link_preview_options: {

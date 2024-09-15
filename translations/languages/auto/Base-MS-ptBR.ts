@@ -297,5 +297,6 @@ export const baseLang = {
   collage12monthButton: '[📆] - Último ano',
   tfPnalbumShareTitle: '<b>[🔗] <a href="{{postUrl}}">Compartilhe!</a></b>',
   tfPnartistShareTitle: '<b>[🔗] <a href="{{postUrl}}">Compartilhe!</a></b>',
-  tfPntrackShareTitle: '<b>[🔗] <a href="{{postUrl}}">Compartilhe!</a></b>'
+  tfPntrackShareTitle: '<b>[🔗] <a href="{{postUrl}}">Compartilhe!</a></b>',
+  tfPostimageBlueskySuccessMessage: 'Imagem compartilhada com sucesso na conta do MelodyScout no Bluesky!\n\n<b><a href="{{postUrl}}">Ver publicação</a></b>\n\nSolicitado por: <b><a href=\'tg://user?id={{requesterId}}\'>{{requesterName}}</a></b>'
 }

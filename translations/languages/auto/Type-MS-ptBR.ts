@@ -297,4 +297,5 @@ export type BaseLang =
   { key: 'collage12monthButton', value: '[📆] - Último ano' } |
   { key: 'tfPnalbumShareTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe!</a></b>' } |
   { key: 'tfPnartistShareTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe!</a></b>' } |
-  { key: 'tfPntrackShareTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe!</a></b>' }
+  { key: 'tfPntrackShareTitle', value: '<b>[🔗] <a href="{{postUrl}}">Compartilhe!</a></b>' } |
+  { key: 'tfPostimageBlueskySuccessMessage', value: 'Imagem compartilhada com sucesso na conta do MelodyScout no Bluesky!\n\n<b><a href="{{postUrl}}">Ver publicação</a></b>\n\nSolicitado por: <b><a href=\'tg://user?id={{requesterId}}\'>{{requesterName}}</a></b>' }
