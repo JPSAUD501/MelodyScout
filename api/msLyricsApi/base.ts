@@ -4,6 +4,7 @@ import { Google, Musixmatch } from '@flytri/lyrics-finder'
 import { zodGoogleLyricsData } from './types/zodGoogleLyricsData'
 import { zodMusicxmatchLyricsData } from './types/zodMusicxmatchLyricsData'
 import { LyricsFind } from './classes/lyricsfind'
+import { LyricsOvh } from './classes/lyricsovh'
 
 interface MsLyricsApiError {
   success: false
@@ -45,11 +46,13 @@ export class MsLyricsApi {
   private readonly accessToken: string
 
   public lyricfind: LyricsFind
+  public lyricsovh: LyricsOvh
 
   constructor (accessToken: string) {
     this.accessToken = accessToken
 
     this.lyricfind = new LyricsFind()
+    this.lyricsovh = new LyricsOvh()
   }
 
   private async getGeniusLyrics (track: string, artist: string): Promise<MsLyricsApiGetGeniusLyricsResponse> {
@@ -213,25 +216,44 @@ export class MsLyricsApi {
     }
   }
 
+  private async getOvhLyrics (track: string, artist: string): Promise<MsLyricsApiGetLyricsResponse> {
+    const ovhLyrics = await this.lyricsovh.getLyrics(track, artist)
+    if (!ovhLyrics.success) {
+      advError(`MsLyricsApi - Error while getting lyrics from LyricsOVH! Track: ${track} Artist: ${artist} - Error: ${ovhLyrics.errorData.status.msg}`)
+      return {
+        success: false,
+        error: ovhLyrics.errorData.status.msg
+      }
+    }
+    return {
+      success: true,
+      data: {
+        lyrics: ovhLyrics.data.lyrics,
+        url: 'https://lyrics.ovh/',
+        provider: 'LyricsOVH'
+      }
+    }
+  }
+
   async getLyrics (track: string, artist: string): Promise<MsLyricsApiGetLyricsResponse> {
     const geniusLyricsPromise = this.getGeniusLyrics(track, artist)
     const googleLyricsPromise = this.getGoogleLyrics(track, artist)
     const musicxmatchLyricsPromise = this.getMusicxmatchLyrics(track, artist)
     const lyricsFindLyricsPromise = this.getLyricsFindLyrics(track, artist)
-    const [geniusLyrics, googleLyrics, musicxmatchLyrics, lyricsFindLyrics] = await Promise.all([geniusLyricsPromise, googleLyricsPromise, musicxmatchLyricsPromise, lyricsFindLyricsPromise])
+    const ovhLyricsPromise = this.getOvhLyrics(track, artist)
+    const [geniusLyrics, googleLyrics, musicxmatchLyrics, lyricsFindLyrics, ovhLyrics] = await Promise.all([
+      geniusLyricsPromise,
+      googleLyricsPromise,
+      musicxmatchLyricsPromise,
+      lyricsFindLyricsPromise,
+      ovhLyricsPromise
+    ])
     const validLyrics: MsLyricsData[] = []
-    if (googleLyrics.success) {
-      validLyrics.push(googleLyrics.data)
-    }
-    if (musicxmatchLyrics.success) {
-      validLyrics.push(musicxmatchLyrics.data)
-    }
-    if (lyricsFindLyrics.success) {
-      validLyrics.push(lyricsFindLyrics.data)
-    }
-    if (geniusLyrics.success) {
-      validLyrics.push(geniusLyrics.data)
-    }
+    if (googleLyrics.success) { validLyrics.push(googleLyrics.data) }
+    if (musicxmatchLyrics.success) { validLyrics.push(musicxmatchLyrics.data) }
+    if (lyricsFindLyrics.success) { validLyrics.push(lyricsFindLyrics.data) }
+    if (ovhLyrics.success) { validLyrics.push(ovhLyrics.data) }
+    if (geniusLyrics.success) { validLyrics.push(geniusLyrics.data) }
     if (validLyrics.length <= 0) {
       advError(`MsLyricsApi - No lyrics found! Track: ${track} Artist: ${artist}`)
       return {

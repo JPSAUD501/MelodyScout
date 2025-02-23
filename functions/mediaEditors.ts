@@ -380,7 +380,7 @@ export async function createStoriesVideo (storiesImage: Buffer, trackPreview: Bu
             resolve(fs.readFileSync(path.join(tempDir, 'video.mp4')))
           })
           .on('error', (error) => {
-            reject(new Error(error))
+            reject(new Error(error.message))
           })
           .save(path.join(tempDir, 'video.mp4'))
       })
