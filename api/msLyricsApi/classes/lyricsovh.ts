@@ -57,10 +57,11 @@ export class LyricsOvh {
       console.error(`MsLyricsApi - LyricsOvh - Error: ${msApiFetchResponse.errorData.status.msg}`)
       return msApiFetchResponse
     }
+    const parsedLyrics = msApiFetchResponse.data.lyrics.replace(/\n\n/g, '\n')
     return {
       success: true,
       data: {
-        lyrics: msApiFetchResponse.data.lyrics
+        lyrics: parsedLyrics
       }
     }
   }
