@@ -188,7 +188,7 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
     }
   }
   textArray.push(lang(ctxLang, { key: 'tfBriefInfosRepeatedTracks', value: '- Das suas músicas ouvidas <b>{{repeatedTracksPercentage}}%</b> são repetidas e <b>{{newTracksPercentage}}%</b> são novas.' }, { repeatedTracksPercentage: Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.playcount) * 100).toFixed(2)).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })), newTracksPercentage: Number(((Number(user.track_count) / Number(user.playcount)) * 100).toFixed(2)).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })) }))
-  textArray.push(lang(ctxLang, { key: 'tfBriefInfosAverageRepeatTracks', value: '- Em média você repete <b>{{averageRepeatTracks}}</b> vezes cada música que conhece.' }, { averageRepeatTracks: Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.track_count)).toFixed(2)).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })) }))
+  textArray.push(lang(ctxLang, { key: 'tfBriefInfosAverageRepeatTracks', value: '- Em média você repete <b>{{averageRepeatTracks}}</b>x cada música.' }, { averageRepeatTracks: Number(((Number(user.playcount) - Number(user.track_count)) / Number(user.track_count)).toFixed(2)).toLocaleString(lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })) }))
   textArray.push('')
   if (toptracks.track.length > 0) {
     switch (true) {

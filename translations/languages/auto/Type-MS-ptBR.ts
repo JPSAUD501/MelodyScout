@@ -25,7 +25,7 @@ export type BaseLang =
   { key: 'tfBriefMetricsAlbumsKnown', value: '- Álbuns conhecidos: <b>{{albumsKnownLength}}</b>' } |
   { key: 'tfBriefInfosTittle', value: '<b>[ℹ️] Informações</b>' } |
   { key: 'tfBriefInfosRepeatedTracks', value: '- Das suas músicas ouvidas <b>{{repeatedTracksPercentage}}%</b> são repetidas e <b>{{newTracksPercentage}}%</b> são novas.' } |
-  { key: 'tfBriefInfosAverageRepeatTracks', value: '- Em média você repete <b>{{averageRepeatTracks}}</b> vezes cada música que conhece.' } |
+  { key: 'tfBriefInfosAverageRepeatTracks', value: '- Em média você repete <b>{{averageRepeatTracks}}</b>x cada música.' } |
   { key: 'tfBriefMostPlayedTracksTittle', value: '<b>[🎵] Músicas mais tocadas</b>' } |
   { key: 'tfBriefMostPlayedTracksListItem', value: '- ({{trackPlaycount}}x) <a href="{{trackUrl}}"><b>{{trackName}}</b> de <b>{{trackArtistName}}</b></a>' } |
   { key: 'tfBriefMostPlayedAlbumsTittle', value: '<b>[💿] Álbuns mais tocados</b>' } |
