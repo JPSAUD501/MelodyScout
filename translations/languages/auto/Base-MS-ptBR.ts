@@ -24,7 +24,7 @@ export const baseLang = {
   tfBriefMetricsArtistsKnown: '- Artistas conhecidos: <b>{{artistsKnownLength}}</b>',
   tfBriefMetricsAlbumsKnown: '- Álbuns conhecidos: <b>{{albumsKnownLength}}</b>',
   tfBriefInfosTittle: '<b>[ℹ️] Informações</b>',
-  tfBriefInfosRepeatedTracks: '- Dentre as suas músicas ouvidas <b>{{repeatedTracksPercentage}}%</b> são repetidas e <b>{{newTracksPercentage}}%</b> são novas.',
+  tfBriefInfosRepeatedTracks: '- Das suas músicas ouvidas <b>{{repeatedTracksPercentage}}%</b> são repetidas e <b>{{newTracksPercentage}}%</b> são novas.',
   tfBriefInfosAverageRepeatTracks: '- Em média você repete <b>{{averageRepeatTracks}}</b> vezes cada música que conhece.',
   tfBriefMostPlayedTracksTittle: '<b>[🎵] Músicas mais tocadas</b>',
   tfBriefMostPlayedTracksListItem: '- ({{trackPlaycount}}x) <a href="{{trackUrl}}"><b>{{trackName}}</b> de <b>{{trackArtistName}}</b></a>',
