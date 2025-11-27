@@ -10,11 +10,11 @@
     "start:prod": "bun run deploy && bun start",
     "start": "bun run ./app.ts",
     "start:dev": "bun run typecheck && bun run start",
-    "deploy": "bunx prisma migrate deploy",
+    "deploy": "bun x prisma migrate deploy",
     "dev": "bun run translate:dev && bun run start:dev",
     "translate:dev": "bun run ./translations/runModule.ts",
     "translate": "bun run ./translations/runModule.ts",
-    "typecheck": "bunx tsc --noEmit --skipLibCheck"
+    "typecheck": "bun x tsc --noEmit --skipLibCheck"
   },
   "repository": {
     "type": "git",
