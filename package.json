@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@atproto/api": "^0.13.7",
+    "@bochilteam/scraper-lyrics": "^5.0.0",
     "@flytri/lyrics-finder": "^1.0.7",
     "@google/generative-ai": "^0.11.5",
     "@material/material-color-utilities": "^0.2.7",

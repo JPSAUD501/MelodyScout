@@ -5,6 +5,7 @@ import { zodGoogleLyricsData } from './types/zodGoogleLyricsData'
 import { zodMusicxmatchLyricsData } from './types/zodMusicxmatchLyricsData'
 import { LyricsFind } from './classes/lyricsfind'
 import { LyricsOvh } from './classes/lyricsovh'
+import { BochilLyrics } from './classes/bochillyrics'
 
 interface MsLyricsApiError {
   success: false
@@ -37,6 +38,11 @@ type MsLyricsApiGetLyricsFindLyricsResponse = {
   data: MsLyricsData
 } | MsLyricsApiError
 
+type MsLyricsApiGetBochilLyricsResponse = {
+  success: true
+  data: MsLyricsData
+} | MsLyricsApiError
+
 type MsLyricsApiGetLyricsResponse = {
   success: true
   data: MsLyricsData
@@ -47,12 +53,14 @@ export class MsLyricsApi {
 
   public lyricfind: LyricsFind
   public lyricsovh: LyricsOvh
+  public bochillyrics: BochilLyrics
 
   constructor (accessToken: string) {
     this.accessToken = accessToken
 
     this.lyricfind = new LyricsFind()
     this.lyricsovh = new LyricsOvh()
+    this.bochillyrics = new BochilLyrics()
   }
 
   private async getGeniusLyrics (track: string, artist: string): Promise<MsLyricsApiGetGeniusLyricsResponse> {
@@ -235,24 +243,54 @@ export class MsLyricsApi {
     }
   }
 
+  private async getBochilLyrics (track: string, artist: string): Promise<MsLyricsApiGetBochilLyricsResponse> {
+    const bochilLyrics = await this.bochillyrics.getLyrics(track, artist)
+    if (!bochilLyrics.success) {
+      advError(`MsLyricsApi - Error while getting lyrics from BochilLyrics! Track: ${track} Artist: ${artist} - Error: ${bochilLyrics.errorData.status.msg}`)
+      return {
+        success: false,
+        error: bochilLyrics.errorData.status.msg
+      }
+    }
+    const lyricsText = this.bochillyrics.formatLyricsToString(bochilLyrics.data)
+    if (lyricsText.length <= 0) {
+      advError(`MsLyricsApi - Error while getting lyrics from BochilLyrics! Track: ${track} Artist: ${artist} - Error: Lyrics length is 0`)
+      return {
+        success: false,
+        error: 'Lyrics length is 0'
+      }
+    }
+    return {
+      success: true,
+      data: {
+        lyrics: lyricsText,
+        url: bochilLyrics.data.url,
+        provider: 'BochilLyrics'
+      }
+    }
+  }
+
   async getLyrics (track: string, artist: string): Promise<MsLyricsApiGetLyricsResponse> {
     const geniusLyricsPromise = this.getGeniusLyrics(track, artist)
     const googleLyricsPromise = this.getGoogleLyrics(track, artist)
     const musicxmatchLyricsPromise = this.getMusicxmatchLyrics(track, artist)
     const lyricsFindLyricsPromise = this.getLyricsFindLyrics(track, artist)
     const ovhLyricsPromise = this.getOvhLyrics(track, artist)
-    const [geniusLyrics, googleLyrics, musicxmatchLyrics, lyricsFindLyrics, ovhLyrics] = await Promise.all([
+    const bochilLyricsPromise = this.getBochilLyrics(track, artist)
+    const [geniusLyrics, googleLyrics, musicxmatchLyrics, lyricsFindLyrics, ovhLyrics, bochilLyrics] = await Promise.all([
       geniusLyricsPromise,
       googleLyricsPromise,
       musicxmatchLyricsPromise,
       lyricsFindLyricsPromise,
-      ovhLyricsPromise
+      ovhLyricsPromise,
+      bochilLyricsPromise
     ])
     const validLyrics: MsLyricsData[] = []
     if (googleLyrics.success) { validLyrics.push(googleLyrics.data) }
     if (musicxmatchLyrics.success) { validLyrics.push(musicxmatchLyrics.data) }
     if (lyricsFindLyrics.success) { validLyrics.push(lyricsFindLyrics.data) }
     if (ovhLyrics.success) { validLyrics.push(ovhLyrics.data) }
+    if (bochilLyrics.success) { validLyrics.push(bochilLyrics.data) }
     if (geniusLyrics.success) { validLyrics.push(geniusLyrics.data) }
     if (validLyrics.length <= 0) {
       advError(`MsLyricsApi - No lyrics found! Track: ${track} Artist: ${artist}`)
