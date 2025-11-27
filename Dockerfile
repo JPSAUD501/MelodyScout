@@ -17,11 +17,11 @@ RUN apt-get update && apt-get install -y \
 FROM base AS install
 
 # Copiar arquivos de dependências
-COPY package.json bun.lockb ./
+COPY package.json ./
 COPY prisma ./prisma/
 
 # Instalar todas as dependências e confiar em todos os scripts
-RUN bun install --frozen-lockfile --trust
+RUN bun install --trust
 
 # Gerar o cliente Prisma
 RUN bunx prisma generate
