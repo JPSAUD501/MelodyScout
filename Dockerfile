@@ -23,6 +23,9 @@ COPY prisma ./prisma/
 # Instalar todas as dependências (incluindo devDependencies para o Prisma)
 RUN bun install --frozen-lockfile
 
+# Confiar e executar postinstalls bloqueados (sharp, prisma, etc.)
+RUN bun pm trust --all
+
 # Gerar o cliente Prisma
 RUN bunx prisma generate
 
