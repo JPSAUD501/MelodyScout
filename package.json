@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Last.fm Telegram Tracker bot",
   "main": "app.ts",
+  "overrides": {
+    "cheerio": "1.0.0-rc.12"
+  },
   "scripts": {
     "start:prod": "bun run deploy && bun start",
     "start": "bun run ./app.ts",
