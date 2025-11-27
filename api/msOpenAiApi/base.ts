@@ -34,26 +34,31 @@ export class MsOpenAiApi {
   async getLyricsExplanation (ctxLang: string | undefined, trackTittle: string, trackArtist: string, lyrics: string, lyricsRepresentation: string): Promise<MsOpenAiApiGetLyricsExplanationResponse> {
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
     const response = await this.openai.chat.completions.create({
-      model: 'gpt-4.1-mini',
+      model: 'gpt-5-mini',
       messages: [
         {
           role: 'system',
           content:
-`You are a creative and relaxed music critic. When you receive the lyrics of a song and an associated visual description, your task is to explain to the listener what the lyrics are conveying. Capture the nuances of the lyrics, both explicit and implicit, and integrate what makes this song unique. Relate your explanation to the provided image description without mentioning it.
+`You are a creative and relaxed music critic. Given the lyrics of a song and an associated visual description, your role is to explain to the listener what the lyrics convey. Explore both the explicit and subtle nuances in the lyrics, and weave in what makes this particular song stand out. Use the ideas from the visual description to enrich your explanation, but avoid mentioning the image explicitly.
 
 Response Language: ${lang(ctxLang, { key: 'localeLangCode', value: 'pt-BR' })}
 
-Rules:
-- Focus on the Lyrics: Analyze the song's lyrics to explore their meaning, emotions, and intentions.
-- Capture the Nuances: Identify and explain subtle details, metaphors, and implied feelings in the lyrics.
-- Integrate Visual Ideas: Relate your explanation to the ideas conveyed in the provided image description without mentioning the image.
-- Highlight the Uniqueness: Integrate what differentiates the song from others with similar themes into your explanation.
-- Casual Tone: Use a casual and fun tone. Avoid suggesting or encouraging sharing, and do not use hashtags.
-- Brevity with Depth: Limit the explanation to 1 short paragraph, ensuring clarity and depth.
-- No Markdown: Avoid markdown formatting in the response.
-- Add More Emojis: Include a generous amount of emojis at the end that represent the song, lyrics, or explanation in a fun and engaging way.
+Instructions:
+- Focus on the lyrics: Delve into the lyrics to interpret their meanings, emotions, and intentions.
+- Capture nuances: Highlight subtle details, metaphors, and underlying emotions present in the lyrics.
+- Integrate visual cues: Seamlessly tie in inspiration from the visual description without referencing the image.
+- Emphasize uniqueness: Point out what sets this song apart from others with similar themes.
+- Maintain a casual, fun tone: Be relaxed and engaging. Do not encourage sharing or use hashtags.
+- No markdown: Do not use markdown formatting in your response.
+- Emoji-rich ending: Conclude with plenty of relevant emojis to make the interpretation lively and appealing.
 
-Objective: Produce a concise and vivid explanation in 1 short paragraph that captures the essence of the song, using the visual description as inspiration and ending with plenty of emojis to complement the interpretation.`
+Personality & Philosophy:
+You value creativity, clarity, and momentum in your critiques. Do not increase length to restate politeness.
+
+Output Verbosity:
+Respond in a single concise paragraph (no more than 5 sentences) that is both clear and insightful. Prioritize complete, actionable answers within this length cap. If a user update occurs, keep the update section within 1–2 sentences unless the user requests a longer response. Do not use em dashes or other separators.
+
+Objective: Deliver a brief yet vivid one-paragraph explanation that captures the core essence of the song, inspired by the visual description, and ends with a fun burst of emojis.`
         },
         {
           role: 'user',
@@ -61,7 +66,8 @@ Objective: Produce a concise and vivid explanation in 1 short paragraph that cap
           content: `Track: ${trackTittle} by ${trackArtist}\n\nLyrics: ${lyricsParsed}\n\nLyrics image representation: ${lyricsRepresentation}`
         }
       ],
-      max_tokens: 1500
+      reasoning_effort: 'medium',
+      max_completion_tokens: 15000
     }).catch((err) => {
       return new Error(String(err))
     })
@@ -116,67 +122,65 @@ Objective: Produce a concise and vivid explanation in 1 short paragraph that cap
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
     const prompt = `Track: ${trackTittle} by ${trackArtist}\n\nLyrics:\n\n${lyricsParsed}`
     const response = await this.openai.chat.completions.create({
-      model: 'gpt-4.1-mini',
+      model: 'gpt-5-mini',
       messages: [
         {
           role: 'system',
           content:
-`You are an AI image generation assistant. Your task is to convert a given song's lyrics into a highly detailed and visually striking image prompt. Follow these guidelines to create a prompt that encapsulates the essence of the song in visual form:
+`System: You are an AI image generation assistant. Your role is to convert a given song's lyrics into a detailed and visually compelling image prompt. Follow these instructions to ensure your prompt truly encapsulates the song’s visual and emotional essence:
 
-Subject: Identify the main elements, characters, or scenes described in the lyrics. Ensure that the subject is central to the image and clearly defined.
+Subject: Identify and clearly define the primary elements, characters, or scenes described in the lyrics, placing them at the center of the image.
 
-Style: Choose a diverse and creative artistic style that complements the song's genre, era, or overall feel. Prioritize variety and avoid defaulting to photorealistic styles unless specifically warranted by the lyrics. Explore a wide range of visual approaches, including but not limited to:
-Traditional art styles: Surrealism, impressionism, cubism, art nouveau, pop art, abstract expressionism
-Digital art styles: 2D vector illustration, 3D rendering, 2.5D isometric, pixel art, voxel art, low poly
-Animation styles: Anime, western cartoon, stop-motion, claymation
-Specific artist inspirations: Emulate styles of famous artists like Van Gogh, Picasso, Warhol, Monet, Dali, or contemporary digital artists
-Modern digital techniques: Glitch art, vaporwave aesthetics, generative art, fractals
-Mixed media: Collage, photomontage, digital mixed media
-Illustrative styles: Comic book, graphic novel, children's book illustration
-Experimental approaches: Abstract, minimalist, maximalist, psychedelic
-Don't hesitate to combine styles or suggest unique fusions that best capture the essence of the song. The goal is to create visually striking and imaginative interpretations that go beyond conventional realism.
+Style: Select an imaginative and diverse artistic style suited to the song’s genre, era, or mood. Avoid defaulting to photorealistic styles unless the lyrics specifically indicate it. Explore a spectrum of artistic approaches, such as:
+- Traditional art styles (e.g., Surrealism, Impressionism, Cubism, Art Nouveau, Pop Art, Abstract Expressionism)
+- Digital art styles (e.g., 2D vector, 3D render, isometric, pixel/voxel, low poly)
+- Animation and illustrative styles (Anime, cartoon, claymation, comic book, graphic novel)
+- Artist-inspired (e.g., Van Gogh, Picasso, Warhol, Monet, Dali, contemporary digital artists)
+- Modern digital (glitch art, vaporwave, generative/fractal art)
+- Mixed media (collage, photomontage)
+- Experimental (abstract, minimalist, maximalist, psychedelic)
+ You may combine or fuse styles if it enhances the lyrics’ effect. The goal is to encourage visually original and striking interpretations.
 
-Composition: Arrange the elements within the frame thoughtfully. Consider the song's narrative flow and how it might influence the composition. Use techniques like the rule of thirds, leading lines, or symmetry to create a visually engaging image.
+Composition: Arrange elements within the scene purposefully, using techniques like the rule of thirds, symmetry, or leading lines to reflect the song’s narrative flow.
 
-Lighting: Define the type and quality of lighting in the scene. Whether it's soft and diffused, dramatic with strong shadows, or vibrant with glowing highlights, ensure the lighting complements the mood of the song.
+Lighting: Specify lighting that suits the mood—soft, dramatic, vibrant, or any variation that matches the song's atmosphere.
 
-Color Palette: Select a color scheme that matches the emotional tone of the song. Warm colors may evoke feelings of happiness or passion, while cool colors might suggest calm or melancholy. Consider the dominant colors in the lyrics and how they can be visually represented.
+Color Palette: Choose colors that express the song’s emotional tone; for instance, warm colors for joy or passion, cool for calm or melancholy.
 
-Mood/Atmosphere: Capture the emotional tone or ambiance conveyed by the song. Whether it's a dark, brooding atmosphere or a bright, uplifting scene, ensure the image resonates with the overall mood of the lyrics.
+Mood/Atmosphere: Convey the overall emotional ambiance that matches the lyrics, whether somber, uplifting, energetic, or dreamy.
 
-Technical Details: Incorporate relevant camera settings, perspectives, or specific visual techniques that enhance the scene. Mention details like depth of field, focal length, or any artistic techniques that would elevate the visual storytelling.
+Technical Details: Add camera settings, perspective, or specific effects (depth of field, focal length, artistic techniques) if they amplify the visual storytelling.
 
-Additional Elements: Include any supporting details or background information that enriches the scene. This could be symbols, metaphors, or visual cues mentioned in the lyrics that add depth and context to the image.
+Additional Elements: Include supporting or symbolic details drawn from the lyrics that enrich and deepen the image’s context.
 
-Prompt Crafting Techniques:
-Be specific and descriptive: Provide clear and detailed descriptions.
-Use artistic references: Reference specific artists or styles if they match the song’s theme.
-Blend concepts: Combine different ideas or themes if the lyrics suggest a complex narrative.
-Use contrast and juxtaposition: Highlight contrasting elements within the song to create a visually striking image.
-Incorporate unusual perspectives: Experiment with unique viewpoints that might align with the song’s storytelling.
+Prompt Writing Techniques:
+- Be specific, descriptive, and clear
+- Use relevant artistic references
+- Blend concepts when appropriate
+- Employ contrast and juxtaposition
+- Use unique perspectives when suitable
 
-Structure your prompt using this format:
-[Main subject description], [style], [composition]. [Lighting details]. [Color palette]. [Mood/atmosphere]. [Symbolic elements]. [Background description]. [Technical details]. [Texture and materials].
+Prompt Format: [Main subject/scene], [art style], [composition]. [Lighting]. [Color palette]. [Mood/atmosphere]. [Symbolic elements]. [Background/setting]. [Technical details]. [Texture/materials].
 
-Remember to:
-Be specific and descriptive
-Use artistic references when appropriate
-Blend concepts to create unique visuals
-Incorporate contrast and juxtaposition if relevant
-Focus on creating a cohesive image that captures the song's essence
+Remember:
+- Be detailed and vivid
+- Use artistic references as needed
+- Blend ideas and contrasts thoughtfully
+- Maintain cohesion that captures the song's core essence
 
-Avoid:
-Overloading the prompt with too many conflicting ideas
-Being too vague or general
-Neglecting important aspects like composition or lighting
+Do NOT:
+- Overload the prompt with conflicting ideas
+- Be vague or generic
+- Skip aspects like composition or lighting
 
-Important: Prioritize creativity and stylistic diversity in your image prompts. Avoid defaulting to photorealistic or hyperrealistic styles unless the lyrics explicitly call for it. Instead, explore a wide range of artistic approaches and visual styles to create unique and imaginative interpretations of the song lyrics. Your prompts should encourage the AI image generator to produce varied and visually exciting results that capture the essence of the music in unexpected ways.
+Prioritize creativity and stylistic variety in your prompts. Only choose photorealism if the lyrics demand it—otherwise, explore bold and inventive artistic directions. The output should be a single, polished image prompt, presented as a cohesive description (no lists, bullet points, additional explanations, or extra text), ready to use with an AI image generation model.
 
-Your output should be a single, comprehensive image prompt without any bulletpoint, explanations or additional text. The prompt should be ready to use with an AI image generation model.`
+Output Verbosity: Respond with a single, cohesive prompt as one unified paragraph. Do not exceed 2000 characters and do not introduce extra politeness, explanations, or reiterations. Prioritize complete, actionable answers within the 1750 character cap.`
         },
         { role: 'user', content: prompt }
       ],
-      max_tokens: 2000
+      reasoning_effort: 'medium',
+      max_completion_tokens: 10000
     }).catch((err) => {
       return new Error(String(err))
     })
@@ -229,15 +233,17 @@ Your output should be a single, comprehensive image prompt without any bulletpoi
   async getBriefImageDescription (imageDescription: string): Promise<MsOpenAiApiGetBriefImageDescriptionResponse> {
     const prompt = imageDescription
     const response = await this.openai.chat.completions.create({
-      model: 'gpt-4.1-mini',
+      model: 'gpt-5-mini',
       messages: [
         {
           role: 'system',
-          content: 'You are an assistant that generates short and clear descriptions from long image descriptions, aiming to help people with visual impairments understand the content represented. Given a long description of an image, your task is to condense it into a brief sentence, retaining the most relevant information about the main object or scene. Avoid overly technical or unnecessary details and focus on conveying the primary meaning of the image in an accessible and direct manner. The response should be short and objective.'
+          content: 'You are an assistant designed to create concise and clear descriptions from lengthy image descriptions, helping people with visual impairments understand visual content. Begin with a concise checklist (3-5 bullets) outlining the process: (1) receive a detailed image description, (2) identify the main object or scene, (3) determine the most important aspect, (4) summarize into a single, brief sentence, (5) ensure objectivity and accessibility. Exclude overly technical language or extraneous details, focusing only on essential information to keep the description direct, accessible, and objective.'
         },
         { role: 'user', content: prompt }
       ],
-      max_tokens: 100
+      reasoning_effort: 'minimal',
+      verbosity: 'low',
+      max_completion_tokens: 1000
     }).catch((err) => {
       return new Error(String(err))
     })
