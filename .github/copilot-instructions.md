@@ -1,119 +1,43 @@
-# MelodyScout - AI Coding Instructions
+# MelodyScout – AI Coding Instructions
 
-## Project Overview
+## What You Are Building
+- Bun + TypeScript Telegram stack: `app.ts` boots `MelodyScout_Bot` (Grammy), `MelodyScoutLog_Bot` (receives `advLog/advError` queue) and `Server/server.ts` (health pings).
+- Main bot lives under `MelodyScout_Bot/`; log bot mirrors the same config but only streams structured logs.
 
-MelodyScout is a **Telegram bot** that integrates with **Last.fm** to provide music tracking, scrobble statistics, lyrics, and AI-powered features. Built with **Bun runtime** and **TypeScript**.
+## Runtime Topology
+- `MelodyScout_Bot/bot.ts` wires Grammy middlewares, registers composers, and exposes `bot.api` helpers.
+- Command/callback flow: `composers/*` are thin ctx parsers → delegate to `botFunctions/*` (business logic) → render strings/media via `textFabric/*`.
+- Callback payloads must fit 64 bytes; always build them with `functions/callbackMaker.getCallbackKey()` and match with `new RegExp('^XX' + melodyScoutConfig.divider)` to stay consistent.
 
-## Architecture
+## Cross-Cutting Patterns
+- **Grammy helpers** (`functions/grammyFunctions.ts`): prefer `ctxReply`, `ctxEditMessage`, `ctxReplyWithAudio/Video/Photo`, `ctxAnswerCallbackQuery` for html parsing + typing indicators.
+- **Advanced logging** (`functions/advancedConsole.ts`): wrap background work in `advLog/advError` so the log bot can relay messages.
+- **I18n**: generate copy via `lang()` (`translations/base.ts`) inside `textFabric/*`; add fallback `value` strings and run `bun run translate:dev` to sync JSON keys.
+- **Media utilities**: long-running edits go through helpers such as `functions/collage.ts`, `functions/mediaEditors.ts`, and `functions/getTrackPreview.ts` to keep behavior uniform.
 
-### Entry Point & Boot Sequence
-- `app.ts` → Starts `MelodyScoutLog_Bot` (logging), `MelodyScout_Bot` (main), and `Server` (health checks)
-- Both bots run concurrently; the log bot receives all `advLog/advError` messages via a queue
+## API + Data Layer
+- Every integration sits under `api/ms{Service}Api/` with `base.ts` exposing sub-clients from `classes/`, zod schemas in `types/`, and shared fetch logic in `functions/`.
+- Responses are discriminated unions: `{ success: true; data } | ApiErrors`. Never touch `.data` before checking `success` and propagate the typed error branch upward.
+- Database access happens exclusively through `api/msPrismaDbApi/` which groups `checkIfExists/create/get/update` modules; Prisma schema lives in `prisma/schema.prisma`.
 
-### Core Components
-```
-MelodyScout_Bot/
-├── bot.ts              # Grammy bot setup, composer registration
-├── composers/          # Middleware for commands/callbacks/inlines
-│   ├── commands/       # Thin wrappers → delegate to botFunctions/
-│   └── callbacks/      # Parse callback data using regex + divider
-├── botFunctions/       # Business logic for each command/callback
-└── textFabric/         # Text generation with i18n support
-```
+## Adding Features Safely
+- **New command**: add composer stub in `MelodyScout_Bot/composers/commands`, core logic in `botFunctions/commands`, strings in `textFabric`, then register it via `bot.use(...)` + `bot.api.setMyCommands`.
+- **New callback**: mirror the command flow, but ensure the regex matcher and payload prefix align and keep params truncated with `callbackMaker.truncateParam`.
+- **New external service**: scaffold `api/msXApi/` with the base/class/types layout and plumb configuration through `config.ts` env exports.
 
-### API Wrapper Pattern
-Each external service has a dedicated wrapper in `api/ms{Service}Api/`:
-- `base.ts` - Main class exposing sub-modules (e.g., `MsLastfmApi.user.getInfo()`)
-- `classes/` - Method implementations per entity (User, Track, Album, Artist)
-- `types/` - Zod schemas for response validation
-- `functions/` - Shared fetch utilities
+## Build + Verification Workflow
+- `bun run dev` (translation extraction → typecheck → start bots).
+- `bun run start` (fire `app.ts` only) and `bun run typecheck` for quick linting.
+- `bun run deploy` applies Prisma migrations and should precede prod boots; dev DB resets live under `prisma/migrations`.
+- Tests reside in `Tests/*.test.ts`; execute targeted suites with `bun test Tests/radio.test.ts` (Bun’s native test runner).
 
-**Example:** `MsLastfmApi` exposes `user`, `artist`, `album`, `track` classes with typed methods.
+## Environment & Ops Notes
+- Critical env vars (see `config.ts`): Telegram tokens/IDs for both bots, `DATABASE_URL/DIRECT_URL`, music API keys (Last.fm, Spotify, Genius), AI keys (`OPENAI_API_KEY`, `GOOGLE_AI_KEY`). Missing vars surface early because constructors in `config.ts` throw.
+- Server health checks (`Server/server.ts`) are lightweight—don’t block startup paths; any long job should log via `advLog` and avoid unhandled promise chains.
 
-### Response Pattern
-All API methods return discriminated unions:
-```typescript
-type Response = { success: true; data: T } | ApiErrors
-// Always check `success` before accessing `data`
-```
+## Quick Reference
+- Text + translations: `MelodyScout_Bot/textFabric`, `translations/base/`.
+- Media + download helpers: `functions/*.ts` (collage, downloader, sanitizer, track preview length calculation).
+- Temporary assets: write to `temp/` via helpers in `functions/tempy.ts` so cleanup happens automatically.
 
-## Key Patterns
-
-### Callback Data Encoding
-Callbacks use a divider (`melodyScoutConfig.divider`) with 64-byte limit:
-```typescript
-// Create: getCallbackKey(['TP', trackName, artistName])
-// Match: new RegExp(`^TP${melodyScoutConfig.divider}`)
-```
-Parameters are truncated with `…` if exceeding byte limit.
-
-### Internationalization
-Use `lang()` from `translations/base.ts`:
-```typescript
-lang(ctxLang, { key: 'keyName', value: 'Fallback text {{var}}' }, { var: 'value' })
-```
-- `key` maps to translation file; `value` is fallback
-- Run `bun run translate:dev` to sync translation keys from code to JSON base
-
-### Grammy Helpers
-Use functions from `functions/grammyFunctions.ts`:
-- `ctxReply()` - Send message with HTML parsing
-- `ctxEditMessage()` - Edit existing message
-- `ctxReplyWithAudio/Video/Photo()` - Media with loading indicator
-- `ctxAnswerCallbackQuery()` - Answer callbacks
-
-### Logging
-```typescript
-import { advLog, advError } from '../functions/advancedConsole'
-advLog('Info message')   // 🔵 prefix in log bot
-advError('Error message') // 🔴 prefix in log bot
-```
-
-## Development Commands
-
-```bash
-bun run dev          # Translate + typecheck + start
-bun run start        # Run app.ts directly
-bun run deploy       # Run Prisma migrations (required before start in prod)
-bun run translate:dev # Extract translation keys from code
-bun run typecheck    # TypeScript check without emit
-```
-
-## Adding New Features
-
-### New Command
-1. Create `MelodyScout_Bot/composers/commands/{name}.ts` (thin wrapper)
-2. Create `MelodyScout_Bot/botFunctions/commands/{name}.ts` (logic)
-3. Create `MelodyScout_Bot/textFabric/{name}.ts` (text generation)
-4. Register in `MelodyScout_Bot/bot.ts` with `bot.use()`
-5. Add to `bot.api.setMyCommands()` array
-
-### New Callback
-1. Create `MelodyScout_Bot/composers/callbacks/{name}.ts`
-2. Create `MelodyScout_Bot/botFunctions/callbacks/{name}.ts`
-3. Use `getCallbackKey(['PREFIX', ...params])` to generate callback data
-4. Match with `new RegExp(`^PREFIX${melodyScoutConfig.divider}`)`
-
-### New API Integration
-1. Create `api/ms{Service}Api/base.ts` with class structure
-2. Add Zod schemas in `types/` for response validation
-3. Export config in root `config.ts` from environment variables
-
-## Database
-
-- **Prisma** with PostgreSQL (`prisma/schema.prisma`)
-- Access via `MsPrismaDbApi` class with `checkIfExists`, `create`, `get`, `update` modules
-- Always run `bun run deploy` before starting in production
-
-## Environment Variables
-
-Key variables (see `config.ts`):
-- `MSB_TELEGRAM_TOKEN` / `MSB_TELEGRAM_BOT_ID` - Main bot
-- `MSLB_TELEGRAM_TOKEN` / `MSLB_TELEGRAM_LOG_CHANNEL` - Log bot
-- `DATABASE_URL` / `DIRECT_URL` - Prisma database
-- `LASTFM_API_KEY`, `SPOTIFY_CLIENT_*`, `GENIUS_ACCESS_TOKEN` - Music APIs
-- `OPENAI_API_KEY`, `GOOGLE_AI_KEY` - AI features
-
-## Testing
-
-Tests are in `Tests/` directory. Run specific tests directly with Bun.
+Keep these conventions in mind and you can slot new behavior into the bot without regressing logging, localization, or API contracts.
