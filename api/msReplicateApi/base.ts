@@ -244,4 +244,79 @@ export class MsReplicateApi {
       }
     }
   }
+
+  async getZImageTurboImage (imageDescription: string): Promise<MsReplicateGetSdxlImageResponse> {
+    try {
+      advLog(`MsReplicateApi - getFlux2Image - imageDescription: ${imageDescription}`)
+      const model = 'black-forest-labs/flux-2-dev'
+      const output = await this.replicate.run(
+        model,
+        {
+          input: {
+            width: 1024,
+            height: 1024,
+            prompt: imageDescription,
+            output_format: 'jpg',
+            guidance_scale: 0,
+            output_quality: 80,
+            num_inference_steps: 8
+          }
+        }
+      ).catch((err) => {
+        return new Error(String(err))
+      })
+      if (output instanceof Error) {
+        advError(`MsReplicateApi - getFlux2Image - Error on running model: ${output.message}`)
+        return {
+          success: false,
+          error: output.message
+        }
+      }
+      if (!('url' in output) || typeof output.url !== 'function') {
+        advError('MsReplicateApi - getFlux2Image - Output does not contain URL field')
+        return {
+          success: false,
+          error: 'Output does not contain URL field'
+        }
+      }
+      const outputUrl = output.url()
+      if (outputUrl.length <= 0) {
+        advError('MsReplicateApi - getFlux2Image - Output URL not found, length <= 0')
+        return {
+          success: false,
+          error: 'Output URL not found, length <= 0'
+        }
+      }
+      const image = await axios.get(outputUrl, { responseType: 'arraybuffer' }).catch((err) => {
+        return new Error(String(err))
+      })
+      if (image instanceof Error) {
+        advError(`MsReplicateApi - getFlux2Image - Error on getting image: ${image.message}`)
+        return {
+          success: false,
+          error: image.message
+        }
+      }
+      const imageBufferSafeParse = z.instanceof(Buffer).safeParse(image.data)
+      if (!imageBufferSafeParse.success) {
+        advError(`MsReplicateApi - getFlux2Image - Error on parsing image buffer: ${JSON.stringify(imageBufferSafeParse.error)}`)
+        return {
+          success: false,
+          error: 'Error on parsing image buffer'
+        }
+      }
+      advLog(`MsReplicateApi - getFlux2Image - Success! Image URL: ${outputUrl}`)
+      return {
+        success: true,
+        imageUrl: outputUrl,
+        image: imageBufferSafeParse.data
+      }
+    } catch (err) {
+      advError(`MsReplicateApi - getFlux2Image - Error Try Catch: ${String(err)}`)
+      return {
+        success: false,
+        error: `Error Try Catch: ${String(err)}`
+      }
+    }
+  }
 }
