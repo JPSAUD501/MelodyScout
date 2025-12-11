@@ -133,10 +133,10 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
   textArray.push(`<a href="${user.image[user.image.length - 1]['#text']}">️️</a><a href="${melodyScoutConfig.userImgUrl}">️️</a>${lang(ctxLang, { key: 'tfBriefUserMusicSummaryTittle', value: '<b>Resumo musical de <a href="{{userUrl}}">{{username}}</a></b>' }, { userUrl: urlLimiter(user.url), username: sanitizeText(user.realname.length > 0 ? user.realname : user.name) })}`)
   textArray.push('')
   switch (true) {
-    case (postText.metrics.postUrl().length < 325): {
-      textArray.push(`${lang(ctxLang, { key: 'tfBriefMetricsTittle', value: '<b>[📊] Métricas</b>' })} ${lang(ctxLang, { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar</a></i>)' }, { postUrl: postText.metrics.postUrl() })}`)
-      break
-    }
+    // case (postText.metrics.postUrl().length < 325): {
+    //   textArray.push(`${lang(ctxLang, { key: 'tfBriefMetricsTittle', value: '<b>[📊] Métricas</b>' })} ${lang(ctxLang, { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar</a></i>)' }, { postUrl: postText.metrics.postUrl() })}`)
+    //   break
+    // }
     default: {
       textArray.push(lang(ctxLang, { key: 'tfBriefMetricsTittle', value: '<b>[📊] Métricas</b>' }))
       break
@@ -192,10 +192,10 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
   textArray.push('')
   if (toptracks.track.length > 0) {
     switch (true) {
-      case (postText.mostPlayedTracks.postUrl().length < 325): {
-        textArray.push(`${lang(ctxLang, { key: 'tfBriefMostPlayedTracksTittle', value: '<b>[🎵] Músicas mais tocadas</b>' })} ${lang(ctxLang, { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar</a></i>)' }, { postUrl: postText.mostPlayedTracks.postUrl() })}`)
-        break
-      }
+      // case (postText.mostPlayedTracks.postUrl().length < 325): {
+      //   textArray.push(`${lang(ctxLang, { key: 'tfBriefMostPlayedTracksTittle', value: '<b>[🎵] Músicas mais tocadas</b>' })} ${lang(ctxLang, { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar</a></i>)' }, { postUrl: postText.mostPlayedTracks.postUrl() })}`)
+      //   break
+      // }
       default: {
         textArray.push(lang(ctxLang, { key: 'tfBriefMostPlayedTracksTittle', value: '<b>[🎵] Músicas mais tocadas</b>' }))
         break
@@ -209,10 +209,10 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
   }
   if (topalbums.album.length > 0) {
     switch (true) {
-      case (postText.mostPlayedAlbums.postUrl().length < 325): {
-        textArray.push(`${lang(ctxLang, { key: 'tfBriefMostPlayedAlbumsTittle', value: '<b>[💿] Álbuns mais tocados</b>' })} ${lang(ctxLang, { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar</a></i>)' }, { postUrl: postText.mostPlayedAlbums.postUrl() })}`)
-        break
-      }
+      // case (postText.mostPlayedAlbums.postUrl().length < 325): {
+      //   textArray.push(`${lang(ctxLang, { key: 'tfBriefMostPlayedAlbumsTittle', value: '<b>[💿] Álbuns mais tocados</b>' })} ${lang(ctxLang, { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar</a></i>)' }, { postUrl: postText.mostPlayedAlbums.postUrl() })}`)
+      //   break
+      // }
       default: {
         textArray.push(lang(ctxLang, { key: 'tfBriefMostPlayedAlbumsTittle', value: '<b>[💿] Álbuns mais tocados</b>' }))
         break
@@ -226,10 +226,10 @@ export function getBriefText (ctxLang: string | undefined, userInfo: UserInfo, u
   }
   if (topartists.artist.length > 0) {
     switch (true) {
-      case (postText.mostPlayedArtists.postUrl().length < 325): {
-        textArray.push(`${lang(ctxLang, { key: 'tfBriefMostPlayedArtistsTittle', value: '<b>[👨‍🎤] Artistas mais tocados</b>' })} ${lang(ctxLang, { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar</a></i>)' }, { postUrl: postText.mostPlayedArtists.postUrl() })}`)
-        break
-      }
+      // case (postText.mostPlayedArtists.postUrl().length < 325): {
+      //   textArray.push(`${lang(ctxLang, { key: 'tfBriefMostPlayedArtistsTittle', value: '<b>[👨‍🎤] Artistas mais tocados</b>' })} ${lang(ctxLang, { key: 'tfBriefPostShareButton', value: '(<i><a href="{{postUrl}}">Postar</a></i>)' }, { postUrl: postText.mostPlayedArtists.postUrl() })}`)
+      //   break
+      // }
       default: {
         textArray.push(lang(ctxLang, { key: 'tfBriefMostPlayedArtistsTittle', value: '<b>[👨‍🎤] Artistas mais tocados</b>' }))
         break
