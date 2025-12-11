@@ -21,7 +21,7 @@ export async function getAiImageByLyrics (ctxLang: string | undefined, lyrics: s
   error: string
 }> {
   const msReplicateApi = new MsReplicateApi(replicateConfig.token)
-  const imageByDescription = await msReplicateApi.getFlux2Image(lyricsRepresentationImageDescription)
+  const imageByDescription = await msReplicateApi.getZImageTurboImage(lyricsRepresentationImageDescription)
   if (!imageByDescription.success) {
     return {
       success: false,

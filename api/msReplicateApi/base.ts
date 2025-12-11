@@ -244,4 +244,79 @@ export class MsReplicateApi {
       }
     }
   }
+
+  async getZImageTurboImage (imageDescription: string): Promise<MsReplicateGetSdxlImageResponse> {
+    try {
+      advLog(`MsReplicateApi - getZImageTurboImage - imageDescription: ${imageDescription}`)
+      const model = 'prunaai/z-image-turbo:7ea16386290ff5977c7812e66e462d7ec3954d8e007a8cd18ded3e7d41f5d7cf'
+      const output = await this.replicate.run(
+        model,
+        {
+          input: {
+            width: 1024,
+            height: 1024,
+            prompt: imageDescription,
+            output_format: 'jpg',
+            guidance_scale: 0,
+            output_quality: 100,
+            num_inference_steps: 10
+          }
+        }
+      ).catch((err) => {
+        return new Error(String(err))
+      })
+      if (output instanceof Error) {
+        advError(`MsReplicateApi - getZImageTurboImage - Error on running model: ${output.message}`)
+        return {
+          success: false,
+          error: output.message
+        }
+      }
+      if (!('url' in output) || typeof output.url !== 'function') {
+        advError('MsReplicateApi - getZImageTurboImage - Output does not contain URL field')
+        return {
+          success: false,
+          error: 'Output does not contain URL field'
+        }
+      }
+      const outputUrl = output.url()
+      if (outputUrl.length <= 0) {
+        advError('MsReplicateApi - getZImageTurboImage - Output URL not found, length <= 0')
+        return {
+          success: false,
+          error: 'Output URL not found, length <= 0'
+        }
+      }
+      const image = await axios.get(outputUrl, { responseType: 'arraybuffer' }).catch((err) => {
+        return new Error(String(err))
+      })
+      if (image instanceof Error) {
+        advError(`MsReplicateApi - getZImageTurboImage - Error on getting image: ${image.message}`)
+        return {
+          success: false,
+          error: image.message
+        }
+      }
+      const imageBufferSafeParse = z.instanceof(Buffer).safeParse(image.data)
+      if (!imageBufferSafeParse.success) {
+        advError(`MsReplicateApi - getZImageTurboImage - Error on parsing image buffer: ${JSON.stringify(imageBufferSafeParse.error)}`)
+        return {
+          success: false,
+          error: 'Error on parsing image buffer'
+        }
+      }
+      advLog(`MsReplicateApi - getZImageTurboImage - Success! Image URL: ${outputUrl}`)
+      return {
+        success: true,
+        imageUrl: outputUrl,
+        image: imageBufferSafeParse.data
+      }
+    } catch (err) {
+      advError(`MsReplicateApi - getZImageTurboImage - Error Try Catch: ${String(err)}`)
+      return {
+        success: false,
+        error: `Error Try Catch: ${String(err)}`
+      }
+    }
+  }
 }
