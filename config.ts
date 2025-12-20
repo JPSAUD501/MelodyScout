@@ -31,8 +31,8 @@ export const spotifyConfig = {
   clientSecret: process.env['SPOTIFY_CLIENT_SECRET'] ?? ''
 }
 
-export const openaiConfig = {
-  apiKey: process.env['OPENAI_API_KEY'] ?? ''
+export const openrouterConfig = {
+  apiKey: process.env['OPENROUTER_API_KEY'] ?? ''
 }
 
 export const replicateConfig = {

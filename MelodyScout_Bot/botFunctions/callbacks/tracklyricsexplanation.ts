@@ -1,13 +1,13 @@
 import { type CallbackQueryContext, type Context, InputFile, InlineKeyboard } from 'grammy'
 import { ctxAnswerCallbackQuery, ctxEditMessage, ctxReply, ctxReplyWithVoice, ctxTempReply } from '../../../functions/grammyFunctions'
 import { getTracklyricsexplanationText } from '../../textFabric/tracklyricsexplanation'
-import { geniusConfig, melodyScoutConfig, openaiConfig } from '../../../config'
+import { geniusConfig, melodyScoutConfig, openrouterConfig } from '../../../config'
 import { advLog } from '../../../functions/advancedConsole'
 import { MsLyricsApi } from '../../../api/msLyricsApi/base'
 import { MsTextToSpeechApi } from '../../../api/msTextToSpeechApi/base'
 import { lang } from '../../../translations/base'
 import { getCallbackKey } from '../../../functions/callbackMaker'
-import { MsOpenAiApi } from '../../../api/msOpenAiApi/base'
+import { MsOpenRouterApi } from '../../../api/msOpenRouterApi/base'
 import { getAiImageByLyrics } from '../../../functions/trackAiFunctions'
 
 export async function runTracklyricsexplanationCallback (ctx: CallbackQueryContext<Context>): Promise<void> {
@@ -33,15 +33,15 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
     })
     return
   }
-  const msOpenAiApi = new MsOpenAiApi(openaiConfig.apiKey)
-  const openAiLyricsImageDescription = await msOpenAiApi.getLyricsImageDescription(track, artist, songLyricsData.data.lyrics)
-  if (!openAiLyricsImageDescription.success) {
+  const msOpenRouterApi = new MsOpenRouterApi(openrouterConfig.apiKey)
+  const openRouterLyricsImageDescription = await msOpenRouterApi.getLyricsImageDescription(track, artist, songLyricsData.data.lyrics)
+  if (!openRouterLyricsImageDescription.success) {
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'errorOnCreatingLyricsExplanationInformMessage', value: 'Ocorreu um erro ao tentar gerar a explicação da letra dessa música, por favor tente novamente mais tarde.' }), {
       reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined
     })
     return
   }
-  const lyricsExplanation = await msOpenAiApi.getLyricsExplanation(ctxLang, track, artist, songLyricsData.data.lyrics, openAiLyricsImageDescription.description)
+  const lyricsExplanation = await msOpenRouterApi.getLyricsExplanation(ctxLang, track, artist, songLyricsData.data.lyrics, openRouterLyricsImageDescription.description)
   if (!lyricsExplanation.success) {
     void ctxReply(ctx, undefined, lang(ctxLang, { key: 'errorOnCreatingLyricsExplanationInformMessage', value: 'Ocorreu um erro ao tentar gerar a explicação da letra dessa música, por favor tente novamente mais tarde.' }), {
       reply_parameters: (messageId !== undefined) ? { message_id: messageId, allow_sending_without_reply: true } : undefined
@@ -49,7 +49,7 @@ export async function runTracklyricsexplanationCallback (ctx: CallbackQueryConte
     return
   }
   advLog(`New track lyrics explanation generated for ${track} by ${artist} by user ${ctx.from.id}: ${lyricsExplanation.explanation}`)
-  const imageByLyricsRequest = getAiImageByLyrics(ctxLang, songLyricsData.data.lyrics, openAiLyricsImageDescription.description, track, artist)
+  const imageByLyricsRequest = getAiImageByLyrics(ctxLang, songLyricsData.data.lyrics, openRouterLyricsImageDescription.description, track, artist)
   const msTextToSpeechApi = new MsTextToSpeechApi()
   const TTSAudioRequest = msTextToSpeechApi.getTTS(ctxLang, lang(ctxLang, { key: 'trackLyricsExplanationTTSHeader', value: 'Explicação da música "{{track}}" de "{{artist}}" pelo MelodyScout.' }, { track, artist }), `${lyricsExplanation.explanation}`)
   const TTSAudio = await TTSAudioRequest

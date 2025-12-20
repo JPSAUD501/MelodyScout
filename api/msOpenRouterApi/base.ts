@@ -2,39 +2,40 @@ import OpenAI from 'openai'
 import { advError } from '../../functions/advancedConsole'
 import { lang } from '../../translations/base'
 
-interface MsOpenAiApiError {
+interface MsOpenRouterApiError {
   success: false
   error: string
 }
 
-type MsOpenAiApiGetLyricsExplanationResponse = {
+type MsOpenRouterApiGetLyricsExplanationResponse = {
   success: true
   explanation: string
-} | MsOpenAiApiError
+} | MsOpenRouterApiError
 
-type MsOpenAiApiGetLyricsImageDescriptionResponse = {
+type MsOpenRouterApiGetLyricsImageDescriptionResponse = {
   success: true
   description: string
-} | MsOpenAiApiError
+} | MsOpenRouterApiError
 
-type MsOpenAiApiGetBriefImageDescriptionResponse = {
+type MsOpenRouterApiGetBriefImageDescriptionResponse = {
   success: true
   description: string
-} | MsOpenAiApiError
+} | MsOpenRouterApiError
 
-export class MsOpenAiApi {
+export class MsOpenRouterApi {
   private readonly openai: OpenAI
 
-  constructor (openAiApiKey: string) {
+  constructor (openRouterApiKey: string) {
     this.openai = new OpenAI({
-      apiKey: openAiApiKey
+      apiKey: openRouterApiKey,
+      baseURL: 'https://openrouter.ai/api/v1'
     })
   }
 
-  async getLyricsExplanation (ctxLang: string | undefined, trackTittle: string, trackArtist: string, lyrics: string, lyricsRepresentation: string): Promise<MsOpenAiApiGetLyricsExplanationResponse> {
+  async getLyricsExplanation (ctxLang: string | undefined, trackTittle: string, trackArtist: string, lyrics: string, lyricsRepresentation: string): Promise<MsOpenRouterApiGetLyricsExplanationResponse> {
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
     const response = await this.openai.chat.completions.create({
-      model: 'gpt-5-mini',
+      model: 'openai/gpt-5-mini',
       messages: [
         {
           role: 'system',
@@ -72,7 +73,7 @@ Objective: Deliver a brief yet vivid one-paragraph explanation that captures the
       return new Error(String(err))
     })
     if (response instanceof Error) {
-      advError(`MsOpenAiAPi - Error while generating explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - ${response.message} - ${response.stack ?? 'No STACK'} - ${response.name}`)
+      advError(`MsOpenRouterApi - Error while generating explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - ${response.message} - ${response.stack ?? 'No STACK'} - ${response.name}`)
       return {
         success: false,
         error: response.message
@@ -80,7 +81,7 @@ Objective: Deliver a brief yet vivid one-paragraph explanation that captures the
     }
     const explanation = response.choices[0]
     if (explanation === undefined) {
-      advError(`MsOpenAiAPi - No choices explanation generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
+      advError(`MsOpenRouterApi - No choices explanation generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
       return {
         success: false,
         error: 'No choices generated'
@@ -88,7 +89,7 @@ Objective: Deliver a brief yet vivid one-paragraph explanation that captures the
     }
     let explanationText: string | undefined = explanation.message?.content?.replace(/\n{2,}/g, '\n\n').trim()
     if (explanationText === undefined) {
-      advError(`MsOpenAiAPi - No explanation text generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
+      advError(`MsOpenRouterApi - No explanation text generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
       return {
         success: false,
         error: 'No explanation text generated'
@@ -97,7 +98,7 @@ Objective: Deliver a brief yet vivid one-paragraph explanation that captures the
     if (explanation.finish_reason !== 'stop') {
       switch (explanation.finish_reason) {
         case undefined: {
-          advError(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: undefined`)
+          advError(`MsOpenRouterApi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: undefined`)
           explanationText += '...\n(A explicação foi interrompida por um erro desconhecido)'
           break
         }
@@ -105,7 +106,7 @@ Objective: Deliver a brief yet vivid one-paragraph explanation that captures the
           break
         }
         default: {
-          advError(`MsOpenAiAPi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: ${JSON.stringify(explanation.finish_reason, null, 2)}`)
+          advError(`MsOpenRouterApi - Explanation for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: ${JSON.stringify(explanation.finish_reason, null, 2)}`)
           explanationText += '...\n(A explicação excedeu o limite de caracteres)'
           break
         }
@@ -118,11 +119,11 @@ Objective: Deliver a brief yet vivid one-paragraph explanation that captures the
     }
   }
 
-  async getLyricsImageDescription (trackTittle: string, trackArtist: string, lyrics: string): Promise<MsOpenAiApiGetLyricsImageDescriptionResponse> {
+  async getLyricsImageDescription (trackTittle: string, trackArtist: string, lyrics: string): Promise<MsOpenRouterApiGetLyricsImageDescriptionResponse> {
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
     const prompt = `Track: ${trackTittle} by ${trackArtist}\n\nLyrics:\n\n${lyricsParsed}`
     const response = await this.openai.chat.completions.create({
-      model: 'gpt-5-mini',
+      model: 'openai/gpt-5-mini',
       messages: [
         {
           role: 'system',
@@ -185,7 +186,7 @@ Output Verbosity: Respond with a single, cohesive prompt as one unified paragrap
       return new Error(String(err))
     })
     if (response instanceof Error) {
-      advError(`MsOpenAiAPi - Error while generating image description for lyrics: ${lyricsParsed.substring(0, 40)}... - ${response.message} - ${response.stack ?? 'No STACK'} - ${response.name}`)
+      advError(`MsOpenRouterApi - Error while generating image description for lyrics: ${lyricsParsed.substring(0, 40)}... - ${response.message} - ${response.stack ?? 'No STACK'} - ${response.name}`)
       return {
         success: false,
         error: response.message
@@ -193,7 +194,7 @@ Output Verbosity: Respond with a single, cohesive prompt as one unified paragrap
     }
     const explanation = response.choices[0]
     if (explanation === undefined) {
-      advError(`MsOpenAiAPi - No choices image description generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
+      advError(`MsOpenRouterApi - No choices image description generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
       return {
         success: false,
         error: 'No choices generated'
@@ -201,7 +202,7 @@ Output Verbosity: Respond with a single, cohesive prompt as one unified paragrap
     }
     const imageDescription: string | undefined = explanation.message?.content?.replace(/\n/g, '').trim()
     if (imageDescription === undefined) {
-      advError(`MsOpenAiAPi - No image description text generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
+      advError(`MsOpenRouterApi - No image description text generated for lyrics: ${lyricsParsed.substring(0, 40)}...`)
       return {
         success: false,
         error: 'No image description text generated'
@@ -210,15 +211,15 @@ Output Verbosity: Respond with a single, cohesive prompt as one unified paragrap
     if (explanation.finish_reason !== 'stop') {
       switch (explanation.finish_reason) {
         case undefined: {
-          advError(`MsOpenAiAPi - Image description for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: undefined`)
+          advError(`MsOpenRouterApi - Image description for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: undefined`)
           break
         }
         case null: {
-          advError(`MsOpenAiAPi - Image description for for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: null`)
+          advError(`MsOpenRouterApi - Image description for for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: null`)
           break
         }
         default: {
-          advError(`MsOpenAiAPi - Image description for for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: ${JSON.stringify(explanation.finish_reason, null, 2)}`)
+          advError(`MsOpenRouterApi - Image description for for lyrics: ${lyricsParsed.substring(0, 40)}... - was not finished! Finish reason: ${JSON.stringify(explanation.finish_reason, null, 2)}`)
           break
         }
       }
@@ -230,10 +231,10 @@ Output Verbosity: Respond with a single, cohesive prompt as one unified paragrap
     }
   }
 
-  async getBriefImageDescription (imageDescription: string): Promise<MsOpenAiApiGetBriefImageDescriptionResponse> {
+  async getBriefImageDescription (imageDescription: string): Promise<MsOpenRouterApiGetBriefImageDescriptionResponse> {
     const prompt = imageDescription
     const response = await this.openai.chat.completions.create({
-      model: 'gpt-5-mini',
+      model: 'openai/gpt-5-mini',
       messages: [
         {
           role: 'system',
@@ -248,7 +249,7 @@ Output Verbosity: Respond with a single, cohesive prompt as one unified paragrap
       return new Error(String(err))
     })
     if (response instanceof Error) {
-      advError(`MsOpenAiAPi - Error while generating brief image description for image description: ${imageDescription.substring(0, 40)}... - ${response.message} - ${response.stack ?? 'No STACK'} - ${response.name}`)
+      advError(`MsOpenRouterApi - Error while generating brief image description for image description: ${imageDescription.substring(0, 40)}... - ${response.message} - ${response.stack ?? 'No STACK'} - ${response.name}`)
       return {
         success: false,
         error: response.message
@@ -256,7 +257,7 @@ Output Verbosity: Respond with a single, cohesive prompt as one unified paragrap
     }
     const explanation = response.choices[0]
     if (explanation === undefined) {
-      advError(`MsOpenAiAPi - No choices brief image description generated for image description: ${imageDescription.substring(0, 40)}...`)
+      advError(`MsOpenRouterApi - No choices brief image description generated for image description: ${imageDescription.substring(0, 40)}...`)
       return {
         success: false,
         error: 'No choices generated'
@@ -264,7 +265,7 @@ Output Verbosity: Respond with a single, cohesive prompt as one unified paragrap
     }
     const briefImageDescription: string | undefined = explanation.message?.content?.replace(/\n/g, '').trim()
     if (briefImageDescription === undefined) {
-      advError(`MsOpenAiAPi - No brief image description text generated for image description: ${imageDescription.substring(0, 40)}...`)
+      advError(`MsOpenRouterApi - No brief image description text generated for image description: ${imageDescription.substring(0, 40)}...`)
       return {
         success: false,
         error: 'No brief image description text generated'
@@ -273,15 +274,15 @@ Output Verbosity: Respond with a single, cohesive prompt as one unified paragrap
     if (explanation.finish_reason !== 'stop') {
       switch (explanation.finish_reason) {
         case undefined: {
-          advError(`MsOpenAiAPi - Brief image description for image description: ${imageDescription.substring(0, 40)}... - was not finished! Finish reason: undefined`)
+          advError(`MsOpenRouterApi - Brief image description for image description: ${imageDescription.substring(0, 40)}... - was not finished! Finish reason: undefined`)
           break
         }
         case null: {
-          advError(`MsOpenAiAPi - Brief image description for for image description: ${imageDescription.substring(0, 40)}... - was not finished! Finish reason: null`)
+          advError(`MsOpenRouterApi - Brief image description for for image description: ${imageDescription.substring(0, 40)}... - was not finished! Finish reason: null`)
           break
         }
         default: {
-          advError(`MsOpenAiAPi - Brief image description for for image description: ${imageDescription.substring(0, 40)}... - was not finished! Finish reason: ${JSON.stringify(explanation.finish_reason, null, 2)}`)
+          advError(`MsOpenRouterApi - Brief image description for for image description: ${imageDescription.substring(0, 40)}... - was not finished! Finish reason: ${JSON.stringify(explanation.finish_reason, null, 2)}`)
           break
         }
       }

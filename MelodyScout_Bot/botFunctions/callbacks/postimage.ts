@@ -1,5 +1,5 @@
 import { type CallbackQueryContext, type Context } from 'grammy'
-import { melodyScoutConfig, openaiConfig, spotifyConfig } from '../../../config'
+import { melodyScoutConfig, openrouterConfig, spotifyConfig } from '../../../config'
 import { ctxAnswerCallbackQuery, ctxEditMessageReplyMarkup, ctxReply, ctxTempReply } from '../../../functions/grammyFunctions'
 import { lang } from '../../../translations/base'
 import { zodAIImageMetadata } from '../../../types'
@@ -10,7 +10,7 @@ import { MsMusicApi } from '../../../api/msMusicApi/base'
 import { MsDeezerApi } from '../../../api/msDeezerApi/base'
 import type { Track } from '@soundify/web-api'
 import type { DeezerTrack } from '../../../api/msDeezerApi/types/zodSearchTrack'
-import { MsOpenAiApi } from '../../../api/msOpenAiApi/base'
+import { MsOpenRouterApi } from '../../../api/msOpenRouterApi/base'
 import sharp from 'sharp'
 
 const postedImages: Record<string, boolean> = {}
@@ -76,7 +76,7 @@ export async function runPostimageCallback (ctx: CallbackQueryContext<Context>):
     })
     return
   }
-  const briefImageDescription = await new MsOpenAiApi(openaiConfig.apiKey).getBriefImageDescription(parsedMetadata.data.imageDescription)
+  const briefImageDescription = await new MsOpenRouterApi(openrouterConfig.apiKey).getBriefImageDescription(parsedMetadata.data.imageDescription)
   const postImageAlt = briefImageDescription.success ? briefImageDescription.description : parsedMetadata.data.imageDescription
   const msBlueskyApi = new MsBlueskyApi()
   const postText = `${parsedMetadata.data.trackName} by ${parsedMetadata.data.artistName}\n${mainTrackUrl}`
