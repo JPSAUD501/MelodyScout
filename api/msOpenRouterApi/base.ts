@@ -123,7 +123,7 @@ Objective: Deliver a brief yet vivid one-paragraph explanation that captures the
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
     const prompt = `Track: ${trackTittle} by ${trackArtist}\n\nLyrics:\n\n${lyricsParsed}`
     const response = await this.openai.chat.completions.create({
-      model: 'openai/gpt-5-mini',
+      model: 'moonshotai/kimi-k2-0905',
       messages: [
         {
           role: 'system',
