@@ -35,7 +35,7 @@ export class MsOpenRouterApi {
   async getLyricsExplanation (ctxLang: string | undefined, trackTittle: string, trackArtist: string, lyrics: string, lyricsRepresentation: string): Promise<MsOpenRouterApiGetLyricsExplanationResponse> {
     const lyricsParsed = lyrics.replace(/\[.*\]/g, '').replace(/\n{2,}/g, '\n\n').trim()
     const response = await this.openai.chat.completions.create({
-      model: 'openai/gpt-5-mini',
+      model: 'moonshotai/kimi-k2-0905',
       messages: [
         {
           role: 'system',
